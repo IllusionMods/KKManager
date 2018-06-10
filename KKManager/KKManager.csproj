@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Data\Card.cs" />
     <Compile Include="Data\Internal\BlockHeader.cs" />
+    <Compile Include="Data\Internal\ChaFileExtended.cs" />
     <Compile Include="Data\Internal\ChaFileParameter.cs" />
     <Compile Include="formMain.cs">
       <SubType>Form</SubType>

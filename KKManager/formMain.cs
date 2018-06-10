@@ -145,6 +145,14 @@ namespace KKManager
 
 			imgCard.Image = card.CardImage;
 			imgCardFace.Image = card.CardFaceImage;
+
+			lsvCardExtData.Items.Clear();
+
+			if (card.Extended != null)
+			{
+				foreach (string key in card.Extended.Keys)
+					lsvCardExtData.Items.Add(key);
+			}
 		}
 
 		private void WriteToBindingCard()

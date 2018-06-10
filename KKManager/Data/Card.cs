@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MessagePack;
 
 namespace KKManager.Data
@@ -12,8 +9,9 @@ namespace KKManager.Data
 	public class Card
 	{
 		protected Func<Stream> streamGenerator { get; set; }
-
+		
 		public ChaFileParameter Parameter { get; protected set; }
+		public Dictionary<string, PluginData> Extended { get; protected set; }
 
 		public Image CardImage
 		{
@@ -39,12 +37,6 @@ namespace KKManager.Data
 
 					using (MemoryStream memStream = new MemoryStream(reader.ReadBytes(faceLength)))
 						return Image.FromStream(memStream);
-
-					//if (faceLength > 0)
-					//{
-					//	this.facePngData = reader.ReadBytes(num);
-
-					//}
 				}
 			}
 		}
@@ -149,6 +141,15 @@ namespace KKManager.Data
 							card.Parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes);
 							card.Parameter.ComplementWithVersion();
 						}
+					}
+
+					info = blockHeader.SearchInfo(ChaFileExtended.BlockName);
+					if (info != null)
+					{
+						reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
+						byte[] parameterBytes = reader.ReadBytes((int)info.size);
+						
+						card.Extended = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
 					}
 
 					//if (!noLoadStatus)

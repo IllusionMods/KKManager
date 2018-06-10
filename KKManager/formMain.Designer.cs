@@ -38,24 +38,27 @@
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
 			this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
 			this.cmbCardsViewSize = new System.Windows.Forms.ToolStripComboBox();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tabControl2 = new System.Windows.Forms.TabControl();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
-			this.tabPage5 = new System.Windows.Forms.TabPage();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.txtCardNickname = new System.Windows.Forms.TextBox();
+			this.txtCardLastName = new System.Windows.Forms.TextBox();
+			this.txtCardFirstName = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.imgCard = new System.Windows.Forms.PictureBox();
 			this.imgCardFace = new System.Windows.Forms.PictureBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.txtCardFirstName = new System.Windows.Forms.TextBox();
-			this.txtCardLastName = new System.Windows.Forms.TextBox();
-			this.txtCardNickname = new System.Windows.Forms.TextBox();
+			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.tabPage6 = new System.Windows.Forms.TabPage();
-			this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
-			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.lsvCardExtData = new System.Windows.Forms.ListView();
+			this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.menuStrip1.SuspendLayout();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
@@ -76,6 +79,8 @@
 			this.splitContainer3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.imgCard)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.imgCardFace)).BeginInit();
+			this.tabPage5.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -84,7 +89,7 @@
             this.fileToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(994, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(1024, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -104,7 +109,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 24);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(994, 481);
+			this.tabControl1.Size = new System.Drawing.Size(1024, 489);
 			this.tabControl1.TabIndex = 1;
 			// 
 			// tabPage1
@@ -113,7 +118,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(986, 455);
+			this.tabPage1.Size = new System.Drawing.Size(1016, 463);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Cards";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -132,8 +137,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabControl2);
-			this.splitContainer1.Size = new System.Drawing.Size(980, 449);
-			this.splitContainer1.SplitterDistance = 519;
+			this.splitContainer1.Size = new System.Drawing.Size(1010, 457);
+			this.splitContainer1.SplitterDistance = 534;
 			this.splitContainer1.TabIndex = 0;
 			// 
 			// lsvCards
@@ -141,7 +146,7 @@
 			this.lsvCards.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.lsvCards.Location = new System.Drawing.Point(0, 25);
 			this.lsvCards.Name = "lsvCards";
-			this.lsvCards.Size = new System.Drawing.Size(519, 424);
+			this.lsvCards.Size = new System.Drawing.Size(534, 432);
 			this.lsvCards.TabIndex = 1;
 			this.lsvCards.UseCompatibleStateImageBehavior = false;
 			this.lsvCards.SelectedIndexChanged += new System.EventHandler(this.lsvCards_SelectedIndexChanged);
@@ -156,7 +161,7 @@
             this.toolStripDropDownButton1});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(519, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(534, 25);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -181,24 +186,23 @@
 			this.cmbCardsViewSize.Size = new System.Drawing.Size(100, 25);
 			this.cmbCardsViewSize.SelectedIndexChanged += new System.EventHandler(this.cmbCardsViewSize_SelectedIndexChanged);
 			// 
-			// tabPage2
+			// toolStripSplitButton1
 			// 
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(986, 455);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Scenes";
-			this.tabPage2.UseVisualStyleBackColor = true;
+			this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+			this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+			this.toolStripSplitButton1.Size = new System.Drawing.Size(32, 22);
+			this.toolStripSplitButton1.Text = "toolStripSplitButton1";
 			// 
-			// tabPage3
+			// toolStripDropDownButton1
 			// 
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Size = new System.Drawing.Size(986, 455);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Settings";
-			this.tabPage3.UseVisualStyleBackColor = true;
+			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
 			// 
 			// tabControl2
 			// 
@@ -208,7 +212,7 @@
 			this.tabControl2.Location = new System.Drawing.Point(0, 0);
 			this.tabControl2.Name = "tabControl2";
 			this.tabControl2.SelectedIndex = 0;
-			this.tabControl2.Size = new System.Drawing.Size(457, 449);
+			this.tabControl2.Size = new System.Drawing.Size(472, 457);
 			this.tabControl2.TabIndex = 0;
 			// 
 			// tabPage4
@@ -217,20 +221,10 @@
 			this.tabPage4.Location = new System.Drawing.Point(4, 22);
 			this.tabPage4.Name = "tabPage4";
 			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage4.Size = new System.Drawing.Size(449, 423);
+			this.tabPage4.Size = new System.Drawing.Size(464, 431);
 			this.tabPage4.TabIndex = 0;
 			this.tabPage4.Text = "Info";
 			this.tabPage4.UseVisualStyleBackColor = true;
-			// 
-			// tabPage5
-			// 
-			this.tabPage5.Location = new System.Drawing.Point(4, 22);
-			this.tabPage5.Name = "tabPage5";
-			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage5.Size = new System.Drawing.Size(449, 423);
-			this.tabPage5.TabIndex = 1;
-			this.tabPage5.Text = "Metadata";
-			this.tabPage5.UseVisualStyleBackColor = true;
 			// 
 			// splitContainer2
 			// 
@@ -250,9 +244,66 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer2.Size = new System.Drawing.Size(443, 417);
-			this.splitContainer2.SplitterDistance = 268;
+			this.splitContainer2.Size = new System.Drawing.Size(458, 425);
+			this.splitContainer2.SplitterDistance = 277;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// txtCardNickname
+			// 
+			this.txtCardNickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtCardNickname.Location = new System.Drawing.Point(77, 59);
+			this.txtCardNickname.Name = "txtCardNickname";
+			this.txtCardNickname.ReadOnly = true;
+			this.txtCardNickname.Size = new System.Drawing.Size(187, 20);
+			this.txtCardNickname.TabIndex = 5;
+			// 
+			// txtCardLastName
+			// 
+			this.txtCardLastName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtCardLastName.Location = new System.Drawing.Point(77, 33);
+			this.txtCardLastName.Name = "txtCardLastName";
+			this.txtCardLastName.ReadOnly = true;
+			this.txtCardLastName.Size = new System.Drawing.Size(187, 20);
+			this.txtCardLastName.TabIndex = 4;
+			// 
+			// txtCardFirstName
+			// 
+			this.txtCardFirstName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtCardFirstName.Location = new System.Drawing.Point(77, 7);
+			this.txtCardFirstName.Name = "txtCardFirstName";
+			this.txtCardFirstName.ReadOnly = true;
+			this.txtCardFirstName.Size = new System.Drawing.Size(187, 20);
+			this.txtCardFirstName.TabIndex = 3;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(6, 62);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(58, 13);
+			this.label3.TabIndex = 2;
+			this.label3.Text = "Nickname:";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(6, 36);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(61, 13);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "Last Name:";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(6, 10);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(60, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "First Name:";
 			// 
 			// splitContainer3
 			// 
@@ -269,8 +320,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.imgCardFace);
-			this.splitContainer3.Size = new System.Drawing.Size(171, 417);
-			this.splitContainer3.SplitterDistance = 251;
+			this.splitContainer3.Size = new System.Drawing.Size(177, 425);
+			this.splitContainer3.SplitterDistance = 255;
 			this.splitContainer3.TabIndex = 0;
 			// 
 			// imgCard
@@ -279,7 +330,7 @@
 			this.imgCard.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.imgCard.Location = new System.Drawing.Point(0, 0);
 			this.imgCard.Name = "imgCard";
-			this.imgCard.Size = new System.Drawing.Size(171, 251);
+			this.imgCard.Size = new System.Drawing.Size(177, 255);
 			this.imgCard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.imgCard.TabIndex = 0;
 			this.imgCard.TabStop = false;
@@ -289,61 +340,31 @@
 			this.imgCardFace.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.imgCardFace.Location = new System.Drawing.Point(0, 0);
 			this.imgCardFace.Name = "imgCardFace";
-			this.imgCardFace.Size = new System.Drawing.Size(171, 162);
+			this.imgCardFace.Size = new System.Drawing.Size(177, 166);
 			this.imgCardFace.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.imgCardFace.TabIndex = 0;
 			this.imgCardFace.TabStop = false;
 			// 
-			// label1
+			// tabPage5
 			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(6, 10);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(60, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "First Name:";
+			this.tabPage5.Controls.Add(this.groupBox1);
+			this.tabPage5.Location = new System.Drawing.Point(4, 22);
+			this.tabPage5.Name = "tabPage5";
+			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage5.Size = new System.Drawing.Size(464, 431);
+			this.tabPage5.TabIndex = 1;
+			this.tabPage5.Text = "Metadata";
+			this.tabPage5.UseVisualStyleBackColor = true;
 			// 
-			// label2
+			// tabPage2
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 36);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(61, 13);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "Last Name:";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 62);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(58, 13);
-			this.label3.TabIndex = 2;
-			this.label3.Text = "Nickname:";
-			// 
-			// txtCardFirstName
-			// 
-			this.txtCardFirstName.Location = new System.Drawing.Point(77, 7);
-			this.txtCardFirstName.Name = "txtCardFirstName";
-			this.txtCardFirstName.ReadOnly = true;
-			this.txtCardFirstName.Size = new System.Drawing.Size(182, 20);
-			this.txtCardFirstName.TabIndex = 3;
-			// 
-			// txtCardLastName
-			// 
-			this.txtCardLastName.Location = new System.Drawing.Point(77, 33);
-			this.txtCardLastName.Name = "txtCardLastName";
-			this.txtCardLastName.ReadOnly = true;
-			this.txtCardLastName.Size = new System.Drawing.Size(182, 20);
-			this.txtCardLastName.TabIndex = 4;
-			// 
-			// txtCardNickname
-			// 
-			this.txtCardNickname.Location = new System.Drawing.Point(77, 59);
-			this.txtCardNickname.Name = "txtCardNickname";
-			this.txtCardNickname.ReadOnly = true;
-			this.txtCardNickname.Size = new System.Drawing.Size(182, 20);
-			this.txtCardNickname.TabIndex = 5;
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(986, 455);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Scenes";
+			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
 			// tabPage6
 			// 
@@ -355,29 +376,51 @@
 			this.tabPage6.Text = "Mods";
 			this.tabPage6.UseVisualStyleBackColor = true;
 			// 
-			// toolStripSplitButton1
+			// tabPage3
 			// 
-			this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
-			this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-			this.toolStripSplitButton1.Size = new System.Drawing.Size(32, 22);
-			this.toolStripSplitButton1.Text = "toolStripSplitButton1";
+			this.tabPage3.Location = new System.Drawing.Point(4, 22);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Size = new System.Drawing.Size(986, 455);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Settings";
+			this.tabPage3.UseVisualStyleBackColor = true;
 			// 
-			// toolStripDropDownButton1
+			// groupBox1
 			// 
-			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.lsvCardExtData);
+			this.groupBox1.Location = new System.Drawing.Point(6, 6);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(452, 123);
+			this.groupBox1.TabIndex = 0;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Extended Save Data";
+			// 
+			// lsvCardExtData
+			// 
+			this.lsvCardExtData.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+			this.lsvCardExtData.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.lsvCardExtData.GridLines = true;
+			this.lsvCardExtData.Location = new System.Drawing.Point(3, 16);
+			this.lsvCardExtData.Name = "lsvCardExtData";
+			this.lsvCardExtData.Size = new System.Drawing.Size(446, 104);
+			this.lsvCardExtData.TabIndex = 0;
+			this.lsvCardExtData.UseCompatibleStateImageBehavior = false;
+			this.lsvCardExtData.View = System.Windows.Forms.View.Details;
+			// 
+			// columnHeader1
+			// 
+			this.columnHeader1.Text = "Data Name";
+			this.columnHeader1.Width = 405;
 			// 
 			// formMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(994, 505);
+			this.ClientSize = new System.Drawing.Size(1024, 513);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
@@ -408,6 +451,8 @@
 			this.splitContainer3.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.imgCard)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.imgCardFace)).EndInit();
+			this.tabPage5.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -442,6 +487,9 @@
 		private System.Windows.Forms.TabPage tabPage6;
 		private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.ListView lsvCardExtData;
+		private System.Windows.Forms.ColumnHeader columnHeader1;
 	}
 }
 
