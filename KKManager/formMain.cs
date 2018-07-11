@@ -27,6 +27,8 @@ namespace KKManager
 
 		private ConcurrentDictionary<string, Image> masterImageList { get; set; }
 
+		private List<ListViewItem> lsvItems = new List<ListViewItem>();
+
 		private List<Size> ListViewCardSizes { get; set; } = new List<Size>
 		{
 			new Size(92, 128),
@@ -57,7 +59,6 @@ namespace KKManager
 
 				using (MemoryStream mem = new MemoryStream(File.ReadAllBytes(file)))
 				{
-					Image image = Image.FromStream(mem);
 
 					string itemName = key;
 
@@ -66,9 +67,10 @@ namespace KKManager
 						itemName = $"{card.Parameter.lastname} {card.Parameter.firstname}";
 					}
 
-					masterImageList[key] = image;
+					var item = new ListViewItem(itemName, key);
+					item.Name = key;
+					lsvItems.Add(item);
 
-					var item = lsvCards.Items.Add(key, itemName, key);
 
 					if (card != null)
 						item.Tag = card;
@@ -81,6 +83,7 @@ namespace KKManager
 				}
 			}
 
+			lsvCards.VirtualListSize = lsvItems.Count;
 			lsvCards.EndUpdate();
 
 			cmbCardsViewSize.SelectedIndex = 0;
@@ -99,16 +102,8 @@ namespace KKManager
 
 			activeImageList.Images.Clear();
 
-			var arrr = masterImageList.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
 
-			activeImageList.Images.AddRange(arrr);
 
-			for (int i = 0; i < activeImageList.Images.Count; i++)
-			{
-				string key = masterImageList.First(x => object.ReferenceEquals(x.Value, arrr[i])).Key;
-				activeImageList.Images.SetKeyName(i, key);
-				lsvCards.Items[key].ImageKey = key;
-			}
 
 			lsvCards.EndUpdate();
 		}
@@ -169,10 +164,27 @@ namespace KKManager
 			if (lsvCards.SelectedIndices.Count == 0) 
 				return;
 			
-			if (lsvCards.SelectedItems[0].Tag is Card card)
+			if (lsvItems[lsvCards.SelectedIndices[0]].Tag is Card card)
 			{
 				SetCardDatabindings(card);
 			}
+		}
+
+		private void lsvCards_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+		{
+			e.Item = lsvItems[e.ItemIndex];
+
+			if (activeImageList.Images.ContainsKey(e.Item.Name))
+				return;
+
+			Image image = (e.Item.Tag as Card)?.CardImage;
+
+			if (image == null)
+				image = new Bitmap(1, 1);
+
+			activeImageList.Images.Add(e.Item.Name, image);
+			e.Item.ImageKey = e.Item.Name;
+			e.Item.ImageIndex = activeImageList.Images.IndexOfKey(e.Item.Name);
 		}
 	}
 }
