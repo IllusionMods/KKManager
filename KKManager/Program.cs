@@ -36,8 +36,7 @@ namespace KKManager
                 Environment.Exit(1);
             }
 
-            var koikatuDirectory = new DirectoryInfo(path);
-            return koikatuDirectory;
+            return new DirectoryInfo(path);
         }
 
         /// <summary>
