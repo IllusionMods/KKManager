@@ -1,7 +1,7 @@
 ﻿using System;
 using MessagePack;
 
-namespace KKManager.Data
+namespace KKManager.Cards.Data.Internal
 {
 	[MessagePackObject(true)]
 	public class ChaFileParameter

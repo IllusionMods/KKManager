@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using KKManager.Cards.Data.Internal;
 using MessagePack;
 
-namespace KKManager.Data
+namespace KKManager.Cards.Data
 {
 	public class Card
 	{

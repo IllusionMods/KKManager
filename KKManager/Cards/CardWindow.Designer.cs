@@ -1,4 +1,4 @@
-﻿namespace KKManager
+﻿namespace KKManager.Cards
 {
 	partial class CardWindow
 	{

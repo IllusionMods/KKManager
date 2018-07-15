@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace KKManager
+namespace KKManager.Cards
 {
 	public static class Utility
 	{

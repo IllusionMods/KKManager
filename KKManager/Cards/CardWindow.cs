@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using KKManager.Data;
+using KKManager.Cards.Data;
+using KKManager.Cards.Data.Internal;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace KKManager
+namespace KKManager.Cards
 {
 	public partial class CardWindow : DockContent
     {
