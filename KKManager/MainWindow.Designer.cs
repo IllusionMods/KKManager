@@ -30,9 +30,10 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.sideloaderModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +55,22 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cardManagerToolStripMenuItem,
+            this.sideloaderModsToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // cardManagerToolStripMenuItem
+            // 
+            this.cardManagerToolStripMenuItem.Name = "cardManagerToolStripMenuItem";
+            this.cardManagerToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.cardManagerToolStripMenuItem.Text = "Card manager";
+            this.cardManagerToolStripMenuItem.Click += new System.EventHandler(this.cardManagerToolStripMenuItem_Click);
+            // 
             // dockPanel1
             // 
             this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -62,20 +79,12 @@
             this.dockPanel1.Size = new System.Drawing.Size(682, 413);
             this.dockPanel1.TabIndex = 1;
             // 
-            // viewToolStripMenuItem
+            // sideloaderModsToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cardManagerToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // cardManagerToolStripMenuItem
-            // 
-            this.cardManagerToolStripMenuItem.Name = "cardManagerToolStripMenuItem";
-            this.cardManagerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.cardManagerToolStripMenuItem.Text = "Card manager";
-            this.cardManagerToolStripMenuItem.Click += new System.EventHandler(this.cardManagerToolStripMenuItem_Click);
+            this.sideloaderModsToolStripMenuItem.Name = "sideloaderModsToolStripMenuItem";
+            this.sideloaderModsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.sideloaderModsToolStripMenuItem.Text = "Sideloader mod manager";
+            this.sideloaderModsToolStripMenuItem.Click += new System.EventHandler(this.sideloaderModsToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -102,5 +111,6 @@
         private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cardManagerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sideloaderModsToolStripMenuItem;
     }
 }

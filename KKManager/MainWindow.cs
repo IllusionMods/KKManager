@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Cards;
+using KKManager.Sideloader;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager
@@ -36,12 +37,18 @@ namespace KKManager
         {
             InitializeComponent();
 
+            GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<CardWindow>();
         }
 
         private void cardManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetOrCreateWindow<CardWindow>().Show(dockPanel1, DockState.Document);
+        }
+
+        private void sideloaderModsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel1, DockState.Document);
         }
     }
 }
