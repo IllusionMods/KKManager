@@ -93,7 +93,7 @@ namespace KKManager.Data
 					BlockHeader blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
 					long num2 = reader.ReadInt64();
 					long position = reader.BaseStream.Position;
-
+                    
 					BlockHeader.Info info;
 
 					card = new Card(streamFunc);

@@ -5,15 +5,17 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using KKManager.Data;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager
 {
-	public partial class formMain : Form
-	{
-		public formMain()
+	public partial class CardWindow : DockContent
+    {
+		public CardWindow()
 		{
 			InitializeComponent();
-		}
+		    AutoScaleMode = AutoScaleMode.Dpi;
+        }
 
 		private void formMain_Load(object sender, EventArgs e)
 		{
@@ -50,7 +52,7 @@ namespace KKManager
 
 			lsvCards.BeginUpdate();
 
-			foreach (string file in Directory.EnumerateFiles(@"M:\koikatu\UserData\chara\female", "*.png",
+			foreach (string file in Directory.EnumerateFiles(@"D:\Games\koikatsu\UserData\chara\female", "*.png",
 				SearchOption.AllDirectories))
 			{
 
