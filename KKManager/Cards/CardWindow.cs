@@ -52,37 +52,45 @@ namespace KKManager
 
 			lsvCards.BeginUpdate();
 
-			foreach (string file in Directory.EnumerateFiles(@"D:\Games\koikatsu\UserData\chara\female", "*.png",
-				SearchOption.AllDirectories))
-			{
+            var charaCardPath = Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\female");
+		    if (!Directory.Exists(charaCardPath))
+		    {
+		        MessageBox.Show($"The card directory \"{charaCardPath}\" doesn't exist or is inaccessible.", "Load cards",
+		            MessageBoxButtons.OK, MessageBoxIcon.Error);
+		    }
+            else
+		    {
+		        foreach (string file in Directory.EnumerateFiles(charaCardPath, "*.png", SearchOption.AllDirectories))
+		        {
 
-				string key = Path.GetFileName(file);
+		            string key = Path.GetFileName(file);
 
-				using (MemoryStream mem = new MemoryStream(File.ReadAllBytes(file)))
-				{
+		            using (MemoryStream mem = new MemoryStream(File.ReadAllBytes(file)))
+		            {
 
-					string itemName = key;
+		                string itemName = key;
 
-					if (Card.TryParseCard(() => File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read), out Card card))
-					{
-						itemName = $"{card.Parameter.lastname} {card.Parameter.firstname}";
-					}
+		                if (Card.TryParseCard(() => File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read), out Card card))
+		                {
+		                    itemName = $"{card.Parameter.lastname} {card.Parameter.firstname}";
+		                }
 
-					var item = new ListViewItem(itemName, key);
-					item.Name = key;
-					lsvItems.Add(item);
+		                var item = new ListViewItem(itemName, key);
+		                item.Name = key;
+		                lsvItems.Add(item);
 
 
-					if (card != null)
-						item.Tag = card;
-					else
-					{
-						item.ForeColor = Color.Red;
-						item.Font = new Font(item.Font, FontStyle.Italic);
-					}
+		                if (card != null)
+		                    item.Tag = card;
+		                else
+		                {
+		                    item.ForeColor = Color.Red;
+		                    item.Font = new Font(item.Font, FontStyle.Italic);
+		                }
 
-				}
-			}
+		            }
+		        }
+		    }
 
 			lsvCards.VirtualListSize = lsvItems.Count;
 			lsvCards.EndUpdate();
