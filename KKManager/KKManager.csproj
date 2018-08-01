@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cards\CardLoader.cs" />
     <Compile Include="Cards\Data\Card.cs" />
     <Compile Include="Cards\Data\Internal\BlockHeader.cs" />
     <Compile Include="Cards\Data\Internal\ChaFileExtended.cs" />
@@ -93,6 +94,27 @@
     <Compile Include="Sideloader\SideloaderModsWindow.Designer.cs">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\Properties\PropertiesToolWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\PropertiesToolWindow.Designer.cs">
+      <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\PropertyViewerBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\CardInfoViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\CardInfoViewer.Designer.cs">
+      <DependentUpon>CardInfoViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\SideloaderViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\SideloaderViewer.Designer.cs">
+      <DependentUpon>SideloaderViewer.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Cards\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -111,6 +133,15 @@
     </Compile>
     <EmbeddedResource Include="Sideloader\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\Properties\PropertiesToolWindow.resx">
+      <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\Properties\Viewers\CardInfoViewer.resx">
+      <DependentUpon>CardInfoViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\Properties\Viewers\SideloaderViewer.resx">
+      <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

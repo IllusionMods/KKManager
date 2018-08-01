@@ -10,8 +10,9 @@ namespace KKManager.Cards.Data
 	public class Card
 	{
 		protected Func<Stream> streamGenerator { get; set; }
-		
-		public ChaFileParameter Parameter { get; protected set; }
+
+	    public FileInfo CardFile { get; private set; }
+        public ChaFileParameter Parameter { get; protected set; }
 		public Dictionary<string, PluginData> Extended { get; protected set; }
 
 		public Image CardImage
@@ -47,11 +48,13 @@ namespace KKManager.Cards.Data
 			this.streamGenerator = streamGenerator;
 		}
 
-		public static bool TryParseCard(Func<Stream> streamFunc, out Card card)
+		public static bool TryParseCard(FileInfo file, out Card card)
 		{
 			card = null;
 
-			using (Stream stream = streamFunc())
+		    Func<Stream> generator = () => File.Open(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+            using (Stream stream = generator())
 			using (BinaryReader reader = new BinaryReader(stream))
 			{
 				long IEND = Utility.SearchForIEND(stream);
@@ -97,7 +100,8 @@ namespace KKManager.Cards.Data
                     
 					BlockHeader.Info info;
 
-					card = new Card(streamFunc);
+					card = new Card(generator);
+				    card.CardFile = file;
 
 					//BlockHeader.Info info = blockHeader.SearchInfo(ChaFileCustom.BlockName);
 					//if (info != null)
@@ -181,5 +185,10 @@ namespace KKManager.Cards.Data
 				return true;
 			}
 		}
-	}
+
+	    public string GetCharaName()
+	    {
+            return $"{Parameter.lastname} {Parameter.firstname}";
+        }
+    }
 }

@@ -1,200 +1,123 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using KKManager.Cards.Data;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using KKManager.Cards.Data;
-using KKManager.Cards.Data.Internal;
+using BrightIdeasSoftware;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Cards
 {
-	public partial class CardWindow : DockContent
+    public partial class CardWindow : DockContent
     {
-		public CardWindow()
-		{
-			InitializeComponent();
-		    AutoScaleMode = AutoScaleMode.Dpi;
+        public CardWindow()
+        {
+            InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
+            _loader = new CardLoader();
+            _loader.CardsChanged += Loader_CardsChanged;
+
+            olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.GetCharaName();
+            olvColumnFilename.AspectGetter = rowObject => (rowObject as Card)?.CardFile.Name;
+            olvColumnModDate.AspectGetter = rowObject => (rowObject as Card)?.CardFile.LastWriteTime;
+
+            listView.LargeImageList = new ImageList
+            {
+                ImageSize = new Size(183, 256),
+                ColorDepth = ColorDepth.Depth24Bit
+            };
+
+            listView.SmallImageList = new ImageList
+            {
+                ImageSize = new Size(38, 51),
+                ColorDepth = ColorDepth.Depth24Bit
+            };
+            
+            olvColumnName.ImageGetter = delegate (object rowObject)
+            {
+                var card = (rowObject as Card);
+                if (card == null) return null;
+
+                var key = card.CardFile.FullName;
+                if (!listView.LargeImageList.Images.ContainsKey(key))
+                {
+                    listView.SmallImageList.Images.Add(key, card.CardFaceImage);
+                    listView.LargeImageList.Images.Add(key, card.CardImage);
+                }
+                return key;
+            };
+
+            Details(this, EventArgs.Empty);
+
+            ((OLVColumn) listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
         }
 
-		private void formMain_Load(object sender, EventArgs e)
-		{
-			InitCards();
-		}
+        private void Loader_CardsChanged(object sender, EventArgs e)
+        {
+            listView.SmallImageList?.Images.Clear();
+            listView.LargeImageList?.Images.Clear();
 
-		#region Cards
+            listView.SetObjects(_loader.Cards);
+            listView.AutoResizeColumns();
+        }
 
-		private ImageList activeImageList { get; set; }
+        private readonly CardLoader _loader;
 
-		private ConcurrentDictionary<string, Image> masterImageList { get; set; }
+        public void OpenCardDirectory(DirectoryInfo directory)
+        {
+            _loader.Read(directory);
+        }
 
-		private List<ListViewItem> lsvItems = new List<ListViewItem>();
+        private void formMain_Load(object sender, EventArgs e)
+        {
+            //InitCards();
 
-		private List<Size> ListViewCardSizes { get; set; } = new List<Size>
-		{
-			new Size(92, 128),
-			new Size(183, 256)
-		};
+            listView.Sort(olvColumnModDate, SortOrder.Descending);
+        }
 
-
-		private void InitCards()
-		{
-			InitCardBindings();
-
-			masterImageList = new ConcurrentDictionary<string, Image>();
-			activeImageList = new ImageList();
-
-			activeImageList.ColorDepth = ColorDepth.Depth24Bit;
-			activeImageList.ImageSize = new Size(183, 256);
-			
-			lsvCards.LargeImageList = activeImageList;
+        #region Cards
 
 
-			lsvCards.BeginUpdate();
+        /*private List<ListViewItem> lsvItems = new List<ListViewItem>();
 
-            var charaCardPath = Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\female");
-		    if (!Directory.Exists(charaCardPath))
-		    {
-		        MessageBox.Show($"The card directory \"{charaCardPath}\" doesn't exist or is inaccessible.", "Load cards",
-		            MessageBoxButtons.OK, MessageBoxIcon.Error);
-		    }
-            else
-		    {
-		        foreach (string file in Directory.EnumerateFiles(charaCardPath, "*.png", SearchOption.AllDirectories))
-		        {
+        private List<Size> ListViewCardSizes { get; set; } = new List<Size>
+        {
+            new Size(92, 128),
+            new Size(183, 256)
+        };
 
-		            string key = Path.GetFileName(file);
+        private ImageList activeImageList { get; set; }
 
-		            using (MemoryStream mem = new MemoryStream(File.ReadAllBytes(file)))
-		            {
+        private ConcurrentDictionary<string, Image> masterImageList { get; set; }*/
 
-		                string itemName = key;
+        #endregion
 
-		                if (Card.TryParseCard(() => File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read), out Card card))
-		                {
-		                    itemName = $"{card.Parameter.lastname} {card.Parameter.firstname}";
-		                }
+        private void fastObjectListView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView.SelectedObject != null)
+                MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject);
+        }
 
-		                var item = new ListViewItem(itemName, key);
-		                item.Name = key;
-		                lsvItems.Add(item);
+        private void Details(object sender, EventArgs e)
+        {
+            listView.View = View.Details;
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
+            toolStripViewSelect.Text = detailsToolStripMenuItem.Text;
+        }
 
-		                if (card != null)
-		                    item.Tag = card;
-		                else
-		                {
-		                    item.ForeColor = Color.Red;
-		                    item.Font = new Font(item.Font, FontStyle.Italic);
-		                }
+        private void SmallIcons(object sender, EventArgs e)
+        {
+            listView.View = View.SmallIcon;
 
-		            }
-		        }
-		    }
+            toolStripViewSelect.Text = smallIconsToolStripMenuItem.Text;
+        }
 
-			lsvCards.VirtualListSize = lsvItems.Count;
-			lsvCards.EndUpdate();
+        private void LargeIcons(object sender, EventArgs e)
+        {
+            listView.View = View.LargeIcon;
 
-			cmbCardsViewSize.SelectedIndex = 0;
-		}
-
-		private void cmbCardsViewSize_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			lsvCards.BeginUpdate();
-
-			activeImageList.ImageSize = ListViewCardSizes[cmbCardsViewSize.SelectedIndex];
-
-			foreach (Image image in activeImageList.Images)
-			{
-				image.Dispose();
-			}
-
-			activeImageList.Images.Clear();
-
-
-
-
-			lsvCards.EndUpdate();
-		}
-
-		#region Card Databinding
-
-		private BindingSource cardParameterSource = new BindingSource();
-
-		private void InitCardBindings()
-		{
-			cardParameterSource = new BindingSource();
-			cardParameterSource.DataSource = typeof(ChaFileParameter);
-
-			txtCardFirstName.DataBindings.Add(nameof(Label.Text), cardParameterSource, nameof(ChaFileParameter.firstname));
-			txtCardLastName.DataBindings.Add(nameof(Label.Text), cardParameterSource, nameof(ChaFileParameter.lastname));
-			txtCardNickname.DataBindings.Add(nameof(Label.Text), cardParameterSource, nameof(ChaFileParameter.nickname));
-		}
-
-		private void SetCardDatabindings(Card card)
-		{
-			cardParameterSource.DataSource = card.Parameter;
-
-			if (imgCard.Image != null)
-			{
-				imgCard.Image.Dispose();
-				imgCard.Image = null;
-			}
-
-			if (imgCardFace.Image != null)
-			{
-				imgCardFace.Image.Dispose();
-				imgCardFace.Image = null;
-			}
-
-			imgCard.Image = card.CardImage;
-			imgCardFace.Image = card.CardFaceImage;
-
-			lsvCardExtData.Items.Clear();
-
-			if (card.Extended != null)
-			{
-				foreach (string key in card.Extended.Keys)
-					lsvCardExtData.Items.Add(key);
-			}
-		}
-
-		private void WriteToBindingCard()
-		{
-			cardParameterSource.EndEdit();
-		}
-
-		#endregion
-
-		#endregion
-
-		private void lsvCards_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (lsvCards.SelectedIndices.Count == 0) 
-				return;
-			
-			if (lsvItems[lsvCards.SelectedIndices[0]].Tag is Card card)
-			{
-				SetCardDatabindings(card);
-			}
-		}
-
-		private void lsvCards_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-		{
-			e.Item = lsvItems[e.ItemIndex];
-
-			if (activeImageList.Images.ContainsKey(e.Item.Name))
-				return;
-
-			Image image = (e.Item.Tag as Card)?.CardImage;
-
-			if (image == null)
-				image = new Bitmap(1, 1);
-
-			activeImageList.Images.Add(e.Item.Name, image);
-			e.Item.ImageKey = e.Item.Name;
-			e.Item.ImageIndex = activeImageList.Images.IndexOfKey(e.Item.Name);
-		}
-	}
+            toolStripViewSelect.Text = largeIconsToolStripMenuItem.Text;
+        }
+    }
 }
