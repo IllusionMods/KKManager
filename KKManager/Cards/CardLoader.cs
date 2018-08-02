@@ -25,7 +25,7 @@ namespace KKManager.Cards
             }
             else
             {
-                foreach (var file in path.EnumerateFiles("*.png", SearchOption.AllDirectories))
+                foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
                 {
                     if (Card.TryParseCard(file, out Card card))
                     {
