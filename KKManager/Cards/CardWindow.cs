@@ -18,6 +18,7 @@ namespace KKManager.Cards
             new DirectoryInfo(Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\male"));
 
         private readonly CardLoader _loader;
+        private DirectoryInfo _currentDirectory;
 
         public CardWindow()
         {
@@ -39,7 +40,16 @@ namespace KKManager.Cards
             ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
         }
 
-        public DirectoryInfo CurrentDirectory { get; private set; }
+        public DirectoryInfo CurrentDirectory
+        {
+            get { return _currentDirectory; }
+            private set
+            {
+                _currentDirectory = value;
+                Text = CurrentDirectory?.Name ?? "Card viewer";
+                ToolTipText = CurrentDirectory?.FullName ?? string.Empty;
+            }
+        }
 
         private void SetupImageLists()
         {
@@ -177,9 +187,6 @@ namespace KKManager.Cards
 
             addressBar.Text = directory.FullName;
             CurrentDirectory = directory;
-
-            Text = CurrentDirectory.Name;
-            ToolTipText = CurrentDirectory.FullName;
         }
 
         private void formMain_Load(object sender, EventArgs e)
@@ -267,6 +274,11 @@ namespace KKManager.Cards
         private void toolStripButtonGo_Click(object sender, EventArgs e)
         {
             TryOpenCardDirectory(addressBar.Text);
+        }
+
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshCurrentFolder();
         }
     }
 }
