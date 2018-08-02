@@ -109,6 +109,8 @@ namespace KKManager.Cards
                 s.CanDropOnSubItem = can;
             }
 
+            SetDropAllow(e.DropSink, false);
+
             if (e.DataObject is DataObject dataObject)
             {
                 var files = dataObject.GetFileDropList();
@@ -125,10 +127,6 @@ namespace KKManager.Cards
                         SetDropAllow(e.DropSink, true);
                         e.Effect = ModifierKeys.HasFlag(Keys.Control) ? DragDropEffects.Copy : DragDropEffects.Move;
                     }
-                    else
-                    {
-                        SetDropAllow(e.DropSink, false);
-                    }
                 }
             }
         }
@@ -139,8 +137,11 @@ namespace KKManager.Cards
             {
                 var files = dataObject.GetFileDropList();
 
+                var filesChanged = false;
                 foreach (var file in files)
                 {
+                    if (_loader.Cards.Any(y => y.CardFile.FullName == file)) continue;
+
                     switch (e.Effect)
                     {
                         case DragDropEffects.Link:
@@ -148,14 +149,17 @@ namespace KKManager.Cards
                             return;
                         case DragDropEffects.Copy:
                             File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
-                            RefreshCurrentFolder();
+                            filesChanged = true;
                             break;
                         case DragDropEffects.Move:
                             File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
-                            RefreshCurrentFolder();
+                            filesChanged = true;
                             break;
                     }
                 }
+
+                if (filesChanged)
+                    RefreshCurrentFolder();
             }
         }
 
