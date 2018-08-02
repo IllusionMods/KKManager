@@ -221,7 +221,8 @@ namespace KKManager.Cards
             var otherWidth = toolStrip.Items.Cast<ToolStripItem>().Where(x => x.Name != "addressBar").Sum(x => x.Width);
             var fillWidth = toolStrip.Width - otherWidth - 20;
             addressBar.Width = fillWidth;
-            addressBar.DropDownWidth = fillWidth;
+            if (fillWidth > 0)
+                addressBar.DropDownWidth = fillWidth;
         }
 
         private void ShowOpenFolderDialog(object sender, EventArgs e)

@@ -20,7 +20,8 @@ namespace KKManager
 
             GetOrCreateWindow<SideloaderModsWindow>();
 
-            openFemaleCardFolderToolStripMenuItem_Click(this, EventArgs.Empty);
+            var fc = OpenOrGetCardWindow(CardWindow.FemaleCardDir);
+            OpenOrGetCardWindow(CardWindow.MaleCardDir).Show(fc.Pane, DockAlignment.Bottom, 0.4);
 
             dockPanel.DockRightPortion = 400;
             var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
@@ -67,7 +68,7 @@ namespace KKManager
         {
             GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel, DockState.Document);
         }
-        
+
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenOrGetCardWindow(CardWindow.FemaleCardDir);
