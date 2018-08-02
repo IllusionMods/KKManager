@@ -32,9 +32,6 @@ namespace KKManager.Cards
 		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CardWindow));
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ctxCards = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +46,8 @@ namespace KKManager.Cards
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.addressBar = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripOpenDropdown = new System.Windows.Forms.ToolStripSplitButton();
             this.femaleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.maleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,38 +57,10 @@ namespace KKManager.Cards
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.statusStrip1.SuspendLayout();
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 491);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1024, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(29, 17);
-            this.toolStripStatusLabel1.Text = "Idle.";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(980, 17);
-            this.toolStripStatusLabel2.Spring = true;
-            this.toolStripStatusLabel2.Text = "Showing (x / x)";
-            this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // ctxCards
             // 
@@ -161,7 +132,7 @@ namespace KKManager.Cards
             this.listView.Name = "listView";
             this.listView.ShowGroups = false;
             this.listView.ShowItemToolTips = true;
-            this.listView.Size = new System.Drawing.Size(1024, 466);
+            this.listView.Size = new System.Drawing.Size(1024, 488);
             this.listView.TabIndex = 3;
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
@@ -215,6 +186,21 @@ namespace KKManager.Cards
             this.toolStripButtonGo.Size = new System.Drawing.Size(26, 22);
             this.toolStripButtonGo.Text = "Go";
             this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
+            // 
+            // toolStripButtonRefresh
+            // 
+            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
+            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 22);
+            this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripOpenDropdown
             // 
@@ -286,21 +272,6 @@ namespace KKManager.Cards
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
-            // toolStripButtonRefresh
-            // 
-            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
-            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 22);
-            this.toolStripButtonRefresh.Text = "Refresh";
-            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
             // CardWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -308,13 +279,10 @@ namespace KKManager.Cards
             this.ClientSize = new System.Drawing.Size(1024, 513);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.toolStrip);
-            this.Controls.Add(this.statusStrip1);
             this.Name = "CardWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
             this.Text = "Cards";
             this.Load += new System.EventHandler(this.formMain_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ctxCards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listView)).EndInit();
             this.toolStrip.ResumeLayout(false);
@@ -326,9 +294,6 @@ namespace KKManager.Cards
 
 		#endregion
 		private System.Windows.Forms.ContextMenuStrip ctxCards;
-		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
 		private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem changeGenderToToolStripMenuItem;
