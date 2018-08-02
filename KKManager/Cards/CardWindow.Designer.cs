@@ -1,4 +1,6 @@
-﻿namespace KKManager.Cards
+﻿using System.Windows.Forms;
+
+namespace KKManager.Cards
 {
 	partial class CardWindow
 	{
@@ -44,15 +46,22 @@
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnModDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.addressBar = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripOpenDropdown = new System.Windows.Forms.ToolStripSplitButton();
+            this.femaleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.maleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
-            this.toolStrip1.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -155,7 +164,7 @@
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.LargeIcon;
-            this.listView.SelectedIndexChanged += new System.EventHandler(this.fastObjectListView1_SelectedIndexChanged);
+            this.listView.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
             // 
             // olvColumnName
             // 
@@ -169,15 +178,66 @@
             // 
             this.olvColumnFilename.Text = "Filename";
             // 
-            // toolStrip1
+            // toolStrip
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addressBar,
+            this.toolStripButtonGo,
+            this.toolStripOpenDropdown,
+            this.toolStripSeparator1,
             this.toolStripViewSelect});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1024, 25);
-            this.toolStrip1.TabIndex = 4;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(1024, 25);
+            this.toolStrip.TabIndex = 4;
+            this.toolStrip.Text = "toolStrip1";
+            this.toolStrip.Resize += new System.EventHandler(this.OnResizeToolstip);
+            // 
+            // addressBar
+            // 
+            this.addressBar.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
+            this.addressBar.AutoSize = false;
+            this.addressBar.Name = "addressBar";
+            this.addressBar.Size = new System.Drawing.Size(200, 25);
+            this.addressBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addressBar_KeyDown);
+            // 
+            // toolStripOpenDropdown
+            // 
+            this.toolStripOpenDropdown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.femaleCardFolderToolStripMenuItem,
+            this.maleCardFolderToolStripMenuItem,
+            this.toolStripSeparator2});
+            this.toolStripOpenDropdown.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenDropdown.Image")));
+            this.toolStripOpenDropdown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripOpenDropdown.Name = "toolStripOpenDropdown";
+            this.toolStripOpenDropdown.Size = new System.Drawing.Size(77, 22);
+            this.toolStripOpenDropdown.Text = "Open...";
+            this.toolStripOpenDropdown.ButtonClick += new System.EventHandler(this.ShowOpenFolderDialog);
+            // 
+            // femaleCardFolderToolStripMenuItem
+            // 
+            this.femaleCardFolderToolStripMenuItem.Name = "femaleCardFolderToolStripMenuItem";
+            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.femaleCardFolderToolStripMenuItem.Text = "Female card folder";
+            this.femaleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.femaleCardFolderToolStripMenuItem_Click);
+            // 
+            // maleCardFolderToolStripMenuItem
+            // 
+            this.maleCardFolderToolStripMenuItem.Name = "maleCardFolderToolStripMenuItem";
+            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.maleCardFolderToolStripMenuItem.Text = "Male card folder";
+            this.maleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.maleCardFolderToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripViewSelect
             // 
@@ -188,29 +248,39 @@
             this.toolStripViewSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripViewSelect.Image")));
             this.toolStripViewSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripViewSelect.Name = "toolStripViewSelect";
-            this.toolStripViewSelect.Size = new System.Drawing.Size(94, 22);
-            this.toolStripViewSelect.Text = "View select";
+            this.toolStripViewSelect.Size = new System.Drawing.Size(61, 22);
+            this.toolStripViewSelect.Text = "View";
             // 
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
             // smallIconsToolStripMenuItem
             // 
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
+            // 
+            // toolStripButtonGo
+            // 
+            this.toolStripButtonGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonGo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGo.Image")));
+            this.toolStripButtonGo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGo.Name = "toolStripButtonGo";
+            this.toolStripButtonGo.Size = new System.Drawing.Size(26, 22);
+            this.toolStripButtonGo.Text = "Go";
+            this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // CardWindow
             // 
@@ -218,7 +288,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 513);
             this.Controls.Add(this.listView);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.statusStrip1);
             this.Name = "CardWindow";
             this.Text = "Cards";
@@ -227,8 +297,8 @@
             this.statusStrip1.PerformLayout();
             this.ctxCards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listView)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -249,11 +319,18 @@
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnModDate;
         private BrightIdeasSoftware.OLVColumn olvColumnFilename;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripDropDownButton toolStripViewSelect;
         private System.Windows.Forms.ToolStripMenuItem detailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem smallIconsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem largeIconsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripComboBox addressBar;
+        private System.Windows.Forms.ToolStripSplitButton toolStripOpenDropdown;
+        private System.Windows.Forms.ToolStripMenuItem femaleCardFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem maleCardFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private ToolStripButton toolStripButtonGo;
     }
 }
 

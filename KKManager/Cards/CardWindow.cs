@@ -1,15 +1,24 @@
-﻿using KKManager.Cards.Data;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.Cards.Data;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Cards
 {
     public partial class CardWindow : DockContent
     {
+        public static readonly DirectoryInfo FemaleCardDir =
+            new DirectoryInfo(Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\female"));
+
+        public static readonly DirectoryInfo MaleCardDir =
+            new DirectoryInfo(Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\male"));
+
+        private readonly CardLoader _loader;
+
         public CardWindow()
         {
             InitializeComponent();
@@ -32,19 +41,21 @@ namespace KKManager.Cards
                 ImageSize = new Size(38, 51),
                 ColorDepth = ColorDepth.Depth24Bit
             };
-            
-            olvColumnName.ImageGetter = delegate (object rowObject)
-            {
-                var card = (rowObject as Card);
-                if (card == null) return null;
 
-                var key = card.CardFile.FullName;
-                if (!listView.LargeImageList.Images.ContainsKey(key))
+            olvColumnName.ImageGetter = delegate(object rowObject)
+            {
+                if (rowObject is Card card)
                 {
-                    listView.SmallImageList.Images.Add(key, card.CardFaceImage);
-                    listView.LargeImageList.Images.Add(key, card.CardImage);
+                    var key = card.CardFile.FullName;
+                    if (!listView.LargeImageList.Images.ContainsKey(key))
+                    {
+                        listView.SmallImageList.Images.Add(key, card.CardFaceImage);
+                        listView.LargeImageList.Images.Add(key, card.CardImage);
+                    }
+                    return key;
                 }
-                return key;
+
+                return null;
             };
 
             Details(this, EventArgs.Empty);
@@ -61,38 +72,18 @@ namespace KKManager.Cards
             listView.AutoResizeColumns();
         }
 
-        private readonly CardLoader _loader;
-
         public void OpenCardDirectory(DirectoryInfo directory)
         {
             _loader.Read(directory);
+            addressBar.Text = directory.FullName;
         }
 
         private void formMain_Load(object sender, EventArgs e)
         {
-            //InitCards();
-
             listView.Sort(olvColumnModDate, SortOrder.Descending);
         }
 
-        #region Cards
-
-
-        /*private List<ListViewItem> lsvItems = new List<ListViewItem>();
-
-        private List<Size> ListViewCardSizes { get; set; } = new List<Size>
-        {
-            new Size(92, 128),
-            new Size(183, 256)
-        };
-
-        private ImageList activeImageList { get; set; }
-
-        private ConcurrentDictionary<string, Image> masterImageList { get; set; }*/
-
-        #endregion
-
-        private void fastObjectListView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (listView.SelectedObject != null)
                 MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject);
@@ -102,22 +93,72 @@ namespace KKManager.Cards
         {
             listView.View = View.Details;
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-            toolStripViewSelect.Text = detailsToolStripMenuItem.Text;
         }
 
         private void SmallIcons(object sender, EventArgs e)
         {
             listView.View = View.SmallIcon;
-
-            toolStripViewSelect.Text = smallIconsToolStripMenuItem.Text;
         }
 
         private void LargeIcons(object sender, EventArgs e)
         {
             listView.View = View.LargeIcon;
+        }
 
-            toolStripViewSelect.Text = largeIconsToolStripMenuItem.Text;
+        private void OnResizeToolstip(object sender, EventArgs e)
+        {
+            var otherWidth = toolStrip.Items.Cast<ToolStripItem>().Where(x => x.Name != "addressBar").Sum(x => x.Width);
+            var fillWidth = toolStrip.Width - otherWidth - 20;
+            addressBar.Width = fillWidth;
+            addressBar.DropDownWidth = fillWidth;
+        }
+
+        private void ShowOpenFolderDialog(object sender, EventArgs e)
+        {
+            using (var d = new FolderBrowserDialog())
+            {
+                retry:
+                if (d.ShowDialog(this) != DialogResult.OK)
+                    return;
+                if (!TryOpenCardDirectory(d.SelectedPath))
+                    goto retry;
+            }
+        }
+
+        public bool TryOpenCardDirectory(string path)
+        {
+            try
+            {
+                OpenCardDirectory(new DirectoryInfo(path));
+                return true;
+            }
+            catch (SystemException ex)
+            {
+                MessageBox.Show(ex.Message, "Failed to open folder", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenCardDirectory(FemaleCardDir);
+        }
+
+        private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenCardDirectory(MaleCardDir);
+        }
+
+        private void addressBar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                TryOpenCardDirectory(addressBar.Text);
+        }
+
+        private void toolStripButtonGo_Click(object sender, EventArgs e)
+        {
+            TryOpenCardDirectory(addressBar.Text);
         }
     }
 }

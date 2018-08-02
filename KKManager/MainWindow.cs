@@ -63,7 +63,7 @@ namespace KKManager
         {
             CardWindow cardWindow = GetOrCreateWindow<CardWindow>();
             cardWindow.Show(dockPanel1, DockState.Document);
-            cardWindow.OpenCardDirectory(new DirectoryInfo(Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\female")));
+            cardWindow.OpenCardDirectory(CardWindow.FemaleCardDir);
         }
 
         private void sideloaderModsToolStripMenuItem_Click(object sender, EventArgs e)
