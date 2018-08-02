@@ -76,7 +76,10 @@ namespace KKManager.Cards
         {
             _loader.Read(directory);
             addressBar.Text = directory.FullName;
+            CurrentDirectory = directory;
         }
+
+        public DirectoryInfo CurrentDirectory { get; private set; }
 
         private void formMain_Load(object sender, EventArgs e)
         {
@@ -115,13 +118,17 @@ namespace KKManager.Cards
 
         private void ShowOpenFolderDialog(object sender, EventArgs e)
         {
+            var d = ShowCardFolderBrowseDialog(this);
+            if (d != null) TryOpenCardDirectory(d);
+        }
+
+        public static string ShowCardFolderBrowseDialog(IWin32Window owner)
+        {
             using (var d = new FolderBrowserDialog())
             {
-                retry:
-                if (d.ShowDialog(this) != DialogResult.OK)
-                    return;
-                if (!TryOpenCardDirectory(d.SelectedPath))
-                    goto retry;
+                if (d.ShowDialog(owner) != DialogResult.OK)
+                    return null;
+                return d.SelectedPath;
             }
         }
 

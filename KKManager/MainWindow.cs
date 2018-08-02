@@ -26,15 +26,20 @@ namespace KKManager
         /// <param name="createNew">Create new instance if none are present?</param>
         public T GetOrCreateWindow<T>(bool createNew = true) where T : DockContent, new()
         {
-            var w = dockPanel1.Contents.OfType<T>().Concat(dockPanel1.FloatWindows.OfType<T>()).FirstOrDefault();
+            var w = GetWindows<T>().FirstOrDefault();
 
             if (w == null && createNew)
             {
                 w = new T();
-                w.Show(dockPanel1);
+                w.Show(dockPanel);
             }
 
             return w;
+        }
+
+        public IEnumerable<T> GetWindows<T>() where T : DockContent, new()
+        {
+            return dockPanel.Contents.OfType<T>().Concat(dockPanel.FloatWindows.OfType<T>());
         }
 
         public PropertyViewerBase DisplayInPropertyViewer(object obj, bool forceOpen = false)
@@ -53,7 +58,7 @@ namespace KKManager
 
             cardManagerToolStripMenuItem_Click(this, EventArgs.Empty);
 
-            dockPanel1.DockRightPortion = 400;
+            dockPanel.DockRightPortion = 400;
             PropertiesToolWindow propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
             propertiesToolWindow.DockState = DockState.DockRight;
 
@@ -62,13 +67,58 @@ namespace KKManager
         private void cardManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CardWindow cardWindow = GetOrCreateWindow<CardWindow>();
-            cardWindow.Show(dockPanel1, DockState.Document);
+            cardWindow.Show(dockPanel, DockState.Document);
             cardWindow.OpenCardDirectory(CardWindow.FemaleCardDir);
         }
 
         private void sideloaderModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel1, DockState.Document);
+            GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel, DockState.Document);
+        }
+
+
+
+        private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenOrGetCardWindow(CardWindow.FemaleCardDir);
+        }
+
+        private void openMaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenOrGetCardWindow(CardWindow.MaleCardDir);
+        }
+
+        private CardWindow OpenOrGetCardWindow(string targetDir)
+        {
+            var existing = GetWindows<CardWindow>().FirstOrDefault(x => string.Equals(
+                targetDir, x.CurrentDirectory.FullName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (existing != null)
+            {
+                existing.Focus();
+                return existing;
+            }
+
+            var cardWindow = GetOrCreateWindow<CardWindow>();
+            cardWindow.Show(dockPanel, DockState.Document);
+            cardWindow.TryOpenCardDirectory(targetDir);
+            return cardWindow;
+        }
+
+        private CardWindow OpenOrGetCardWindow(DirectoryInfo targetDir)
+        {
+            return OpenOrGetCardWindow(targetDir.FullName);
+        }
+
+        private void otherToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dir = CardWindow.ShowCardFolderBrowseDialog(this);
+            if (dir != null)
+            {
+                var w = new CardWindow();
+                w.Show(dockPanel, DockState.Document);
+                w.TryOpenCardDirectory(dir);
+            }
         }
     }
 }
