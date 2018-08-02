@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Cards;
 using KKManager.Sideloader;
@@ -17,10 +12,25 @@ namespace KKManager
 {
     public partial class MainWindow : Form
     {
+        public MainWindow()
+        {
+            Instance = this;
+
+            InitializeComponent();
+
+            GetOrCreateWindow<SideloaderModsWindow>();
+
+            openFemaleCardFolderToolStripMenuItem_Click(this, EventArgs.Empty);
+
+            dockPanel.DockRightPortion = 400;
+            var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
+            propertiesToolWindow.DockState = DockState.DockRight;
+        }
+
         public static MainWindow Instance { get; private set; }
 
         /// <summary>
-        /// Get already existing dockable window or open a new instance of it if none are present.
+        ///     Get already existing dockable window or open a new instance of it if none are present.
         /// </summary>
         /// <typeparam name="T">Type of the window to open</typeparam>
         /// <param name="createNew">Create new instance if none are present?</param>
@@ -48,36 +58,16 @@ namespace KKManager
             return viewer?.ShowProperties(obj);
         }
 
-        public MainWindow()
+        public CardWindow OpenOrGetCardWindow(DirectoryInfo targetDir)
         {
-            Instance = this;
-
-            InitializeComponent();
-
-            GetOrCreateWindow<SideloaderModsWindow>();
-
-            cardManagerToolStripMenuItem_Click(this, EventArgs.Empty);
-
-            dockPanel.DockRightPortion = 400;
-            PropertiesToolWindow propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
-            propertiesToolWindow.DockState = DockState.DockRight;
-
-        }
-
-        private void cardManagerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CardWindow cardWindow = GetOrCreateWindow<CardWindow>();
-            cardWindow.Show(dockPanel, DockState.Document);
-            cardWindow.OpenCardDirectory(CardWindow.FemaleCardDir);
+            return OpenOrGetCardWindow(targetDir.FullName);
         }
 
         private void sideloaderModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel, DockState.Document);
         }
-
-
-
+        
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenOrGetCardWindow(CardWindow.FemaleCardDir);
@@ -99,15 +89,10 @@ namespace KKManager
                 return existing;
             }
 
-            var cardWindow = GetOrCreateWindow<CardWindow>();
+            var cardWindow = new CardWindow();
             cardWindow.Show(dockPanel, DockState.Document);
             cardWindow.TryOpenCardDirectory(targetDir);
             return cardWindow;
-        }
-
-        private CardWindow OpenOrGetCardWindow(DirectoryInfo targetDir)
-        {
-            return OpenOrGetCardWindow(targetDir.FullName);
         }
 
         private void otherToolStripMenuItem_Click(object sender, EventArgs e)

@@ -77,6 +77,7 @@
     <Compile Include="Cards\CardWindow.Designer.cs">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cards\FileDragSource.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

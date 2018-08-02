@@ -23,13 +23,26 @@ namespace KKManager.Cards
         {
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
+
             _loader = new CardLoader();
             _loader.CardsChanged += Loader_CardsChanged;
+
+            SetupDragAndDrop();
+            SetupImageLists();
 
             olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.GetCharaName();
             olvColumnFilename.AspectGetter = rowObject => (rowObject as Card)?.CardFile.Name;
             olvColumnModDate.AspectGetter = rowObject => (rowObject as Card)?.CardFile.LastWriteTime;
 
+            Details(this, EventArgs.Empty);
+
+            ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
+        }
+
+        public DirectoryInfo CurrentDirectory { get; private set; }
+
+        private void SetupImageLists()
+        {
             listView.LargeImageList = new ImageList
             {
                 ImageSize = new Size(183, 256),
@@ -42,7 +55,7 @@ namespace KKManager.Cards
                 ColorDepth = ColorDepth.Depth24Bit
             };
 
-            olvColumnName.ImageGetter = delegate(object rowObject)
+            olvColumnName.ImageGetter = delegate (object rowObject)
             {
                 if (rowObject is Card card)
                 {
@@ -57,10 +70,96 @@ namespace KKManager.Cards
 
                 return null;
             };
+        }
 
-            Details(this, EventArgs.Empty);
+        private void SetupDragAndDrop()
+        {
+            var simpleDropSink = new SimpleDropSink
+            {
+                AcceptExternal = true,
+                EnableFeedback = false,
+                UseDefaultCursors = true
+            };
+            simpleDropSink.Dropped += SimpleDropSink_Dropped;
+            simpleDropSink.CanDrop += SimpleDropSink_CanDrop;
+            listView.DropSink = simpleDropSink;
+            listView.AllowDrop = true;
 
-            ((OLVColumn) listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
+            var fileDragSource = new FileDragSource();
+            fileDragSource.AfterDrag += (sender, args) => RefreshCurrentFolder();
+            listView.DragSource = fileDragSource;
+        }
+
+        private void SimpleDropSink_CanDrop(object sender, OlvDropEventArgs e)
+        {
+            void SetDropAllow(SimpleDropSink s, bool can)
+            {
+                s.CanDropOnBackground = can;
+                s.CanDropOnItem = can;
+                s.CanDropOnSubItem = can;
+            }
+
+            if (e.DataObject is DataObject dataObject)
+            {
+                var files = dataObject.GetFileDropList();
+                foreach (var file in files)
+                {
+                    if (Directory.Exists(file))
+                    {
+                        SetDropAllow(e.DropSink, true);
+                        e.Effect = DragDropEffects.Link;
+                        break;
+                    }
+                    if (CurrentDirectory != null && CurrentDirectory.Exists && File.Exists(file))
+                    {
+                        SetDropAllow(e.DropSink, true);
+                        e.Effect = ModifierKeys.HasFlag(Keys.Control) ? DragDropEffects.Copy : DragDropEffects.Move;
+                    }
+                    else
+                    {
+                        SetDropAllow(e.DropSink, false);
+                    }
+                }
+            }
+        }
+
+        private void SimpleDropSink_Dropped(object sender, OlvDropEventArgs e)
+        {
+            if (e.DataObject is DataObject dataObject)
+            {
+                var files = dataObject.GetFileDropList();
+
+                foreach (var file in files)
+                {
+                    switch (e.Effect)
+                    {
+                        case DragDropEffects.Link:
+                            TryOpenCardDirectory(file);
+                            return;
+                        case DragDropEffects.Copy:
+                            File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                            RefreshCurrentFolder();
+                            break;
+                        case DragDropEffects.Move:
+                            File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                            RefreshCurrentFolder();
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void RefreshCurrentFolder()
+        {
+            if (CurrentDirectory != null && CurrentDirectory.Exists)
+            {
+                _loader.Read(CurrentDirectory);
+            }
+            else
+            {
+                CurrentDirectory = null;
+                _loader.Clear();
+            }
         }
 
         private void Loader_CardsChanged(object sender, EventArgs e)
@@ -75,11 +174,13 @@ namespace KKManager.Cards
         public void OpenCardDirectory(DirectoryInfo directory)
         {
             _loader.Read(directory);
+
             addressBar.Text = directory.FullName;
             CurrentDirectory = directory;
-        }
 
-        public DirectoryInfo CurrentDirectory { get; private set; }
+            Text = CurrentDirectory.Name;
+            ToolTipText = CurrentDirectory.FullName;
+        }
 
         private void formMain_Load(object sender, EventArgs e)
         {

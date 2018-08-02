@@ -37,6 +37,12 @@ namespace KKManager.Cards
             OnCardsChanged();
         }
 
+        public void Clear()
+        {
+            _cards.Clear();
+            OnCardsChanged();
+        }
+
         public event EventHandler CardsChanged;
 
         protected void OnCardsChanged()

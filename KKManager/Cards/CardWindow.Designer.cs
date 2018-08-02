@@ -48,6 +48,7 @@ namespace KKManager.Cards
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.addressBar = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
             this.toolStripOpenDropdown = new System.Windows.Forms.ToolStripSplitButton();
             this.femaleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.maleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +58,6 @@ namespace KKManager.Cards
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
@@ -199,8 +199,18 @@ namespace KKManager.Cards
             this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.addressBar.AutoSize = false;
             this.addressBar.Name = "addressBar";
-            this.addressBar.Size = new System.Drawing.Size(200, 25);
+            this.addressBar.Size = new System.Drawing.Size(200, 23);
             this.addressBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addressBar_KeyDown);
+            // 
+            // toolStripButtonGo
+            // 
+            this.toolStripButtonGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonGo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGo.Image")));
+            this.toolStripButtonGo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGo.Name = "toolStripButtonGo";
+            this.toolStripButtonGo.Size = new System.Drawing.Size(26, 22);
+            this.toolStripButtonGo.Text = "Go";
+            this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // toolStripOpenDropdown
             // 
@@ -254,33 +264,23 @@ namespace KKManager.Cards
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
             // smallIconsToolStripMenuItem
             // 
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
-            // 
-            // toolStripButtonGo
-            // 
-            this.toolStripButtonGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonGo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGo.Image")));
-            this.toolStripButtonGo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGo.Name = "toolStripButtonGo";
-            this.toolStripButtonGo.Size = new System.Drawing.Size(26, 22);
-            this.toolStripButtonGo.Text = "Go";
-            this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // CardWindow
             // 
@@ -291,6 +291,7 @@ namespace KKManager.Cards
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.statusStrip1);
             this.Name = "CardWindow";
+            this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
             this.Text = "Cards";
             this.Load += new System.EventHandler(this.formMain_Load);
             this.statusStrip1.ResumeLayout(false);
