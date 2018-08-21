@@ -15,7 +15,7 @@ namespace KKManager.Sideloader.Data
         {
             var results = new List<SideloaderMod>();
 
-            foreach (var file in Directory.GetFiles(directory, "*.zip", SearchOption.TopDirectoryOnly))
+            foreach (var file in Directory.GetFiles(directory, "*.zip", SearchOption.AllDirectories))
             {
                 try
                 {
