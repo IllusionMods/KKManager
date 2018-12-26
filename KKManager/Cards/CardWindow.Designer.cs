@@ -57,6 +57,7 @@ namespace KKManager.Cards
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonSegregate = new System.Windows.Forms.ToolStripButton();
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -160,7 +161,8 @@ namespace KKManager.Cards
             this.toolStripSeparator3,
             this.toolStripOpenDropdown,
             this.toolStripSeparator1,
-            this.toolStripViewSelect});
+            this.toolStripViewSelect,
+            this.toolStripButtonSegregate});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1024, 25);
@@ -272,6 +274,15 @@ namespace KKManager.Cards
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
+            // toolStripButtonSegregate
+            // 
+            this.toolStripButtonSegregate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSegregate.Image")));
+            this.toolStripButtonSegregate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSegregate.Name = "toolStripButtonSegregate";
+            this.toolStripButtonSegregate.Size = new System.Drawing.Size(114, 22);
+            this.toolStripButtonSegregate.Text = "Segregate by sex";
+            this.toolStripButtonSegregate.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
+            // 
             // CardWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,6 +329,7 @@ namespace KKManager.Cards
         private ToolStripButton toolStripButtonGo;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton toolStripButtonSegregate;
     }
 }
 

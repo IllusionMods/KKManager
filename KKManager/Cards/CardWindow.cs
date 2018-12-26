@@ -285,5 +285,17 @@ namespace KKManager.Cards
         {
             RefreshCurrentFolder();
         }
+
+        private void toolStripButtonSegregate_Click(object sender, EventArgs e)
+        {
+            foreach (var card in _loader.Cards)
+            {
+                string dirpath = Path.Combine(_currentDirectory.FullName, card.Parameter.sex == 0 ? "male" : "female");
+                Directory.CreateDirectory(dirpath);
+                card.CardFile.MoveTo(Path.Combine(dirpath, card.CardFile.Name));
+            }
+
+            OpenCardDirectory(_currentDirectory.GetDirectories().First());
+        }
     }
 }
