@@ -11,21 +11,24 @@ namespace KKManager.Sideloader.Data
 {
     public class SideloaderModLoader
     {
-        public static List<SideloaderMod> ReadSideloaderMods(string directory)
+        public static List<SideloaderMod> TryReadSideloaderMods(string directory)
         {
             var results = new List<SideloaderMod>();
 
-            foreach (var file in Directory.GetFiles(directory, "*.zip", SearchOption.AllDirectories))
+            if (Directory.Exists(directory))
             {
-                try
+                foreach (var file in Directory.GetFiles(directory, "*.zip", SearchOption.AllDirectories))
                 {
-                    results.Add(LoadFromFile(file));
-                }
-                catch (SystemException ex)
-                {
-                    Console.WriteLine(ex);
-                    MessageBox.Show($"Failed to load mod from \"{file}\" with error: {ex.Message}", 
-                        "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    try
+                    {
+                        results.Add(LoadFromFile(file));
+                    }
+                    catch (SystemException ex)
+                    {
+                        Console.WriteLine(ex);
+                        MessageBox.Show($"Failed to load mod from \"{file}\" with error: {ex.Message}",
+                            "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
 
@@ -60,23 +63,25 @@ namespace KKManager.Sideloader.Data
                     m.Website = manifest.Root.Element("website")?.Value;
                 }
 
+                var images = new List<Image>();
                 foreach (var imageFile in zf.Entries
                     .Where(x => ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
                                 ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase))
-                    .OrderBy(x=>x.FileName))
+                    .OrderBy(x => x.FileName))
                 {
                     try
                     {
                         using (var stream = imageFile.OpenReader())
-                        {
-                            m.Images.Add(Image.FromStream(stream));
-                        }
+                            images.Add(Image.FromStream(stream));
                     }
                     catch (SystemException ex)
                     {
                         Console.WriteLine($"Failed to load image \"{imageFile.FileName}\" from mod archive \"{zf.Name}\" with error: {ex.Message}");
                     }
                 }
+                m.Images = images;
+
+                m.Contents = zf.EntryFileNames.Select(x => x.Replace('/', '\\')).ToList();
             }
 
             return m;

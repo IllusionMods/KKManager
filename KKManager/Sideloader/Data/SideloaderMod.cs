@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 
@@ -17,7 +18,13 @@ namespace KKManager.Sideloader.Data
         public string Website { get; internal set; }
         public string Guid { get; internal set; }
 
-        public List<Image> Images { get; } = new List<Image>();
+        [Browsable(false)]
+        public string FileName => Location.Name;
+        [Browsable(false)]
+        public IReadOnlyList<Image> Images { get; internal set; }
+
+        [Browsable(false)]
+        public IReadOnlyList<string> Contents { get; internal set; }
 
         public Uri TryGetWebsiteUri()
         {

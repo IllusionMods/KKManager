@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using KKManager.Sideloader.Data;
 
 namespace KKManager.ToolWindows.Properties.Viewers
@@ -14,7 +15,8 @@ namespace KKManager.ToolWindows.Properties.Viewers
         {
             InitializeComponent();
 
-            SupportedTypes = new[] {typeof(SideloaderMod)};
+            SupportedTypes = new[] { typeof(SideloaderMod) };
+
         }
 
         private SideloaderMod CurrentObject
@@ -27,13 +29,27 @@ namespace KKManager.ToolWindows.Properties.Viewers
                 propertyGrid1.SelectedObject = _currentObject;
                 pictureBox1.Image = _currentObject?.Images.FirstOrDefault();
                 _currentImageId = 0;
+
+
+                listView1.Items.Clear();
+
+                if (_currentObject != null)
+                {
+                    listView1.Items.AddRange(_currentObject.Contents
+                        .Where(x => !x.EndsWith("\\"))
+                        .OrderBy(x => x)
+                        .Select(x => new ListViewItem(x))
+                        .ToArray());
+
+                    columnHeaderPath.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                }
             }
         }
-        
+
         public override void DisplayObjectProperties(object obj)
         {
             Debug.Assert(obj is SideloaderMod);
-            CurrentObject = (SideloaderMod) obj;
+            CurrentObject = (SideloaderMod)obj;
         }
 
         private void buttonImageRight_Click(object sender, EventArgs e)

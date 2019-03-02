@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using KKManager.Cards;
 using KKManager.Sideloader;
@@ -14,6 +15,8 @@ namespace KKManager
     {
         public MainWindow()
         {
+            Program.MainSc = SynchronizationContext.Current;
+
             Instance = this;
 
             InitializeComponent();
