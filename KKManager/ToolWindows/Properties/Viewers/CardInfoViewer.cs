@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using KKManager.Cards.Data;
-using KKManager.Cards.Data.Internal;
+﻿using KKManager.Cards.Data;
 
 namespace KKManager.ToolWindows.Properties.Viewers
 {

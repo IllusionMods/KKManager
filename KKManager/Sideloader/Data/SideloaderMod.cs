@@ -6,9 +6,9 @@ using System.IO;
 
 namespace KKManager.Sideloader.Data
 {
-    public class SideloaderMod
+    public class SideloaderModInfo
     {
-        internal SideloaderMod() { }
+        internal SideloaderModInfo() { }
 
         public FileInfo Location { get; internal set; }
         public string Name { get; internal set; }

@@ -11,9 +11,9 @@ namespace KKManager.Sideloader.Data
 {
     public class SideloaderModLoader
     {
-        public static List<SideloaderMod> TryReadSideloaderMods(string directory)
+        public static List<SideloaderModInfo> TryReadSideloaderMods(string directory)
         {
-            var results = new List<SideloaderMod>();
+            var results = new List<SideloaderModInfo>();
 
             if (Directory.Exists(directory))
             {
@@ -35,9 +35,9 @@ namespace KKManager.Sideloader.Data
             return results;
         }
 
-        public static SideloaderMod LoadFromFile(string filename)
+        public static SideloaderModInfo LoadFromFile(string filename)
         {
-            var m = new SideloaderMod();
+            var m = new SideloaderModInfo();
             m.Location = new FileInfo(filename);
 
             using (var zf = ZipFile.Read(m.Location.FullName))

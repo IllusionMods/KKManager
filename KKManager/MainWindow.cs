@@ -23,12 +23,14 @@ namespace KKManager
 
             GetOrCreateWindow<SideloaderModsWindow>();
 
-            var fc = OpenOrGetCardWindow(CardWindow.FemaleCardDir);
-            OpenOrGetCardWindow(CardWindow.MaleCardDir).Show(fc.Pane, DockAlignment.Bottom, 0.4);
+            //var fc = OpenOrGetCardWindow(CardWindow.FemaleCardDir);
+            //OpenOrGetCardWindow(CardWindow.MaleCardDir).Show(fc.Pane, DockAlignment.Bottom, 0.4);
 
             dockPanel.DockRightPortion = 400;
             var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
             propertiesToolWindow.DockState = DockState.DockRight;
+
+            GetOrCreateWindow<PluginsWindow>();
         }
 
         public static MainWindow Instance { get; private set; }

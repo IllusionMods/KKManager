@@ -9,17 +9,16 @@ namespace KKManager.ToolWindows.Properties.Viewers
     public partial class SideloaderViewerBase : PropertyViewerBase
     {
         private int _currentImageId;
-        private SideloaderMod _currentObject;
+        private SideloaderModInfo _currentObject;
 
         public SideloaderViewerBase()
         {
             InitializeComponent();
 
-            SupportedTypes = new[] { typeof(SideloaderMod) };
-
+            SupportedTypes = new[] { typeof(SideloaderModInfo) };
         }
 
-        private SideloaderMod CurrentObject
+        private SideloaderModInfo CurrentObject
         {
             get => _currentObject;
             set
@@ -29,8 +28,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
                 propertyGrid1.SelectedObject = _currentObject;
                 pictureBox1.Image = _currentObject?.Images.FirstOrDefault();
                 _currentImageId = 0;
-
-
+                
                 listView1.Items.Clear();
 
                 if (_currentObject != null)
@@ -48,8 +46,8 @@ namespace KKManager.ToolWindows.Properties.Viewers
 
         public override void DisplayObjectProperties(object obj)
         {
-            Debug.Assert(obj is SideloaderMod);
-            CurrentObject = (SideloaderMod)obj;
+            Debug.Assert(obj is SideloaderModInfo);
+            CurrentObject = (SideloaderModInfo)obj;
         }
 
         private void buttonImageRight_Click(object sender, EventArgs e)
