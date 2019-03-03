@@ -68,13 +68,13 @@ namespace KKManager
                                 .Where(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
                                 .ToList();
 
-                            FileInfo location = new FileInfo(dll);
+                            var location = new FileInfo(dll);
                             foreach (var attrib in attribs)
                             {
                                 plugins.Add(new PluginInfo(
-                                    attrib.ConstructorArguments[1].Value.ToString(),
-                                    attrib.ConstructorArguments[2].Value.ToString(),
-                                    attrib.ConstructorArguments[0].Value.ToString(),
+                                    attrib.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
+                                    attrib.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
+                                    attrib.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
                                     location));
                             }
                         }
