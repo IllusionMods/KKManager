@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using System.Threading.Tasks;
 using KKManager.Plugins.Data;
 using KKManager.Sideloader.Data;
+using Mono.Cecil;
 
 namespace KKManager
 {
@@ -55,55 +54,31 @@ namespace KKManager
                 () =>
                 {
                     var modDir = Path.Combine(Program.KoikatuDirectory.FullName, "bepinex");
-                    string dependancyDir = Path.Combine(Program.KoikatuDirectory.FullName, "Koikatu_Data");
-                    string[] dependancies = Directory.GetFiles(dependancyDir, "*.dll", SearchOption.AllDirectories);
                     var dlls = Directory.GetFiles(modDir, "*.dll", SearchOption.AllDirectories);
-
-                    foreach (var dll in dependancies)
-                    {
-                        try
-                        {
-                            Assembly.ReflectionOnlyLoadFrom(dll);
-                        }
-                        catch { }
-                    }
-
-                    var loadedAsses = new List<Assembly>();
+                    
+                    var plugins = new List<PluginInfo>();
                     foreach (var dll in dlls)
                     {
                         try
                         {
-                            loadedAsses.Add(Assembly.ReflectionOnlyLoadFrom(dll));
-                        }
-                        catch { }
-                    }
-
-                    var plugins = new List<PluginInfo>();
-                    foreach (var ass in loadedAsses)
-                    {
-                        try
-                        {
-                            // BUG: Assembly.ReflectionOnlyLoad Ignores Assembly Binding Redirects, plugins compiled against different version of BepInEx fail to load
-                            // http://blogs.microsoft.co.il/sasha/2010/06/09/assemblyreflectiononlyload-ignores-assembly-binding-redirects/
-                            var assAttribs = ass.GetTypes()
-                                .Where(x => x.IsClass)
-                                .SelectMany(x => x.CustomAttributes.Where(u => u.AttributeType.FullName == "BepInEx.BepInPlugin"))
+                            var md = ModuleDefinition.ReadModule(dll);
+                            var attribs = md.Types
+                                .Where(x => x.HasCustomAttributes && x.IsClass)
+                                .SelectMany(x => x.CustomAttributes)
+                                .Where(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
                                 .ToList();
 
-                            if (assAttribs.Count == 0) continue;
-
-                            FileInfo location = new FileInfo(ass.Location);
-
-                            plugins.AddRange(assAttribs.Select(x => new PluginInfo(x.ConstructorArguments[1].Value.ToString(), x.ConstructorArguments[2].Value.ToString(), x.ConstructorArguments[0].Value.ToString(), location)));
+                            FileInfo location = new FileInfo(dll);
+                            foreach (var attrib in attribs)
+                            {
+                                plugins.Add(new PluginInfo(
+                                    attrib.ConstructorArguments[1].Value.ToString(),
+                                    attrib.ConstructorArguments[2].Value.ToString(),
+                                    attrib.ConstructorArguments[0].Value.ToString(),
+                                    location));
+                            }
                         }
-                        catch
-                        {
-                            FileInfo location = new FileInfo(ass.Location);
-                            var ver = FileVersionInfo.GetVersionInfo(location.FullName);
-                            string version = ver.FileVersion ?? ver.ProductVersion;
-                            if (version == "1.0.0.0") version = string.Empty;
-                            plugins.Add(new PluginInfo(ver.ProductName ?? ver.FileName, version, "ERROR: Failed to load assembly", location));
-                        }
+                        catch { }
                     }
 
                     _plugins.OnNext(plugins);
