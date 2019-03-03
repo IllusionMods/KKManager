@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using KKManager.Plugins.Data;
 using KKManager.Sideloader.Data;
-using Mono.Cecil;
 
 namespace KKManager
 {
     internal static class ModSearcher
     {
-        private static readonly BehaviorSubject<IReadOnlyCollection<SideloaderModInfo>> _sideloaderMods;
         private static readonly BehaviorSubject<IReadOnlyCollection<PluginInfo>> _plugins;
+        private static readonly BehaviorSubject<IReadOnlyCollection<SideloaderModInfo>> _sideloaderMods;
+
+        private static bool _refreshRunning;
 
         static ModSearcher()
         {
@@ -22,8 +22,9 @@ namespace KKManager
             _plugins = new BehaviorSubject<IReadOnlyCollection<PluginInfo>>(new PluginInfo[] { });
         }
 
-        public static IObservable<IReadOnlyCollection<SideloaderModInfo>> SideloaderMods => _sideloaderMods.ObserveOn(Program.MainSc);
-        public static IObservable<IReadOnlyCollection<PluginInfo>> Plugins => _plugins.ObserveOn(Program.MainSc);
+        public static IObservable<IReadOnlyCollection<PluginInfo>> Plugins => _plugins.ObserveOn(Program.MainSynchronizationContext);
+
+        public static IObservable<IReadOnlyCollection<SideloaderModInfo>> SideloaderMods => _sideloaderMods.ObserveOn(Program.MainSynchronizationContext);
 
         public static void StartModsRefresh()
         {
@@ -32,57 +33,31 @@ namespace KKManager
                 if (!_refreshRunning)
                 {
                     _refreshRunning = true;
-                    Task.Run((Action)RefreshMods);
+                    Task.Run((Action) RefreshMods);
                 }
             }
         }
 
-        private static bool _refreshRunning;
+        private static void LoadPlugins()
+        {
+            var modDir = Path.Combine(Program.KoikatuDirectory.FullName, "bepinex");
+            var plugins = PluginLoader.TryLoadPlugins(modDir);
+
+            _plugins.OnNext(plugins);
+        }
+
+        private static void LoadSideloaderMods()
+        {
+            var modDir = Path.Combine(Program.KoikatuDirectory.FullName, "mods");
+            var mods = SideloaderModLoader.TryReadSideloaderMods(modDir);
+
+            _sideloaderMods.OnNext(mods);
+        }
 
         private static void RefreshMods()
         {
-            var sideloaderTask = Task.Run(
-                () =>
-                {
-                    var modDir = Path.Combine(Program.KoikatuDirectory.FullName, "mods");
-                    var mods = SideloaderModLoader.TryReadSideloaderMods(modDir);
-
-                    _sideloaderMods.OnNext(mods);
-                });
-
-            var pluinsTask = Task.Run(
-                () =>
-                {
-                    var modDir = Path.Combine(Program.KoikatuDirectory.FullName, "bepinex");
-                    var dlls = Directory.GetFiles(modDir, "*.dll", SearchOption.AllDirectories);
-                    
-                    var plugins = new List<PluginInfo>();
-                    foreach (var dll in dlls)
-                    {
-                        try
-                        {
-                            var md = ModuleDefinition.ReadModule(dll);
-                            var attribs = md.Types
-                                .Where(x => x.HasCustomAttributes && x.IsClass)
-                                .SelectMany(x => x.CustomAttributes)
-                                .Where(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
-                                .ToList();
-
-                            var location = new FileInfo(dll);
-                            foreach (var attrib in attribs)
-                            {
-                                plugins.Add(new PluginInfo(
-                                    attrib.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
-                                    attrib.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
-                                    attrib.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
-                                    location));
-                            }
-                        }
-                        catch { }
-                    }
-
-                    _plugins.OnNext(plugins);
-                });
+            var sideloaderTask = Task.Run((Action) LoadSideloaderMods);
+            var pluinsTask = Task.Run((Action) LoadPlugins);
 
             Task.WaitAll(sideloaderTask, pluinsTask);
 

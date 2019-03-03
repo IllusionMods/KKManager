@@ -173,7 +173,7 @@ namespace KKManager.Cards
             // addressBar
             // 
             this.addressBar.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
+            this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.addressBar.AutoSize = false;
             this.addressBar.Name = "addressBar";
             this.addressBar.Size = new System.Drawing.Size(200, 23);

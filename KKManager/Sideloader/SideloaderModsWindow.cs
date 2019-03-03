@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using KKManager.Sideloader.Data;
+using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Sideloader
@@ -16,7 +16,8 @@ namespace KKManager.Sideloader
         {
             InitializeComponent();
 
-            olvColumnName.GroupKeyGetter = rowObject => char.ToUpperInvariant(((SideloaderModInfo)rowObject).Name.FirstOrDefault());
+            olvColumnName.GroupKeyGetter = rowObject => ListTools.GetFirstCharacter(((SideloaderModInfo)rowObject).Name);
+            olvColumnGuid.GroupKeyGetter = rowObject => ListTools.GetGuidGroupKey(((SideloaderModInfo)rowObject).Guid);
 
             objectListView1.EmptyListMsgFont = new Font(Font.FontFamily, 24);
         }

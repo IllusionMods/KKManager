@@ -9,7 +9,19 @@ namespace KKManager
 {
     internal static class Program
     {
-        public static SynchronizationContext MainSc { get; set; }
+        /// <summary>
+        ///     The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        private static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainWindow());
+            Settings.Default.Save();
+        }
+
+        public static SynchronizationContext MainSynchronizationContext { get; set; }
 
         static Program()
         {
@@ -67,19 +79,14 @@ namespace KKManager
 
         private static bool IsValidGamePath(string path)
         {
-            return !string.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
-        }
-
-        /// <summary>
-        ///     The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        private static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
-            Settings.Default.Save();
+            try
+            {
+                return !string.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

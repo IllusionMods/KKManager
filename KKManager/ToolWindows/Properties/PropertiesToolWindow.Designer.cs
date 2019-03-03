@@ -44,7 +44,7 @@
             this.ClientSize = new System.Drawing.Size(341, 321);
             this.Controls.Add(this.propViewerContainer);
             this.Name = "PropertiesToolWindow";
-            this.Text = "PropertiesToolWindow";
+            this.Text = "Properties";
             this.ResumeLayout(false);
 
         }

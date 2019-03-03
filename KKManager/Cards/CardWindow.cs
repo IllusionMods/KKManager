@@ -40,6 +40,9 @@ namespace KKManager.Cards
             ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
         }
 
+        /// <summary>
+        /// Use <see cref="OpenCardDirectory"/> to change
+        /// </summary>
         public DirectoryInfo CurrentDirectory
         {
             get { return _currentDirectory; }
@@ -296,6 +299,26 @@ namespace KKManager.Cards
             }
 
             OpenCardDirectory(_currentDirectory.GetDirectories().First());
+        }
+
+        protected override string GetPersistString()
+        {
+            return base.GetPersistString() + "|||" + _currentDirectory.FullName;
+        }
+
+        public static CardWindow TryLoadFromPersistString(string ps)
+        {
+            var parts = ps.Split(new[] { "|||" }, StringSplitOptions.None);
+            if (parts.Length == 2)
+            {
+                if (parts[0] == typeof(CardWindow).ToString())
+                {
+                    CardWindow cardWindow = new CardWindow();
+                    cardWindow.OpenCardDirectory(new DirectoryInfo(parts[1]));
+                    return cardWindow;
+                }
+            }
+            return null;
         }
     }
 }

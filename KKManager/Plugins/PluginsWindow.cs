@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using KKManager.Plugins.Data;
-using KKManager.Sideloader.Data;
+using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace KKManager.Sideloader
+namespace KKManager.Plugins
 {
     public sealed partial class PluginsWindow : DockContent
     {
         private IDisposable _subscription;
-        
+
         public PluginsWindow()
         {
             InitializeComponent();
 
-            olvColumnName.GroupKeyGetter = rowObject => char.ToUpperInvariant(((PluginInfo)rowObject).Name.FirstOrDefault());
+            olvColumnName.GroupKeyGetter = rowObject => ListTools.GetFirstCharacter(((PluginInfo)rowObject).Name);
+            olvColumnGuid.GroupKeyGetter = rowObject => ListTools.GetGuidGroupKey(((PluginInfo)rowObject).Guid);
 
             objectListView1.EmptyListMsgFont = new Font(Font.FontFamily, 24);
         }

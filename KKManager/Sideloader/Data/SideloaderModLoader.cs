@@ -9,15 +9,20 @@ using Ionic.Zip;
 
 namespace KKManager.Sideloader.Data
 {
-    public class SideloaderModLoader
+    public static class SideloaderModLoader
     {
-        public static List<SideloaderModInfo> TryReadSideloaderMods(string directory)
+        /// <summary>
+        /// Gather information about valid plugins inside the selected directory
+        /// </summary>
+        /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
+        /// <param name="searchOption">Where to search</param>
+        public static List<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, SearchOption searchOption = SearchOption.AllDirectories)
         {
             var results = new List<SideloaderModInfo>();
 
-            if (Directory.Exists(directory))
+            if (Directory.Exists(modDirectory))
             {
-                foreach (var file in Directory.GetFiles(directory, "*.zip", SearchOption.AllDirectories))
+                foreach (var file in Directory.GetFiles(modDirectory, "*.zip", searchOption))
                 {
                     try
                     {
@@ -64,15 +69,19 @@ namespace KKManager.Sideloader.Data
                 }
 
                 var images = new List<Image>();
+                // TODO load from drive instead of caching to ram
                 foreach (var imageFile in zf.Entries
                     .Where(x => ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
                                 ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase))
-                    .OrderBy(x => x.FileName))
+                    .OrderBy(x => x.FileName).Take(3))
                 {
                     try
                     {
                         using (var stream = imageFile.OpenReader())
-                            images.Add(Image.FromStream(stream));
+                        using (var img = Image.FromStream(stream))
+                        {
+                            images.Add(img.GetThumbnailImage(200, 200, null, IntPtr.Zero));
+                        }
                     }
                     catch (SystemException ex)
                     {

@@ -62,6 +62,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.DimGray;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(26, 16);
             this.pictureBox1.Name = "pictureBox1";
@@ -109,6 +110,7 @@
             // 
             // propertyGrid1
             // 
+            this.propertyGrid1.DisabledItemForeColor = System.Drawing.SystemColors.ControlText;
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Top;
             this.propertyGrid1.HelpVisible = false;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 16);

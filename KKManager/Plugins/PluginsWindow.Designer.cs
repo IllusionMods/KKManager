@@ -1,4 +1,4 @@
-﻿namespace KKManager.Sideloader
+﻿namespace KKManager.Plugins
 {
     sealed partial class PluginsWindow
     {

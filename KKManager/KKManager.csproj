@@ -96,7 +96,14 @@
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Cards\FileDragSource.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Plugins\Data\PluginLoader.cs" />
+    <Compile Include="ToolWindows\Properties\Viewers\GenericViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\GenericViewer.Designer.cs">
+      <DependentUpon>GenericViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Util\Extensions.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +150,7 @@
     <Compile Include="ToolWindows\Properties\Viewers\SideloaderViewer.Designer.cs">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Util\ListTools.cs" />
     <EmbeddedResource Include="Cards\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -167,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ToolWindows\Properties\PropertiesToolWindow.resx">
       <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\Properties\Viewers\GenericViewer.resx">
+      <DependentUpon>GenericViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolWindows\Properties\Viewers\CardInfoViewer.resx">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
