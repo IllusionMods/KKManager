@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +21,8 @@ namespace KKManager
     {
         public MainWindow()
         {
+            Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+
             Program.MainSynchronizationContext = SynchronizationContext.Current;
 
             Instance = this;
@@ -110,6 +114,7 @@ namespace KKManager
             }
             catch { }
 
+
             GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<PluginsWindow>();
 
@@ -176,6 +181,11 @@ namespace KKManager
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void readmeAndSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/bbepis/KKManager");
         }
     }
 }
