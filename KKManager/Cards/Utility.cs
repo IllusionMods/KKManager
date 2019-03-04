@@ -4,7 +4,57 @@ namespace KKManager.Cards
 {
 	public static class Utility
 	{
-		public const int BufferSize = 4096;
+        public static string GetPersonalityName(int personality)
+	    {
+	        string[] personalityLookup = new string[]{"Sexy",
+	            "Ojousama",
+	            "Snobby",
+	            "Kouhai",
+	            "Mysterious",
+	            "Weirdo",
+	            "Yamato Nadeshiko",
+	            "Tomboy",
+	            "Pure",
+	            "Simple",
+	            "Delusional",
+	            "Motherly",
+	            "Big Sisterly",
+	            "Gyaru",
+	            "Delinquent",
+	            "Wild",
+	            "Wannabe",
+	            "Reluctant",
+	            "Jinxed",
+	            "Bookish",
+	            "Timid",
+	            "Typical Schoolgirl",
+	            "Trendy",
+	            "Otaku",
+	            "Yandere",
+	            "Lazy",
+	            "Quiet",
+	            "Stubborn",
+	            "Old-Fashioned",
+	            "Humble",
+	            "Friendly",
+	            "Willful",
+	            "Honest",
+	            "Glamorous",
+	            "Returnee",
+	            "Slangy",
+	            "Sadistic",
+	            "Emotionless"};
+
+	        if (personality < 0 || personality > 90) return "Invalid";
+
+	        if (personalityLookup.Length > personality) return personalityLookup[personality];
+
+	        if (personality >= 80 && personality <= 86) return "Story-only " + personality;
+
+	        return "Unknown";
+	    }
+
+        public const int BufferSize = 4096;
 
 		private static byte[] IENDChunk = {0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82};
 

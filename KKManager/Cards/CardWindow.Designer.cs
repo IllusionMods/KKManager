@@ -58,6 +58,9 @@ namespace KKManager.Cards
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonSegregate = new System.Windows.Forms.ToolStripButton();
+            this.olvColumnPersonality = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnSex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnExtended = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -116,11 +119,17 @@ namespace KKManager.Cards
             // 
             this.listView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.listView.AllColumns.Add(this.olvColumnName);
+            this.listView.AllColumns.Add(this.olvColumnSex);
+            this.listView.AllColumns.Add(this.olvColumnPersonality);
+            this.listView.AllColumns.Add(this.olvColumnExtended);
             this.listView.AllColumns.Add(this.olvColumnModDate);
             this.listView.AllColumns.Add(this.olvColumnFilename);
             this.listView.CellEditUseWholeCell = false;
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
+            this.olvColumnSex,
+            this.olvColumnPersonality,
+            this.olvColumnExtended,
             this.olvColumnModDate,
             this.olvColumnFilename});
             this.listView.ContextMenuStrip = this.ctxCards;
@@ -129,7 +138,6 @@ namespace KKManager.Cards
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
             this.listView.Location = new System.Drawing.Point(0, 25);
-            this.listView.MultiSelect = false;
             this.listView.Name = "listView";
             this.listView.ShowGroups = false;
             this.listView.ShowItemToolTips = true;
@@ -257,7 +265,7 @@ namespace KKManager.Cards
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
@@ -265,14 +273,14 @@ namespace KKManager.Cards
             // 
             this.smallIconsToolStripMenuItem.Enabled = false;
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
@@ -284,6 +292,19 @@ namespace KKManager.Cards
             this.toolStripButtonSegregate.Size = new System.Drawing.Size(114, 22);
             this.toolStripButtonSegregate.Text = "Segregate by sex";
             this.toolStripButtonSegregate.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
+            // 
+            // olvColumnPersonality
+            // 
+            this.olvColumnPersonality.Text = "Personality";
+            // 
+            // olvColumnSex
+            // 
+            this.olvColumnSex.Text = "Sex";
+            // 
+            // olvColumnExtended
+            // 
+            this.olvColumnExtended.Searchable = false;
+            this.olvColumnExtended.Text = "Extended data count";
             // 
             // CardWindow
             // 
@@ -333,6 +354,9 @@ namespace KKManager.Cards
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripButton toolStripButtonSegregate;
+        private BrightIdeasSoftware.OLVColumn olvColumnPersonality;
+        private BrightIdeasSoftware.OLVColumn olvColumnSex;
+        private BrightIdeasSoftware.OLVColumn olvColumnExtended;
     }
 }
 

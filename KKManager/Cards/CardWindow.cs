@@ -30,8 +30,8 @@ namespace KKManager.Cards
         private DirectoryInfo _currentDirectory;
 
         private bool _listLoadIsRunning;
-        private int _loadedItemsEnd;
-        private int _loadedItemsStart;
+        private CancellationTokenSource _thumbnailCancellationTokenSource;
+        private CharacterRange _previousLoadedItemRange = new CharacterRange();
 
         public CardWindow()
         {
@@ -48,6 +48,9 @@ namespace KKManager.Cards
             olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.GetCharaName();
             olvColumnFilename.AspectGetter = rowObject => (rowObject as Card)?.CardFile.Name;
             olvColumnModDate.AspectGetter = rowObject => (rowObject as Card)?.CardFile.LastWriteTime;
+            olvColumnSex.AspectGetter = rowObject => (rowObject as Card)?.Parameter.sex == 0 ? "Male" : "Female";
+            olvColumnPersonality.AspectGetter = rowObject => Utility.GetPersonalityName((rowObject as Card)?.Parameter.personality ?? -1);
+            olvColumnExtended.AspectGetter = rowObject => (rowObject as Card)?.Extended?.Count.ToString() ?? "-";
 
             Details(this, EventArgs.Empty);
 
@@ -172,12 +175,14 @@ namespace KKManager.Cards
 
         private void ListView_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
-            if (_loadedItemsStart == e.StartIndex && _loadedItemsEnd == e.EndIndex) return;
+            if (_previousLoadedItemRange.First == e.StartIndex &&
+                _previousLoadedItemRange.First + _previousLoadedItemRange.Length == e.EndIndex + 1)
+                return;
 
-            _loadedItemsStart = e.StartIndex;
-            _loadedItemsEnd = e.EndIndex;
+            _previousLoadedItemRange.First = e.StartIndex;
+            _previousLoadedItemRange.Length = e.EndIndex - e.StartIndex + 1;
 
-            RefreshThumbnails(true);
+            RefreshThumbnails(true, _previousLoadedItemRange);
         }
 
         private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,6 +211,8 @@ namespace KKManager.Cards
             var cancellationToken = StartNewLoadProcess();
 
             listView.ClearObjects();
+            listView.SmallImageList.Images.Clear();
+            listView.LargeImageList.Images.Clear();
 
             if (CurrentDirectory == null)
                 return;
@@ -227,6 +234,7 @@ namespace KKManager.Cards
                     {
                         MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
                         listView.AddObjects((ICollection)list);
+                        //RefreshThumbnails(true);
                     },
                     ShowFailedToLoadDirError,
                     () =>
@@ -235,43 +243,46 @@ namespace KKManager.Cards
                         catch (Exception ex) { Console.WriteLine(ex); }
 
                         _listLoadIsRunning = false;
-                        RefreshThumbnails(cancellationToken);
+                        RefreshThumbnails(true);
 
                         MainWindow.SetStatusText("Done loading cards");
                     },
                     cancellationToken);
         }
 
+
+
         /// <summary>
         /// Cancels previous thumbnail refresh if any and starts a new one
         /// </summary>
-        private void RefreshThumbnails(bool additive = false)
+        private void RefreshThumbnails(bool additive = false, CharacterRange refreshRange = default)
         {
-            if (!additive)
+            CancelThumbnailRefresh();
+            _thumbnailCancellationTokenSource = new CancellationTokenSource();
+
+            if (listView.GetItemCount() <= 0) return;
+
+            if (refreshRange == default)
             {
-                _loadedItemsStart = listView.LowLevelScrollPosition.X;
-                var visibleItems = (int) Math.Ceiling(listView.Height / (double) listView.RowHeightEffective);
-                _loadedItemsEnd = visibleItems + _loadedItemsStart;
+                refreshRange.First = listView.LowLevelScrollPosition.X;
+                var visibleItems = (int)Math.Ceiling(listView.Height / (double)listView.RowHeightEffective);
+                refreshRange.Length = visibleItems;
             }
 
-            if (!_listLoadIsRunning && listView.GetItemCount() > 0)
-                RefreshThumbnails(StartNewLoadProcess(), additive);
-        }
-
-        private void RefreshThumbnails(CancellationToken token, bool additive = false)
-        {
             if (!additive)
             {
                 listView.SmallImageList.Images.Clear();
                 listView.LargeImageList.Images.Clear();
             }
 
+            var token = _thumbnailCancellationTokenSource.Token;
+
             if (token.IsCancellationRequested) return;
 
             var large = listView.View == View.LargeIcon;
             var imageList = large ? listView.LargeImageList : listView.SmallImageList;
 
-            var targetCards = _typedListView.Objects.Skip(_loadedItemsStart).Take(_loadedItemsEnd - _loadedItemsStart + 1);
+            var targetCards = _typedListView.Objects.Skip(refreshRange.First).Take(refreshRange.Length);
             if (additive)
             {
                 targetCards = targetCards.Where(
@@ -329,8 +340,7 @@ namespace KKManager.Cards
             updateSubject
                 .Buffer(TimeSpan.FromSeconds(1))
                 .ObserveOn(this)
-                .Subscribe(list => listView.RefreshObjects((IList)list)
-                , token);
+                .Subscribe(list => listView.RefreshObjects((IList)list), token);
         }
 
         private void SetupDragAndDrop()
@@ -469,16 +479,32 @@ namespace KKManager.Cards
         {
             lock (this)
             {
-                if (_cancellationTokenSource != null)
-                {
-                    _cancellationTokenSource.Cancel();
-                    _cancellationTokenSource.Dispose();
-                    _cancellationTokenSource = null;
-                }
+                CancelCardLoad();
+                CancelThumbnailRefresh();
 
                 _cancellationTokenSource = new CancellationTokenSource();
 
                 return _cancellationTokenSource.Token;
+            }
+        }
+
+        private void CancelCardLoad()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+        }
+
+        private void CancelThumbnailRefresh()
+        {
+            if (_thumbnailCancellationTokenSource != null)
+            {
+                _thumbnailCancellationTokenSource.Cancel();
+                _thumbnailCancellationTokenSource.Dispose();
+                _thumbnailCancellationTokenSource = null;
             }
         }
 
@@ -494,11 +520,20 @@ namespace KKManager.Cards
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            foreach (var card in _typedListView.Objects)
+            var sexes = _typedListView.Objects.GroupBy(x => x.Parameter.sex).ToList();
+
+            if (sexes.Count < 2)
             {
-                var dirpath = Path.Combine(_currentDirectory.FullName, card.Parameter.sex == 0 ? "male" : "female");
+                MessageBox.Show("All cards are of the same sex, no need to sort", "Card sort", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            foreach (var sex in sexes)
+            {
+                var dirpath = Path.Combine(_currentDirectory.FullName, sex.Key == 0 ? "male" : "female");
                 Directory.CreateDirectory(dirpath);
-                card.CardFile.MoveTo(Path.Combine(dirpath, card.CardFile.Name));
+                foreach (var card in sex)
+                    card.CardFile.MoveTo(Path.Combine(dirpath, card.CardFile.Name));
             }
 
             OpenCardDirectory(_currentDirectory.GetDirectories().First());
