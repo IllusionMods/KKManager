@@ -82,9 +82,8 @@ namespace KKManager
         private CardWindow OpenOrGetCardWindow(string targetDir)
         {
             var existing = GetWindows<CardWindow>()
-                .FirstOrDefault(
-                    x => string.Equals(
-                        targetDir, x.CurrentDirectory.FullName, StringComparison.InvariantCultureIgnoreCase));
+                .FirstOrDefault(x => string.Equals(
+                    targetDir, x.CurrentDirectory.FullName, StringComparison.InvariantCultureIgnoreCase));
 
             if (existing != null)
             {
@@ -113,14 +112,13 @@ namespace KKManager
                 }
             }
             catch { }
-
+            
+            OpenOrGetCardWindow(CardWindow.MaleCardDir);
+            OpenOrGetCardWindow(CardWindow.FemaleCardDir);
 
             GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<PluginsWindow>();
-
-            var fc = OpenOrGetCardWindow(CardWindow.FemaleCardDir);
-            OpenOrGetCardWindow(CardWindow.MaleCardDir).Show(fc.Pane, DockAlignment.Bottom, 0.4);
-
+            
             dockPanel.DockRightPortion = 400;
             var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
             propertiesToolWindow.DockState = DockState.DockRight;

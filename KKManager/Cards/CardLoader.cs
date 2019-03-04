@@ -30,17 +30,31 @@ namespace KKManager.Cards
             {
                 void ReadCardsFromDir()
                 {
-                    foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
+                    try
                     {
-                        if (cancellationToken.IsCancellationRequested) break;
-
-                        if (Card.TryParseCard(file, out Card card))
-                            s.OnNext(card);
+                        foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
+                        {
+                            if (cancellationToken.IsCancellationRequested) break;
+                            try
+                            {
+                                if (Card.TryParseCard(file, out Card card))
+                                    s.OnNext(card);
+                            }
+                            catch (SystemException ex)
+                            {
+                                Console.WriteLine(ex);
+                            }
+                        }
                     }
+                    catch (SystemException ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
+
                     s.OnCompleted();
                 }
 
-                Task.Run((Action) ReadCardsFromDir, cancellationToken);
+                Task.Run((Action)ReadCardsFromDir, cancellationToken);
             }
 
             return s;

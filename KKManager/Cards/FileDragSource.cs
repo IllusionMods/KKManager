@@ -10,16 +10,34 @@ namespace KKManager.Cards
     {
         public override object StartDrag(ObjectListView olv, MouseButtons button, OLVListItem item)
         {
-            if (button != MouseButtons.Left)
-                return (object)null;
-            return new DataObject(DataFormats.FileDrop,
-                olv.SelectedObjects.OfType<Card>().Select(x => x.CardFile.FullName).ToArray());
+            try
+            {
+                if (button == MouseButtons.Left)
+                {
+                    return new DataObject(
+                        DataFormats.FileDrop,
+                        olv.SelectedObjects.OfType<Card>().Select(x => x.CardFile.FullName).ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return null;
         }
 
         public override void EndDrag(object dragObject, DragDropEffects effect)
         {
-            base.EndDrag(dragObject, effect);
-            AfterDrag?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                base.EndDrag(dragObject, effect);
+                AfterDrag?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public event EventHandler AfterDrag;

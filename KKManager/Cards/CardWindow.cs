@@ -28,7 +28,7 @@ namespace KKManager.Cards
         private CancellationTokenSource _cancellationTokenSource;
 
         private DirectoryInfo _currentDirectory;
-        
+
         private CancellationTokenSource _thumbnailCancellationTokenSource;
         private CharacterRange _previousLoadedItemRange = new CharacterRange();
 
@@ -239,14 +239,14 @@ namespace KKManager.Cards
                     {
                         try { listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent); }
                         catch (Exception ex) { Console.WriteLine(ex); }
-                        
+
                         RefreshThumbnails(true);
 
                         MainWindow.SetStatusText("Done loading cards");
                     },
                     cancellationToken);
         }
-        
+
         /// <summary>
         /// Cancels previous thumbnail refresh if any and starts a new one
         /// </summary>
@@ -398,6 +398,7 @@ namespace KKManager.Cards
 
         private static void ShowFailedToLoadDirError(Exception exception)
         {
+            Console.WriteLine(exception);
             MessageBox.Show(exception.Message, "Failed to open folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -442,31 +443,38 @@ namespace KKManager.Cards
         {
             if (e.DataObject is DataObject dataObject)
             {
-                var files = dataObject.GetFileDropList();
-
-                var filesChanged = false;
-                foreach (var file in files)
+                try
                 {
-                    if (_typedListView.Objects.Any(y => y.CardFile.FullName == file)) continue;
+                    var files = dataObject.GetFileDropList();
 
-                    switch (e.Effect)
+                    var filesChanged = false;
+                    foreach (var file in files)
                     {
-                        case DragDropEffects.Link:
-                            TryOpenCardDirectory(file);
-                            return;
-                        case DragDropEffects.Copy:
-                            File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
-                            filesChanged = true;
-                            break;
-                        case DragDropEffects.Move:
-                            File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
-                            filesChanged = true;
-                            break;
-                    }
-                }
+                        if (_typedListView.Objects.Any(y => y.CardFile.FullName == file)) continue;
 
-                if (filesChanged)
-                    RefreshCurrentFolder();
+                        switch (e.Effect)
+                        {
+                            case DragDropEffects.Link:
+                                TryOpenCardDirectory(file);
+                                return;
+                            case DragDropEffects.Copy:
+                                File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                                filesChanged = true;
+                                break;
+                            case DragDropEffects.Move:
+                                File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                                filesChanged = true;
+                                break;
+                        }
+                    }
+
+                    if (filesChanged)
+                        RefreshCurrentFolder();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
 

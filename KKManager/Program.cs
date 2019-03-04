@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using KKManager.Properties;
@@ -15,10 +16,19 @@ namespace KKManager
         [STAThread]
         private static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
-            Settings.Default.Save();
+            using (var writer = new FileStream(Assembly.GetExecutingAssembly().Location + ".log", FileMode.OpenOrCreate))
+            using (var tw = new StreamWriter(writer))
+            {
+                tw.WriteLine("=======================");
+                tw.WriteLine(DateTime.Now + " Application start");
+                Console.SetOut(tw);
+                Console.SetError(tw);
+
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainWindow());
+                Settings.Default.Save();
+            }
         }
 
         public static SynchronizationContext MainSynchronizationContext { get; set; }
