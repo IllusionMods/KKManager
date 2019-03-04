@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Cards.Data;
@@ -17,16 +22,25 @@ namespace KKManager.Cards
         public static readonly DirectoryInfo MaleCardDir =
             new DirectoryInfo(Path.Combine(Program.KoikatuDirectory.FullName, @"UserData\chara\male"));
 
-        private readonly CardLoader _loader;
+        private readonly Bitmap _emptyImage;
+
+        private readonly TypedObjectListView<Card> _typedListView;
+        private CancellationTokenSource _cancellationTokenSource;
+
         private DirectoryInfo _currentDirectory;
+
+        private bool _listLoadIsRunning;
+        private int _loadedItemsEnd;
+        private int _loadedItemsStart;
 
         public CardWindow()
         {
+            _emptyImage = new Bitmap(1, 1);
+            using (var gr = Graphics.FromImage(_emptyImage))
+                gr.Clear(Color.FromKnownColor(KnownColor.Transparent));
+
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
-
-            _loader = new CardLoader();
-            _loader.CardsChanged += Loader_CardsChanged;
 
             SetupDragAndDrop();
             SetupImageLists();
@@ -38,6 +52,10 @@ namespace KKManager.Cards
             Details(this, EventArgs.Empty);
 
             ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
+
+            _typedListView = new TypedObjectListView<Card>(listView);
+
+            listView.CacheVirtualItems += ListView_CacheVirtualItems;
         }
 
         /// <summary>
@@ -45,13 +63,292 @@ namespace KKManager.Cards
         /// </summary>
         public DirectoryInfo CurrentDirectory
         {
-            get { return _currentDirectory; }
+            get => _currentDirectory;
             private set
             {
                 _currentDirectory = value;
                 Text = CurrentDirectory?.Name ?? "Card viewer";
                 ToolTipText = CurrentDirectory?.FullName ?? string.Empty;
             }
+        }
+
+        public void OpenCardDirectory(DirectoryInfo directory)
+        {
+            StartNewLoadProcess();
+
+            addressBar.Text = directory?.FullName ?? string.Empty;
+            CurrentDirectory = directory;
+
+            RefreshCurrentFolder();
+        }
+
+        public static string ShowCardFolderBrowseDialog(IWin32Window owner)
+        {
+            using (var d = new FolderBrowserDialog())
+            {
+                if (d.ShowDialog(owner) != DialogResult.OK)
+                    return null;
+                return d.SelectedPath;
+            }
+        }
+
+        public static CardWindow TryLoadFromPersistString(string ps)
+        {
+            var parts = ps.Split(new[] { "|||" }, StringSplitOptions.None);
+            if (parts.Length == 2)
+            {
+                if (parts[0] == typeof(CardWindow).ToString())
+                {
+                    var cardWindow = new CardWindow();
+                    cardWindow.OpenCardDirectory(new DirectoryInfo(parts[1]));
+                    return cardWindow;
+                }
+            }
+            return null;
+        }
+
+        public bool TryOpenCardDirectory(string path)
+        {
+            try
+            {
+                OpenCardDirectory(new DirectoryInfo(path));
+                return true;
+            }
+            catch (SystemException ex)
+            {
+                ShowFailedToLoadDirError(ex);
+                return false;
+            }
+        }
+
+        protected override string GetPersistString()
+        {
+            return base.GetPersistString() + "|||" + _currentDirectory.FullName;
+        }
+
+        private void addressBar_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                TryOpenCardDirectory(addressBar.Text);
+        }
+
+        private void CardWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            StartNewLoadProcess();
+        }
+
+        private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenCardDirectory(FemaleCardDir);
+        }
+
+        private void formMain_Load(object sender, EventArgs e)
+        {
+            listView.Sort(olvColumnModDate, SortOrder.Descending);
+        }
+
+        private void Details(object sender, EventArgs e)
+        {
+            var refresh = listView.View == View.LargeIcon;
+            listView.View = View.Details;
+            if (refresh) RefreshThumbnails();
+
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        }
+
+        private void LargeIcons(object sender, EventArgs e)
+        {
+            var refresh = listView.View != View.LargeIcon;
+            listView.View = View.LargeIcon;
+            if (refresh) RefreshThumbnails();
+        }
+
+        private void SmallIcons(object sender, EventArgs e)
+        {
+            var refresh = listView.View == View.LargeIcon;
+            listView.View = View.SmallIcon;
+            if (refresh) RefreshThumbnails();
+        }
+
+        private void ListView_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
+        {
+            if (_loadedItemsStart == e.StartIndex && _loadedItemsEnd == e.EndIndex) return;
+
+            _loadedItemsStart = e.StartIndex;
+            _loadedItemsEnd = e.EndIndex;
+
+            RefreshThumbnails(true);
+        }
+
+        private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenCardDirectory(MaleCardDir);
+        }
+
+        private void OnResizeToolstip(object sender, EventArgs e)
+        {
+            var otherWidth = toolStrip.Items.Cast<ToolStripItem>().Where(x => x.Name != "addressBar").Sum(x => x.Width);
+            var fillWidth = toolStrip.Width - otherWidth - 20;
+            addressBar.Width = fillWidth;
+            if (fillWidth > 0)
+                addressBar.DropDownWidth = fillWidth;
+        }
+
+        private void OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView.SelectedObject != null)
+                MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject);
+        }
+
+        private void RefreshCurrentFolder()
+        {
+            _listLoadIsRunning = true;
+            var cancellationToken = StartNewLoadProcess();
+
+            listView.ClearObjects();
+
+            if (CurrentDirectory == null)
+                return;
+
+            if (!CurrentDirectory.Exists)
+            {
+                OpenCardDirectory(null);
+                return;
+            }
+
+            var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, cancellationToken);
+
+            var processedCount = 0;
+            cardLoadObservable
+                .Buffer(TimeSpan.FromSeconds(1))
+                .ObserveOn(this)
+                .Subscribe(
+                    list =>
+                    {
+                        MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
+                        listView.AddObjects((ICollection)list);
+                    },
+                    ShowFailedToLoadDirError,
+                    () =>
+                    {
+                        try { listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent); }
+                        catch (Exception ex) { Console.WriteLine(ex); }
+
+                        _listLoadIsRunning = false;
+                        RefreshThumbnails(cancellationToken);
+
+                        MainWindow.SetStatusText("Done loading cards");
+                    },
+                    cancellationToken);
+        }
+
+        /// <summary>
+        /// Cancels previous thumbnail refresh if any and starts a new one
+        /// </summary>
+        private void RefreshThumbnails(bool additive = false)
+        {
+            if (!additive)
+            {
+                _loadedItemsStart = listView.LowLevelScrollPosition.X;
+                var visibleItems = (int) Math.Ceiling(listView.Height / (double) listView.RowHeightEffective);
+                _loadedItemsEnd = visibleItems + _loadedItemsStart;
+            }
+
+            if (!_listLoadIsRunning && listView.GetItemCount() > 0)
+                RefreshThumbnails(StartNewLoadProcess(), additive);
+        }
+
+        private void RefreshThumbnails(CancellationToken token, bool additive = false)
+        {
+            if (!additive)
+            {
+                listView.SmallImageList.Images.Clear();
+                listView.LargeImageList.Images.Clear();
+            }
+
+            if (token.IsCancellationRequested) return;
+
+            var large = listView.View == View.LargeIcon;
+            var imageList = large ? listView.LargeImageList : listView.SmallImageList;
+
+            var targetCards = _typedListView.Objects.Skip(_loadedItemsStart).Take(_loadedItemsEnd - _loadedItemsStart + 1);
+            if (additive)
+            {
+                targetCards = targetCards.Where(
+                    x =>
+                    {
+                        try
+                        {
+                            return !imageList.Images.ContainsKey(x.CardFile.FullName);
+                        }
+                        catch (SystemException)
+                        {
+                            return false;
+                        }
+                    });
+            }
+
+            var cardsToProcess = targetCards.ToList();
+
+            if (cardsToProcess.Count == 0) return;
+
+            var width = imageList.ImageSize.Width;
+            var height = imageList.ImageSize.Height;
+
+            var updateSubject = new ReplaySubject<Card>();
+
+            void CardThumbLoader()
+            {
+                foreach (var card in cardsToProcess)
+                {
+                    if (token.IsCancellationRequested) return;
+                    try
+                    {
+                        var key = card.CardFile.FullName;
+                        using (var img = large ? card.GetCardImage() : card.GetCardFaceImage())
+                        {
+                            var thumb = img.GetThumbnailImage(width, height, null, IntPtr.Zero);
+                            imageList.Images.Add(key, thumb);
+                            updateSubject.OnNext(card);
+                        }
+
+                        // Need to keep SmallImageList keys in sync when using LargeImageList
+                        if (large)
+                            listView.SmallImageList.Images.Add(key, _emptyImage);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+                updateSubject.OnCompleted();
+            }
+
+            Task.Run((Action)CardThumbLoader, token);
+
+            updateSubject
+                .Buffer(TimeSpan.FromSeconds(1))
+                .ObserveOn(this)
+                .Subscribe(list => listView.RefreshObjects((IList)list)
+                , token);
+        }
+
+        private void SetupDragAndDrop()
+        {
+            var simpleDropSink = new SimpleDropSink
+            {
+                AcceptExternal = true,
+                EnableFeedback = false,
+                UseDefaultCursors = true
+            };
+            simpleDropSink.Dropped += SimpleDropSink_Dropped;
+            simpleDropSink.CanDrop += SimpleDropSink_CanDrop;
+            listView.DropSink = simpleDropSink;
+            listView.AllowDrop = true;
+
+            var fileDragSource = new FileDragSource();
+            fileDragSource.AfterDrag += (sender, args) => RefreshCurrentFolder();
+            listView.DragSource = fileDragSource;
         }
 
         private void SetupImageLists()
@@ -72,35 +369,37 @@ namespace KKManager.Cards
             {
                 if (rowObject is Card card)
                 {
-                    var key = card.CardFile.FullName;
-                    if (!listView.LargeImageList.Images.ContainsKey(key))
+                    try
                     {
-                        listView.SmallImageList.Images.Add(key, card.CardFaceImage);
-                        listView.LargeImageList.Images.Add(key, card.CardImage);
+                        var key = card.CardFile.FullName;
+                        if (listView.View == View.LargeIcon)
+                        {
+                            // Need to use index to fix large images not showing in large icon view of a vritual list
+                            var index = listView.LargeImageList.Images.IndexOfKey(key);
+                            if (index >= 0) return index;
+                        }
+                        else
+                        {
+                            if (listView.SmallImageList.Images.ContainsKey(key))
+                                return key;
+                        }
                     }
-                    return key;
+                    catch (SystemException) { }
                 }
 
                 return null;
             };
         }
 
-        private void SetupDragAndDrop()
+        private static void ShowFailedToLoadDirError(Exception exception)
         {
-            var simpleDropSink = new SimpleDropSink
-            {
-                AcceptExternal = true,
-                EnableFeedback = false,
-                UseDefaultCursors = true
-            };
-            simpleDropSink.Dropped += SimpleDropSink_Dropped;
-            simpleDropSink.CanDrop += SimpleDropSink_CanDrop;
-            listView.DropSink = simpleDropSink;
-            listView.AllowDrop = true;
+            MessageBox.Show(exception.Message, "Failed to open folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
 
-            var fileDragSource = new FileDragSource();
-            fileDragSource.AfterDrag += (sender, args) => RefreshCurrentFolder();
-            listView.DragSource = fileDragSource;
+        private void ShowOpenFolderDialog(object sender, EventArgs e)
+        {
+            var d = ShowCardFolderBrowseDialog(this);
+            if (d != null) TryOpenCardDirectory(d);
         }
 
         private void SimpleDropSink_CanDrop(object sender, OlvDropEventArgs e)
@@ -143,7 +442,7 @@ namespace KKManager.Cards
                 var filesChanged = false;
                 foreach (var file in files)
                 {
-                    if (_loader.Cards.Any(y => y.CardFile.FullName == file)) continue;
+                    if (_typedListView.Objects.Any(y => y.CardFile.FullName == file)) continue;
 
                     switch (e.Effect)
                     {
@@ -166,117 +465,21 @@ namespace KKManager.Cards
             }
         }
 
-        private void RefreshCurrentFolder()
+        private CancellationToken StartNewLoadProcess()
         {
-            if (CurrentDirectory != null && CurrentDirectory.Exists)
+            lock (this)
             {
-                _loader.Read(CurrentDirectory);
+                if (_cancellationTokenSource != null)
+                {
+                    _cancellationTokenSource.Cancel();
+                    _cancellationTokenSource.Dispose();
+                    _cancellationTokenSource = null;
+                }
+
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                return _cancellationTokenSource.Token;
             }
-            else
-            {
-                CurrentDirectory = null;
-                _loader.Clear();
-            }
-        }
-
-        private void Loader_CardsChanged(object sender, EventArgs e)
-        {
-            listView.SmallImageList?.Images.Clear();
-            listView.LargeImageList?.Images.Clear();
-
-            listView.SetObjects(_loader.Cards);
-            listView.AutoResizeColumns();
-        }
-
-        public void OpenCardDirectory(DirectoryInfo directory)
-        {
-            _loader.Read(directory);
-
-            addressBar.Text = directory.FullName;
-            CurrentDirectory = directory;
-        }
-
-        private void formMain_Load(object sender, EventArgs e)
-        {
-            listView.Sort(olvColumnModDate, SortOrder.Descending);
-        }
-
-        private void OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listView.SelectedObject != null)
-                MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject);
-        }
-
-        private void Details(object sender, EventArgs e)
-        {
-            listView.View = View.Details;
-            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        }
-
-        private void SmallIcons(object sender, EventArgs e)
-        {
-            listView.View = View.SmallIcon;
-        }
-
-        private void LargeIcons(object sender, EventArgs e)
-        {
-            listView.View = View.LargeIcon;
-        }
-
-        private void OnResizeToolstip(object sender, EventArgs e)
-        {
-            var otherWidth = toolStrip.Items.Cast<ToolStripItem>().Where(x => x.Name != "addressBar").Sum(x => x.Width);
-            var fillWidth = toolStrip.Width - otherWidth - 20;
-            addressBar.Width = fillWidth;
-            if (fillWidth > 0)
-                addressBar.DropDownWidth = fillWidth;
-        }
-
-        private void ShowOpenFolderDialog(object sender, EventArgs e)
-        {
-            var d = ShowCardFolderBrowseDialog(this);
-            if (d != null) TryOpenCardDirectory(d);
-        }
-
-        public static string ShowCardFolderBrowseDialog(IWin32Window owner)
-        {
-            using (var d = new FolderBrowserDialog())
-            {
-                if (d.ShowDialog(owner) != DialogResult.OK)
-                    return null;
-                return d.SelectedPath;
-            }
-        }
-
-        public bool TryOpenCardDirectory(string path)
-        {
-            try
-            {
-                OpenCardDirectory(new DirectoryInfo(path));
-                return true;
-            }
-            catch (SystemException ex)
-            {
-                MessageBox.Show(ex.Message, "Failed to open folder", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenCardDirectory(FemaleCardDir);
-        }
-
-        private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenCardDirectory(MaleCardDir);
-        }
-
-        private void addressBar_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                TryOpenCardDirectory(addressBar.Text);
         }
 
         private void toolStripButtonGo_Click(object sender, EventArgs e)
@@ -291,34 +494,14 @@ namespace KKManager.Cards
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            foreach (var card in _loader.Cards)
+            foreach (var card in _typedListView.Objects)
             {
-                string dirpath = Path.Combine(_currentDirectory.FullName, card.Parameter.sex == 0 ? "male" : "female");
+                var dirpath = Path.Combine(_currentDirectory.FullName, card.Parameter.sex == 0 ? "male" : "female");
                 Directory.CreateDirectory(dirpath);
                 card.CardFile.MoveTo(Path.Combine(dirpath, card.CardFile.Name));
             }
 
             OpenCardDirectory(_currentDirectory.GetDirectories().First());
-        }
-
-        protected override string GetPersistString()
-        {
-            return base.GetPersistString() + "|||" + _currentDirectory.FullName;
-        }
-
-        public static CardWindow TryLoadFromPersistString(string ps)
-        {
-            var parts = ps.Split(new[] { "|||" }, StringSplitOptions.None);
-            if (parts.Length == 2)
-            {
-                if (parts[0] == typeof(CardWindow).ToString())
-                {
-                    CardWindow cardWindow = new CardWindow();
-                    cardWindow.OpenCardDirectory(new DirectoryInfo(parts[1]));
-                    return cardWindow;
-                }
-            }
-            return null;
         }
     }
 }

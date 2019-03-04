@@ -23,8 +23,8 @@ namespace KKManager.ToolWindows.Properties.Viewers
 
                 imgCard.Image?.Dispose();
                 imgCardFace.Image?.Dispose();
-                imgCard.Image = _currentCard?.CardImage;
-                imgCardFace.Image = _currentCard?.CardFaceImage;
+                imgCard.Image = _currentCard?.GetCardImage();
+                imgCardFace.Image = _currentCard?.GetCardFaceImage();
                 
                 lsvCardExtData.Items.Clear();
                 if (_currentCard?.Extended != null)

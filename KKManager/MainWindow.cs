@@ -32,6 +32,15 @@ namespace KKManager
 
         public static MainWindow Instance { get; private set; }
 
+        public static void SetStatusText(string text)
+        {
+            Instance?.SafeInvoke(() =>
+            {
+                Instance.toolStripStatusLabelStatus.Text = text;
+                //Instance.toolStripStatusLabelStatus.Invalidate();
+            });
+        }
+
         public PropertyViewerBase DisplayInPropertyViewer(object obj, bool forceOpen = false)
         {
             var viewer = GetOrCreateWindow<PropertiesToolWindow>(forceOpen);
@@ -121,7 +130,7 @@ namespace KKManager
             if (t == null || !typeof(IDockContent).IsAssignableFrom(t))
                 throw new InvalidDataException(persistString + " points to an invalid type");
 
-            return (IDockContent) Activator.CreateInstance(t);
+            return (IDockContent)Activator.CreateInstance(t);
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)

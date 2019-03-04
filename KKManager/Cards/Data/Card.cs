@@ -9,61 +9,50 @@ namespace KKManager.Cards.Data
 {
 	public class Card
 	{
-		protected Func<Stream> streamGenerator { get; set; }
+	    public FileInfo CardFile { get; }
+        public ChaFileParameter Parameter { get; private set; }
+		public Dictionary<string, PluginData> Extended { get; private set; }
 
-	    public FileInfo CardFile { get; private set; }
-        public ChaFileParameter Parameter { get; protected set; }
-		public Dictionary<string, PluginData> Extended { get; protected set; }
+        public Image GetCardImage()
+        {
+            using (var stream = CardFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+                return Image.FromStream(stream);
+        }
 
-		public Image CardImage
-		{
-			get
-			{
-				using (var stream = streamGenerator())
-					return Image.FromStream(stream);
-			}
-		}
+        public Image GetCardFaceImage()
+        {
+            using (var stream = CardFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (BinaryReader reader = new BinaryReader(stream))
+            {
+                stream.Position = Utility.SearchForIEND(stream);
+                int loadProductNo = reader.ReadInt32();
+                string marker = reader.ReadString();
+                var loadVersion = new Version(reader.ReadString());
+                int faceLength = reader.ReadInt32();
 
-		public Image CardFaceImage
-		{
-			get
-			{
-				using (var stream = streamGenerator())
-				using (BinaryReader reader = new BinaryReader(stream))
-				{
-					stream.Position = Utility.SearchForIEND(stream);
-					int loadProductNo = reader.ReadInt32();
-					string marker = reader.ReadString();
-					var loadVersion = new Version(reader.ReadString());
-					int faceLength = reader.ReadInt32();
+                using (MemoryStream memStream = new MemoryStream(reader.ReadBytes(faceLength)))
+                    return Image.FromStream(memStream);
+            }
+        }
 
-					using (MemoryStream memStream = new MemoryStream(reader.ReadBytes(faceLength)))
-						return Image.FromStream(memStream);
-				}
-			}
-		}
-
-		protected Card(Func<Stream> streamGenerator)
-		{
-			this.streamGenerator = streamGenerator;
-		}
-
+	    private Card(FileInfo cardFile)
+        {
+            CardFile = cardFile;
+        }
+        
 		public static bool TryParseCard(FileInfo file, out Card card)
 		{
 			card = null;
 
-		    Func<Stream> generator = () => File.Open(file.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
-
-            using (Stream stream = generator())
-			using (BinaryReader reader = new BinaryReader(stream))
+		    using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (BinaryReader reader = new BinaryReader(stream))
 			{
 				long IEND = Utility.SearchForIEND(stream);
 
 				if (IEND == -1 || IEND >= stream.Length)
 					return false;
 
-
-				stream.Position = IEND;
+                stream.Position = IEND;
 
 				try
 				{
@@ -100,40 +89,8 @@ namespace KKManager.Cards.Data
                     
 					BlockHeader.Info info;
 
-					card = new Card(generator);
-				    card.CardFile = file;
-
-					//BlockHeader.Info info = blockHeader.SearchInfo(ChaFileCustom.BlockName);
-					//if (info != null)
-					//{
-					//	Version version = new Version(info.version);
-					//	if (0 > ChaFileDefine.ChaFileCustomVersion.CompareTo(version))
-					//	{
-					//		this.lastLoadErrorCode = -2;
-					//	}
-					//	else
-					//	{
-					//		reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-					//		byte[] data = reader.ReadBytes((int)info.size);
-					//		this.SetCustomBytes(data, version);
-					//	}
-					//}
-					//info = blockHeader.SearchInfo(ChaFileCoordinate.BlockName);
-					//if (info != null)
-					//{
-					//	Version version2 = new Version(info.version);
-					//	if (0 > ChaFileDefine.ChaFileCoordinateVersion.CompareTo(version2))
-					//	{
-					//		this.lastLoadErrorCode = -2;
-					//	}
-					//	else
-					//	{
-					//		reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-					//		byte[] data2 = reader.ReadBytes((int)info.size);
-					//		this.SetCoordinateBytes(data2, version2);
-					//	}
-					//}
-
+					card = new Card(file);
+                    
 					info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
 					if (info != null)
 					{
@@ -156,26 +113,8 @@ namespace KKManager.Cards.Data
 						
 						card.Extended = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
 					}
-
-					//if (!noLoadStatus)
-					//{
-					//	info = blockHeader.SearchInfo(ChaFileStatus.BlockName);
-					//	if (info != null)
-					//	{
-					//		Version value2 = new Version(info.version);
-					//		if (0 > ChaFileDefine.ChaFileStatusVersion.CompareTo(value2))
-					//		{
-					//			this.lastLoadErrorCode = -2;
-					//		}
-					//		else
-					//		{
-					//			reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-					//			byte[] statusBytes = reader.ReadBytes((int)info.size);
-					//			this.SetStatusBytes(statusBytes);
-					//		}
-					//	}
-					//}
-					reader.BaseStream.Seek(position + num2, SeekOrigin.Begin);
+                    
+					//reader.BaseStream.Seek(position + num2, SeekOrigin.Begin);
 				}
 				catch (EndOfStreamException)
 				{

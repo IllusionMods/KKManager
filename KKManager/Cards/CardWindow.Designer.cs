@@ -39,7 +39,7 @@ namespace KKManager.Cards
             this.maleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fermaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView = new BrightIdeasSoftware.ObjectListView();
+            this.listView = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnModDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -138,6 +138,7 @@ namespace KKManager.Cards
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.LargeIcon;
+            this.listView.VirtualMode = true;
             this.listView.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
             // 
             // olvColumnName
@@ -256,21 +257,22 @@ namespace KKManager.Cards
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
             // smallIconsToolStripMenuItem
             // 
+            this.smallIconsToolStripMenuItem.Enabled = false;
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
@@ -293,6 +295,7 @@ namespace KKManager.Cards
             this.Name = "CardWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
             this.Text = "Cards";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CardWindow_FormClosed);
             this.Load += new System.EventHandler(this.formMain_Load);
             this.ctxCards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listView)).EndInit();
@@ -311,7 +314,7 @@ namespace KKManager.Cards
 		private System.Windows.Forms.ToolStripMenuItem maleToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem fermaleToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem moveToolStripMenuItem;
-        private BrightIdeasSoftware.ObjectListView listView;
+        private BrightIdeasSoftware.FastObjectListView listView;
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnModDate;
         private BrightIdeasSoftware.OLVColumn olvColumnFilename;

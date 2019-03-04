@@ -1,58 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Cards.Data;
 
 namespace KKManager.Cards
 {
-    public class CardLoader
+    public static class CardLoader
     {
-        private readonly List<Card> _cards;
-        
-        public CardLoader()
+        public static IObservable<Card> ReadCards(DirectoryInfo path, CancellationToken cancellationToken)
         {
-            _cards = new List<Card>();
-        }
+            var s = new ReplaySubject<Card>();
 
-        public void Read(DirectoryInfo path)
-        {
-            _cards.Clear();
+            if (cancellationToken.IsCancellationRequested)
+            {
+                s.OnCompleted();
+                return s;
+            }
+
             if (!path.Exists)
             {
                 MessageBox.Show($"The card directory \"{path.FullName}\" doesn't exist or is inaccessible.", "Load cards",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                s.OnCompleted();
             }
             else
             {
-                foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
+                void ReadCardsFromDir()
                 {
-                    if (Card.TryParseCard(file, out Card card))
+                    foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
                     {
-                        _cards.Add(card);
+                        if (cancellationToken.IsCancellationRequested) break;
+
+                        if (Card.TryParseCard(file, out Card card))
+                            s.OnNext(card);
                     }
+                    s.OnCompleted();
                 }
+
+                Task.Run((Action) ReadCardsFromDir, cancellationToken);
             }
 
-            OnCardsChanged();
-        }
-
-        public void Clear()
-        {
-            _cards.Clear();
-            OnCardsChanged();
-        }
-
-        public event EventHandler CardsChanged;
-
-        protected void OnCardsChanged()
-        {
-            CardsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public IReadOnlyCollection<Card> Cards
-        {
-            get { return _cards; }
+            return s;
         }
     }
 }
