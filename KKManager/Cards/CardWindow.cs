@@ -28,8 +28,7 @@ namespace KKManager.Cards
         private CancellationTokenSource _cancellationTokenSource;
 
         private DirectoryInfo _currentDirectory;
-
-        private bool _listLoadIsRunning;
+        
         private CancellationTokenSource _thumbnailCancellationTokenSource;
         private CharacterRange _previousLoadedItemRange = new CharacterRange();
 
@@ -207,7 +206,6 @@ namespace KKManager.Cards
 
         private void RefreshCurrentFolder()
         {
-            _listLoadIsRunning = true;
             var cancellationToken = StartNewLoadProcess();
 
             listView.ClearObjects();
@@ -241,17 +239,14 @@ namespace KKManager.Cards
                     {
                         try { listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent); }
                         catch (Exception ex) { Console.WriteLine(ex); }
-
-                        _listLoadIsRunning = false;
+                        
                         RefreshThumbnails(true);
 
                         MainWindow.SetStatusText("Done loading cards");
                     },
                     cancellationToken);
         }
-
-
-
+        
         /// <summary>
         /// Cancels previous thumbnail refresh if any and starts a new one
         /// </summary>

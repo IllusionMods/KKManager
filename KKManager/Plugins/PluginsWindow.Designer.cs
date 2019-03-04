@@ -70,6 +70,7 @@
             // 
             this.olvColumnName.AspectName = "Name";
             this.olvColumnName.Text = "Name";
+            this.olvColumnName.Width = 183;
             // 
             // olvColumnVersion
             // 
@@ -80,11 +81,13 @@
             // 
             this.olvColumnGuid.AspectName = "Guid";
             this.olvColumnGuid.Text = "Guid";
+            this.olvColumnGuid.Width = 167;
             // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
             this.olvColumnFilename.Text = "File name";
+            this.olvColumnFilename.Width = 127;
             // 
             // PluginsWindow
             // 

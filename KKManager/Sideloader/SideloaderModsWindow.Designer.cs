@@ -33,8 +33,8 @@
             this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnGuid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,6 +76,7 @@
             // 
             this.olvColumnName.AspectName = "Name";
             this.olvColumnName.Text = "Name";
+            this.olvColumnName.Width = 171;
             // 
             // olvColumnVersion
             // 
@@ -86,22 +87,26 @@
             // 
             this.olvColumnAuthor.AspectName = "Author";
             this.olvColumnAuthor.Text = "Author";
+            this.olvColumnAuthor.Width = 88;
             // 
             // olvColumnGuid
             // 
             this.olvColumnGuid.AspectName = "Guid";
             this.olvColumnGuid.Text = "Guid";
+            this.olvColumnGuid.Width = 144;
+            // 
+            // olvColumnFilename
+            // 
+            this.olvColumnFilename.AspectName = "FileName";
+            this.olvColumnFilename.Text = "File name";
+            this.olvColumnFilename.Width = 91;
             // 
             // olvColumnWebsite
             // 
             this.olvColumnWebsite.AspectName = "Website";
             this.olvColumnWebsite.Hyperlink = true;
             this.olvColumnWebsite.Text = "Website";
-            // 
-            // olvColumnFilename
-            // 
-            this.olvColumnFilename.AspectName = "FileName";
-            this.olvColumnFilename.Text = "File name";
+            this.olvColumnWebsite.Width = 123;
             // 
             // SideloaderModsWindow
             // 

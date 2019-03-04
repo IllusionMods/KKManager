@@ -110,7 +110,6 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ModSearcher.cs" />
     <Compile Include="Plugins\PluginsWindow.cs">
       <SubType>Form</SubType>
     </Compile>

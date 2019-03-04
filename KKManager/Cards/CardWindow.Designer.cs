@@ -41,6 +41,9 @@ namespace KKManager.Cards
             this.moveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnSex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnPersonality = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnExtended = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnModDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
@@ -58,9 +61,6 @@ namespace KKManager.Cards
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonSegregate = new System.Windows.Forms.ToolStripButton();
-            this.olvColumnPersonality = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnSex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnExtended = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -145,6 +145,8 @@ namespace KKManager.Cards
             this.listView.TabIndex = 3;
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
+            this.listView.UseFilterIndicator = true;
+            this.listView.UseFiltering = true;
             this.listView.View = System.Windows.Forms.View.LargeIcon;
             this.listView.VirtualMode = true;
             this.listView.SelectedIndexChanged += new System.EventHandler(this.OnSelectedIndexChanged);
@@ -152,14 +154,30 @@ namespace KKManager.Cards
             // olvColumnName
             // 
             this.olvColumnName.Text = "Name";
+            this.olvColumnName.UseFiltering = false;
+            // 
+            // olvColumnSex
+            // 
+            this.olvColumnSex.Text = "Sex";
+            // 
+            // olvColumnPersonality
+            // 
+            this.olvColumnPersonality.Text = "Personality";
+            // 
+            // olvColumnExtended
+            // 
+            this.olvColumnExtended.Searchable = false;
+            this.olvColumnExtended.Text = "Extended data count";
             // 
             // olvColumnModDate
             // 
             this.olvColumnModDate.Text = "Modified";
+            this.olvColumnModDate.UseFiltering = false;
             // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.Text = "Filename";
+            this.olvColumnFilename.UseFiltering = false;
             // 
             // toolStrip
             // 
@@ -292,19 +310,6 @@ namespace KKManager.Cards
             this.toolStripButtonSegregate.Size = new System.Drawing.Size(114, 22);
             this.toolStripButtonSegregate.Text = "Segregate by sex";
             this.toolStripButtonSegregate.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
-            // 
-            // olvColumnPersonality
-            // 
-            this.olvColumnPersonality.Text = "Personality";
-            // 
-            // olvColumnSex
-            // 
-            this.olvColumnSex.Text = "Sex";
-            // 
-            // olvColumnExtended
-            // 
-            this.olvColumnExtended.Searchable = false;
-            this.olvColumnExtended.Text = "Extended data count";
             // 
             // CardWindow
             // 

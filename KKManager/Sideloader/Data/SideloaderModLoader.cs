@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Ionic.Zip;
 
@@ -15,29 +17,51 @@ namespace KKManager.Sideloader.Data
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
+        /// <param name="cancellationToken">Token used to abort the search</param>
         /// <param name="searchOption">Where to search</param>
-        public static List<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, SearchOption searchOption = SearchOption.AllDirectories)
+        public static IObservable<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
         {
-            var results = new List<SideloaderModInfo>();
+            var subject = new ReplaySubject<SideloaderModInfo>();
 
-            if (Directory.Exists(modDirectory))
+            if (!Directory.Exists(modDirectory) || cancellationToken.IsCancellationRequested)
             {
-                foreach (var file in Directory.GetFiles(modDirectory, "*.zip", searchOption))
+                subject.OnCompleted();
+                return subject;
+            }
+
+            void ReadSideloaderModsAsync()
+            {
+                try
                 {
-                    try
+                    foreach (var file in Directory.EnumerateFiles(modDirectory, "*.zip", searchOption))
                     {
-                        results.Add(LoadFromFile(file));
+                        try
+                        {
+                            subject.OnNext(LoadFromFile(file));
+                        }
+                        catch (SystemException ex)
+                        {
+                            Console.WriteLine(ex);
+                            /*MessageBox.Show(
+                                        $"Failed to load mod from \"{file}\" with error: {ex.Message}",
+                                        "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);*/
+                        }
+
+                        if (cancellationToken.IsCancellationRequested) break;
                     }
-                    catch (SystemException ex)
-                    {
-                        Console.WriteLine(ex);
-                        MessageBox.Show($"Failed to load mod from \"{file}\" with error: {ex.Message}",
-                            "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+
+                    subject.OnCompleted();
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex);
+                    subject.OnError(ex);
                 }
             }
 
-            return results;
+            Task.Run((Action)ReadSideloaderModsAsync, cancellationToken);
+
+            return subject;
         }
 
         public static SideloaderModInfo LoadFromFile(string filename)
