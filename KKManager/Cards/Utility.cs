@@ -59,7 +59,7 @@ namespace KKManager.Cards
 
         public const int BufferSize = 4096;
 
-        private static byte[] IENDChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+        private static readonly byte[] IENDChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
 
         public static long SearchForIEND(Stream stream)
         {

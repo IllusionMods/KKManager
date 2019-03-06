@@ -15,7 +15,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
 
         public Card CurrentCard
         {
-            get { return _currentCard; }
+            get => _currentCard;
             set
             {
                 _currentCard = value;

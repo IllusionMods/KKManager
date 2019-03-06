@@ -19,7 +19,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
             SupportedTypes = new[] { typeof(PluginInfo) };
         }
 
-        private PluginInfo CurrentPlugin
+        public PluginInfo CurrentPlugin
         {
             get => _currentPlugin;
             set

@@ -84,6 +84,7 @@ namespace KKManager
                 Environment.Exit(1);
             }
 
+            System.Diagnostics.Debug.Assert(path != null, nameof(path) + " != null");
             return new DirectoryInfo(path);
         }
 

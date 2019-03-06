@@ -30,7 +30,7 @@ namespace KKManager.Cards
         private DirectoryInfo _currentDirectory;
 
         private CancellationTokenSource _thumbnailCancellationTokenSource;
-        private CharacterRange _previousLoadedItemRange = new CharacterRange();
+        private CharacterRange _previousLoadedItemRange;
 
         public CardWindow()
         {
@@ -458,11 +458,11 @@ namespace KKManager.Cards
                                 TryOpenCardDirectory(file);
                                 return;
                             case DragDropEffects.Copy:
-                                File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                                File.Copy(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file) ?? throw new InvalidOperationException(file + " is not a valid path")));
                                 filesChanged = true;
                                 break;
                             case DragDropEffects.Move:
-                                File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file)));
+                                File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file) ?? throw new InvalidOperationException(file + " is not a valid path")));
                                 filesChanged = true;
                                 break;
                         }

@@ -13,7 +13,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
             SupportedTypes = null;
         }
 
-        private object CurrentObject
+        public object CurrentObject
         {
             get => _currentObject;
             set

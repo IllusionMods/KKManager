@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace KKManager
+namespace KKManager.Util
 {
-    static class Extensions
+    internal static class Extensions
     {
         public static void SafeInvoke(this Control obj, Action action)
         {

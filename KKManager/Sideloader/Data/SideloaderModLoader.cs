@@ -68,8 +68,7 @@ namespace KKManager.Sideloader.Data
 
         public static SideloaderModInfo LoadFromFile(string filename)
         {
-            var m = new SideloaderModInfo();
-            m.Location = new FileInfo(filename);
+            var m = new SideloaderModInfo {Location = new FileInfo(filename)};
 
             using (var zf = ZipFile.Read(m.Location.FullName))
             {

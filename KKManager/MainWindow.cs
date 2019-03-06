@@ -13,6 +13,7 @@ using KKManager.Plugins;
 using KKManager.Properties;
 using KKManager.Sideloader;
 using KKManager.ToolWindows.Properties;
+using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager
@@ -111,14 +112,14 @@ namespace KKManager
                     }
                 }
             }
-            catch { }
-            
+            catch (Exception ex) { Console.WriteLine("Failed to read opened tabs from config: " + ex); }
+
             OpenOrGetCardWindow(CardWindow.MaleCardDir);
             OpenOrGetCardWindow(CardWindow.FemaleCardDir);
 
             GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<PluginsWindow>();
-            
+
             dockPanel.DockRightPortion = 400;
             var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
             propertiesToolWindow.DockState = DockState.DockRight;

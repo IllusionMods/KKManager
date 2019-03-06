@@ -86,12 +86,10 @@ namespace KKManager.Cards.Data
 					BlockHeader blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
 					long num2 = reader.ReadInt64();
 					long position = reader.BaseStream.Position;
-                    
-					BlockHeader.Info info;
 
-					card = new Card(file);
+				    card = new Card(file);
                     
-					info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
+					var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
 					if (info != null)
 					{
 						Version value = new Version(info.version);

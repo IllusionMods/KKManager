@@ -17,7 +17,7 @@ namespace KKManager.Sideloader
     public sealed partial class SideloaderModsWindow : DockContent
     {
         private CancellationTokenSource _cancellationTokenSource;
-        private TypedObjectListView<SideloaderModInfo> _listView;
+        private readonly TypedObjectListView<SideloaderModInfo> _listView;
 
         public SideloaderModsWindow()
         {
