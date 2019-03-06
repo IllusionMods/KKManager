@@ -60,7 +60,9 @@ namespace KKManager.Windows.Content
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonSegregate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
+            this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
@@ -189,7 +191,7 @@ namespace KKManager.Windows.Content
             this.toolStripOpenDropdown,
             this.toolStripSeparator1,
             this.toolStripViewSelect,
-            this.toolStripButtonSegregate});
+            this.toolStripDropDownButtonTools});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1024, 25);
@@ -233,6 +235,7 @@ namespace KKManager.Windows.Content
             // 
             // toolStripOpenDropdown
             // 
+            this.toolStripOpenDropdown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripOpenDropdown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.femaleCardFolderToolStripMenuItem,
             this.maleCardFolderToolStripMenuItem,
@@ -240,28 +243,28 @@ namespace KKManager.Windows.Content
             this.toolStripOpenDropdown.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenDropdown.Image")));
             this.toolStripOpenDropdown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripOpenDropdown.Name = "toolStripOpenDropdown";
-            this.toolStripOpenDropdown.Size = new System.Drawing.Size(77, 22);
+            this.toolStripOpenDropdown.Size = new System.Drawing.Size(61, 22);
             this.toolStripOpenDropdown.Text = "Open...";
             this.toolStripOpenDropdown.ButtonClick += new System.EventHandler(this.ShowOpenFolderDialog);
             // 
             // femaleCardFolderToolStripMenuItem
             // 
             this.femaleCardFolderToolStripMenuItem.Name = "femaleCardFolderToolStripMenuItem";
-            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.femaleCardFolderToolStripMenuItem.Text = "Female card folder";
             this.femaleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.femaleCardFolderToolStripMenuItem_Click);
             // 
             // maleCardFolderToolStripMenuItem
             // 
             this.maleCardFolderToolStripMenuItem.Name = "maleCardFolderToolStripMenuItem";
-            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.maleCardFolderToolStripMenuItem.Text = "Male card folder";
             this.maleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.maleCardFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripSeparator1
             // 
@@ -270,6 +273,7 @@ namespace KKManager.Windows.Content
             // 
             // toolStripViewSelect
             // 
+            this.toolStripViewSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripViewSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.detailsToolStripMenuItem,
             this.smallIconsToolStripMenuItem,
@@ -277,13 +281,13 @@ namespace KKManager.Windows.Content
             this.toolStripViewSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripViewSelect.Image")));
             this.toolStripViewSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripViewSelect.Name = "toolStripViewSelect";
-            this.toolStripViewSelect.Size = new System.Drawing.Size(61, 22);
+            this.toolStripViewSelect.Size = new System.Drawing.Size(45, 22);
             this.toolStripViewSelect.Text = "View";
             // 
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
@@ -291,25 +295,44 @@ namespace KKManager.Windows.Content
             // 
             this.smallIconsToolStripMenuItem.Enabled = false;
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
-            // toolStripButtonSegregate
+            // toolStripDropDownButtonTools
             // 
-            this.toolStripButtonSegregate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSegregate.Image")));
-            this.toolStripButtonSegregate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSegregate.Name = "toolStripButtonSegregate";
-            this.toolStripButtonSegregate.Size = new System.Drawing.Size(114, 22);
-            this.toolStripButtonSegregate.Text = "Segregate by sex";
-            this.toolStripButtonSegregate.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
+            this.toolStripDropDownButtonTools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.segregateBySexToolStripMenuItem,
+            this.renameCardsToolStripMenuItem});
+            this.toolStripDropDownButtonTools.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonTools.Image")));
+            this.toolStripDropDownButtonTools.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonTools.Name = "toolStripDropDownButtonTools";
+            this.toolStripDropDownButtonTools.Size = new System.Drawing.Size(48, 22);
+            this.toolStripDropDownButtonTools.Text = "Tools";
+            this.toolStripDropDownButtonTools.ToolTipText = "Tools";
+            // 
+            // segregateBySexToolStripMenuItem
+            // 
+            this.segregateBySexToolStripMenuItem.Name = "segregateBySexToolStripMenuItem";
+            this.segregateBySexToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.segregateBySexToolStripMenuItem.Text = "Segregate selected by sex";
+            this.segregateBySexToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
+            // 
+            // renameCardsToolStripMenuItem
+            // 
+            this.renameCardsToolStripMenuItem.Enabled = false;
+            this.renameCardsToolStripMenuItem.Name = "renameCardsToolStripMenuItem";
+            this.renameCardsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.renameCardsToolStripMenuItem.Text = "Rename selected card files...";
+            this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
             // 
             // CardWindow
             // 
@@ -358,10 +381,12 @@ namespace KKManager.Windows.Content
         private ToolStripButton toolStripButtonGo;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator3;
-        private ToolStripButton toolStripButtonSegregate;
         private BrightIdeasSoftware.OLVColumn olvColumnPersonality;
         private BrightIdeasSoftware.OLVColumn olvColumnSex;
         private BrightIdeasSoftware.OLVColumn olvColumnExtended;
+        private ToolStripDropDownButton toolStripDropDownButtonTools;
+        private ToolStripMenuItem segregateBySexToolStripMenuItem;
+        private ToolStripMenuItem renameCardsToolStripMenuItem;
     }
 }
 

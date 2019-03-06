@@ -117,6 +117,12 @@
     <Compile Include="Data\Plugins\PluginLoader.cs" />
     <Compile Include="Functions\ModInstaller.cs" />
     <Compile Include="Data\Zipmods\SideloaderModInfo.cs" />
+    <Compile Include="Windows\Dialogs\RenameCards.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Dialogs\RenameCards.Designer.cs">
+      <DependentUpon>RenameCards.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -180,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Dialogs\RenameCards.resx">
+      <DependentUpon>RenameCards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>

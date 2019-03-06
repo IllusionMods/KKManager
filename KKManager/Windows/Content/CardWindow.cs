@@ -12,6 +12,7 @@ using BrightIdeasSoftware;
 using KKManager.Data.Cards;
 using KKManager.Functions;
 using KKManager.Util;
+using KKManager.Windows.Dialogs;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.Content
@@ -505,7 +506,7 @@ namespace KKManager.Windows.Content
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            var sexes = _typedListView.Objects.GroupBy(x => x.Parameter.sex).ToList();
+            var sexes = _typedListView.SelectedObjects.GroupBy(x => x.Parameter.sex).ToList();
 
             if (sexes.Count < 2)
             {
@@ -522,6 +523,11 @@ namespace KKManager.Windows.Content
             }
 
             OpenCardDirectory(_currentDirectory.GetDirectories().First());
+        }
+
+        private void renameCardsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RenameCards.ShowDialog(this, _typedListView.SelectedObjects.ToArray());
         }
     }
 }
