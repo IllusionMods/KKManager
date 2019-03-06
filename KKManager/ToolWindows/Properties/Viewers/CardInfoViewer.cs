@@ -1,4 +1,5 @@
 ﻿using KKManager.Cards.Data;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.ToolWindows.Properties.Viewers
 {
@@ -35,7 +36,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
             }
         }
 
-        public override void DisplayObjectProperties(object obj)
+        public override void DisplayObjectProperties(object obj, DockContent source)
         {
             CurrentCard = obj as Card;
         }

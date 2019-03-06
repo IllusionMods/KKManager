@@ -31,10 +31,13 @@ namespace KKManager.Plugins.Data
             {
                 try
                 {
-                    foreach (var file in Directory.EnumerateFiles(pluginDirectory, "*.dll", searchOption))
+                    foreach (var file in Directory.EnumerateFiles(pluginDirectory, "*.*", searchOption))
                     {
                         try
                         {
+                            var ext = Path.GetExtension(file);
+                            if (!IsValidPluginExtension(ext)) continue;
+
                             foreach (var pluginInfo in LoadFromFile(file))
                                 subject.OnNext(pluginInfo);
                         }
@@ -65,23 +68,90 @@ namespace KKManager.Plugins.Data
 
         public static IEnumerable<PluginInfo> LoadFromFile(string dllFile)
         {
-            using (var md = ModuleDefinition.ReadModule(dllFile))
-            {
-                var attribs = md.Types.Where(x => x.HasCustomAttributes && x.IsClass)
-                    .SelectMany(x => x.CustomAttributes)
-                    .Where(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
-                    .ToList();
+            var location = new FileInfo(dllFile);
 
-                var location = new FileInfo(dllFile);
-                foreach (var attrib in attribs)
+            using (var md = ModuleDefinition.ReadModule(dllFile, new ReaderParameters { AssemblyResolver = GetResolver(location) }))
+            {
+                var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
+                var classes = md.Types.Where(x => x.HasCustomAttributes && x.IsClass).ToList();
+
+                foreach (var c in classes)
                 {
+                    var bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin");
+                    if (bp == null) continue;
+
+                    var depAttributes = c.CustomAttributes
+                        .Where(x => x.AttributeType.FullName == "BepInEx.BepInDependency");
+                    var deps = depAttributes
+                        .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
+                        .Where(x => !String.IsNullOrWhiteSpace(x))
+                        .ToArray();
+
                     yield return new PluginInfo(
-                            attrib.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
-                            attrib.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
-                            attrib.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
-                            location);
+                        bp.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
+                        bp.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
+                        bp.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
+                        location,
+                        deps,
+                        assRefs);
                 }
             }
+        }
+
+        public static bool IsValidPluginExtension(string extension)
+        {
+            return extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) || extension.Equals(".dl_", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static DefaultAssemblyResolver GetResolver(FileInfo location)
+        {
+            var resolver = new DefaultAssemblyResolver();
+            if (location.Directory != null)
+            {
+                var coreDir = Path.Combine(location.Directory.FullName, "core");
+                if (Directory.Exists(coreDir))
+                    resolver.AddSearchDirectory(coreDir);
+            }
+
+            return resolver;
+        }
+
+        /// <summary>
+        /// Check which of the <see cref="referencesToTest"/> depend on the supplied <see cref="plugins"/>
+        /// </summary>
+        /// <param name="plugins">Plugins to be tested against</param>
+        /// <param name="referencesToTest">Plugins to check if they depend on the target plugin list</param>
+        /// <returns>Filtered list of references (only what the plugins reference)</returns>
+        public static IEnumerable<PluginInfo> CheckReferences(IList<PluginInfo> plugins, IList<PluginInfo> referencesToTest)
+        {
+            var deps = referencesToTest.SelectMany(reference => reference.Dependancies.Select(d => new { reference, depGuid = d.ToLower() }));
+            var existingDeps = deps.Join(plugins, s => s.depGuid, info => info.Guid.ToLower(), (s, info) => s.reference);
+
+            var refs = referencesToTest.SelectMany(reference => reference.GetAssemblyReferencesNames().Select(d => new { reference, dllName = d.ToLower() }));
+            var existingRefs = refs.Join(plugins, s => s.dllName, info => info.FileNameWithoutExtension.ToLower(), (s, info) => s.reference);
+
+            var topLevelDependancies = existingDeps.Concat(existingRefs).Distinct();
+
+            return topLevelDependancies;
+        }
+
+        /// <summary>
+        /// Check the supplied <see cref="plugins"/> for being dependent on other plugins in <see cref="dependenciesToTest"/>
+        /// </summary>
+        /// <param name="plugins">Plugins to be tested for depending on others</param>
+        /// <param name="dependenciesToTest">Plugins to check if they are depend on by the target plugin list</param>
+        /// <returns>Filtered list of references (only what the plugins reference)</returns>
+        public static IEnumerable<PluginInfo> CheckDependencies(IList<PluginInfo> plugins, IList<PluginInfo> dependenciesToTest)
+        {
+            var deps = plugins.SelectMany(reference => reference.Dependancies.Select(d => new { reference, depGuid = d.ToLower() }));
+            var existingDeps = deps.Join(dependenciesToTest, s => s.depGuid, info => info.Guid.ToLower(), (s, info) => info);
+
+            var refs = plugins.SelectMany(reference => reference.GetAssemblyReferencesNames().Select(d => new { reference, dllName = d.ToLower() }));
+            var existingRefs = refs.Join(dependenciesToTest, s => s.dllName, info => info.FileNameWithoutExtension.ToLower(), (s, info) => info);
+
+            var topLevelDependancies = existingDeps.Concat(existingRefs).Distinct();
+
+            return topLevelDependancies;
         }
     }
 }

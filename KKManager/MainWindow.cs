@@ -45,10 +45,10 @@ namespace KKManager
             });
         }
 
-        public PropertyViewerBase DisplayInPropertyViewer(object obj, bool forceOpen = false)
+        public PropertyViewerBase DisplayInPropertyViewer(object obj, DockContent source, bool forceOpen = false)
         {
             var viewer = GetOrCreateWindow<PropertiesToolWindow>(forceOpen);
-            return viewer?.ShowProperties(obj);
+            return viewer?.ShowProperties(obj, source);
         }
 
         /// <summary>

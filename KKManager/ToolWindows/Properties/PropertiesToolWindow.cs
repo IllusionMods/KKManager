@@ -44,7 +44,7 @@ namespace KKManager.ToolWindows.Properties
             }
         }
 
-        public PropertyViewerBase ShowProperties(object targetObject)
+        public PropertyViewerBase ShowProperties(object targetObject, DockContent source)
         {
             if (targetObject != null)
             {
@@ -52,7 +52,7 @@ namespace KKManager.ToolWindows.Properties
                 if (targetViewer == null) targetViewer = _defaultPropertyViewer;
 
                 ShowViewer(targetViewer);
-                targetViewer.DisplayObjectProperties(targetObject);
+                targetViewer.DisplayObjectProperties(targetObject, source);
                 return targetViewer;
             }
             return null;

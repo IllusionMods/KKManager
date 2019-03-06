@@ -1,4 +1,6 @@
-﻿namespace KKManager.ToolWindows.Properties.Viewers
+﻿using WeifenLuo.WinFormsUI.Docking;
+
+namespace KKManager.ToolWindows.Properties.Viewers
 {
     public partial class GenericViewer : PropertyViewerBase
     {
@@ -22,7 +24,7 @@
             }
         }
 
-        public override void DisplayObjectProperties(object obj)
+        public override void DisplayObjectProperties(object obj, DockContent source)
         {
             CurrentObject = obj;
         }

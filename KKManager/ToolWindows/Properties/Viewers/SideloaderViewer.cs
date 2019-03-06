@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using KKManager.Sideloader.Data;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.ToolWindows.Properties.Viewers
 {
@@ -44,7 +45,7 @@ namespace KKManager.ToolWindows.Properties.Viewers
             }
         }
 
-        public override void DisplayObjectProperties(object obj)
+        public override void DisplayObjectProperties(object obj, DockContent source)
         {
             Debug.Assert(obj is SideloaderModInfo);
             CurrentObject = (SideloaderModInfo)obj;

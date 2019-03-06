@@ -201,7 +201,7 @@ namespace KKManager.Cards
         private void OnSelectedIndexChanged(object sender, EventArgs e)
         {
             if (listView.SelectedObject != null)
-                MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject);
+                MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject, this);
         }
 
         private void RefreshCurrentFolder()

@@ -33,10 +33,12 @@ namespace KKManager.Sideloader.Data
             {
                 try
                 {
-                    foreach (var file in Directory.EnumerateFiles(modDirectory, "*.zip", searchOption))
+                    foreach (var file in Directory.EnumerateFiles(modDirectory, "*.*", searchOption))
                     {
                         try
                         {
+                            if(!IsValidZipmodExtension(Path.GetExtension(file))) continue;
+
                             subject.OnNext(LoadFromFile(file));
                         }
                         catch (SystemException ex)
@@ -118,6 +120,19 @@ namespace KKManager.Sideloader.Data
             }
 
             return m;
+        }
+
+        public static bool IsValidZipmodExtension(string extension)
+        {
+            var exts = new[]
+            {
+                ".zip",
+                ".zi_",
+                ".zipmod",
+                ".zi_mod",
+            };
+
+            return exts.Any(x => x.Equals(extension, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -101,6 +101,13 @@
     </Compile>
     <Compile Include="Cards\FileDragSource.cs" />
     <Compile Include="Plugins\Data\PluginLoader.cs" />
+    <Compile Include="Sideloader\Data\SideloaderModInfo.cs" />
+    <Compile Include="ToolWindows\Properties\Viewers\PluginViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolWindows\Properties\Viewers\PluginViewer.Designer.cs">
+      <DependentUpon>PluginViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolWindows\Properties\Viewers\GenericViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -124,7 +131,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Cards\Utility.cs" />
     <Compile Include="Plugins\Data\PluginInfo.cs" />
-    <Compile Include="Sideloader\Data\SideloaderMod.cs" />
     <Compile Include="Sideloader\Data\SideloaderModLoader.cs" />
     <Compile Include="Sideloader\SideloaderModsWindow.cs">
       <SubType>Form</SubType>
@@ -175,6 +181,9 @@
     </Compile>
     <EmbeddedResource Include="Sideloader\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolWindows\Properties\Viewers\PluginViewer.resx">
+      <DependentUpon>PluginViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolWindows\Properties\PropertiesToolWindow.resx">
       <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
