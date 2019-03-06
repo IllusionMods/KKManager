@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
+using BrightIdeasSoftware;
 
 namespace KKManager.Util
 {
@@ -15,6 +17,31 @@ namespace KKManager.Util
             guid = guid ?? string.Empty;
             var i = guid.LastIndexOf(".", StringComparison.Ordinal);
             return i < 0 ? guid : guid.Substring(0, i).Trim().ToLowerInvariant();
+        }
+
+        public static void FastAutoResizeColumns(this ObjectListView olv)
+        {
+            try
+            {
+                olv.BeginUpdate();
+                olv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                try
+                {
+                    olv.EndUpdate();
+                }
+                catch (SystemException ex)
+                {
+                    Console.WriteLine(ex);
+
+                }
+            }
         }
     }
 }

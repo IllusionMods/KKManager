@@ -89,85 +89,90 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cards\CardLoader.cs" />
-    <Compile Include="Cards\Data\Card.cs" />
-    <Compile Include="Cards\Data\Internal\BlockHeader.cs" />
-    <Compile Include="Cards\Data\Internal\ChaFileExtended.cs" />
-    <Compile Include="Cards\Data\Internal\ChaFileParameter.cs" />
-    <Compile Include="Cards\CardWindow.cs">
+    <Compile Include="Data\Cards\CardLoader.cs" />
+    <Compile Include="Data\Cards\Card.cs" />
+    <Compile Include="Data\Cards\Internal\BlockHeader.cs" />
+    <Compile Include="Data\Cards\Internal\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
+    <Compile Include="Functions\InstallDirectoryHelper.cs" />
+    <Compile Include="Util\SimpleFileLogger.cs" />
+    <Compile Include="Windows\Content\CardWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Cards\CardWindow.Designer.cs">
+    <Compile Include="Windows\Content\CardWindow.Designer.cs">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cards\FileDragSource.cs" />
-    <Compile Include="Plugins\Data\PluginLoader.cs" />
-    <Compile Include="Sideloader\Data\SideloaderModInfo.cs" />
-    <Compile Include="ToolWindows\Properties\Viewers\PluginViewer.cs">
+    <Compile Include="Util\UniversalDragAndDrop.cs" />
+    <Compile Include="Data\IFileInfoBase.cs" />
+    <Compile Include="Data\ModInfoBase.cs" />
+    <Compile Include="Data\Plugins\PluginLoader.cs" />
+    <Compile Include="Functions\ModInstaller.cs" />
+    <Compile Include="Data\Zipmods\SideloaderModInfo.cs" />
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\PluginViewer.Designer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.Designer.cs">
       <DependentUpon>PluginViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\GenericViewer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\GenericViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\GenericViewer.Designer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\GenericViewer.Designer.cs">
       <DependentUpon>GenericViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\Extensions.cs" />
-    <Compile Include="MainWindow.cs">
+    <Compile Include="Windows\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWindow.Designer.cs">
+    <Compile Include="Windows\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Plugins\PluginsWindow.cs">
+    <Compile Include="Windows\Content\PluginsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Plugins\PluginsWindow.Designer.cs">
+    <Compile Include="Windows\Content\PluginsWindow.Designer.cs">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Cards\Utility.cs" />
-    <Compile Include="Plugins\Data\PluginInfo.cs" />
-    <Compile Include="Sideloader\Data\SideloaderModLoader.cs" />
-    <Compile Include="Sideloader\SideloaderModsWindow.cs">
+    <Compile Include="Data\Cards\Utility.cs" />
+    <Compile Include="Data\Plugins\PluginInfo.cs" />
+    <Compile Include="Data\Zipmods\SideloaderModLoader.cs" />
+    <Compile Include="Windows\Content\SideloaderModsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Sideloader\SideloaderModsWindow.Designer.cs">
+    <Compile Include="Windows\Content\SideloaderModsWindow.Designer.cs">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolWindows\Properties\PropertiesToolWindow.cs">
+    <Compile Include="Windows\ToolWindows\Properties\PropertiesToolWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\PropertiesToolWindow.Designer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\PropertiesToolWindow.Designer.cs">
       <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolWindows\Properties\PropertyViewerBase.cs">
+    <Compile Include="Windows\ToolWindows\Properties\PropertyViewerBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\CardInfoViewer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\CardInfoViewer.Designer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.Designer.cs">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\SideloaderViewer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ToolWindows\Properties\Viewers\SideloaderViewer.Designer.cs">
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.Designer.cs">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\ListTools.cs" />
-    <EmbeddedResource Include="Cards\CardWindow.resx">
+    <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainWindow.resx">
+    <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\PluginsWindow.resx">
+    <EmbeddedResource Include="Windows\Content\PluginsWindow.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -180,22 +185,22 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Sideloader\SideloaderModsWindow.resx">
+    <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolWindows\Properties\Viewers\PluginViewer.resx">
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.resx">
       <DependentUpon>PluginViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolWindows\Properties\PropertiesToolWindow.resx">
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\PropertiesToolWindow.resx">
       <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolWindows\Properties\Viewers\GenericViewer.resx">
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\GenericViewer.resx">
       <DependentUpon>GenericViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolWindows\Properties\Viewers\CardInfoViewer.resx">
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.resx">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolWindows\Properties\Viewers\SideloaderViewer.resx">
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -215,6 +220,7 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del /f /q $(TargetDir)*.pdb
