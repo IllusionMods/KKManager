@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Functions;
 using Mono.Cecil;
 
 namespace KKManager.Data.Plugins
@@ -108,7 +109,7 @@ namespace KKManager.Data.Plugins
             var resolver = new DefaultAssemblyResolver();
             if (location.Directory != null)
             {
-                var coreDir = Path.Combine(location.Directory.FullName, "core");
+                var coreDir = Path.Combine(InstallDirectoryHelper.GetPluginPath(), "core");
                 if (Directory.Exists(coreDir))
                     resolver.AddSearchDirectory(coreDir);
             }

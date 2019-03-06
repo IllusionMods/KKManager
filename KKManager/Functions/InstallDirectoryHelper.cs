@@ -21,11 +21,21 @@ namespace KKManager.Functions
             }
         }
 
+        public static string GetPluginPath()
+        {
+            return Path.Combine(KoikatuDirectory.FullName, "BepInEx");
+        }
+
+        public static string GetModsPath()
+        {
+            return Path.Combine(KoikatuDirectory.FullName, "mods");
+        }
+
         public static bool IsValidGamePath(string path)
         {
             try
             {
-                return !string.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
+                return !String.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
             }
             catch
             {

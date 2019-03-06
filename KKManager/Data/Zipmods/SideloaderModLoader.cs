@@ -79,7 +79,12 @@ namespace KKManager.Data.Zipmods
                     x.FileName.Equals("manifest.xml", StringComparison.OrdinalIgnoreCase));
 
                 if (manifestEntry == null)
-                    throw new FileNotFoundException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.", "manifest.xml");
+                {
+                    if(zf.Entries.Any(x => x.IsDirectory && x.FileName.StartsWith("abdata", StringComparison.OrdinalIgnoreCase)))
+                        throw new NotSupportedException("The file is a hardmod and cannot be installed automatically. It's recommeded to look for a sideloader version.");
+
+                    throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
+                }
 
                 using (var fileStream = manifestEntry.OpenReader())
                 {

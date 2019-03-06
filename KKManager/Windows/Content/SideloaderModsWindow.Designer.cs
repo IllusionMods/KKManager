@@ -44,6 +44,8 @@
             this.toolStripButtonDisable = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -138,7 +140,9 @@
             this.toolStripButtonEnable,
             this.toolStripButtonDisable,
             this.toolStripSeparator1,
-            this.toolStripButtonDelete});
+            this.toolStripButtonDelete,
+            this.toolStripSeparator3,
+            this.toolStripButtonOpenDir});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(891, 25);
@@ -195,6 +199,21 @@
             this.toolStripButtonDelete.Text = "Delete";
             this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonOpenDir
+            // 
+            this.toolStripButtonOpenDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonOpenDir.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpenDir.Image")));
+            this.toolStripButtonOpenDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOpenDir.Name = "toolStripButtonOpenDir";
+            this.toolStripButtonOpenDir.Size = new System.Drawing.Size(123, 22);
+            this.toolStripButtonOpenDir.Text = "Open mods directory";
+            this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
+            // 
             // SideloaderModsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -230,5 +249,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
         private BrightIdeasSoftware.OLVColumn olvColumnEnabled;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton toolStripButtonOpenDir;
     }
 }

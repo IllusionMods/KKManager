@@ -65,6 +65,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.1.3\lib\net46\System.Reactive.dll</HintPath>
@@ -94,8 +95,16 @@
     <Compile Include="Data\Cards\Internal\BlockHeader.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
+    <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
     <Compile Include="Util\SimpleFileLogger.cs" />
+    <Compile Include="Util\StringTools.cs" />
+    <Compile Include="Windows\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Content\CardWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,6 +175,9 @@
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Util\ListTools.cs" />
+    <EmbeddedResource Include="Windows\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -55,16 +56,14 @@ namespace KKManager.Windows.Content
             ReloadList();
         }
 
-        private void ReloadList()
+        public void ReloadList()
         {
             CancelListReload();
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
-
-            var modDir = Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "mods");
             var token = _cancellationTokenSource.Token;
-            var observable = SideloaderModLoader.TryReadSideloaderMods(modDir, token);
+            var observable = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath(), token);
 
             observable
                 .Buffer(TimeSpan.FromSeconds(1))
@@ -144,6 +143,18 @@ namespace KKManager.Windows.Content
                     Console.WriteLine(ex);
                     MessageBox.Show("Failed to delete " + obj.Name + "\n\n" + ex.Message, "Delete zipmods", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private void toolStripButtonOpenDir_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start(InstallDirectoryHelper.GetModsPath());
+            }
+            catch (SystemException ex)
+            {
+                MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

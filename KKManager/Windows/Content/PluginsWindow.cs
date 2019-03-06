@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -55,16 +56,14 @@ namespace KKManager.Windows.Content
             ReloadList();
         }
 
-        private void ReloadList()
+        public void ReloadList()
         {
             CancelListReload();
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
-
-            var modDir = Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "bepinex");
             var token = _cancellationTokenSource.Token;
-            var observable = PluginLoader.TryLoadPlugins(modDir, token);
+            var observable = PluginLoader.TryLoadPlugins(InstallDirectoryHelper.GetPluginPath(), token);
 
             observable
                 .Buffer(TimeSpan.FromSeconds(0.5))
@@ -187,33 +186,15 @@ namespace KKManager.Windows.Content
                 objectListView1.EnsureModelVisible(toSelect);
         }
 
-        private void toolStripButtonInstall_Click(object sender, EventArgs e)
+        private void toolStripButtonOpenDir_Click(object sender, EventArgs e)
         {
-            using (var dialog = new OpenFileDialog
+            try
             {
-                Multiselect = false,
-                CheckFileExists = true,
-                DereferenceLinks = true,
-                ValidateNames = true,
-                AutoUpgradeEnabled = true,
-                Title = "Choose a .dll file or an archive with a plugin inside",
-                Filter = "Potential plugin files|*.dll;*.7z;*.rar;*.zip"
-            })
+                Process.Start(InstallDirectoryHelper.GetPluginPath());
+            }
+            catch (SystemException ex)
             {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    try
-                    {
-                        var plugins = ModInstaller.InstallFromUnknownFile(dialog.FileName);
-                        // todo handle differently?
-                        objectListView1.AddObjects(plugins.OfType<PluginInfo>().ToList());
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        throw;
-                    }
-                }
+                MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -7,7 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Functions;
 using KKManager.Properties;
 using KKManager.Util;
 using KKManager.Windows.Content;
@@ -31,17 +33,32 @@ namespace KKManager.Windows
             SetupTabs();
 
             Text = $"{Text} - {Assembly.GetExecutingAssembly().GetName().Version}";
+
+            Task.Run((Action)PopulateStartMenu);
+        }
+
+        private void PopulateStartMenu()
+        {
+            var toAdd = new List<ToolStripItem>();
+            var pluginPath = InstallDirectoryHelper.GetPluginPath();
+            var allExes = InstallDirectoryHelper.KoikatuDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
+            var filteredExes = allExes.Where(x => !x.Name.Equals("bepinex.patcher.exe", StringComparison.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
+            foreach (var file in filteredExes.OrderBy(x => x.Name))
+            {
+                var item = new ToolStripMenuItem(file.Name);
+                item.AutoToolTip = false;
+                item.ToolTipText = file.FullName;
+                item.Click += (o, args) => { SafeStartProcess(file.FullName); };
+                toAdd.Add(item);
+            }
+            this.SafeInvoke(() => startTheGameToolStripMenuItem.DropDownItems.AddRange(toAdd.ToArray()));
         }
 
         public static MainWindow Instance { get; private set; }
 
         public static void SetStatusText(string text)
         {
-            Instance?.SafeInvoke(() =>
-            {
-                Instance.toolStripStatusLabelStatus.Text = text;
-                //Instance.toolStripStatusLabelStatus.Invalidate();
-            });
+            Instance?.SafeInvoke(() => Instance.toolStripStatusLabelStatus.Text = text);
         }
 
         public PropertyViewerBase DisplayInPropertyViewer(object obj, DockContent source, bool forceOpen = false)
@@ -183,6 +200,79 @@ namespace KKManager.Windows
         private void readmeAndSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/bbepis/KKManager");
+        }
+
+        private void installANewModToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog
+            {
+                Multiselect = false,
+                CheckFileExists = true,
+                DereferenceLinks = true,
+                ValidateNames = true,
+                AutoUpgradeEnabled = true,
+                Title = "Choose a .dll file or an archive with the mod to install",
+                Filter = "Supported mod files(*.dll;*.zipmod;*.zip)|*.dll;*.zipmod;*.zip"
+            })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    try
+                    {
+                        ModInstaller.InstallFromUnknownFile(dialog.FileName);
+                        foreach (var window in GetWindows<DockContent>())
+                        {
+                            if (window is PluginsWindow pw)
+                                pw.ReloadList();
+                            else if (window is SideloaderModsWindow sm)
+                                sm.ReloadList();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        MessageBox.Show("Failed to install the selected mod.\n\n" + ex.Message, "Failed to install mod", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var ab = new AboutBox())
+                ab.Show(this);
+        }
+
+        private void installDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeStartProcess(InstallDirectoryHelper.KoikatuDirectory.FullName);
+        }
+
+        private void screenshotsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\cap"));
+        }
+
+        private void charactersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\chara"));
+        }
+
+        private void scenesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\Studio\\scene"));
+        }
+
+        private static void SafeStartProcess(string fileFullName)
+        {
+            try
+            {
+                Process.Start(fileFullName);
+            }
+            catch (SystemException ex)
+            {
+                MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

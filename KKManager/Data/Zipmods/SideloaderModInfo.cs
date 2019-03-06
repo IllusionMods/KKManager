@@ -8,8 +8,8 @@ namespace KKManager.Data.Zipmods
 {
     public class SideloaderModInfo : ModInfoBase
     {
-        public SideloaderModInfo(FileInfo location, string guid, string name, string version, 
-            string author, string description, string website, IReadOnlyList<Image> images, IReadOnlyList<string> contents) 
+        public SideloaderModInfo(FileInfo location, string guid, string name, string version,
+            string author, string description, string website, IReadOnlyList<Image> images, IReadOnlyList<string> contents)
             : base(location, guid, name, version)
         {
             Author = author;
@@ -19,10 +19,20 @@ namespace KKManager.Data.Zipmods
             Contents = contents;
         }
 
+        ~SideloaderModInfo()
+        {
+            // todo handle properly or move images out of here
+            if (Images != null)
+            {
+                foreach (var image in Images)
+                    image.Dispose();
+            }
+        }
+
         public string Author { get; }
         public string Description { get; }
         public string Website { get; }
-        
+
         [Browsable(false)]
         public IReadOnlyList<Image> Images { get; }
 

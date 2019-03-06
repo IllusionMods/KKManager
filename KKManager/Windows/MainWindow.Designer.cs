@@ -39,11 +39,19 @@
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sideloaderModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPluginBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startTheGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.installDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.screenshotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.charactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scenesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.installANewModToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -53,6 +61,9 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem,
+            this.startTheGameToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.installANewModToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -137,6 +148,81 @@
             this.openPluginBrowserToolStripMenuItem.Text = "Open plugin browser";
             this.openPluginBrowserToolStripMenuItem.Click += new System.EventHandler(this.openPluginBrowserToolStripMenuItem_Click);
             // 
+            // startTheGameToolStripMenuItem
+            // 
+            this.startTheGameToolStripMenuItem.Name = "startTheGameToolStripMenuItem";
+            this.startTheGameToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.startTheGameToolStripMenuItem.Text = "Start";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.installDirectoryToolStripMenuItem,
+            this.screenshotsToolStripMenuItem,
+            this.charactersToolStripMenuItem,
+            this.scenesToolStripMenuItem});
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
+            this.openToolStripMenuItem.Text = "Open directory";
+            // 
+            // installDirectoryToolStripMenuItem
+            // 
+            this.installDirectoryToolStripMenuItem.Name = "installDirectoryToolStripMenuItem";
+            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.installDirectoryToolStripMenuItem.Text = "Install directory";
+            this.installDirectoryToolStripMenuItem.Click += new System.EventHandler(this.installDirectoryToolStripMenuItem_Click);
+            // 
+            // screenshotsToolStripMenuItem
+            // 
+            this.screenshotsToolStripMenuItem.Name = "screenshotsToolStripMenuItem";
+            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.screenshotsToolStripMenuItem.Text = "Screenshots";
+            this.screenshotsToolStripMenuItem.Click += new System.EventHandler(this.screenshotsToolStripMenuItem_Click);
+            // 
+            // charactersToolStripMenuItem
+            // 
+            this.charactersToolStripMenuItem.Name = "charactersToolStripMenuItem";
+            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.charactersToolStripMenuItem.Text = "Characters";
+            this.charactersToolStripMenuItem.Click += new System.EventHandler(this.charactersToolStripMenuItem_Click);
+            // 
+            // scenesToolStripMenuItem
+            // 
+            this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
+            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scenesToolStripMenuItem.Text = "Scenes";
+            this.scenesToolStripMenuItem.Click += new System.EventHandler(this.scenesToolStripMenuItem_Click);
+            // 
+            // installANewModToolStripMenuItem
+            // 
+            this.installANewModToolStripMenuItem.Name = "installANewModToolStripMenuItem";
+            this.installANewModToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
+            this.installANewModToolStripMenuItem.Text = "Install a new mod...";
+            this.installANewModToolStripMenuItem.Click += new System.EventHandler(this.installANewModToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.readmeAndSourceCodeToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // readmeAndSourceCodeToolStripMenuItem
+            // 
+            this.readmeAndSourceCodeToolStripMenuItem.Name = "readmeAndSourceCodeToolStripMenuItem";
+            this.readmeAndSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.readmeAndSourceCodeToolStripMenuItem.Text = "Readme and source code";
+            this.readmeAndSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.readmeAndSourceCodeToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // dockPanel
             // 
             this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -159,21 +245,6 @@
             // 
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.readmeAndSourceCodeToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // readmeAndSourceCodeToolStripMenuItem
-            // 
-            this.readmeAndSourceCodeToolStripMenuItem.Name = "readmeAndSourceCodeToolStripMenuItem";
-            this.readmeAndSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-            this.readmeAndSourceCodeToolStripMenuItem.Text = "Readme and source code";
-            this.readmeAndSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.readmeAndSourceCodeToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -215,5 +286,13 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelStatus;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem readmeAndSourceCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startTheGameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem installANewModToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem installDirectoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem screenshotsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem charactersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem scenesToolStripMenuItem;
     }
 }
