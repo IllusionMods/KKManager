@@ -5,7 +5,7 @@
     <Setting Name="GamePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DockState" Type="System.String" Scope="User">
+    <Setting Name="DockState" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
