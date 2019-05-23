@@ -52,6 +52,7 @@
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.openPropertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,7 +93,8 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openCardBrowserToolStripMenuItem,
             this.sideloaderModsToolStripMenuItem,
-            this.openPluginBrowserToolStripMenuItem});
+            this.openPluginBrowserToolStripMenuItem,
+            this.openPropertiesToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -168,28 +170,28 @@
             // installDirectoryToolStripMenuItem
             // 
             this.installDirectoryToolStripMenuItem.Name = "installDirectoryToolStripMenuItem";
-            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.installDirectoryToolStripMenuItem.Text = "Install directory";
             this.installDirectoryToolStripMenuItem.Click += new System.EventHandler(this.installDirectoryToolStripMenuItem_Click);
             // 
             // screenshotsToolStripMenuItem
             // 
             this.screenshotsToolStripMenuItem.Name = "screenshotsToolStripMenuItem";
-            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.screenshotsToolStripMenuItem.Text = "Screenshots";
             this.screenshotsToolStripMenuItem.Click += new System.EventHandler(this.screenshotsToolStripMenuItem_Click);
             // 
             // charactersToolStripMenuItem
             // 
             this.charactersToolStripMenuItem.Name = "charactersToolStripMenuItem";
-            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.charactersToolStripMenuItem.Text = "Characters";
             this.charactersToolStripMenuItem.Click += new System.EventHandler(this.charactersToolStripMenuItem_Click);
             // 
             // scenesToolStripMenuItem
             // 
             this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
-            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.scenesToolStripMenuItem.Text = "Scenes";
             this.scenesToolStripMenuItem.Click += new System.EventHandler(this.scenesToolStripMenuItem_Click);
             // 
@@ -246,6 +248,13 @@
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
             // 
+            // openPropertiesToolStripMenuItem
+            // 
+            this.openPropertiesToolStripMenuItem.Name = "openPropertiesToolStripMenuItem";
+            this.openPropertiesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.openPropertiesToolStripMenuItem.Text = "Open properties";
+            this.openPropertiesToolStripMenuItem.Click += new System.EventHandler(this.openPropertiesToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -294,5 +303,6 @@
         private System.Windows.Forms.ToolStripMenuItem screenshotsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem charactersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scenesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openPropertiesToolStripMenuItem;
     }
 }

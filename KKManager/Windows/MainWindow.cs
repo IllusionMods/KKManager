@@ -176,6 +176,11 @@ namespace KKManager.Windows
             GetOrCreateWindow<PluginsWindow>().Show(dockPanel, DockState.Document);
         }
 
+        private void openPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetOrCreateWindow<PropertiesToolWindow>().Show(dockPanel, DockState.DockRight);
+        }
+
         private void otherToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dir = CardWindow.ShowCardFolderBrowseDialog(this);
