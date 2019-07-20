@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -9,23 +10,25 @@ namespace KKManager.Windows.ToolWindows.Properties
 {
     public partial class PropertiesToolWindow : DockContent
     {
-        private readonly PropertyViewerBase _defaultPropertyViewer;
-        private readonly Dictionary<Type, PropertyViewerBase> _propertyViewers;
+        private PropertyViewerBase _defaultPropertyViewer;
+        private Dictionary<Type, PropertyViewerBase> _propertyViewers;
 
         public PropertiesToolWindow()
         {
             InitializeComponent();
 
-            var iType = typeof(PropertyViewerBase);
-            var propViewers = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => x != iType && iType.IsAssignableFrom(x))
-                .Select(Activator.CreateInstance)
-                .Cast<PropertyViewerBase>();
+            CreateAllPropertyViewers();
+        }
 
+        private void CreateAllPropertyViewers()
+        {
             _propertyViewers = new Dictionary<Type, PropertyViewerBase>();
-            foreach (var propViewer in propViewers)
+
+            foreach (var propViewerType in FindAllPropertyViewerTypes())
             {
+                var propViewer = TryCreatePropertyViewer(propViewerType);
+                if (propViewer == null) continue;
+
                 propViewerContainer.Controls.Add(propViewer);
                 propViewer.Dock = DockStyle.Fill;
                 propViewer.Enabled = false;
@@ -40,8 +43,49 @@ namespace KKManager.Windows.ToolWindows.Properties
                     }
                 }
                 else
+                {
                     _defaultPropertyViewer = propViewer;
+                }
             }
+        }
+
+        private static PropertyViewerBase TryCreatePropertyViewer(Type propViewerType)
+        {
+            try
+            {
+                return (PropertyViewerBase)Activator.CreateInstance(propViewerType);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        private static IEnumerable<Type> FindAllPropertyViewerTypes()
+        {
+            var iType = typeof(PropertyViewerBase);
+            var results = new List<Type>();
+
+            foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    results.AddRange(ass.GetTypes().Where(x => x != iType && iType.IsAssignableFrom(x)));
+                }
+                catch (Exception e)
+                {
+                    if (e is ReflectionTypeLoadException re)
+                    {
+                        foreach (var loaderException in re.LoaderExceptions)
+                            Console.WriteLine("LoaderException: " + loaderException);
+                    }
+
+                    Console.WriteLine(e);
+                }
+            }
+
+            return results;
         }
 
         public PropertyViewerBase ShowProperties(object targetObject, DockContent source)
@@ -60,7 +104,7 @@ namespace KKManager.Windows.ToolWindows.Properties
 
         private IEnumerable<PropertyViewerBase> GetAllPropertyViewers()
         {
-            return _propertyViewers.Values.Concat(new[] {_defaultPropertyViewer});
+            return _propertyViewers.Values.Concat(new[] { _defaultPropertyViewer });
         }
 
         private void ShowViewer(PropertyViewerBase targetViewerBase)
