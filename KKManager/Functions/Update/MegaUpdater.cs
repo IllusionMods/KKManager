@@ -11,6 +11,8 @@ namespace KKManager.Functions.Update
 {
     public class MegaUpdater : IDisposable
     {
+        private static readonly string[] _acceptableZipmodExtensions = { ".zip", ".zipmod" };
+
         private readonly MegaApiClient _client;
 
         private List<INode> _allNodes;
@@ -133,13 +135,11 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localFile);
 
-                            if (!localFile.Exists)
-                                results.Add(new SideloaderUpdateItem(remoteItem, localFile));
-                            else
+                            var extension = Path.GetExtension(remoteItem.Name)?.ToLower();
+
+                            if (_acceptableZipmodExtensions.Contains(extension))
                             {
-                                var localIsUpToDate = localFile.Length == remoteItem.Size;
-                                //todo re-add and remove the span add?
-                                //	&& localFile.CreationTimeUtc + TimeSpan.FromDays(1) >= remoteItem.CreationDate.ToUniversalTime();
+                                var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
 
                                 results.Add(new SideloaderUpdateItem(remoteItem, localFile, localIsUpToDate));
                             }
@@ -157,6 +157,7 @@ namespace KKManager.Functions.Update
                             results.AddRange(ProcessDirectory(remoteItem, localItem, cancellationToken));
                         }
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
