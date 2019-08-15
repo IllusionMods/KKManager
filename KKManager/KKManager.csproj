@@ -105,7 +105,7 @@
     <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
-    <Compile Include="Functions\SideloaderUpdateTask.cs" />
+    <Compile Include="Functions\Update\SideloaderUpdateItem.cs" />
     <Compile Include="Util\SimpleFileLogger.cs" />
     <Compile Include="Util\StringTools.cs" />
     <Compile Include="Windows\AboutBox.cs">
@@ -126,19 +126,25 @@
     <Compile Include="Data\Plugins\PluginLoader.cs" />
     <Compile Include="Functions\ModInstaller.cs" />
     <Compile Include="Data\Zipmods\SideloaderModInfo.cs" />
+    <Compile Include="Windows\Dialogs\ModUpdateProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Dialogs\ModUpdateProgressDialog.Designer.cs">
+      <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Dialogs\RenameCards.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Windows\Dialogs\RenameCards.Designer.cs">
       <DependentUpon>RenameCards.cs</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Dialogs\SideloaderUpdateWindow.cs">
+    <Compile Include="Windows\Dialogs\ModUpdateSelectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Windows\Dialogs\SideloaderUpdateWindow.Designer.cs">
-      <DependentUpon>SideloaderUpdateWindow.cs</DependentUpon>
+    <Compile Include="Windows\Dialogs\ModUpdateSelectDialog.Designer.cs">
+      <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\SideloaderModpackUpdater.cs" />
+    <Compile Include="Functions\Update\MegaUpdater.cs" />
     <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -203,11 +209,14 @@
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Dialogs\ModUpdateProgressDialog.resx">
+      <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\RenameCards.resx">
       <DependentUpon>RenameCards.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Windows\Dialogs\SideloaderUpdateWindow.resx">
-      <DependentUpon>SideloaderUpdateWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Windows\Dialogs\ModUpdateSelectDialog.resx">
+      <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
@@ -259,6 +268,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\chikajump.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

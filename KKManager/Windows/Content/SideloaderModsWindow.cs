@@ -66,7 +66,7 @@ namespace KKManager.Windows.Content
             var observable = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath(), token);
 
             observable
-                .Buffer(TimeSpan.FromSeconds(1))
+                .Buffer(TimeSpan.FromSeconds(3))
                 .ObserveOn(this)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
                     () =>

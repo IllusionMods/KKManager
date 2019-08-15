@@ -228,7 +228,7 @@ namespace KKManager.Windows.Content
 
             var processedCount = 0;
             cardLoadObservable
-                .Buffer(TimeSpan.FromSeconds(1))
+                .Buffer(TimeSpan.FromSeconds(3))
                 .ObserveOn(this)
                 .Subscribe(
                     list =>
@@ -334,7 +334,7 @@ namespace KKManager.Windows.Content
             Task.Run((Action)CardThumbLoader, token);
 
             updateSubject
-                .Buffer(TimeSpan.FromSeconds(1))
+                .Buffer(TimeSpan.FromSeconds(3))
                 .ObserveOn(this)
                 .Subscribe(list => listView.RefreshObjects((IList)list), token);
         }
