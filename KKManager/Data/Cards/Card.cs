@@ -26,15 +26,15 @@ namespace KKManager.Data.Cards
         public Image GetCardFaceImage()
         {
             using (var stream = Location.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (BinaryReader reader = new BinaryReader(stream))
+            using (var reader = new BinaryReader(stream))
             {
                 stream.Position = Utility.SearchForIEND(stream);
-                int loadProductNo = reader.ReadInt32();
-                string marker = reader.ReadString();
+                var loadProductNo = reader.ReadInt32();
+                var marker = reader.ReadString();
                 var loadVersion = new Version(reader.ReadString());
-                int faceLength = reader.ReadInt32();
+                var faceLength = reader.ReadInt32();
 
-                using (MemoryStream memStream = new MemoryStream(reader.ReadBytes(faceLength)))
+                using (var memStream = new MemoryStream(reader.ReadBytes(faceLength)))
                     return Image.FromStream(memStream);
             }
         }
@@ -49,9 +49,9 @@ namespace KKManager.Data.Cards
 			card = null;
 
 		    using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (BinaryReader reader = new BinaryReader(stream))
+            using (var reader = new BinaryReader(stream))
 			{
-				long IEND = Utility.SearchForIEND(stream);
+				var IEND = Utility.SearchForIEND(stream);
 
 				if (IEND == -1 || IEND >= stream.Length)
 					return false;
@@ -60,13 +60,13 @@ namespace KKManager.Data.Cards
 
 				try
 				{
-					int loadProductNo = reader.ReadInt32();
+					var loadProductNo = reader.ReadInt32();
 					if (loadProductNo > 100)
 					{
 						return false;
 					}
 
-					string marker = reader.ReadString();
+					var marker = reader.ReadString();
 					if (marker != "【KoiKatuChara】")
 					{
 						return false;
@@ -78,29 +78,29 @@ namespace KKManager.Data.Cards
 						return false;
 					}
 
-					int faceLength = reader.ReadInt32();
+					var faceLength = reader.ReadInt32();
 					if (faceLength > 0)
 					{
 						//this.facePngData = reader.ReadBytes(num);
 						stream.Seek(faceLength, SeekOrigin.Current);
 					}
 
-					int count = reader.ReadInt32();
-					byte[] bytes = reader.ReadBytes(count);
-					BlockHeader blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
-					long num2 = reader.ReadInt64();
-					long position = reader.BaseStream.Position;
+					var count = reader.ReadInt32();
+					var bytes = reader.ReadBytes(count);
+					var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
+					var num2 = reader.ReadInt64();
+					var position = reader.BaseStream.Position;
 
 				    card = new Card(file);
                     
 					var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
 					if (info != null)
 					{
-						Version value = new Version(info.version);
+						var value = new Version(info.version);
 						if (0 <= ChaFileParameter.CurrentVersion.CompareTo(value))
 						{
 							reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-							byte[] parameterBytes = reader.ReadBytes((int)info.size);
+							var parameterBytes = reader.ReadBytes((int)info.size);
 
 							card.Parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes);
 							card.Parameter.ComplementWithVersion();
@@ -111,7 +111,7 @@ namespace KKManager.Data.Cards
 					if (info != null)
 					{
 						reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-						byte[] parameterBytes = reader.ReadBytes((int)info.size);
+						var parameterBytes = reader.ReadBytes((int)info.size);
 						
 						card.Extended = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
 					}

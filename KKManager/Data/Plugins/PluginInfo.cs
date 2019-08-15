@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace KKManager.Data.Plugins
 {
-
     public class PluginInfo : ModInfoBase
     {
         public PluginInfo(string name, string version, string guid, FileInfo location, string[] dependancies, string[] assemblyReferences) : base(location, guid, name, version)
