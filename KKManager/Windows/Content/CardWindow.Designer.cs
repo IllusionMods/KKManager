@@ -119,7 +119,6 @@ namespace KKManager.Windows.Content
             // 
             // listView
             // 
-            this.listView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.listView.AllColumns.Add(this.olvColumnName);
             this.listView.AllColumns.Add(this.olvColumnSex);
             this.listView.AllColumns.Add(this.olvColumnPersonality);
@@ -135,7 +134,6 @@ namespace KKManager.Windows.Content
             this.olvColumnModDate,
             this.olvColumnFilename});
             this.listView.ContextMenuStrip = this.ctxCards;
-            this.listView.Cursor = System.Windows.Forms.Cursors.Default;
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
@@ -155,29 +153,39 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnName
             // 
+            this.olvColumnName.MinimumWidth = 150;
             this.olvColumnName.Text = "Name";
             this.olvColumnName.UseFiltering = false;
+            this.olvColumnName.Width = 200;
             // 
             // olvColumnSex
             // 
+            this.olvColumnSex.MinimumWidth = 35;
             this.olvColumnSex.Text = "Sex";
+            this.olvColumnSex.Width = 35;
             // 
             // olvColumnPersonality
             // 
+            this.olvColumnPersonality.MinimumWidth = 70;
             this.olvColumnPersonality.Text = "Personality";
+            this.olvColumnPersonality.Width = 70;
             // 
             // olvColumnExtended
             // 
+            this.olvColumnExtended.MinimumWidth = 40;
             this.olvColumnExtended.Searchable = false;
             this.olvColumnExtended.Text = "Extended data count";
+            this.olvColumnExtended.Width = 40;
             // 
             // olvColumnModDate
             // 
+            this.olvColumnModDate.MinimumWidth = 60;
             this.olvColumnModDate.Text = "Modified";
             this.olvColumnModDate.UseFiltering = false;
             // 
             // olvColumnFilename
             // 
+            this.olvColumnFilename.MinimumWidth = 60;
             this.olvColumnFilename.Text = "Filename";
             this.olvColumnFilename.UseFiltering = false;
             // 
@@ -250,21 +258,21 @@ namespace KKManager.Windows.Content
             // femaleCardFolderToolStripMenuItem
             // 
             this.femaleCardFolderToolStripMenuItem.Name = "femaleCardFolderToolStripMenuItem";
-            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.femaleCardFolderToolStripMenuItem.Text = "Female card folder";
             this.femaleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.femaleCardFolderToolStripMenuItem_Click);
             // 
             // maleCardFolderToolStripMenuItem
             // 
             this.maleCardFolderToolStripMenuItem.Name = "maleCardFolderToolStripMenuItem";
-            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.maleCardFolderToolStripMenuItem.Text = "Male card folder";
             this.maleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.maleCardFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
             // 
             // toolStripSeparator1
             // 
@@ -287,7 +295,7 @@ namespace KKManager.Windows.Content
             // detailsToolStripMenuItem
             // 
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
@@ -295,14 +303,14 @@ namespace KKManager.Windows.Content
             // 
             this.smallIconsToolStripMenuItem.Enabled = false;
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
