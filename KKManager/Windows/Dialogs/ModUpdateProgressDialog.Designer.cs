@@ -30,12 +30,12 @@
         {
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.labelProgress = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.labelProgress = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -61,38 +61,18 @@
             this.panel1.Size = new System.Drawing.Size(474, 74);
             this.panel1.TabIndex = 1;
             // 
-            // panel2
+            // labelStatus
             // 
-            this.panel2.Controls.Add(this.progressBar1);
-            this.panel2.Controls.Add(this.labelProgress);
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 284);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(9);
-            this.panel2.Size = new System.Drawing.Size(474, 53);
-            this.panel2.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Location = new System.Drawing.Point(390, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 35);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Cancel";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // labelProgress
-            // 
-            this.labelProgress.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelProgress.Location = new System.Drawing.Point(317, 9);
-            this.labelProgress.Name = "labelProgress";
-            this.labelProgress.Size = new System.Drawing.Size(73, 35);
-            this.labelProgress.TabIndex = 2;
-            this.labelProgress.Text = "1234 / 5678";
-            this.labelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatus.Location = new System.Drawing.Point(0, 33);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
+            this.labelStatus.Size = new System.Drawing.Size(474, 41);
+            this.labelStatus.TabIndex = 1;
+            this.labelStatus.Text = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T" +
+    "est Test Test Test Test Test Test Test \r\n";
+            this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
@@ -107,6 +87,39 @@
     " the update is finished.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.progressBar1);
+            this.panel2.Controls.Add(this.labelProgress);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 284);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(9);
+            this.panel2.Size = new System.Drawing.Size(474, 53);
+            this.panel2.TabIndex = 2;
+            // 
+            // labelProgress
+            // 
+            this.labelProgress.Dock = System.Windows.Forms.DockStyle.Right;
+            this.labelProgress.Location = new System.Drawing.Point(317, 9);
+            this.labelProgress.Name = "labelProgress";
+            this.labelProgress.Size = new System.Drawing.Size(73, 35);
+            this.labelProgress.TabIndex = 2;
+            this.labelProgress.Text = "1234 / 5678";
+            this.labelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.button1.Location = new System.Drawing.Point(390, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 35);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Cancel";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -118,26 +131,12 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // labelStatus
-            // 
-            this.labelStatus.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStatus.Location = new System.Drawing.Point(0, 33);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Padding = new System.Windows.Forms.Padding(8, 0, 8, 0);
-            this.labelStatus.Size = new System.Drawing.Size(474, 41);
-            this.labelStatus.TabIndex = 1;
-            this.labelStatus.Text = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T" +
-    "est Test Test Test Test Test Test Test \r\n";
-            this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ModUpdateProgress
+            // ModUpdateProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CancelButton = this.button1;
             this.ClientSize = new System.Drawing.Size(474, 401);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);

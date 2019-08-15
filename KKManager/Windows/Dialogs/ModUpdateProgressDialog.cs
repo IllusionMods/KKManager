@@ -43,14 +43,23 @@ namespace KKManager.Windows.Dialogs
 
                 var updateTasks = await _megaUpdater.GetUpdateTasksAsync();
 
-                SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
-                updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
+                _cancelToken.Token.ThrowIfCancellationRequested();
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
+
+                if (updateTasks.All(x => x.UpToDate))
+                {
+                    SetStatus("Everything is up to date!");
+                    return;
+                }
+
+                SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
+                updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
 
                 if (updateTasks == null)
                 {
                     _cancelToken.Cancel();
+                    _cancelToken.Token.ThrowIfCancellationRequested();
                 }
                 else
                 {
@@ -74,14 +83,12 @@ namespace KKManager.Windows.Dialogs
                 SetStatus(s, true, true);
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 SetStatus("Operation was cancelled by the user.", true, true);
             }
             catch (Exception ex)
             {
-                progressBar1.Style = ProgressBarStyle.Blocks;
-
                 var exceptions = ex is AggregateException aex ? aex.Flatten().InnerExceptions : (ICollection<Exception>)new[] { ex };
 
                 SetStatus("Crash while updating mods, aborting.", true, true);
@@ -90,9 +97,12 @@ namespace KKManager.Windows.Dialogs
                                 "and that you did not hit your download limit on Mega, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
                                 "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            button1.Enabled = true;
-            button1.Text = "OK";
+            finally
+            {
+                progressBar1.Style = ProgressBarStyle.Blocks;
+                button1.Enabled = true;
+                button1.Text = "OK";
+            }
         }
 
         private async Task UpdateSingleItem(SideloaderUpdateItem task)
@@ -129,8 +139,15 @@ namespace KKManager.Windows.Dialogs
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _cancelToken.Cancel();
-            button1.Enabled = false;
+            if (_cancelToken.IsCancellationRequested)
+            {
+                Close();
+            }
+            else
+            {
+                _cancelToken.Cancel();
+                button1.Enabled = false;
+            }
         }
 
         protected override void OnClosed(EventArgs e)
