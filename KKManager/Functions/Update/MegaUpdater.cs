@@ -96,18 +96,20 @@ namespace KKManager.Functions.Update
 
             var results = Enumerable.Empty<SideloaderUpdateItem>();
 
-            foreach (var modpackType in GetSubNodes(root).Where(x => x.Type == NodeType.Directory))
+            foreach (var remoteModpackDir in GetSubNodes(root).Where(x => x.Type == NodeType.Directory))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (modpackType.Name.StartsWith("Sideloader Modpack"))
+                if (remoteModpackDir.Name.StartsWith("Sideloader Modpack"))
                 {
-                    var localDir = Path.Combine(modsDirPath, modpackType.Name);
-                    var modpackDir = new DirectoryInfo(localDir);
-                    results = results.Concat(ProcessDirectory(modpackType, modpackDir, cancellationToken));
+                    var localModpackDir = new DirectoryInfo(Path.Combine(modsDirPath, remoteModpackDir.Name));
+                    if (localModpackDir.Exists)
+                        results = results.Concat(ProcessDirectory(remoteModpackDir, localModpackDir, cancellationToken));
                 }
                 else
-                    Console.WriteLine("Skipping non-modpack directory " + modpackType.Name);
+                {
+                    Console.WriteLine("Skipping non-modpack directory " + remoteModpackDir.Name);
+                }
             }
 
             return results;
