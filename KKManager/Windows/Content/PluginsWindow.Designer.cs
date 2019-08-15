@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginsWindow));
-            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnEnabled = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -42,8 +42,8 @@
             this.toolStripButtonDisable = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -70,6 +70,7 @@
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, 25);
             this.objectListView1.Name = "objectListView1";
+            this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
             this.objectListView1.Size = new System.Drawing.Size(891, 547);
             this.objectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -179,6 +180,11 @@
             this.toolStripButtonDelete.Text = "Delete";
             this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonOpenDir
             // 
             this.toolStripButtonOpenDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -188,11 +194,6 @@
             this.toolStripButtonOpenDir.Size = new System.Drawing.Size(127, 22);
             this.toolStripButtonOpenDir.Text = "Open plugin directory";
             this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // PluginsWindow
             // 
@@ -214,7 +215,7 @@
         }
 
         #endregion
-        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private BrightIdeasSoftware.FastObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnVersion;
         private BrightIdeasSoftware.OLVColumn olvColumnGuid;

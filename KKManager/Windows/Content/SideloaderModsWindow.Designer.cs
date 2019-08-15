@@ -1,4 +1,6 @@
-﻿namespace KKManager.Windows.Content
+﻿using System.Windows.Forms;
+
+namespace KKManager.Windows.Content
 {
     sealed partial class SideloaderModsWindow
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SideloaderModsWindow));
-            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnEnabled = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -77,6 +79,7 @@
             this.objectListView1.Location = new System.Drawing.Point(0, 25);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
+            this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
             this.objectListView1.Size = new System.Drawing.Size(891, 547);
             this.objectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -134,15 +137,6 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripSeparator2,
-            this.toolStripButtonEnable,
-            this.toolStripButtonDisable,
-            this.toolStripSeparator1,
-            this.toolStripButtonDelete,
-            this.toolStripSeparator3,
-            this.toolStripButtonOpenDir});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(891, 25);
@@ -230,11 +224,12 @@
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            toolStrip1.Items.AddRange(new ToolStripItem[]{ toolStripButton1, toolStripSeparator1, toolStripButtonEnable, toolStripButtonDisable, toolStripSeparator2, toolStripButtonDelete, toolStripSeparator3, toolStripButtonOpenDir });
 
         }
 
         #endregion
-        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private BrightIdeasSoftware.FastObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnVersion;
         private BrightIdeasSoftware.OLVColumn olvColumnAuthor;

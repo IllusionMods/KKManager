@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -26,11 +25,7 @@ namespace KKManager.Windows.Content
             InitializeComponent();
             _listView = new TypedObjectListView<SideloaderModInfo>(objectListView1);
 
-            olvColumnName.GroupKeyGetter = rowObject => ListTools.GetFirstCharacter(((SideloaderModInfo)rowObject).Name);
-            olvColumnGuid.GroupKeyGetter = rowObject => ListTools.GetGuidGroupKey(((SideloaderModInfo)rowObject).Guid);
-
             objectListView1.EmptyListMsgFont = new Font(Font.FontFamily, 24);
-
             objectListView1.EmptyListMsg = "No mods were found";
 
             objectListView1.FormatRow += ObjectListView1_FormatRow;
