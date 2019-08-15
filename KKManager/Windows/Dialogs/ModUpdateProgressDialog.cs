@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions.Update;
+using KKManager.Util;
 
 namespace KKManager.Windows.Dialogs
 {
@@ -12,6 +13,8 @@ namespace KKManager.Windows.Dialogs
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
         private MegaUpdater _megaUpdater;
+        private FileSize _overallSize;
+        private FileSize _completedSize;
 
         private ModUpdateProgressDialog()
         {
@@ -38,6 +41,7 @@ namespace KKManager.Windows.Dialogs
                 progressBar1.Maximum = 1;
 
                 labelProgress.Text = "N/A";
+                labelPercent.Text = "";
 
                 SetStatus("Searching for mod updates...");
 
@@ -59,26 +63,26 @@ namespace KKManager.Windows.Dialogs
                 updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
 
                 if (updateTasks == null)
+                    throw new OperationCanceledException();
+
+                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.Size));
+                _completedSize = FileSize.Empty;
+
+                progressBar1.Maximum = updateTasks.Count;
+
+                for (var index = 0; index < updateTasks.Count; index++)
                 {
-                    _cancelToken.Cancel();
                     _cancelToken.Token.ThrowIfCancellationRequested();
-                }
-                else
-                {
-                    progressBar1.Maximum = updateTasks.Count;
 
-                    for (var index = 0; index < updateTasks.Count; index++)
-                    {
-                        _cancelToken.Token.ThrowIfCancellationRequested();
+                    var task = updateTasks[index];
 
-                        var task = updateTasks[index];
+                    labelProgress.Text = (index + 1) + " / " + updateTasks.Count;
+                    SetStatus("Downloading " + task.Name);
 
-                        labelProgress.Text = (index + 1) + " / " + updateTasks.Count;
+                    await UpdateSingleItem(task);
 
-                        await UpdateSingleItem(task);
-
-                        progressBar1.Value = index + 1;
-                    }
+                    _completedSize += task.Size;
+                    progressBar1.Value = index + 1;
                 }
 
                 var s = $"Successfully updated/removed {updateTasks?.Count ?? 0} mods!";
@@ -101,6 +105,10 @@ namespace KKManager.Windows.Dialogs
             }
             finally
             {
+                _cancelToken.Cancel();
+
+                labelPercent.Text = _completedSize == FileSize.Empty ? "" : $"Downloaded {_completedSize} out of {_overallSize}.";
+
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
                 button1.Text = "OK";
@@ -109,7 +117,7 @@ namespace KKManager.Windows.Dialogs
 
         private async Task UpdateSingleItem(SideloaderUpdateItem task)
         {
-            var progress = new Progress<double>(d => SetStatus($"{d:F1}% - Downloading {task.Name}"));
+            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.Size}.  Overall: {_completedSize} / {_overallSize}.");
 
             SetStatus($"Preparing to download {task.Name}");
 
