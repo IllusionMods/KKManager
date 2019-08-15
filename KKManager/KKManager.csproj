@@ -103,6 +103,7 @@
     <Compile Include="Data\Cards\Internal\BlockHeader.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
+    <Compile Include="Util\SimpleExpandTypeConverter.cs" />
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
     <Compile Include="Functions\Update\SideloaderUpdateItem.cs" />
