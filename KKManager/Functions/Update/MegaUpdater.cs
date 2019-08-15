@@ -28,9 +28,13 @@ namespace KKManager.Functions.Update
             try
             {
                 _allNodes = null;
-                _client.Logout();
+                if (_client != null && _client.IsLoggedIn)
+                    _client.Logout();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public async Task Connect()
@@ -45,10 +49,10 @@ namespace KKManager.Functions.Update
             await RetryHelper.RetryOnExceptionAsync(async () => await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken), 2, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
-        public async Task<List<INode>> GetNodesFromLinkAsync(Uri folderLink)
+        public async Task<List<INode>> GetNodesFromLinkAsync(Uri folderLink, CancellationToken cancellationToken)
         {
             await Connect();
-            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(folderLink)).ToList(), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(folderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
             CurrentFolderLink = folderLink;
             return _allNodes;
         }
@@ -58,40 +62,47 @@ namespace KKManager.Functions.Update
             return _allNodes.Where(x => x.ParentId == rootNode.Id);
         }
 
-        public async Task<IList<SideloaderUpdateItem>> GetUpdateTasksAsync()
+        public async Task<IList<SideloaderUpdateItem>> GetUpdateTasksAsync(CancellationToken cancellationToken)
         {
             var link = new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg");
-            var nodes = await GetNodesFromLinkAsync(link);
-            return await CollectTasksAsync(nodes);
+            var nodes = await GetNodesFromLinkAsync(link, cancellationToken);
+            return await CollectTasksAsync(nodes, cancellationToken);
         }
 
-        private async Task<IList<SideloaderUpdateItem>> CollectTasksAsync(List<INode> nodes)
+        private async Task<IList<SideloaderUpdateItem>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
         {
             IList<SideloaderUpdateItem> results = null;
 
-            await RetryHelper.RetryOnExceptionAsync(async () => results = await Task.Run(() => CollectTasks(nodes).ToList()), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+            await RetryHelper.RetryOnExceptionAsync(async () =>
+            {
+                results = await Task.Run(
+                    () => CollectTasks(nodes, cancellationToken).ToList(),
+                    cancellationToken);
+            }, 2, TimeSpan.FromSeconds(1), cancellationToken);
 
             return results;
         }
 
-        private IEnumerable<SideloaderUpdateItem> CollectTasks(List<INode> nodes)
+        private IEnumerable<SideloaderUpdateItem> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var root = nodes.Single(x => x.Type == NodeType.Root);
-            //var root = nodes.Single(x => x.ParentId == null);
 
             var modsDirPath = InstallDirectoryHelper.GetModsPath();
             Directory.CreateDirectory(modsDirPath);
-            //var modsDir = new DirectoryInfo(modsDirPath);
 
             var results = Enumerable.Empty<SideloaderUpdateItem>();
 
             foreach (var modpackType in GetSubNodes(root).Where(x => x.Type == NodeType.Directory))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (modpackType.Name.StartsWith("Sideloader Modpack"))
                 {
                     var localDir = Path.Combine(modsDirPath, modpackType.Name);
                     var modpackDir = new DirectoryInfo(localDir);
-                    results = results.Concat(ProcessDirectory(modpackType, modpackDir));
+                    results = results.Concat(ProcessDirectory(modpackType, modpackDir, cancellationToken));
                 }
                 else
                     Console.WriteLine("Skipping non-modpack directory " + modpackType.Name);
@@ -100,7 +111,7 @@ namespace KKManager.Functions.Update
             return results;
         }
 
-        private IEnumerable<SideloaderUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir)
+        private IEnumerable<SideloaderUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, CancellationToken cancellationToken)
         {
             var results = new List<SideloaderUpdateItem>();
 
@@ -110,6 +121,8 @@ namespace KKManager.Functions.Update
 
             foreach (var remoteItem in GetSubNodes(remoteDir))
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 switch (remoteItem.Type)
                 {
                     case NodeType.File:
@@ -141,7 +154,7 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localItem);
 
-                            results.AddRange(ProcessDirectory(remoteItem, localItem));
+                            results.AddRange(ProcessDirectory(remoteItem, localItem, cancellationToken));
                         }
                         break;
                     default:

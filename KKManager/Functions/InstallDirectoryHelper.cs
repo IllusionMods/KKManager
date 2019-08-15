@@ -35,7 +35,7 @@ namespace KKManager.Functions
         {
             try
             {
-                return !String.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
+                return !string.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
             }
             catch
             {

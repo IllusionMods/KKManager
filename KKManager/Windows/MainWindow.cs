@@ -22,6 +22,8 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
+        private MegaUpdater _megaUpdater;
+
         public MainWindow()
         {
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
@@ -37,6 +39,8 @@ namespace KKManager.Windows
             Text = $"{Text} - {Assembly.GetExecutingAssembly().GetName().Version}";
 
             Task.Run((Action)PopulateStartMenu);
+
+            _megaUpdater = new MegaUpdater();
         }
 
         private void PopulateStartMenu()
@@ -156,6 +160,8 @@ namespace KKManager.Windows
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            _checkForUpdatesCancel.Cancel();
+
             using (var s = new MemoryStream())
             {
                 dockPanel.SaveAsXml(s, Encoding.Unicode);
@@ -300,15 +306,43 @@ namespace KKManager.Windows
 
         private void ShowModUpdateDialog()
         {
+            _checkForUpdatesCancel.Cancel();
+
             var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
             foreach (var window in sideWindows)
                 window.CancelListReload();
 
-            using (var megaUpdater = new MegaUpdater())
-                ModUpdateProgressDialog.StartUpdateDialog(this, megaUpdater);
+            ModUpdateProgressDialog.StartUpdateDialog(this, _megaUpdater);
 
             foreach (var window in sideWindows)
                 window.ReloadList();
+
+            updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
+        }
+
+        private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            CheckForUpdates();
+        }
+
+        private async void CheckForUpdates()
+        {
+            try
+            {
+                var results = await _megaUpdater.GetUpdateTasksAsync(_checkForUpdatesCancel.Token);
+                var updates = results.Count(item => !item.UpToDate);
+
+                _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
+
+                if (updates > 0)
+                {
+                    SetStatusText($"Found {updates} mod updates!");
+                    updateSideloaderModpackToolStripMenuItem.BackColor = Color.Lime;
+                }
+            }
+            catch (OperationCanceledException) { }
         }
     }
 }

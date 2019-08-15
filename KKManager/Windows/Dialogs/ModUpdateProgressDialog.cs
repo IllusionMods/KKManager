@@ -41,7 +41,7 @@ namespace KKManager.Windows.Dialogs
 
                 SetStatus("Searching for mod updates...");
 
-                var updateTasks = await _megaUpdater.GetUpdateTasksAsync();
+                var updateTasks = await _megaUpdater.GetUpdateTasksAsync(_cancelToken.Token);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -50,6 +50,8 @@ namespace KKManager.Windows.Dialogs
                 if (updateTasks.All(x => x.UpToDate))
                 {
                     SetStatus("Everything is up to date!");
+                    progressBar1.Value = progressBar1.Maximum;
+                    _cancelToken.Cancel();
                     return;
                 }
 
