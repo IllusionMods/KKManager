@@ -48,7 +48,19 @@ namespace KKManager.Functions.Update
         public async Task DownloadNodeAsync(SideloaderUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
         {
             await Connect();
-            await RetryHelper.RetryOnExceptionAsync(async () => await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken), 2, TimeSpan.FromSeconds(1), cancellationToken);
+            await RetryHelper.RetryOnExceptionAsync(async () =>
+            {
+                try
+                {
+                    await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Needed to avoid partially downloaded files causing issues
+                    task.LocalFile.Delete();
+                    throw;
+                }
+            }, 2, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
         public async Task<List<INode>> GetNodesFromLinkAsync(Uri folderLink, CancellationToken cancellationToken)
