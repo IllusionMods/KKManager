@@ -291,7 +291,10 @@ namespace KKManager.Windows
         {
             try
             {
-                Process.Start(fileFullName);
+                if (File.Exists(fileFullName))
+                    Process.Start(new ProcessStartInfo(fileFullName) { WorkingDirectory = Path.GetDirectoryName(fileFullName) ?? fileFullName });
+                else
+                    Process.Start(fileFullName);
             }
             catch (SystemException ex)
             {
