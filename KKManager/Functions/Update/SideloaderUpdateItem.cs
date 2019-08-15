@@ -29,16 +29,9 @@ namespace KKManager.Functions.Update
 		public bool LocalExists => LocalFile.Exists;
 		public bool RemoteExists => RemoteFile != null;
 
-		public object UpdateDate
-		{
-			get
-			{
-				if (RemoteFile != null) return RemoteFile.CreationDate;
-				return "File was removed";
-			}
-		}
+		public DateTime UpdateDate => RemoteFile?.CreationDate ?? DateTime.MinValue;
 
-		public override string ToString()
+	    public override string ToString()
 		{
 			return $"UpToDate={UpToDate} Local={LocalExists} Remote={RemoteExists} - {RelativePath}";
 		}

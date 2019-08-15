@@ -19,6 +19,13 @@ namespace KKManager.Windows.Dialogs
 
             objectListView1.EmptyListMsg = "All mods are up to date!";
             objectListView1.FormatRow += ObjectListView1_FormatRow;
+
+            olvColumnDate.AspectToStringConverter = value =>
+            {
+                if (value is DateTime dt)
+                    return dt == DateTime.MinValue ? "File was removed" : dt.ToShortDateString();
+                return value?.ToString();
+            };
         }
 
         public static List<SideloaderUpdateItem> ShowWindow(ModUpdateProgressDialog owner, IEnumerable<SideloaderUpdateItem> updateTasks)
