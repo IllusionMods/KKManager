@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Functions.Update;
+using KKManager.Util;
 
 namespace KKManager.Windows.Dialogs
 {
@@ -81,19 +82,9 @@ namespace KKManager.Windows.Dialogs
             objectListView1.SuspendLayout();
 
             if (_updateTasks == null)
-            {
                 objectListView1.ClearObjects();
-            }
-            /*else if (checkBoxShowDone.Checked)
-            {
-                objectListView1.SetObjects(_updateTasks);
-                // DisableObjects is extremely slow, not practical
-                objectListView1.DisableObjects(_updateTasks.Where(x => x.UpToDate));
-            }*/
             else
-            {
                 objectListView1.SetObjects(_updateTasks.Where(x => !x.UpToDate).ToList());
-            }
 
             objectListView1.ResumeLayout();
             objectListView1.EndUpdate();
@@ -108,6 +99,12 @@ namespace KKManager.Windows.Dialogs
         private void SelectNone(object sender, EventArgs e)
         {
             objectListView1.UncheckAll();
+        }
+
+        private void objectListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<SideloaderUpdateItem>().Select(x => x.Size));
+            labelDownload.Text = (sumFileSizes == FileSize.Empty ? "Nothing" : sumFileSizes.ToString()) + " to download";
         }
     }
 }

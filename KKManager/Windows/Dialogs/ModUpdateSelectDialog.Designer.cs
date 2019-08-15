@@ -32,7 +32,7 @@ namespace KKManager.Windows.Dialogs
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnStatus = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label1 = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonAccept = new System.Windows.Forms.Button();
@@ -41,6 +41,7 @@ namespace KKManager.Windows.Dialogs
             this.buttonAll = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.labelDownload = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -53,13 +54,13 @@ namespace KKManager.Windows.Dialogs
             // 
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnDate);
-            this.objectListView1.AllColumns.Add(this.olvColumnStatus);
+            this.objectListView1.AllColumns.Add(this.olvColumnSize);
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.CheckBoxes = true;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
             this.olvColumnDate,
-            this.olvColumnStatus});
+            this.olvColumnSize});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.FullRowSelect = true;
@@ -71,6 +72,7 @@ namespace KKManager.Windows.Dialogs
             this.objectListView1.TabIndex = 1;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.objectListView1_ItemChecked);
             // 
             // olvColumnName
             // 
@@ -84,10 +86,12 @@ namespace KKManager.Windows.Dialogs
             this.olvColumnDate.Text = "Update date";
             this.olvColumnDate.Width = 132;
             // 
-            // olvColumnStatus
+            // olvColumnSize
             // 
-            this.olvColumnStatus.AspectName = "UpToDate";
-            this.olvColumnStatus.Text = "Up to date";
+            this.olvColumnSize.AspectName = "Size";
+            this.olvColumnSize.MinimumWidth = 60;
+            this.olvColumnSize.Text = "Size";
+            this.olvColumnSize.Width = 68;
             // 
             // label1
             // 
@@ -128,6 +132,7 @@ namespace KKManager.Windows.Dialogs
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.labelDownload);
             this.panel1.Controls.Add(this.buttonNone);
             this.panel1.Controls.Add(this.buttonAll);
             this.panel1.Controls.Add(this.buttonAccept);
@@ -192,6 +197,16 @@ namespace KKManager.Windows.Dialogs
             this.splitContainer1.SplitterDistance = 86;
             this.splitContainer1.TabIndex = 0;
             // 
+            // labelDownload
+            // 
+            this.labelDownload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelDownload.Location = new System.Drawing.Point(160, 6);
+            this.labelDownload.Name = "labelDownload";
+            this.labelDownload.Size = new System.Drawing.Size(210, 29);
+            this.labelDownload.TabIndex = 5;
+            this.labelDownload.Text = "123 MB to download";
+            this.labelDownload.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ModUpdateSelectDialog
             // 
             this.AcceptButton = this.buttonAccept;
@@ -226,8 +241,9 @@ namespace KKManager.Windows.Dialogs
 		private BrightIdeasSoftware.OLVColumn olvColumnDate;
 		private System.Windows.Forms.Button buttonNone;
 		private System.Windows.Forms.Button buttonAll;
-        private BrightIdeasSoftware.OLVColumn olvColumnStatus;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private BrightIdeasSoftware.OLVColumn olvColumnSize;
+        private System.Windows.Forms.Label labelDownload;
     }
 }

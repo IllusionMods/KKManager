@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using CG.Web.MegaApiClient;
+using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
@@ -22,12 +23,16 @@ namespace KKManager.Functions.Update
 
             RelativePath = localFile.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
 		    Name = localFile.Name;
+
+            Size = FileSize.FromBytes(remoteFile?.Size ?? 0);
 		}
 
 		public string RelativePath { get; }
         public string Name { get; }
 		public bool LocalExists => LocalFile.Exists;
 		public bool RemoteExists => RemoteFile != null;
+
+        public FileSize Size { get; }
 
 		public DateTime UpdateDate => RemoteFile?.CreationDate ?? DateTime.MinValue;
 
