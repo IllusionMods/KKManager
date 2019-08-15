@@ -30,13 +30,13 @@
         {
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelPercent = new System.Windows.Forms.Label();
             this.labelStatus = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelProgress = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.labelPercent = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -62,6 +62,19 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(474, 88);
             this.panel1.TabIndex = 1;
+            // 
+            // labelPercent
+            // 
+            this.labelPercent.AutoSize = true;
+            this.labelPercent.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPercent.Location = new System.Drawing.Point(0, 64);
+            this.labelPercent.Name = "labelPercent";
+            this.labelPercent.Padding = new System.Windows.Forms.Padding(8, 2, 8, 6);
+            this.labelPercent.Size = new System.Drawing.Size(361, 24);
+            this.labelPercent.TabIndex = 2;
+            this.labelPercent.Text = "This item: 70% out of 20 MB.  Overall: 50% out of 1221 MB.";
+            this.labelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelStatus
             // 
@@ -132,19 +145,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            // 
-            // labelPercent
-            // 
-            this.labelPercent.AutoSize = true;
-            this.labelPercent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.labelPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPercent.Location = new System.Drawing.Point(0, 64);
-            this.labelPercent.Name = "labelPercent";
-            this.labelPercent.Padding = new System.Windows.Forms.Padding(8, 2, 8, 6);
-            this.labelPercent.Size = new System.Drawing.Size(361, 24);
-            this.labelPercent.TabIndex = 2;
-            this.labelPercent.Text = "This item: 70% out of 20 MB.  Overall: 50% out of 1221 MB.";
-            this.labelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ModUpdateProgressDialog
             // 

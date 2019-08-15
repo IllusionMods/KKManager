@@ -119,7 +119,7 @@ namespace KKManager.Windows.Dialogs
         {
             var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.Size}.  Overall: {_completedSize} / {_overallSize}.");
 
-            SetStatus($"Preparing to download {task.Name}");
+            SetStatus($"Updating {task.Name}");
 
             if (task.LocalExists)
             {
@@ -131,7 +131,7 @@ namespace KKManager.Windows.Dialogs
             {
                 task.LocalFile.Directory?.Create();
 
-                SetStatus($"Downloading {task.RemoteFile}\nto {task.RelativePath}", false, true);
+                SetStatus($"Downloading {task.RemoteFile} to {task.RelativePath}", false, true);
 
                 await _megaUpdater.DownloadNodeAsync(task, progress, _cancelToken.Token);
 

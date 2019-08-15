@@ -82,7 +82,7 @@ namespace KKManager.Util
         }
 
         /// <summary>
-        ///     Empty items return long.MaxValue. For use in sorting
+        /// Empty items return long.MaxValue. For use in sorting
         /// </summary>
         public long GetRawSize(bool treatEmptyAsLargest)
         {
@@ -119,16 +119,13 @@ namespace KKManager.Util
         }
 
         /// <summary>
-        ///     Returns string representation of the filesize in format "Number.Decimal ShortName"
-        ///     (eg. 32,51 MB, 1021 KB)
+        /// Returns string representation of the filesize in format "Number.Decimal ShortName"
+        /// (eg. 32,51 MB, 1021 KB)
         /// </summary>
         public override string ToString()
         {
             var value = GetCompactSize(out var range);
-
-            if (range == SizeRange.None || value <= 0)
-                return string.Empty;
-
+            
             return $"{Math.Round(value, 2)} {GetRangeString(range)}";
         }
 
