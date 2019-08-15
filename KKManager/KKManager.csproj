@@ -106,6 +106,7 @@
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
     <Compile Include="Functions\Update\SideloaderUpdateItem.cs" />
+    <Compile Include="Util\RetryHelper.cs" />
     <Compile Include="Util\SimpleFileLogger.cs" />
     <Compile Include="Util\StringTools.cs" />
     <Compile Include="Windows\AboutBox.cs">

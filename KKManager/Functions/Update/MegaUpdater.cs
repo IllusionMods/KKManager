@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CG.Web.MegaApiClient;
+using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
@@ -35,20 +36,19 @@ namespace KKManager.Functions.Update
         public async Task Connect()
         {
             if (!_client.IsLoggedIn)
-                await _client.LoginAnonymousAsync();
+                await RetryHelper.RetryOnExceptionAsync(async () => await _client.LoginAnonymousAsync(), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
         }
 
         public async Task DownloadNodeAsync(SideloaderUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
         {
             await Connect();
-            await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken);
+            await RetryHelper.RetryOnExceptionAsync(async () => await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken), 2, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
         public async Task<List<INode>> GetNodesFromLinkAsync(Uri folderLink)
         {
             await Connect();
-            var nodes = await _client.GetNodesFromLinkAsync(folderLink);
-            _allNodes = nodes.ToList();
+            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(folderLink)).ToList(), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
             CurrentFolderLink = folderLink;
             return _allNodes;
         }
@@ -67,7 +67,11 @@ namespace KKManager.Functions.Update
 
         private async Task<IList<SideloaderUpdateItem>> CollectTasksAsync(List<INode> nodes)
         {
-            return await Task.Run(() => CollectTasks(nodes).ToList());
+            IList<SideloaderUpdateItem> results = null;
+
+            await RetryHelper.RetryOnExceptionAsync(async () => results = await Task.Run(() => CollectTasks(nodes).ToList()), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+
+            return results;
         }
 
         private IEnumerable<SideloaderUpdateItem> CollectTasks(List<INode> nodes)

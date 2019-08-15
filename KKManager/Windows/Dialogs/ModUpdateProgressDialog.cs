@@ -97,46 +97,25 @@ namespace KKManager.Windows.Dialogs
 
         private async Task UpdateSingleItem(SideloaderUpdateItem task)
         {
-            var retry = true;
             var progress = new Progress<double>(d => SetStatus($"{d:F1}% - Downloading {task.Name}"));
-
-            Retry:
 
             SetStatus($"Preparing to download {task.Name}");
 
-            try
+            if (task.LocalExists)
             {
-                if (task.LocalExists)
-                {
-                    SetStatus($"Deleting old file {task.RelativePath}", false, true);
-                    task.LocalFile.Delete();
-                }
-
-                if (task.RemoteExists)
-                {
-                    task.LocalFile.Directory?.Create();
-
-                    SetStatus($"Downloading {task.RemoteFile}\nto {task.RelativePath}", false, true);
-
-                    await _megaUpdater.DownloadNodeAsync(task, progress, _cancelToken.Token);
-
-                    SetStatus("Finished", false, true);
-                }
+                SetStatus($"Deleting old file {task.RelativePath}", false, true);
+                task.LocalFile.Delete();
             }
-            catch (TaskCanceledException)
+
+            if (task.RemoteExists)
             {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                SetStatus("Error while downloading " + ex, false, true);
-                if (retry)
-                {
-                    SetStatus("Retrying...", false, true);
-                    retry = false;
-                    goto Retry;
-                }
-                throw;
+                task.LocalFile.Directory?.Create();
+
+                SetStatus($"Downloading {task.RemoteFile}\nto {task.RelativePath}", false, true);
+
+                await _megaUpdater.DownloadNodeAsync(task, progress, _cancelToken.Token);
+
+                SetStatus("Finished", false, true);
             }
         }
 
