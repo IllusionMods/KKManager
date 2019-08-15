@@ -12,13 +12,14 @@ namespace KKManager.Data.Plugins
 {
     internal static class PluginLoader
     {
+        public static bool IsBepin5 => false;
+
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="pluginDirectory">Directory containing the plugins to gather info from. Usually BepInEx directory inside game root.</param>
         /// <param name="cancellationToken">Token used to abort the search</param>
-        /// <param name="searchOption">Where to search</param>
-        public static IObservable<PluginInfo> TryLoadPlugins(string pluginDirectory, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
+        public static IObservable<PluginInfo> TryLoadPlugins(string pluginDirectory, CancellationToken cancellationToken)
         {
             var subject = new ReplaySubject<PluginInfo>();
 
@@ -32,7 +33,9 @@ namespace KKManager.Data.Plugins
             {
                 try
                 {
-                    foreach (var file in Directory.EnumerateFiles(pluginDirectory, "*.*", searchOption))
+                    //todo for bepin5 skip loading from bepinex4_backup and from scripts folder, change how folders are handled too
+                    var files = Directory.EnumerateFiles(pluginDirectory, "*.*", IsBepin5 ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    foreach (var file in files)
                     {
                         try
                         {
