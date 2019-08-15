@@ -71,7 +71,7 @@ namespace KKManager.Windows.Content
                     }, token);
         }
 
-        private void CancelListReload()
+        public void CancelListReload()
         {
             if (_cancellationTokenSource != null)
             {

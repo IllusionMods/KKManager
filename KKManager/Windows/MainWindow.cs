@@ -227,19 +227,30 @@ namespace KKManager.Windows
                     try
                     {
                         ModInstaller.InstallFromUnknownFile(dialog.FileName);
-                        foreach (var window in GetWindows<DockContent>())
-                        {
-                            if (window is PluginsWindow pw)
-                                pw.ReloadList();
-                            else if (window is SideloaderModsWindow sm)
-                                sm.ReloadList();
-                        }
+                        RefreshContents(true, true);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
                         MessageBox.Show("Failed to install the selected mod.\n\n" + ex.Message, "Failed to install mod", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+        }
+
+        private void RefreshContents(bool plugins, bool sideloader)
+        {
+            foreach (var window in GetWindows<DockContent>())
+            {
+                if (window is PluginsWindow pw)
+                {
+                    if (plugins)
+                        pw.ReloadList();
+                }
+                else if (window is SideloaderModsWindow sm)
+                {
+                    if (sideloader)
+                        sm.ReloadList();
                 }
             }
         }
@@ -284,8 +295,20 @@ namespace KKManager.Windows
 
         private void updateSideloaderModpackToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ShowModUpdateDialog();
+        }
+
+        private void ShowModUpdateDialog()
+        {
+            var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
+            foreach (var window in sideWindows)
+                window.CancelListReload();
+
             using (var megaUpdater = new MegaUpdater())
                 ModUpdateProgressDialog.StartUpdateDialog(this, megaUpdater);
+
+            foreach (var window in sideWindows)
+                window.ReloadList();
         }
     }
 }

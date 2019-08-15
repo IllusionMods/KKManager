@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Reactive.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -42,7 +43,7 @@ namespace KKManager.Windows.Dialogs
 
                 var updateTasks = await _megaUpdater.GetUpdateTasksAsync();
 
-                SetStatus("Waiting for user confirmation");
+                SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
                 updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
@@ -75,15 +76,19 @@ namespace KKManager.Windows.Dialogs
             }
             catch (TaskCanceledException)
             {
-                SetStatus("Operation was cancelled by the user", true, true);
+                SetStatus("Operation was cancelled by the user.", true, true);
             }
             catch (Exception ex)
             {
                 progressBar1.Style = ProgressBarStyle.Blocks;
 
-                SetStatus($"Exception while updating mods, aborting - {ex}", true, true);
+                var exceptions = ex is AggregateException aex ? aex.Flatten().InnerExceptions : (ICollection<Exception>)new[] { ex };
+
+                SetStatus("Crash while updating mods, aborting.", true, true);
+                SetStatus(string.Join("\n---\n", exceptions), false, true);
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
-                                "and that you did not hit your download limit on Mega, then try again.\n\nError message: " + ex.Message, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                "and that you did not hit your download limit on Mega, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
+                                "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             button1.Enabled = true;
