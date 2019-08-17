@@ -8,15 +8,15 @@ using MessagePack;
 
 namespace KKManager.Data.Cards
 {
-	[SuppressMessage("ReSharper", "UnusedVariable")]
-	public class Card : IFileInfoBase
-	{
-	    public string Name => $"{Parameter.lastname} {Parameter.firstname}";
+    [SuppressMessage("ReSharper", "UnusedVariable")]
+    public class Card : IFileInfoBase
+    {
+        public string Name => Parameter == null ? "[Missing data]" : $"{Parameter.lastname} {Parameter.firstname}";
         public FileInfo Location { get; }
 
         public ChaFileParameter Parameter { get; private set; }
-		public Dictionary<string, PluginData> Extended { get; private set; }
-        
+        public Dictionary<string, PluginData> Extended { get; private set; }
+
         public Image GetCardImage()
         {
             using (var stream = Location.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -39,92 +39,92 @@ namespace KKManager.Data.Cards
             }
         }
 
-	    private Card(FileInfo cardFile)
+        private Card(FileInfo cardFile)
         {
             Location = cardFile;
         }
-        
-		public static bool TryParseCard(FileInfo file, out Card card)
-		{
-			card = null;
 
-		    using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+        public static bool TryParseCard(FileInfo file, out Card card)
+        {
+            card = null;
+
+            using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
-			{
-				var IEND = Utility.SearchForIEND(stream);
+            {
+                var IEND = Utility.SearchForIEND(stream);
 
-				if (IEND == -1 || IEND >= stream.Length)
-					return false;
+                if (IEND == -1 || IEND >= stream.Length)
+                    return false;
 
                 stream.Position = IEND;
 
-				try
-				{
-					var loadProductNo = reader.ReadInt32();
-					if (loadProductNo > 100)
-					{
-						return false;
-					}
+                try
+                {
+                    var loadProductNo = reader.ReadInt32();
+                    if (loadProductNo > 100)
+                    {
+                        return false;
+                    }
 
-					var marker = reader.ReadString();
-					if (marker != "【KoiKatuChara】")
-					{
-						return false;
-					}
+                    var marker = reader.ReadString();
+                    if (marker != "【KoiKatuChara】")
+                    {
+                        return false;
+                    }
 
-					var loadVersion = new Version(reader.ReadString());
-					if (0 > new Version("0.0.0").CompareTo(loadVersion))
-					{
-						return false;
-					}
+                    var loadVersion = new Version(reader.ReadString());
+                    if (0 > new Version("0.0.0").CompareTo(loadVersion))
+                    {
+                        return false;
+                    }
 
-					var faceLength = reader.ReadInt32();
-					if (faceLength > 0)
-					{
-						//this.facePngData = reader.ReadBytes(num);
-						stream.Seek(faceLength, SeekOrigin.Current);
-					}
+                    var faceLength = reader.ReadInt32();
+                    if (faceLength > 0)
+                    {
+                        //this.facePngData = reader.ReadBytes(num);
+                        stream.Seek(faceLength, SeekOrigin.Current);
+                    }
 
-					var count = reader.ReadInt32();
-					var bytes = reader.ReadBytes(count);
-					var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
-					var num2 = reader.ReadInt64();
-					var position = reader.BaseStream.Position;
+                    var count = reader.ReadInt32();
+                    var bytes = reader.ReadBytes(count);
+                    var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
+                    var num2 = reader.ReadInt64();
+                    var position = reader.BaseStream.Position;
 
-				    card = new Card(file);
-                    
-					var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
-					if (info != null)
-					{
-						var value = new Version(info.version);
-						if (0 <= ChaFileParameter.CurrentVersion.CompareTo(value))
-						{
-							reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-							var parameterBytes = reader.ReadBytes((int)info.size);
+                    card = new Card(file);
 
-							card.Parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes);
-							card.Parameter.ComplementWithVersion();
-						}
-					}
+                    var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
+                    if (info != null)
+                    {
+                        var value = new Version(info.version);
+                        if (0 <= ChaFileParameter.CurrentVersion.CompareTo(value))
+                        {
+                            reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
+                            var parameterBytes = reader.ReadBytes((int)info.size);
 
-					info = blockHeader.SearchInfo(ChaFileExtended.BlockName);
-					if (info != null)
-					{
-						reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-						var parameterBytes = reader.ReadBytes((int)info.size);
-						
-						card.Extended = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
-					}
-                    
-					//reader.BaseStream.Seek(position + num2, SeekOrigin.Begin);
-				}
-				catch (EndOfStreamException)
-				{
-					return false;
-				}
+                            card.Parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes);
+                            card.Parameter.ComplementWithVersion();
+                        }
+                    }
 
-				return true;
-			}
-		}
+                    info = blockHeader.SearchInfo(ChaFileExtended.BlockName);
+                    if (info != null)
+                    {
+                        reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
+                        var parameterBytes = reader.ReadBytes((int)info.size);
+
+                        card.Extended = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
+                    }
+
+                    //reader.BaseStream.Seek(position + num2, SeekOrigin.Begin);
+                }
+                catch (EndOfStreamException)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
     }
 }
