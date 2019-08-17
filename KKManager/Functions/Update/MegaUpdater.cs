@@ -52,6 +52,7 @@ namespace KKManager.Functions.Update
             {
                 try
                 {
+                    task.LocalFile.Delete();
                     await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken);
                 }
                 catch (OperationCanceledException)
