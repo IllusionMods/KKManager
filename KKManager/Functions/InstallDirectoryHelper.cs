@@ -47,15 +47,6 @@ namespace KKManager.Functions
 
                 if (!exeExist && !modsExist) return false;
 
-                if (!PathTools.DirectoryHasWritePermission(path) ||
-                    !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
-                    !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
-                {
-                    if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
-                        "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        ProcessTools.FixPermissions(path)?.WaitForExit();
-                }
-
                 return true;
             }
             catch
@@ -106,6 +97,15 @@ namespace KKManager.Functions
                     "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
                     "Failed to get Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(1);
+            }
+
+            if (!PathTools.DirectoryHasWritePermission(path) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
+            {
+                if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
+                        "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    ProcessTools.FixPermissions(path)?.WaitForExit();
             }
 
             return new DirectoryInfo(path);
