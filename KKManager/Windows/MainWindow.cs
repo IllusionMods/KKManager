@@ -22,7 +22,7 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private MegaUpdater _megaUpdater;
+        private readonly MegaUpdater _megaUpdater;
 
         public MainWindow()
         {
@@ -54,7 +54,7 @@ namespace KKManager.Windows
                 var item = new ToolStripMenuItem(file.Name);
                 item.AutoToolTip = false;
                 item.ToolTipText = file.FullName;
-                item.Click += (o, args) => { SafeStartProcess(file.FullName); };
+                item.Click += (o, args) => { ProcessTools.SafeStartProcess(file.FullName); };
                 toAdd.Add(item);
             }
             this.SafeInvoke(() => startTheGameToolStripMenuItem.DropDownItems.AddRange(toAdd.ToArray()));
@@ -135,8 +135,8 @@ namespace KKManager.Windows
             }
             catch (Exception ex) { Console.WriteLine("Failed to read opened tabs from config: " + ex); }
 
-            OpenOrGetCardWindow(CardWindow.MaleCardDir);
-            OpenOrGetCardWindow(CardWindow.FemaleCardDir);
+            OpenOrGetCardWindow(InstallDirectoryHelper.GetMaleCardDir());
+            OpenOrGetCardWindow(InstallDirectoryHelper.GetFemaleCardDir());
 
             GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<PluginsWindow>();
@@ -171,12 +171,12 @@ namespace KKManager.Windows
 
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenOrGetCardWindow(CardWindow.FemaleCardDir);
+            OpenOrGetCardWindow(InstallDirectoryHelper.GetFemaleCardDir());
         }
 
         private void openMaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenOrGetCardWindow(CardWindow.MaleCardDir);
+            OpenOrGetCardWindow(InstallDirectoryHelper.GetMaleCardDir());
         }
 
         private void openPluginBrowserToolStripMenuItem_Click(object sender, EventArgs e)
@@ -269,42 +269,27 @@ namespace KKManager.Windows
 
         private void installDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeStartProcess(InstallDirectoryHelper.KoikatuDirectory.FullName);
+            ProcessTools.SafeStartProcess(InstallDirectoryHelper.KoikatuDirectory.FullName);
         }
 
         private void screenshotsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\cap"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\cap"));
         }
 
         private void charactersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\chara"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\chara"));
         }
 
         private void scenesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\Studio\\scene"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\Studio\\scene"));
         }
 
         private void kKManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeStartProcess(Program.ProgramLocation);
-        }
-
-        private static void SafeStartProcess(string fileFullName)
-        {
-            try
-            {
-                if (File.Exists(fileFullName))
-                    Process.Start(new ProcessStartInfo(fileFullName) { WorkingDirectory = Path.GetDirectoryName(fileFullName) ?? fileFullName });
-                else
-                    Process.Start(fileFullName);
-            }
-            catch (SystemException ex)
-            {
-                MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            ProcessTools.SafeStartProcess(Program.ProgramLocation);
         }
 
         private void updateSideloaderModpackToolStripMenuItem_Click(object sender, EventArgs e)
@@ -351,6 +336,11 @@ namespace KKManager.Windows
                 }
             }
             catch (OperationCanceledException) { }
+        }
+
+        private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName)?.WaitForExit();
         }
     }
 }

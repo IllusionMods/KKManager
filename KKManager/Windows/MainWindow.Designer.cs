@@ -46,6 +46,7 @@
             this.screenshotsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.charactersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.scenesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kKManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.installANewModToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateSideloaderModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,10 @@
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.kKManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -68,6 +72,7 @@
             this.openToolStripMenuItem,
             this.installANewModToolStripMenuItem,
             this.updateSideloaderModpackToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -172,6 +177,7 @@
             this.screenshotsToolStripMenuItem,
             this.charactersToolStripMenuItem,
             this.scenesToolStripMenuItem,
+            this.toolStripSeparator2,
             this.kKManagerToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
@@ -180,30 +186,37 @@
             // installDirectoryToolStripMenuItem
             // 
             this.installDirectoryToolStripMenuItem.Name = "installDirectoryToolStripMenuItem";
-            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.installDirectoryToolStripMenuItem.Text = "Install directory";
             this.installDirectoryToolStripMenuItem.Click += new System.EventHandler(this.installDirectoryToolStripMenuItem_Click);
             // 
             // screenshotsToolStripMenuItem
             // 
             this.screenshotsToolStripMenuItem.Name = "screenshotsToolStripMenuItem";
-            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.screenshotsToolStripMenuItem.Text = "Screenshots";
             this.screenshotsToolStripMenuItem.Click += new System.EventHandler(this.screenshotsToolStripMenuItem_Click);
             // 
             // charactersToolStripMenuItem
             // 
             this.charactersToolStripMenuItem.Name = "charactersToolStripMenuItem";
-            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.charactersToolStripMenuItem.Text = "Characters";
             this.charactersToolStripMenuItem.Click += new System.EventHandler(this.charactersToolStripMenuItem_Click);
             // 
             // scenesToolStripMenuItem
             // 
             this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
-            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.scenesToolStripMenuItem.Text = "Scenes";
             this.scenesToolStripMenuItem.Click += new System.EventHandler(this.scenesToolStripMenuItem_Click);
+            // 
+            // kKManagerToolStripMenuItem
+            // 
+            this.kKManagerToolStripMenuItem.Name = "kKManagerToolStripMenuItem";
+            this.kKManagerToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.kKManagerToolStripMenuItem.Text = "KK Manager";
+            this.kKManagerToolStripMenuItem.Click += new System.EventHandler(this.kKManagerToolStripMenuItem_Click);
             // 
             // installANewModToolStripMenuItem
             // 
@@ -265,12 +278,33 @@
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
             // 
-            // kKManagerToolStripMenuItem
+            // toolsToolStripMenuItem
             // 
-            this.kKManagerToolStripMenuItem.Name = "kKManagerToolStripMenuItem";
-            this.kKManagerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.kKManagerToolStripMenuItem.Text = "KK Manager";
-            this.kKManagerToolStripMenuItem.Click += new System.EventHandler(this.kKManagerToolStripMenuItem_Click);
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fixesToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // fixesToolStripMenuItem
+            // 
+            this.fixesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fixFileAndFolderPermissionsToolStripMenuItem});
+            this.fixesToolStripMenuItem.Name = "fixesToolStripMenuItem";
+            this.fixesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fixesToolStripMenuItem.Text = "&Fixes";
+            // 
+            // fixFileAndFolderPermissionsToolStripMenuItem
+            // 
+            this.fixFileAndFolderPermissionsToolStripMenuItem.Name = "fixFileAndFolderPermissionsToolStripMenuItem";
+            this.fixFileAndFolderPermissionsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.fixFileAndFolderPermissionsToolStripMenuItem.Text = "Fix file and folder permissions";
+            this.fixFileAndFolderPermissionsToolStripMenuItem.Click += new System.EventHandler(this.fixFileAndFolderPermissionsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // MainWindow
             // 
@@ -324,5 +358,9 @@
         private System.Windows.Forms.ToolStripMenuItem openPropertiesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem updateSideloaderModpackToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem kKManagerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fixesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fixFileAndFolderPermissionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

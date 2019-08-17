@@ -58,7 +58,7 @@ namespace KKManager.Windows.Content
 
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
-            var observable = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath(), token);
+            var observable = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath().FullName, token);
 
             observable
                 .Buffer(TimeSpan.FromSeconds(3))
@@ -141,11 +141,11 @@ namespace KKManager.Windows.Content
             }
         }
 
-        private void toolStripButtonOpenDir_Click(object sender, EventArgs e)
+        private void toolStripButtonOpenModsDir_Click(object sender, EventArgs e)
         {
             try
             {
-                Process.Start(InstallDirectoryHelper.GetModsPath());
+                Process.Start(InstallDirectoryHelper.GetModsPath().FullName);
             }
             catch (SystemException ex)
             {

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using KKManager.Properties;
+using KKManager.Util;
 using Microsoft.Win32;
 
 namespace KKManager.Functions
@@ -16,7 +16,7 @@ namespace KKManager.Functions
             get => _koikatuDirectory ?? (_koikatuDirectory = GetKoikatuDirectory());
             set
             {
-                if(!IsValidGamePath(value.FullName)) throw new ArgumentException("The directory is not a valid install directory");
+                if (!IsValidGamePath(value.FullName)) throw new ArgumentException("The directory is not a valid install directory");
                 _koikatuDirectory = value;
             }
         }
@@ -26,16 +26,37 @@ namespace KKManager.Functions
             return Path.Combine(KoikatuDirectory.FullName, "BepInEx");
         }
 
-        public static string GetModsPath()
+        public static DirectoryInfo GetModsPath()
         {
-            return Path.Combine(KoikatuDirectory.FullName, "mods");
+            var path = Path.Combine(KoikatuDirectory.FullName, "mods");
+            return Directory.CreateDirectory(path);
         }
 
         public static bool IsValidGamePath(string path)
         {
             try
             {
-                return !string.IsNullOrWhiteSpace(path) && (File.Exists(Path.Combine(path, "Koikatu.exe")) || Directory.Exists(Path.Combine(path, "bepinex")));
+                if (!Directory.Exists(path)) return false;
+
+                var exeExist = File.Exists(Path.Combine(path, "Koikatu.exe")) ||
+                               File.Exists(Path.Combine(path, "Koikatsu Party.exe")) ||
+                               File.Exists(Path.Combine(path, "CharaStudio.exe"));
+
+                // todo use this to offer to install bepinex and other mods / run update wizzard
+                var modsExist = Directory.Exists(Path.Combine(path, "bepinex")) && Directory.Exists(Path.Combine(path, "mods"));
+
+                if (!exeExist && !modsExist) return false;
+
+                if (!PathTools.DirectoryHasWritePermission(path) ||
+                    !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
+                    !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
+                {
+                    if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
+                        "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        ProcessTools.FixPermissions(path)?.WaitForExit();
+                }
+
+                return true;
             }
             catch
             {
@@ -79,7 +100,7 @@ namespace KKManager.Functions
                 Settings.Default.GamePath = path;
             }
 
-            if (!IsValidGamePath(path))
+            if (string.IsNullOrEmpty(path) || !IsValidGamePath(path))
             {
                 MessageBox.Show(
                     "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
@@ -87,8 +108,19 @@ namespace KKManager.Functions
                 Environment.Exit(1);
             }
 
-            Debug.Assert(path != null, nameof(path) + " != null");
             return new DirectoryInfo(path);
+        }
+
+        public static DirectoryInfo GetMaleCardDir()
+        {
+            var path = Path.Combine(KoikatuDirectory.FullName, @"UserData\chara\male");
+            return Directory.CreateDirectory(path);
+        }
+
+        public static DirectoryInfo GetFemaleCardDir()
+        {
+            var path = Path.Combine(KoikatuDirectory.FullName, @"UserData\chara\female");
+            return Directory.CreateDirectory(path);
         }
     }
 }

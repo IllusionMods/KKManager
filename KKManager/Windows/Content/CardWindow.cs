@@ -19,12 +19,6 @@ namespace KKManager.Windows.Content
 {
     public partial class CardWindow : DockContent
     {
-        public static readonly DirectoryInfo FemaleCardDir =
-            new DirectoryInfo(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, @"UserData\chara\female"));
-
-        public static readonly DirectoryInfo MaleCardDir =
-            new DirectoryInfo(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, @"UserData\chara\male"));
-
         private readonly Bitmap _emptyImage;
 
         private readonly TypedObjectListView<Card> _typedListView;
@@ -144,7 +138,7 @@ namespace KKManager.Windows.Content
 
         private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenCardDirectory(FemaleCardDir);
+            OpenCardDirectory(InstallDirectoryHelper.GetFemaleCardDir());
         }
 
         private void formMain_Load(object sender, EventArgs e)
@@ -189,7 +183,7 @@ namespace KKManager.Windows.Content
 
         private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenCardDirectory(MaleCardDir);
+            OpenCardDirectory(InstallDirectoryHelper.GetMaleCardDir());
         }
 
         private void OnResizeToolstip(object sender, EventArgs e)

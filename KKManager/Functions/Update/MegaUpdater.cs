@@ -104,7 +104,7 @@ namespace KKManager.Functions.Update
             var root = nodes.Single(x => x.Type == NodeType.Root);
 
             var modsDirPath = InstallDirectoryHelper.GetModsPath();
-            Directory.CreateDirectory(modsDirPath);
+            modsDirPath.Create();
 
             var results = Enumerable.Empty<SideloaderUpdateItem>();
 
@@ -114,7 +114,7 @@ namespace KKManager.Functions.Update
 
                 if (remoteModpackDir.Name.StartsWith("Sideloader Modpack"))
                 {
-                    var localModpackDir = new DirectoryInfo(Path.Combine(modsDirPath, remoteModpackDir.Name));
+                    var localModpackDir = new DirectoryInfo(Path.Combine(modsDirPath.FullName, remoteModpackDir.Name));
                     if (localModpackDir.Exists)
                         results = results.Concat(ProcessDirectory(remoteModpackDir, localModpackDir, cancellationToken));
                 }

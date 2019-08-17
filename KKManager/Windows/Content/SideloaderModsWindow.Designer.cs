@@ -47,7 +47,7 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOpenModsDir = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -200,13 +200,13 @@ namespace KKManager.Windows.Content
             // 
             // toolStripButtonOpenDir
             // 
-            this.toolStripButtonOpenDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonOpenDir.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpenDir.Image")));
-            this.toolStripButtonOpenDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonOpenDir.Name = "toolStripButtonOpenDir";
-            this.toolStripButtonOpenDir.Size = new System.Drawing.Size(123, 22);
-            this.toolStripButtonOpenDir.Text = "Open mods directory";
-            this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
+            this.toolStripButtonOpenModsDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonOpenModsDir.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpenDir.Image")));
+            this.toolStripButtonOpenModsDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOpenModsDir.Name = "toolStripButtonOpenModsDir";
+            this.toolStripButtonOpenModsDir.Size = new System.Drawing.Size(123, 22);
+            this.toolStripButtonOpenModsDir.Text = "Open mods directory";
+            this.toolStripButtonOpenModsDir.Click += new System.EventHandler(this.toolStripButtonOpenModsDir_Click);
             // 
             // SideloaderModsWindow
             // 
@@ -224,7 +224,7 @@ namespace KKManager.Windows.Content
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-            toolStrip1.Items.AddRange(new ToolStripItem[]{ toolStripButton1, toolStripSeparator1, toolStripButtonEnable, toolStripButtonDisable, toolStripSeparator2, toolStripButtonDelete, toolStripSeparator3, toolStripButtonOpenDir });
+            toolStrip1.Items.AddRange(new ToolStripItem[]{ toolStripButton1, toolStripSeparator1, toolStripButtonEnable, toolStripButtonDisable, toolStripSeparator2, toolStripButtonDelete, toolStripSeparator3, toolStripButtonOpenModsDir });
 
         }
 
@@ -245,6 +245,6 @@ namespace KKManager.Windows.Content
         private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
         private BrightIdeasSoftware.OLVColumn olvColumnEnabled;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton toolStripButtonOpenDir;
+        private System.Windows.Forms.ToolStripButton toolStripButtonOpenModsDir;
     }
 }

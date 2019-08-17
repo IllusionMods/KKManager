@@ -195,7 +195,9 @@ namespace KKManager.Functions
             {
                 try
                 {
-                    var mods = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath(), CancellationToken.None);
+                    var modDirectory = InstallDirectoryHelper.GetModsPath().FullName;
+
+                    var mods = SideloaderModLoader.TryReadSideloaderMods(modDirectory, CancellationToken.None);
                     var oldMod = mods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
 
                     if (oldMod != null)
@@ -218,7 +220,7 @@ namespace KKManager.Functions
                         }
                     }
 
-                    var installModDir = Path.Combine(InstallDirectoryHelper.GetModsPath(), "Installed by KKManager");
+                    var installModDir = Path.Combine(modDirectory, "Installed by KKManager");
                     Directory.CreateDirectory(installModDir);
                     newMod.Location.CopyTo(Path.Combine(installModDir, newMod.Location.Name));
                     return;
