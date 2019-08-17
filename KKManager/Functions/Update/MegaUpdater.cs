@@ -50,12 +50,12 @@ namespace KKManager.Functions.Update
             await Connect();
             await RetryHelper.RetryOnExceptionAsync(async () =>
             {
+                task.LocalFile.Delete();
                 try
                 {
-                    task.LocalFile.Delete();
                     await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken);
                 }
-                catch (OperationCanceledException)
+                catch (Exception)
                 {
                     // Needed to avoid partially downloaded files causing issues
                     task.LocalFile.Delete();
