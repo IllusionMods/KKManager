@@ -287,6 +287,11 @@ namespace KKManager.Windows
             SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\Studio\\scene"));
         }
 
+        private void kKManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeStartProcess(Program.ProgramLocation);
+        }
+
         private static void SafeStartProcess(string fileFullName)
         {
             try
