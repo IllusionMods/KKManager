@@ -12,8 +12,7 @@ namespace KKManager
     {
         public static SynchronizationContext MainSynchronizationContext { get; internal set; }
 
-        private static string _assemblyLocation;
-        public static string ProgramLocation => Path.GetDirectoryName(_assemblyLocation);
+        public static string ProgramLocation => Path.GetDirectoryName(typeof(Program).Assembly.Location);
 
         /// <summary>
         /// The main entry point for the application.
@@ -21,8 +20,9 @@ namespace KKManager
         [STAThread]
         private static void Main()
         {
-            _assemblyLocation = typeof(Program).Assembly.Location;
-            using (SimpleFileLogger.SetupLogging(_assemblyLocation))
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
+
+            using (LogWriter.StartLogging())
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

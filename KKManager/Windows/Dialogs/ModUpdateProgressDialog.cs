@@ -85,7 +85,7 @@ namespace KKManager.Windows.Dialogs
                     progressBar1.Value = index + 1;
                 }
 
-                var s = $"Successfully updated/removed {updateTasks?.Count ?? 0} mods!";
+                var s = $"Successfully updated/removed {updateTasks.Count} mods!";
                 SetStatus(s, true, true);
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -131,11 +131,11 @@ namespace KKManager.Windows.Dialogs
             {
                 task.LocalFile.Directory?.Create();
 
-                SetStatus($"Downloading {task.RemoteFile} to {task.RelativePath}", false, true);
+                SetStatus($"Downloading to {task.RelativePath}", false, true);
 
                 await _megaUpdater.DownloadNodeAsync(task, progress, _cancelToken.Token);
 
-                SetStatus("Finished", false, true);
+                SetStatus($"Download OK {task.Size}", false, true);
             }
         }
 
@@ -144,7 +144,7 @@ namespace KKManager.Windows.Dialogs
             if (writeToUi)
                 labelStatus.Text = status;
             if (writeToLog)
-                Console.WriteLine(status);
+                Console.WriteLine("[Updater]" + status);
         }
 
         private void button1_Click(object sender, EventArgs e)
