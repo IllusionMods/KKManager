@@ -21,6 +21,7 @@ namespace KKManager
         private static void Main()
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
 
             using (LogWriter.StartLogging())
             {
