@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using KKManager.Functions;
 using Mono.Cecil;
 
@@ -12,8 +14,6 @@ namespace KKManager.Data.Plugins
 {
     internal static class PluginLoader
     {
-        public static bool IsBepin5 => false;
-
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
@@ -33,8 +33,12 @@ namespace KKManager.Data.Plugins
             {
                 try
                 {
-                    //todo for bepin5 skip loading from bepinex4_backup and from scripts folder, change how folders are handled too
-                    var files = Directory.EnumerateFiles(pluginDirectory, "*.*", IsBepin5 ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    var files = Directory.EnumerateFiles(pluginDirectory, "*.*", SearchOption.TopDirectoryOnly);
+
+                    var bep5PluginsDir = Path.Combine(pluginDirectory, "plugins");
+                    if (Directory.Exists(bep5PluginsDir))
+                        files = files.Concat(Directory.EnumerateFiles(bep5PluginsDir, "*.*", SearchOption.AllDirectories));
+
                     foreach (var file in files)
                     {
                         try
@@ -48,15 +52,28 @@ namespace KKManager.Data.Plugins
                         catch (SystemException ex)
                         {
                             Console.WriteLine(ex);
-                            /*MessageBox.Show(
-                                        $"Failed to load mod from \"{file}\" with error: {ex.Message}",
-                                        "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);*/
                         }
 
                         if (cancellationToken.IsCancellationRequested) break;
                     }
 
                     subject.OnCompleted();
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
+                        "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    Console.WriteLine(ex);
+                    subject.OnError(ex);
+                }
+                catch (SecurityException ex)
+                {
+                    MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
+                        "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    Console.WriteLine(ex);
+                    subject.OnError(ex);
                 }
                 catch (IOException ex)
                 {
@@ -65,11 +82,14 @@ namespace KKManager.Data.Plugins
                 }
             }
 
-            Task.Run((Action)ReadPluginsAsync, cancellationToken);
+            try { Task.Run((Action)ReadPluginsAsync, cancellationToken); }
+            catch (TaskCanceledException) { }
 
             return subject;
         }
 
+        /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
+        /// <exception cref="UnauthorizedAccessException">Access to fileName is denied. </exception>
         public static IEnumerable<PluginInfo> LoadFromFile(string dllFile)
         {
             var location = new FileInfo(dllFile);
@@ -88,7 +108,7 @@ namespace KKManager.Data.Plugins
                         .Where(x => x.AttributeType.FullName == "BepInEx.BepInDependency");
                     var deps = depAttributes
                         .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
-                        .Where(x => !String.IsNullOrWhiteSpace(x))
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToArray();
 
                     yield return new PluginInfo(
@@ -124,7 +144,7 @@ namespace KKManager.Data.Plugins
         /// Check which of the <see cref="referencesToTest"/> depend on the supplied <see cref="plugins"/>
         /// </summary>
         /// <param name="plugins">Plugins to be tested against</param>
-        /// <param name="referencesToTest">Plugins to check if they depend on the target plugin list</param>
+        /// <param name="referencesToTest">Plugins to check if they depended on the target plugin list</param>
         /// <returns>Filtered list of references (only what the plugins reference)</returns>
         public static IEnumerable<PluginInfo> CheckReferences(IList<PluginInfo> plugins, IList<PluginInfo> referencesToTest)
         {
@@ -143,7 +163,7 @@ namespace KKManager.Data.Plugins
         /// Check the supplied <see cref="plugins"/> for being dependent on other plugins in <see cref="dependenciesToTest"/>
         /// </summary>
         /// <param name="plugins">Plugins to be tested for depending on others</param>
-        /// <param name="dependenciesToTest">Plugins to check if they are depend on by the target plugin list</param>
+        /// <param name="dependenciesToTest">Plugins to check if they are depended on by the target plugin list</param>
         /// <returns>Filtered list of references (only what the plugins reference)</returns>
         public static IEnumerable<PluginInfo> CheckDependencies(IList<PluginInfo> plugins, IList<PluginInfo> dependenciesToTest)
         {
