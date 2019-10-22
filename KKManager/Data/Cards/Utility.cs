@@ -45,7 +45,8 @@ namespace KKManager.Data.Cards
                 "Returnee",
                 "Slangy",
                 "Sadistic",
-                "Emotionless"
+                "Emotionless",
+                "Perfectionist"
             };
 
             if (personality < 0 || personality > 90) return "Invalid";
