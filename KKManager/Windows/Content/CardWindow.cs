@@ -66,8 +66,10 @@ namespace KKManager.Windows.Content
             private set
             {
                 _currentDirectory = value;
-                Text = CurrentDirectory?.Name ?? "Card viewer";
-                ToolTipText = CurrentDirectory?.FullName ?? string.Empty;
+                Text = value?.Name ?? "Card viewer";
+                var fullName = value?.FullName ?? string.Empty;
+                ToolTipText = fullName;
+                addressBar.Text = fullName;
             }
         }
 
@@ -75,7 +77,6 @@ namespace KKManager.Windows.Content
         {
             StartNewLoadProcess();
 
-            addressBar.Text = directory?.FullName ?? string.Empty;
             CurrentDirectory = directory;
 
             RefreshCurrentFolder();
@@ -94,7 +95,7 @@ namespace KKManager.Windows.Content
         public static CardWindow TryLoadFromPersistString(string ps)
         {
             var parts = ps.Split(new[] { "|||" }, StringSplitOptions.None);
-            if (parts.Length == 2)
+            if (parts.Length == 2 && parts[1].Length > 0)
             {
                 if (parts[0] == typeof(CardWindow).ToString())
                 {
@@ -122,7 +123,7 @@ namespace KKManager.Windows.Content
 
         protected override string GetPersistString()
         {
-            return base.GetPersistString() + "|||" + _currentDirectory.FullName;
+            return base.GetPersistString() + "|||" + _currentDirectory?.FullName;
         }
 
         private void addressBar_KeyDown(object sender, KeyEventArgs e)
@@ -210,7 +211,12 @@ namespace KKManager.Windows.Content
             listView.LargeImageList.Images.Clear();
 
             if (CurrentDirectory == null)
+            {
+                listView.Enabled = false;
                 return;
+            }
+
+            listView.Enabled = true;
 
             if (!CurrentDirectory.Exists)
             {
@@ -418,6 +424,8 @@ namespace KKManager.Windows.Content
 
         private void SimpleDropSink_Dropped(object sender, OlvDropEventArgs e)
         {
+            if (CurrentDirectory == null) return;
+
             if (e.DataObject is DataObject dataObject)
             {
                 try

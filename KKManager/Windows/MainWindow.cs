@@ -105,7 +105,7 @@ namespace KKManager.Windows
         {
             var existing = GetWindows<CardWindow>()
                 .FirstOrDefault(x => string.Equals(
-                    targetDir, x.CurrentDirectory.FullName, StringComparison.InvariantCultureIgnoreCase));
+                    targetDir, x.CurrentDirectory?.FullName, StringComparison.InvariantCultureIgnoreCase));
 
             if (existing != null)
             {
@@ -207,7 +207,7 @@ namespace KKManager.Windows
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Close();
         }
 
         private void readmeAndSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
