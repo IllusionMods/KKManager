@@ -13,6 +13,7 @@ namespace KKManager.Data.Cards
     {
         public string Name => Parameter == null ? "[Missing data]" : $"{Parameter.lastname} {Parameter.firstname}";
         public FileInfo Location { get; }
+        public CardSource SourceGame { get; }
 
         public ChaFileParameter Parameter { get; private set; }
         public Dictionary<string, PluginData> Extended { get; private set; }
@@ -39,9 +40,10 @@ namespace KKManager.Data.Cards
             }
         }
 
-        private Card(FileInfo cardFile)
+        private Card(FileInfo cardFile, CardSource sourceGame)
         {
             Location = cardFile;
+            SourceGame = sourceGame;
         }
 
         public static bool TryParseCard(FileInfo file, out Card card)
@@ -67,7 +69,8 @@ namespace KKManager.Data.Cards
                     }
 
                     var marker = reader.ReadString();
-                    if (marker != "【KoiKatuChara】")
+                    var gameType = GetGameType(marker);
+                    if (gameType == CardSource.Unknown)
                     {
                         return false;
                     }
@@ -91,7 +94,7 @@ namespace KKManager.Data.Cards
                     var num2 = reader.ReadInt64();
                     var position = reader.BaseStream.Position;
 
-                    card = new Card(file);
+                    card = new Card(file, gameType);
 
                     var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
                     if (info != null)
@@ -125,6 +128,29 @@ namespace KKManager.Data.Cards
 
                 return true;
             }
+        }
+
+        private static CardSource GetGameType(string marker)
+        {
+            switch (marker)
+            {
+                case "【KoiKatuChara】":
+                    return CardSource.Koikatu;
+                case "【KoiKatuCharaS】":
+                    return CardSource.Party;
+                case "【KoiKatuCharaSP】":
+                    return CardSource.PartySpecialPatch;
+                default:
+                    return CardSource.Unknown;
+            }
+        }
+
+        public enum CardSource
+        {
+            Unknown,
+            Koikatu,
+            Party,
+            PartySpecialPatch,
         }
     }
 }
