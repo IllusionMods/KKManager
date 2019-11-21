@@ -24,7 +24,7 @@ namespace KKManager.Windows.Dialogs
             olvColumnDate.AspectToStringConverter = value =>
             {
                 if (value is DateTime dt)
-                    return dt == DateTime.MinValue ? "File was removed" : dt.ToShortDateString();
+                    return dt == DateTime.MinValue ? "Will be removed" : dt.ToShortDateString();
                 return value?.ToString();
             };
         }
