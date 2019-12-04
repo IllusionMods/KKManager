@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,5 +11,6 @@ namespace KKManager.Functions.Update
         Task Update(CancellationToken cancellationToken);
         FileSystemInfo TargetPath { get; }
         FileSize ItemSize { get; }
+        DateTime? ModifiedTime { get; }
     }
 }
