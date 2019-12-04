@@ -40,7 +40,8 @@ namespace KKManager.Windows
 
             Task.Run((Action)PopulateStartMenu);
 
-            _megaUpdater = new MegaUpdater();
+            var link = new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg");
+            _megaUpdater = new MegaUpdater(link, null);
         }
 
         private void PopulateStartMenu()
@@ -324,7 +325,7 @@ namespace KKManager.Windows
         {
             try
             {
-                var results = await _megaUpdater.GetUpdateTasksAsync(_checkForUpdatesCancel.Token);
+                var results = await _megaUpdater.GetUpdateItems(_checkForUpdatesCancel.Token);
                 var updates = results.Count(item => !item.UpToDate);
 
                 _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
