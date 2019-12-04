@@ -23,6 +23,8 @@ namespace KKManager.Functions.Update
         public FileSize TotalUpdateSize => FileSize.SumFileSizes(Items.Select(x=>x.ItemSize));
         public bool UpToDate => Items.Count == 0;
 
+        public DateTime ModifiedTime => Items.Max(x => x.ModifiedTime ?? DateTime.MinValue);
+
         public async Task RunUpdate(CancellationToken cancellationToken)
         {
             foreach (var updateItem in Items)

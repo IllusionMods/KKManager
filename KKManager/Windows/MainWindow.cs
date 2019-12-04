@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -22,7 +23,7 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private readonly MegaUpdater _megaUpdater;
+        private readonly IUpdateSource _megaUpdater;
 
         public MainWindow()
         {
@@ -40,8 +41,30 @@ namespace KKManager.Windows
 
             Task.Run((Action)PopulateStartMenu);
 
-            var link = new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg");
-            _megaUpdater = new MegaUpdater(link, null);
+            try
+            {
+                _megaUpdater = GetUpdater(link);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), "Failed to open update source", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine(e);
+            }
+        }
+
+        private IUpdateSource GetUpdater(Uri link)
+        {
+            switch (link.Scheme)
+            {
+                case "file":
+                    return new ZipUpdater(new FileInfo(link.LocalPath));
+                case "ftp":
+                    return new FtpUpdater(link);
+                case "https":
+                    return new MegaUpdater(link, null);
+                default:
+                    throw new NotSupportedException("Link format is not supported as an update source:" + link.Scheme);
+            }
         }
 
         private void PopulateStartMenu()

@@ -12,8 +12,18 @@ namespace KKManager.Functions.Update
 {
     public class MegaUpdater : IUpdateSource
     {
+        private readonly MegaApiClient.AuthInfos _authInfos;
+
+        private readonly MegaApiClient _client;
+
+        private List<INode> _allNodes;
+        private MegaApiClient.LogonSessionToken _loginToken;
+
         public MegaUpdater(Uri serverUri, NetworkCredential credentials)
         {
+            if (serverUri.Host.ToLower() != "mega.nz")
+                throw new NotSupportedException("The link doesn't point to mega.nz - " + serverUri);
+
             var client = new MegaApiClient();
             _client = client;
             if (credentials != null)
@@ -21,13 +31,7 @@ namespace KKManager.Functions.Update
             CurrentFolderLink = serverUri;
         }
 
-        private readonly MegaApiClient _client;
-
-        private List<INode> _allNodes;
-        private readonly MegaApiClient.AuthInfos _authInfos;
-        private MegaApiClient.LogonSessionToken _loginToken;
-
-        private Uri CurrentFolderLink { get; set; }
+        private Uri CurrentFolderLink { get; }
 
         public void Dispose()
         {
@@ -43,20 +47,10 @@ namespace KKManager.Functions.Update
             }
         }
 
-        private async Task Connect()
+        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
-            if (_client.IsLoggedIn) return;
-
-            await RetryHelper.RetryOnExceptionAsync(
-                async () =>
-                {
-                    if (_loginToken != null)
-                        await _client.LoginAsync(_loginToken);
-                    else if (_authInfos != null)
-                        _loginToken = await _client.LoginAsync(_authInfos);
-                    else
-                        await _client.LoginAnonymousAsync();
-                }, 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+            var nodes = await GetNodesFromLinkAsync(cancellationToken);
+            return await CollectTasksAsync(nodes, cancellationToken);
         }
 
         public async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
@@ -77,36 +71,6 @@ namespace KKManager.Functions.Update
                         throw;
                     }
                 }, 2, TimeSpan.FromSeconds(1), cancellationToken);
-        }
-
-        private IEnumerable<INode> GetSubNodes(INode rootNode)
-        {
-            return _allNodes.Where(x => x.ParentId == rootNode.Id);
-        }
-
-        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
-        {
-            var nodes = await GetNodesFromLinkAsync(cancellationToken);
-            return await CollectTasksAsync(nodes, cancellationToken);
-        }
-
-        private async Task<List<INode>> GetNodesFromLinkAsync(CancellationToken cancellationToken)
-        {
-            await Connect();
-            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(CurrentFolderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
-            return _allNodes;
-        }
-
-        private async Task<List<UpdateTask>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
-        {
-            List<UpdateTask> results = null;
-
-            await RetryHelper.RetryOnExceptionAsync(async () =>
-            {
-                results = await CollectTasks(nodes, cancellationToken);
-            }, 2, TimeSpan.FromSeconds(1), cancellationToken);
-
-            return results;
         }
 
         private async Task<List<UpdateTask>> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
@@ -141,23 +105,42 @@ namespace KKManager.Functions.Update
 
             return results;
         }
-        public sealed class MegaUpdateItem : IUpdateItem
+
+        private async Task<List<UpdateTask>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
         {
-            public INode SourceItem { get; }
-            private readonly MegaUpdater _source;
-            public FileSystemInfo TargetPath { get; }
+            List<UpdateTask> results = null;
 
-            public MegaUpdateItem(INode item, MegaUpdater source, FileSystemInfo targetPath)
-            {
-                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
-                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
-                _source = source ?? throw new ArgumentNullException(nameof(source));
-            }
+            await RetryHelper.RetryOnExceptionAsync(async () => { results = await CollectTasks(nodes, cancellationToken); }, 2, TimeSpan.FromSeconds(1), cancellationToken);
 
-            public async Task Update(CancellationToken cancellationToken)
-            {
-                await _source.DownloadNodeAsync(this, null, cancellationToken);
-            }
+            return results;
+        }
+
+        private async Task Connect()
+        {
+            if (_client.IsLoggedIn) return;
+
+            await RetryHelper.RetryOnExceptionAsync(
+                async () =>
+                {
+                    if (_loginToken != null)
+                        await _client.LoginAsync(_loginToken);
+                    else if (_authInfos != null)
+                        _loginToken = await _client.LoginAsync(_authInfos);
+                    else
+                        await _client.LoginAnonymousAsync();
+                }, 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+        }
+
+        private async Task<List<INode>> GetNodesFromLinkAsync(CancellationToken cancellationToken)
+        {
+            await Connect();
+            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(CurrentFolderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
+            return _allNodes;
+        }
+
+        private IEnumerable<INode> GetSubNodes(INode rootNode)
+        {
+            return _allNodes.Where(x => x.ParentId == rootNode.Id);
         }
 
         private List<IUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, bool recursive, bool removeExtraClientFiles, CancellationToken cancellationToken)
@@ -230,6 +213,30 @@ namespace KKManager.Functions.Update
             }
 
             return results;
+        }
+
+        public sealed class MegaUpdateItem : IUpdateItem
+        {
+            private readonly MegaUpdater _source;
+
+            public MegaUpdateItem(INode item, MegaUpdater source, FileSystemInfo targetPath)
+            {
+                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
+                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
+                _source = source ?? throw new ArgumentNullException(nameof(source));
+                ItemSize = FileSize.FromBytes(item.Size);
+                ModifiedTime = SourceItem.ModificationDate;
+            }
+
+            public INode SourceItem { get; }
+            public FileSize ItemSize { get; }
+            public DateTime? ModifiedTime { get; }
+            public FileSystemInfo TargetPath { get; }
+
+            public async Task Update(CancellationToken cancellationToken)
+            {
+                await _source.DownloadNodeAsync(this, null, cancellationToken);
+            }
         }
     }
 }

@@ -21,6 +21,15 @@ namespace KKManager.Functions
             }
         }
 
+        public static string GetRelativePath(string fullPath)
+        {
+            return fullPath.Substring(KoikatuDirectory.FullName.Length);
+        }
+        public static string GetRelativePath(FileSystemInfo fullPath)
+        {
+            return GetRelativePath(fullPath.FullName);
+        }
+
         public static string GetPluginPath()
         {
             return Path.Combine(KoikatuDirectory.FullName, "BepInEx");

@@ -11,15 +11,15 @@ namespace KKManager.Windows.Dialogs
 {
     public partial class ModUpdateSelectDialog : Form
     {
-        private List<SideloaderUpdateItem> _updateTasks;
-        private List<SideloaderUpdateItem> _selectedItems;
+        private List<UpdateTask> _updateTasks;
+        private List<UpdateTask> _selectedItems;
 
         private ModUpdateSelectDialog()
         {
             InitializeComponent();
 
             objectListView1.EmptyListMsg = "All mods are up to date!";
-            objectListView1.FormatRow += ObjectListView1_FormatRow;
+            //objectListView1.FormatRow += ObjectListView1_FormatRow;
 
             olvColumnDate.AspectToStringConverter = value =>
             {
@@ -29,7 +29,7 @@ namespace KKManager.Windows.Dialogs
             };
         }
 
-        public static List<SideloaderUpdateItem> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
+        public static List<UpdateTask> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace KKManager.Windows.Dialogs
                 {
                     w.Icon = owner.Icon;
                     w.StartPosition = FormStartPosition.CenterParent;
-                    w._updateTasks = updateTasks.OrderBy(x => x.UpToDate).ThenBy(x => x.RelativePath).ToList();
+                    w._updateTasks = updateTasks.OrderBy(x => x.UpToDate).ThenBy(x => x.TaskName).ToList();
                     w.ShowDialog();
 
                     return w._selectedItems;
@@ -55,26 +55,28 @@ namespace KKManager.Windows.Dialogs
         {
             base.OnShown(e);
             UpdateListObjects();
-            SelectAll(this, e);
+
+            objectListView1.UncheckAll();
+            objectListView1.CheckObjects(_updateTasks.Where(x => !x.UpToDate && x.EnableByDefault));
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
-            _selectedItems = objectListView1.CheckedObjects.Cast<SideloaderUpdateItem>().Where(x => !x.UpToDate).ToList();
+            _selectedItems = objectListView1.CheckedObjects.Cast<UpdateTask>().Where(x => !x.UpToDate).ToList();
 
             Close();
         }
 
-        private static void ObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
-        {
-            if (e.Model is SideloaderUpdateItem task)
-            {
-                if (!task.RemoteExists)
-                    e.Item.ForeColor = Color.DarkRed;
-                else if (!task.LocalExists)
-                    e.Item.ForeColor = Color.Green;
-            }
-        }
+//        private static void ObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
+//        {
+//            if (e.Model is UpdateTask task)
+//            {
+//                if (!task.RemoteExists)
+//                    e.Item.ForeColor = Color.DarkRed;
+//                else if (!task.LocalExists)
+//                    e.Item.ForeColor = Color.Green;
+//            }
+//        }
 
         private void UpdateListObjects()
         {
@@ -103,7 +105,7 @@ namespace KKManager.Windows.Dialogs
 
         private void objectListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<SideloaderUpdateItem>().Select(x => x.Size));
+            var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<UpdateTask>().Select(x => x.TotalUpdateSize));
             labelDownload.Text = (sumFileSizes == FileSize.Empty ? "Nothing" : sumFileSizes.ToString()) + " to download";
         }
     }

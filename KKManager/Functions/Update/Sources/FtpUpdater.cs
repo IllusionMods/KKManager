@@ -6,34 +6,24 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
+using KKManager.Util;
 
-namespace KKManager.Functions.Update {
+namespace KKManager.Functions.Update
+{
     internal class FtpUpdater : IUpdateSource
     {
-        public sealed class FtpUpdateItem : IUpdateItem
-        {
-            public FtpListItem SourceItem { get; }
-            private readonly FtpUpdater _source;
-            public FileSystemInfo TargetPath { get; }
-
-            public FtpUpdateItem(FtpListItem item, FtpUpdater source, FileSystemInfo targetPath)
-            {
-                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
-                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
-                _source = source ?? throw new ArgumentNullException(nameof(source));
-            }
-
-            public async Task Update(CancellationToken cancellationToken)
-            {
-                await _source.UpdateItem(this, cancellationToken);
-            }
-        }
-
         private readonly FtpClient _client;
 
-        public FtpUpdater(Uri serverUri, NetworkCredential credentials)
+        public FtpUpdater(Uri serverUri, NetworkCredential credentials = null)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
+
+            if (credentials == null)
+            {
+                var info = serverUri.UserInfo.Split(new[] { ':' }, 2, StringSplitOptions.None);
+                if (info.Length == 2)
+                    credentials = new NetworkCredential(info[0], info[1]);
+            }
 
             if (serverUri.IsDefaultPort)
                 _client = new FtpClient(serverUri.Host, credentials);
@@ -41,22 +31,41 @@ namespace KKManager.Functions.Update {
                 _client = new FtpClient(serverUri.Host, serverUri.Port, credentials);
         }
 
+        public void Dispose()
+        {
+            _client.Dispose();
+        }
+
+        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        {
+            var allResults = new List<UpdateTask>();
+            using (var str = new MemoryStream())
+            {
+                var b = await _client.DownloadAsync(str, UpdateInfo.UpdateFileName, 0, null, cancellationToken);
+                if (!b) throw new FileNotFoundException("Failed to get the update list");
+
+                str.Seek(0, SeekOrigin.Begin);
+                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str))
+                {
+                    // Clean up the path into a usable form
+                    var serverPath = "/" + updateInfo.ServerPath.Trim(' ', '\\', '/');
+
+                    var remote = await _client.GetObjectInfoAsync(serverPath);
+                    if (remote == null) throw new ArgumentNullException(nameof(remote));
+
+                    var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+
+                    // todo change local.Exists to something else? allow per-file?
+                    allResults.Add(new UpdateTask(remote.Name, results, updateInfo.ClientPath.Exists));
+                }
+            }
+            return allResults;
+        }
+
         private async Task Connect()
         {
             if (!_client.IsConnected)
                 await _client.AutoConnectAsync();
-        }
-
-        private async Task UpdateItem(FtpUpdateItem item, CancellationToken cancellationToken)
-        {
-            await Connect();
-
-            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName, FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw, null, cancellationToken);
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
         }
 
         private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir, bool recursive, bool removeNotExisting, CancellationToken cancellationToken)
@@ -86,7 +95,7 @@ namespace KKManager.Functions.Update {
                         results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, cancellationToken));
                     }
                 }
-                else
+                else if (remoteItem.Type == FtpFileSystemObjectType.File)
                 {
                     var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                     if (localFile == null)
@@ -94,7 +103,7 @@ namespace KKManager.Functions.Update {
                     else
                         localContents.Remove(localFile);
 
-                    var localIsUpToDate = localFile.Length != remoteItem.Size;
+                    var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
                     if (!localIsUpToDate)
                         results.Add(new FtpUpdateItem(remoteItem, this, localFile));
                 }
@@ -127,27 +136,35 @@ namespace KKManager.Functions.Update {
             return results;
         }
 
-        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        private async Task UpdateItem(FtpUpdateItem item, CancellationToken cancellationToken)
         {
-            var allResults = new List<UpdateTask>();
-            using (var str = new MemoryStream())
+            await Connect();
+
+            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName, FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw, null, cancellationToken);
+        }
+
+        public sealed class FtpUpdateItem : IUpdateItem
+        {
+            private readonly FtpUpdater _source;
+
+            public FtpUpdateItem(FtpListItem item, FtpUpdater source, FileSystemInfo targetPath)
             {
-                var b = await _client.DownloadAsync(str, UpdateInfo.UpdateFileName, 0, null, cancellationToken);
-                if (!b) throw new FileNotFoundException("Failed to get the update list");
-
-                str.Seek(0, SeekOrigin.Begin);
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str))
-                {
-                    var remote = await _client.GetObjectInfoAsync(updateInfo.ServerPath);
-                    if (remote == null) throw new ArgumentNullException(nameof(remote));
-
-                    var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
-
-                    // todo change local.Exists to something else? allow per-file?
-                    allResults.Add(new UpdateTask(remote.Name, results, updateInfo.ClientPath.Exists));
-                }
+                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
+                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
+                _source = source ?? throw new ArgumentNullException(nameof(source));
+                ItemSize = FileSize.FromBytes(item.Size);
+                ModifiedTime = SourceItem.Modified;
             }
-            return allResults;
+
+            public FtpListItem SourceItem { get; }
+            public FileSize ItemSize { get; }
+            public DateTime? ModifiedTime { get; }
+            public FileSystemInfo TargetPath { get; }
+
+            public async Task Update(CancellationToken cancellationToken)
+            {
+                await _source.UpdateItem(this, cancellationToken);
+            }
         }
     }
 }

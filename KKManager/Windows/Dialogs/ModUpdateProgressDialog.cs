@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Functions;
 using KKManager.Functions.Update;
 using KKManager.Util;
 
@@ -44,7 +45,7 @@ namespace KKManager.Windows.Dialogs
                 labelPercent.Text = "";
 
                 SetStatus("Searching for mod updates...");
-                
+
                 var updateTasks = await _updater.GetUpdateItems(_cancelToken.Token);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
@@ -65,27 +66,29 @@ namespace KKManager.Windows.Dialogs
                 if (updateTasks == null)
                     throw new OperationCanceledException();
 
-                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.Items.Select(i=>i.)));
+                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.TotalUpdateSize));
                 _completedSize = FileSize.Empty;
+
+                var allItems = updateTasks.SelectMany(x => x.Items).ToList();
 
                 progressBar1.Maximum = updateTasks.Count;
 
-                for (var index = 0; index < updateTasks.Count; index++)
+                for (var index = 0; index < allItems.Count; index++)
                 {
                     _cancelToken.Token.ThrowIfCancellationRequested();
 
-                    var task = updateTasks[index];
+                    var task = allItems[index];
 
-                    labelProgress.Text = (index + 1) + " / " + updateTasks.Count;
-                    SetStatus("Downloading " + task.Name);
+                    labelProgress.Text = (index + 1) + " / " + allItems.Count;
+                    SetStatus("Downloading " + task.TargetPath.Name);
 
                     await UpdateSingleItem(task);
 
-                    _completedSize += task.Size;
+                    _completedSize += task.ItemSize;
                     progressBar1.Value = index + 1;
                 }
 
-                var s = $"Successfully updated/removed {updateTasks.Count} mods!";
+                var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks!";
                 SetStatus(s, true, true);
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -115,28 +118,23 @@ namespace KKManager.Windows.Dialogs
             }
         }
 
-        private async Task UpdateSingleItem(SideloaderUpdateItem task)
+        private async Task UpdateSingleItem(IUpdateItem task)
         {
-            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.Size}.  Overall: {_completedSize} / {_overallSize}.");
+            //todo
+            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
 
-            SetStatus($"Updating {task.Name}");
+            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}");
 
-            if (task.LocalExists)
+            // todo move logging to update methods
+            if (task.TargetPath.Exists)
             {
-                SetStatus($"Deleting old file {task.RelativePath}", false, true);
-                task.LocalFile.Delete();
+                SetStatus($"Deleting old file {task.TargetPath.FullName}", false, true);
+                task.TargetPath.Delete();
             }
 
-            if (task.RemoteExists)
-            {
-                task.LocalFile.Directory?.Create();
-
-                SetStatus($"Downloading to {task.RelativePath}", false, true);
-
-                await _updater.DownloadNodeAsync(task, progress, _cancelToken.Token);
-
-                SetStatus($"Download OK {task.Size}", false, true);
-            }
+            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}", false, true);
+            await task.Update(_cancelToken.Token);
+            SetStatus($"Download OK {task.ItemSize}", false, true);
         }
 
         private void SetStatus(string status, bool writeToUi = true, bool writeToLog = false)

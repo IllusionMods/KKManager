@@ -1,8 +1,11 @@
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Util;
 
-namespace KKManager.Functions.Update {
+namespace KKManager.Functions.Update
+{
     internal sealed class DeleteFileUpdateItem : IUpdateItem
     {
         public DeleteFileUpdateItem(FileSystemInfo targetPath)
@@ -17,5 +20,7 @@ namespace KKManager.Functions.Update {
         }
 
         public FileSystemInfo TargetPath { get; }
+        public FileSize ItemSize => FileSize.Empty;
+        public DateTime? ModifiedTime => null;
     }
 }

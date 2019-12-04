@@ -37,11 +37,11 @@ namespace KKManager.Windows.Dialogs
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelDownload = new System.Windows.Forms.Label();
             this.buttonNone = new System.Windows.Forms.Button();
             this.buttonAll = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.labelDownload = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -65,6 +65,7 @@ namespace KKManager.Windows.Dialogs
             this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
+            this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, 30);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
@@ -76,21 +77,21 @@ namespace KKManager.Windows.Dialogs
             // 
             // olvColumnName
             // 
-            this.olvColumnName.AspectName = "LocalFile.Name";
-            this.olvColumnName.Text = "Mod name";
+            this.olvColumnName.AspectName = "TaskName";
+            this.olvColumnName.Text = "Task name";
             this.olvColumnName.Width = 341;
             // 
             // olvColumnDate
             // 
-            this.olvColumnDate.AspectName = "UpdateDate";
+            this.olvColumnDate.AspectName = "ModifiedTime";
             this.olvColumnDate.Text = "Update date";
             this.olvColumnDate.Width = 132;
             // 
             // olvColumnSize
             // 
-            this.olvColumnSize.AspectName = "Size";
+            this.olvColumnSize.AspectName = "TotalUpdateSize";
             this.olvColumnSize.MinimumWidth = 60;
-            this.olvColumnSize.Text = "Size";
+            this.olvColumnSize.Text = "Update Size";
             this.olvColumnSize.Width = 68;
             // 
             // label1
@@ -144,6 +145,16 @@ namespace KKManager.Windows.Dialogs
             this.panel1.Size = new System.Drawing.Size(584, 41);
             this.panel1.TabIndex = 2;
             // 
+            // labelDownload
+            // 
+            this.labelDownload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelDownload.Location = new System.Drawing.Point(160, 6);
+            this.labelDownload.Name = "labelDownload";
+            this.labelDownload.Size = new System.Drawing.Size(210, 29);
+            this.labelDownload.TabIndex = 5;
+            this.labelDownload.Text = "123 MB to download";
+            this.labelDownload.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // buttonNone
             // 
             this.buttonNone.AutoSize = true;
@@ -196,16 +207,6 @@ namespace KKManager.Windows.Dialogs
             this.splitContainer1.Size = new System.Drawing.Size(572, 354);
             this.splitContainer1.SplitterDistance = 86;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // labelDownload
-            // 
-            this.labelDownload.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelDownload.Location = new System.Drawing.Point(160, 6);
-            this.labelDownload.Name = "labelDownload";
-            this.labelDownload.Size = new System.Drawing.Size(210, 29);
-            this.labelDownload.TabIndex = 5;
-            this.labelDownload.Text = "123 MB to download";
-            this.labelDownload.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ModUpdateSelectDialog
             // 
