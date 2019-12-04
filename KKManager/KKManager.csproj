@@ -45,6 +45,9 @@
     <Reference Include="DotNetZip, Version=1.13.3.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.13.3\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="FluentFTP, Version=28.0.0.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentFTP.28.0.0\lib\net45\FluentFTP.dll</HintPath>
+    </Reference>
     <Reference Include="MegaApiClient, Version=1.7.1.495, Culture=neutral, PublicKeyToken=0480d311efbeb4e2, processorArchitecture=MSIL">
       <HintPath>..\packages\MegaApiClient.1.7.1\lib\net46\MegaApiClient.dll</HintPath>
     </Reference>
@@ -106,13 +109,18 @@
     <Compile Include="Data\Cards\Internal\BlockHeader.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
+    <Compile Include="Functions\Update\DeleteFileUpdateItem.cs" />
+    <Compile Include="Functions\Update\FtpUpdater.cs" />
+    <Compile Include="Functions\Update\IUpdateItem.cs" />
+    <Compile Include="Functions\Update\IUpdateSource.cs" />
+    <Compile Include="Functions\Update\MegaUpdater.cs" />
+    <Compile Include="Functions\Update\UpdateInfo.cs" />
     <Compile Include="Util\FileSize.cs" />
     <Compile Include="Util\PathTools.cs" />
     <Compile Include="Util\ProcessTools.cs" />
     <Compile Include="Util\SimpleExpandTypeConverter.cs" />
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
-    <Compile Include="Functions\Update\SideloaderUpdateItem.cs" />
     <Compile Include="Util\RetryHelper.cs" />
     <Compile Include="Util\LogWriter.cs" />
     <Compile Include="Util\StringTools.cs" />
@@ -152,7 +160,7 @@
     <Compile Include="Windows\Dialogs\ModUpdateSelectDialog.Designer.cs">
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Functions\Update\MegaUpdater.cs" />
+    <Compile Include="Functions\Update\UpdateTask.cs" />
     <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

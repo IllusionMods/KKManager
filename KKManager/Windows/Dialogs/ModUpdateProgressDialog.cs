@@ -12,7 +12,7 @@ namespace KKManager.Windows.Dialogs
     public partial class ModUpdateProgressDialog : Form
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
-        private MegaUpdater _megaUpdater;
+        private IUpdateSource _updater;
         private FileSize _overallSize;
         private FileSize _completedSize;
 
@@ -21,13 +21,13 @@ namespace KKManager.Windows.Dialogs
             InitializeComponent();
         }
 
-        public static void StartUpdateDialog(Form owner, MegaUpdater updater)
+        public static void StartUpdateDialog(Form owner, IUpdateSource updater)
         {
             using (var w = new ModUpdateProgressDialog())
             {
                 w.Icon = owner.Icon;
                 w.StartPosition = FormStartPosition.CenterParent;
-                w._megaUpdater = updater;
+                w._updater = updater;
                 w.ShowDialog(owner);
             }
         }
@@ -44,8 +44,8 @@ namespace KKManager.Windows.Dialogs
                 labelPercent.Text = "";
 
                 SetStatus("Searching for mod updates...");
-
-                var updateTasks = await _megaUpdater.GetUpdateTasksAsync(_cancelToken.Token);
+                
+                var updateTasks = await _updater.GetUpdateItems(_cancelToken.Token);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -65,7 +65,7 @@ namespace KKManager.Windows.Dialogs
                 if (updateTasks == null)
                     throw new OperationCanceledException();
 
-                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.Size));
+                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.Items.Select(i=>i.)));
                 _completedSize = FileSize.Empty;
 
                 progressBar1.Maximum = updateTasks.Count;
@@ -133,7 +133,7 @@ namespace KKManager.Windows.Dialogs
 
                 SetStatus($"Downloading to {task.RelativePath}", false, true);
 
-                await _megaUpdater.DownloadNodeAsync(task, progress, _cancelToken.Token);
+                await _updater.DownloadNodeAsync(task, progress, _cancelToken.Token);
 
                 SetStatus($"Download OK {task.Size}", false, true);
             }

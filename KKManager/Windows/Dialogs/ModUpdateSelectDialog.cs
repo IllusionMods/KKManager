@@ -29,7 +29,7 @@ namespace KKManager.Windows.Dialogs
             };
         }
 
-        public static List<SideloaderUpdateItem> ShowWindow(ModUpdateProgressDialog owner, IEnumerable<SideloaderUpdateItem> updateTasks)
+        public static List<SideloaderUpdateItem> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
         {
             try
             {

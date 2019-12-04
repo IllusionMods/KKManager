@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using CG.Web.MegaApiClient;
@@ -9,21 +10,24 @@ using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
-    public class MegaUpdater : IDisposable
+    public class MegaUpdater : IUpdateSource
     {
-        private static readonly string[] _acceptableZipmodExtensions = { ".zip", ".zipmod" };
+        public MegaUpdater(Uri serverUri, NetworkCredential credentials)
+        {
+            var client = new MegaApiClient();
+            _client = client;
+            if (credentials != null)
+                _authInfos = _client.GenerateAuthInfos(credentials.UserName, credentials.Password);
+            CurrentFolderLink = serverUri;
+        }
 
         private readonly MegaApiClient _client;
 
         private List<INode> _allNodes;
+        private readonly MegaApiClient.AuthInfos _authInfos;
+        private MegaApiClient.LogonSessionToken _loginToken;
 
-        public MegaUpdater()
-        {
-            var client = new MegaApiClient();
-            _client = client;
-        }
-
-        public Uri CurrentFolderLink { get; private set; }
+        private Uri CurrentFolderLink { get; set; }
 
         public void Dispose()
         {
@@ -39,98 +43,126 @@ namespace KKManager.Functions.Update
             }
         }
 
-        public async Task Connect()
+        private async Task Connect()
         {
-            if (!_client.IsLoggedIn)
-                await RetryHelper.RetryOnExceptionAsync(async () => await _client.LoginAnonymousAsync(), 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+            if (_client.IsLoggedIn) return;
+
+            await RetryHelper.RetryOnExceptionAsync(
+                async () =>
+                {
+                    if (_loginToken != null)
+                        await _client.LoginAsync(_loginToken);
+                    else if (_authInfos != null)
+                        _loginToken = await _client.LoginAsync(_authInfos);
+                    else
+                        await _client.LoginAnonymousAsync();
+                }, 2, TimeSpan.FromSeconds(1), CancellationToken.None);
         }
 
-        public async Task DownloadNodeAsync(SideloaderUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
+        public async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
         {
             await Connect();
-            await RetryHelper.RetryOnExceptionAsync(async () =>
-            {
-                task.LocalFile.Delete();
-                try
+            await RetryHelper.RetryOnExceptionAsync(
+                async () =>
                 {
-                    await _client.DownloadFileAsync(task.RemoteFile, task.LocalFile.FullName, progress, cancellationToken);
-                }
-                catch (Exception)
-                {
-                    // Needed to avoid partially downloaded files causing issues
-                    task.LocalFile.Delete();
-                    throw;
-                }
-            }, 2, TimeSpan.FromSeconds(1), cancellationToken);
+                    task.TargetPath.Delete();
+                    try
+                    {
+                        await _client.DownloadFileAsync(task.SourceItem, task.TargetPath.FullName, progress, cancellationToken);
+                    }
+                    catch (Exception)
+                    {
+                        // Needed to avoid partially downloaded files causing issues
+                        task.TargetPath.Delete();
+                        throw;
+                    }
+                }, 2, TimeSpan.FromSeconds(1), cancellationToken);
         }
 
-        public async Task<List<INode>> GetNodesFromLinkAsync(Uri folderLink, CancellationToken cancellationToken)
-        {
-            await Connect();
-            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(folderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
-            CurrentFolderLink = folderLink;
-            return _allNodes;
-        }
-
-        public IEnumerable<INode> GetSubNodes(INode rootNode)
+        private IEnumerable<INode> GetSubNodes(INode rootNode)
         {
             return _allNodes.Where(x => x.ParentId == rootNode.Id);
         }
 
-        public async Task<IList<SideloaderUpdateItem>> GetUpdateTasksAsync(CancellationToken cancellationToken)
+        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
-            var link = new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg");
-            var nodes = await GetNodesFromLinkAsync(link, cancellationToken);
+            var nodes = await GetNodesFromLinkAsync(cancellationToken);
             return await CollectTasksAsync(nodes, cancellationToken);
         }
 
-        private async Task<IList<SideloaderUpdateItem>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
+        private async Task<List<INode>> GetNodesFromLinkAsync(CancellationToken cancellationToken)
         {
-            IList<SideloaderUpdateItem> results = null;
+            await Connect();
+            await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(CurrentFolderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
+            return _allNodes;
+        }
+
+        private async Task<List<UpdateTask>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
+        {
+            List<UpdateTask> results = null;
 
             await RetryHelper.RetryOnExceptionAsync(async () =>
             {
-                results = await Task.Run(
-                    () => CollectTasks(nodes, cancellationToken).ToList(),
-                    cancellationToken);
+                results = await CollectTasks(nodes, cancellationToken);
             }, 2, TimeSpan.FromSeconds(1), cancellationToken);
 
             return results;
         }
 
-        private IEnumerable<SideloaderUpdateItem> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
+        private async Task<List<UpdateTask>> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
         {
+            var results = new List<UpdateTask>();
+
             cancellationToken.ThrowIfCancellationRequested();
 
             var root = nodes.Single(x => x.Type == NodeType.Root);
 
-            var modsDirPath = InstallDirectoryHelper.GetModsPath();
-            modsDirPath.Create();
+            var subNodes = GetSubNodes(root).ToList();
+            var updateManifest = subNodes.FirstOrDefault(x => x.Type == NodeType.File && x.Name == UpdateInfo.UpdateFileName);
 
-            var results = Enumerable.Empty<SideloaderUpdateItem>();
+            var result = await _client.DownloadAsync(updateManifest, null, cancellationToken);
 
-            foreach (var remoteModpackDir in GetSubNodes(root).Where(x => x.Type == NodeType.Directory))
+            foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result))
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                // Find the remote directory
+                var updateNode = root;
+                var pathParts = updateInfo.ServerPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var pathPart in pathParts)
+                {
+                    updateNode = GetSubNodes(updateNode).FirstOrDefault(node => node.Type == NodeType.Directory && string.Equals(node.Name, pathPart, StringComparison.OrdinalIgnoreCase));
+                    if (updateNode == null)
+                        throw new ArgumentNullException(nameof(updateNode));
+                }
 
-                if (remoteModpackDir.Name.StartsWith("Sideloader Modpack"))
-                {
-                    var localModpackDir = new DirectoryInfo(Path.Combine(modsDirPath.FullName, remoteModpackDir.Name));
-                    if (localModpackDir.Exists)
-                        results = results.Concat(ProcessDirectory(remoteModpackDir, localModpackDir, cancellationToken));
-                }
-                else
-                {
-                    Console.WriteLine("Skipping non-modpack directory " + remoteModpackDir.Name);
-                }
+                var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+
+                results.Add(new UpdateTask(updateNode.Name, updateItems, updateInfo.ClientPath.Exists));
             }
 
             return results;
         }
-
-        private IEnumerable<SideloaderUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, CancellationToken cancellationToken)
+        public sealed class MegaUpdateItem : IUpdateItem
         {
-            var results = new List<SideloaderUpdateItem>();
+            public INode SourceItem { get; }
+            private readonly MegaUpdater _source;
+            public FileSystemInfo TargetPath { get; }
+
+            public MegaUpdateItem(INode item, MegaUpdater source, FileSystemInfo targetPath)
+            {
+                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
+                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
+                _source = source ?? throw new ArgumentNullException(nameof(source));
+            }
+
+            public async Task Update(CancellationToken cancellationToken)
+            {
+                await _source.DownloadNodeAsync(this, null, cancellationToken);
+            }
+        }
+
+        private List<IUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, bool recursive, bool removeExtraClientFiles, CancellationToken cancellationToken)
+        {
+            var results = new List<IUpdateItem>();
 
             var localContents = new List<FileSystemInfo>();
             if (localDir.Exists)
@@ -150,18 +182,15 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localFile);
 
-                            var extension = Path.GetExtension(remoteItem.Name)?.ToLower();
+                            var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
 
-                            if (_acceptableZipmodExtensions.Contains(extension))
-                            {
-                                var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
-
-                                results.Add(new SideloaderUpdateItem(remoteItem, localFile, localIsUpToDate));
-                            }
+                            if (!localIsUpToDate)
+                                results.Add(new MegaUpdateItem(remoteItem, this, localFile));
                         }
                         break;
 
                     case NodeType.Directory:
+                        if (recursive)
                         {
                             var localItem = localContents.OfType<DirectoryInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                             if (localItem == null)
@@ -169,7 +198,7 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localItem);
 
-                            results.AddRange(ProcessDirectory(remoteItem, localItem, cancellationToken));
+                            results.AddRange(ProcessDirectory(remoteItem, localItem, recursive, removeExtraClientFiles, cancellationToken));
                         }
                         break;
 
@@ -178,22 +207,25 @@ namespace KKManager.Functions.Update
                 }
             }
 
-            // Remove all files that were not on the remote
-            foreach (var localItem in localContents)
+            if (removeExtraClientFiles)
             {
-                if (!localItem.Exists) continue;
-
-                switch (localItem)
+                // Remove all files that were not on the remote //todo not only zip
+                foreach (var localItem in localContents)
                 {
-                    case FileInfo fi:
-                        if (fi.Extension.ToLowerInvariant().Contains("zip"))
-                            results.Add(new SideloaderUpdateItem(null, fi));
-                        break;
+                    if (!localItem.Exists) continue;
 
-                    case DirectoryInfo di:
-                        foreach (var subFi in di.GetFiles("*", SearchOption.AllDirectories).Where(x => x.Extension.ToLowerInvariant().Contains("zip")))
-                            results.Add(new SideloaderUpdateItem(null, subFi));
-                        break;
+                    switch (localItem)
+                    {
+                        case FileInfo fi:
+                            if (fi.Extension.ToLowerInvariant().StartsWith(".zip"))
+                                results.Add(new DeleteFileUpdateItem(fi));
+                            break;
+
+                        case DirectoryInfo di:
+                            foreach (var subFi in di.GetFiles("*", SearchOption.AllDirectories).Where(x => x.Extension.ToLowerInvariant().StartsWith(".zip")))
+                                results.Add(new DeleteFileUpdateItem(subFi));
+                            break;
+                    }
                 }
             }
 
