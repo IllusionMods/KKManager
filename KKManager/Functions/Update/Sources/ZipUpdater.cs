@@ -16,6 +16,7 @@ namespace KKManager.Functions.Update
         public ZipUpdater(FileInfo archive)
         {
             _zipfile = ZipFile.Read(archive.FullName);
+            _zipfile.FlattenFoldersOnExtract = true;
         }
 
         public void Dispose()
@@ -34,7 +35,7 @@ namespace KKManager.Functions.Update
                 foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str))
                 {
                     // Clean up the path into a usable form
-                    var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/');
+                    var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
 
                     var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
                     if (remote == null) throw new ArgumentNullException(nameof(remote));
