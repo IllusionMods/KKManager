@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KKManager.Util
 {
-    class StringTools
+    public static class StringTools
     {
         private static readonly char[] PathTrimChars = {
             '\\',
@@ -77,7 +73,7 @@ namespace KKManager.Util
             path2 = NormalizePath(path2);
             return path1.Equals(path2, StringComparison.InvariantCultureIgnoreCase);
         }
-        
+
         public static string NormalizePath(string path)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));

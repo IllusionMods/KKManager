@@ -9,7 +9,7 @@ using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
-    internal class ZipUpdater : IUpdateSource
+    public class ZipUpdater : IUpdateSource
     {
         private readonly ZipFile _zipfile;
 

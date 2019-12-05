@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKManager", "KKManager\KKManager.csproj", "{04E36698-5B58-4335-B4D6-218A0FA8B57E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKManager.Core", "KKManager.Core\KKManager.Core.csproj", "{09FC4EF5-9694-4961-A136-DCFD8B5F1368}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{04E36698-5B58-4335-B4D6-218A0FA8B57E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04E36698-5B58-4335-B4D6-218A0FA8B57E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04E36698-5B58-4335-B4D6-218A0FA8B57E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09FC4EF5-9694-4961-A136-DCFD8B5F1368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09FC4EF5-9694-4961-A136-DCFD8B5F1368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09FC4EF5-9694-4961-A136-DCFD8B5F1368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09FC4EF5-9694-4961-A136-DCFD8B5F1368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

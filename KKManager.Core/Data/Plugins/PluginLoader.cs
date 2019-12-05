@@ -12,7 +12,7 @@ using Mono.Cecil;
 
 namespace KKManager.Data.Plugins
 {
-    internal static class PluginLoader
+    public static class PluginLoader
     {
         /// <summary>
         /// Gather information about valid plugins inside the selected directory

@@ -16,6 +16,7 @@ using KKManager.Util;
 using KKManager.Windows.Content;
 using KKManager.Windows.Dialogs;
 using KKManager.Windows.ToolWindows.Properties;
+using Microsoft.Win32;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows
@@ -34,6 +35,8 @@ namespace KKManager.Windows
 
             InitializeComponent();
 
+            InstallDirectoryHelper.KoikatuDirectory = GetKoikatuDirectory();
+
             SetupTabs();
 
             Text = $"{Text} - {Assembly.GetExecutingAssembly().GetName().Version}";
@@ -42,6 +45,7 @@ namespace KKManager.Windows
 
             try
             {
+                var link = new Uri(@"D:\test\test.zip");
                 _updateSource = GetUpdater(link);
             }
             catch (Exception e)
@@ -49,6 +53,62 @@ namespace KKManager.Windows
                 MessageBox.Show(e.ToString(), "Failed to open update source", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine(e);
             }
+        }
+
+        private static DirectoryInfo GetKoikatuDirectory()
+        {
+            var path = Settings.Default.GamePath;
+            if (!InstallDirectoryHelper.IsValidGamePath(path))
+            {
+                try
+                {
+                    path = Registry.CurrentUser.OpenSubKey(@"Software\Illusion\Koikatu\koikatu")
+                        ?.GetValue("INSTALLDIR") as string;
+                }
+                catch (SystemException) { }
+
+                if (!InstallDirectoryHelper.IsValidGamePath(path))
+                {
+                    MessageBox.Show(
+                        "Koikatu is either not registered properly or its install directory is missing or inaccessible.\n\nYou will have to select game directory manually.",
+                        "Failed to find Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    var fb = new FolderBrowserDialog { Description = "Select Koikatsu! game directory" };
+                    retryFolderSelect:
+                    if (fb.ShowDialog() == DialogResult.OK)
+                    {
+                        path = fb.SelectedPath;
+                        if (!InstallDirectoryHelper.IsValidGamePath(path))
+                        {
+                            if (MessageBox.Show(
+                                    "The selected directory doesn't seem to contain the game. Make sure the directory is correct and try again.",
+                                    "Failed to find Koikatu install directory", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                                goto retryFolderSelect;
+                        }
+                    }
+                }
+
+                Settings.Default.GamePath = path;
+            }
+
+            if (string.IsNullOrEmpty(path) || !InstallDirectoryHelper.IsValidGamePath(path))
+            {
+                MessageBox.Show(
+                    "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
+                    "Failed to get Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(1);
+            }
+
+            if (!PathTools.DirectoryHasWritePermission(path) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
+            {
+                if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
+                        "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    ProcessTools.FixPermissions(path)?.WaitForExit();
+            }
+
+            return new DirectoryInfo(path);
         }
 
         private IUpdateSource GetUpdater(Uri link)
