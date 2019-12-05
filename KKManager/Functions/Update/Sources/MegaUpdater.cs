@@ -53,7 +53,7 @@ namespace KKManager.Functions.Update
             return await CollectTasks(nodes, cancellationToken);
         }
 
-        public async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
+        private async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
         {
             await Connect();
             await RetryHelper.RetryOnExceptionAsync(
@@ -100,7 +100,7 @@ namespace KKManager.Functions.Update
 
                 var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                results.Add(new UpdateTask(updateNode.Name, updateItems, updateInfo.ClientPath.Exists));
+                results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo.ClientPath.Exists));
             }
 
             return results;
