@@ -14,7 +14,6 @@ using KKManager.Functions.Update;
 using KKManager.Properties;
 using KKManager.Util;
 using KKManager.Windows.Content;
-using KKManager.Windows.Dialogs;
 using KKManager.Windows.ToolWindows.Properties;
 using Microsoft.Win32;
 using WeifenLuo.WinFormsUI.Docking;
@@ -45,8 +44,9 @@ namespace KKManager.Windows
 
             try
             {
+                //todo
                 var link = new Uri(@"D:\test\test.zip");
-                _updateSource = GetUpdater(link);
+                _updateSource = UpdateSourceManager.GetUpdater(link);
             }
             catch (Exception e)
             {
@@ -109,21 +109,6 @@ namespace KKManager.Windows
             }
 
             return new DirectoryInfo(path);
-        }
-
-        private IUpdateSource GetUpdater(Uri link)
-        {
-            switch (link.Scheme)
-            {
-                case "file":
-                    return new ZipUpdater(new FileInfo(link.LocalPath));
-                case "ftp":
-                    return new FtpUpdater(link);
-                case "https":
-                    return new MegaUpdater(link, null);
-                default:
-                    throw new NotSupportedException("Link format is not supported as an update source:" + link.Scheme);
-            }
         }
 
         private void PopulateStartMenu()

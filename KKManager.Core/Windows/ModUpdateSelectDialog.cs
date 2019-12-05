@@ -8,7 +8,7 @@ using KKManager.Functions;
 using KKManager.Functions.Update;
 using KKManager.Util;
 
-namespace KKManager.Windows.Dialogs
+namespace KKManager.Windows
 {
     public partial class ModUpdateSelectDialog : Form
     {

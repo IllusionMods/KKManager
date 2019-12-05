@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,12 +9,12 @@ using KKManager.Functions;
 using KKManager.Functions.Update;
 using KKManager.Util;
 
-namespace KKManager.Windows.Dialogs
+namespace KKManager.Windows
 {
     public partial class ModUpdateProgressDialog : Form
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
-        private IUpdateSource _updater;
+        private IUpdateSource[] _updaters;
         private FileSize _overallSize;
         private FileSize _completedSize;
 
@@ -23,15 +23,25 @@ namespace KKManager.Windows.Dialogs
             InitializeComponent();
         }
 
-        public static void StartUpdateDialog(Form owner, IUpdateSource updater)
+        public bool Silent { get; set; }
+
+        public static void StartUpdateDialog(Form owner, params IUpdateSource[] updaters)
         {
-            using (var w = new ModUpdateProgressDialog())
+            using (var w = CreateUpdateDialog(updaters))
             {
                 w.Icon = owner.Icon;
                 w.StartPosition = FormStartPosition.CenterParent;
-                w._updater = updater;
                 w.ShowDialog(owner);
             }
+        }
+
+        public static ModUpdateProgressDialog CreateUpdateDialog(params IUpdateSource[] updaters)
+        {
+            if (updaters == null || updaters.Length == 0) throw new ArgumentException("Need at least one update source.", nameof(updaters));
+
+            var w = new ModUpdateProgressDialog();
+            w._updaters = updaters;
+            return w;
         }
 
         private async void ModUpdateProgress_Shown(object sender, EventArgs e)
@@ -47,18 +57,23 @@ namespace KKManager.Windows.Dialogs
 
                 SetStatus("Searching for mod updates...");
 
-                List<UpdateTask> updateTasks = null;
-                await RetryHelper.RetryOnExceptionAsync(
-                    async () => updateTasks = await _updater.GetUpdateItems(_cancelToken.Token), 
-                    3, TimeSpan.FromSeconds(3), _cancelToken.Token);
-
-                if(updateTasks == null)
-                    throw new IOException("Failed to get update tasks");
+                // First start all of the sources, then wait until they all finish
+                var results = new ConcurrentBag<UpdateTask>();
+                var concurrentTasks = _updaters.Select(source => RetryHelper.RetryOnExceptionAsync(
+                    async () =>
+                    {
+                        foreach (var task in await source.GetUpdateItems(_cancelToken.Token))
+                            results.Add(task);
+                    },
+                    3, TimeSpan.FromSeconds(3), _cancelToken.Token)).ToList();
+                foreach (var task in concurrentTasks)
+                    await task;
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
 
+                var updateTasks = results.ToList();
                 if (updateTasks.All(x => x.UpToDate))
                 {
                     SetStatus("Everything is up to date!");
@@ -67,8 +82,16 @@ namespace KKManager.Windows.Dialogs
                     return;
                 }
 
-                SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
-                updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
+                if (!Silent)
+                {
+                    SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
+                    updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
+                }
+                else
+                {
+                    var skipped = updateTasks.RemoveAll(x => x.UpToDate || !x.EnableByDefault);
+                    SetStatus($"Found {updateTasks.Count} updates in silent mode, skipped {skipped}.", true, true);
+                }
 
                 if (updateTasks == null)
                     throw new OperationCanceledException();
