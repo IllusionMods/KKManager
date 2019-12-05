@@ -28,12 +28,10 @@ namespace KKManager.Windows.Dialogs
 		/// </summary>
 		private void InitializeComponent()
 		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModUpdateSelectDialog));
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label1 = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -42,12 +40,24 @@ namespace KKManager.Windows.Dialogs
             this.buttonAll = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.olvColumnFileName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnFileDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
             this.SuspendLayout();
             // 
             // objectListView1
@@ -66,20 +76,22 @@ namespace KKManager.Windows.Dialogs
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(0, 30);
+            this.objectListView1.Location = new System.Drawing.Point(0, 17);
+            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(572, 324);
+            this.objectListView1.Size = new System.Drawing.Size(572, 187);
             this.objectListView1.TabIndex = 1;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.objectListView1_ItemChecked);
+            this.objectListView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.objectListView1_ItemSelectionChanged);
             // 
             // olvColumnName
             // 
             this.olvColumnName.AspectName = "TaskName";
             this.olvColumnName.Text = "Task name";
-            this.olvColumnName.Width = 341;
+            this.olvColumnName.Width = 332;
             // 
             // olvColumnDate
             // 
@@ -92,18 +104,7 @@ namespace KKManager.Windows.Dialogs
             this.olvColumnSize.AspectName = "TotalUpdateSize";
             this.olvColumnSize.MinimumWidth = 60;
             this.olvColumnSize.Text = "Update Size";
-            this.olvColumnSize.Width = 68;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.label1.Size = new System.Drawing.Size(564, 30);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            this.olvColumnSize.Width = 82;
             // 
             // buttonCancel
             // 
@@ -139,7 +140,7 @@ namespace KKManager.Windows.Dialogs
             this.panel1.Controls.Add(this.buttonAccept);
             this.panel1.Controls.Add(this.buttonCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 366);
+            this.panel1.Location = new System.Drawing.Point(0, 431);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(6);
             this.panel1.Size = new System.Drawing.Size(584, 41);
@@ -188,7 +189,7 @@ namespace KKManager.Windows.Dialogs
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.panel2.Size = new System.Drawing.Size(584, 366);
+            this.panel2.Size = new System.Drawing.Size(584, 431);
             this.panel2.TabIndex = 3;
             // 
             // splitContainer1
@@ -202,11 +203,93 @@ namespace KKManager.Windows.Dialogs
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.objectListView1);
-            this.splitContainer1.Panel2.Controls.Add(this.label1);
-            this.splitContainer1.Size = new System.Drawing.Size(572, 354);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer1.Size = new System.Drawing.Size(572, 419);
             this.splitContainer1.SplitterDistance = 86;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.objectListView1);
+            this.splitContainer2.Panel1.Controls.Add(this.label1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.objectListView2);
+            this.splitContainer2.Panel2.Controls.Add(this.label2);
+            this.splitContainer2.Size = new System.Drawing.Size(572, 419);
+            this.splitContainer2.SplitterDistance = 204;
+            this.splitContainer2.SplitterWidth = 7;
+            this.splitContainer2.TabIndex = 2;
+            // 
+            // objectListView2
+            // 
+            this.objectListView2.AllColumns.Add(this.olvColumnFileName);
+            this.objectListView2.AllColumns.Add(this.olvColumnFileDate);
+            this.objectListView2.AllColumns.Add(this.olvColumnFileSize);
+            this.objectListView2.CellEditUseWholeCell = false;
+            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumnFileName,
+            this.olvColumnFileDate,
+            this.olvColumnFileSize});
+            this.objectListView2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.objectListView2.FullRowSelect = true;
+            this.objectListView2.GridLines = true;
+            this.objectListView2.Location = new System.Drawing.Point(0, 30);
+            this.objectListView2.Name = "objectListView2";
+            this.objectListView2.ShowGroups = false;
+            this.objectListView2.Size = new System.Drawing.Size(572, 178);
+            this.objectListView2.TabIndex = 2;
+            this.objectListView2.UseCompatibleStateImageBehavior = false;
+            this.objectListView2.View = System.Windows.Forms.View.Details;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
+            this.label1.Size = new System.Drawing.Size(147, 17);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Select which mods to update.";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Name = "label2";
+            this.label2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
+            this.label2.Size = new System.Drawing.Size(522, 30);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Contents of the update. \r\nFiles in white will be updated. Files in green are new." +
+    " Files in red are no longer necessary and will be removed.";
+            // 
+            // olvColumnFileName
+            // 
+            this.olvColumnFileName.AspectName = "";
+            this.olvColumnFileName.Text = "File name";
+            // 
+            // olvColumnFileDate
+            // 
+            this.olvColumnFileDate.AspectName = "ModifiedTime";
+            this.olvColumnFileDate.Text = "Update date";
+            this.olvColumnFileDate.Width = 132;
+            // 
+            // olvColumnFileSize
+            // 
+            this.olvColumnFileSize.AspectName = "ItemSize";
+            this.olvColumnFileSize.Text = "File size";
+            this.olvColumnFileSize.Width = 83;
             // 
             // ModUpdateSelectDialog
             // 
@@ -214,7 +297,7 @@ namespace KKManager.Windows.Dialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(584, 407);
+            this.ClientSize = new System.Drawing.Size(584, 472);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "ModUpdateSelectDialog";
@@ -224,9 +307,15 @@ namespace KKManager.Windows.Dialogs
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -234,7 +323,6 @@ namespace KKManager.Windows.Dialogs
 		#endregion
 
 		private BrightIdeasSoftware.ObjectListView objectListView1;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.Button buttonAccept;
 		private System.Windows.Forms.Panel panel1;
@@ -246,5 +334,12 @@ namespace KKManager.Windows.Dialogs
         private System.Windows.Forms.SplitContainer splitContainer1;
         private BrightIdeasSoftware.OLVColumn olvColumnSize;
         private System.Windows.Forms.Label labelDownload;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Label label1;
+        private BrightIdeasSoftware.ObjectListView objectListView2;
+        private System.Windows.Forms.Label label2;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileName;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileDate;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileSize;
     }
 }
