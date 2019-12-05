@@ -13,7 +13,7 @@ namespace KKManager.Functions.Update
             TargetPath = targetPath;
         }
 
-        public Task Update(CancellationToken cancellationToken)
+        public Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
         {
             TargetPath.Delete();
             return Task.CompletedTask;

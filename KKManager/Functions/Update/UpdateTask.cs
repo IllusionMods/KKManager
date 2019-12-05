@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using KKManager.Util;
 
 namespace KKManager.Functions.Update
@@ -20,15 +18,9 @@ namespace KKManager.Functions.Update
         public List<IUpdateItem> Items { get; }
         public bool EnableByDefault { get; }
 
-        public FileSize TotalUpdateSize => FileSize.SumFileSizes(Items.Select(x=>x.ItemSize));
+        public FileSize TotalUpdateSize => FileSize.SumFileSizes(Items.Select(x => x.ItemSize));
         public bool UpToDate => Items.Count == 0;
 
         public DateTime ModifiedTime => Items.Max(x => x.ModifiedTime ?? DateTime.MinValue);
-
-        public async Task RunUpdate(CancellationToken cancellationToken)
-        {
-            foreach (var updateItem in Items)
-                await updateItem.Update(cancellationToken);
-        }
     }
 }

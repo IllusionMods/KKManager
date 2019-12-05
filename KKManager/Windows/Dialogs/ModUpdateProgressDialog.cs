@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +47,13 @@ namespace KKManager.Windows.Dialogs
 
                 SetStatus("Searching for mod updates...");
 
-                var updateTasks = await _updater.GetUpdateItems(_cancelToken.Token);
+                List<UpdateTask> updateTasks = null;
+                await RetryHelper.RetryOnExceptionAsync(
+                    async () => updateTasks = await _updater.GetUpdateItems(_cancelToken.Token), 
+                    3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+
+                if(updateTasks == null)
+                    throw new IOException("Failed to get update tasks");
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -71,7 +78,7 @@ namespace KKManager.Windows.Dialogs
 
                 var allItems = updateTasks.SelectMany(x => x.Items).ToList();
 
-                progressBar1.Maximum = updateTasks.Count;
+                progressBar1.Maximum = allItems.Count;
 
                 for (var index = 0; index < allItems.Count; index++)
                 {
@@ -120,7 +127,6 @@ namespace KKManager.Windows.Dialogs
 
         private async Task UpdateSingleItem(IUpdateItem task)
         {
-            //todo
             var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
 
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}");
@@ -133,7 +139,9 @@ namespace KKManager.Windows.Dialogs
             }
 
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}", false, true);
-            await task.Update(_cancelToken.Token);
+
+            await RetryHelper.RetryOnExceptionAsync(() => task.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+
             SetStatus($"Download OK {task.ItemSize}", false, true);
         }
 

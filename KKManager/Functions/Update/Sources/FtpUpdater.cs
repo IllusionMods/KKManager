@@ -136,11 +136,14 @@ namespace KKManager.Functions.Update
             return results;
         }
 
-        private async Task UpdateItem(FtpUpdateItem item, CancellationToken cancellationToken)
+        private async Task UpdateItem(FtpUpdateItem item, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
             await Connect();
 
-            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName, FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw, null, cancellationToken);
+            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName, 
+                FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw, 
+                new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)), 
+                cancellationToken);
         }
 
         public sealed class FtpUpdateItem : IUpdateItem
@@ -161,9 +164,9 @@ namespace KKManager.Functions.Update
             public DateTime? ModifiedTime { get; }
             public FileSystemInfo TargetPath { get; }
 
-            public async Task Update(CancellationToken cancellationToken)
+            public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                await _source.UpdateItem(this, cancellationToken);
+                await _source.UpdateItem(this, progressCallback, cancellationToken);
             }
         }
     }
