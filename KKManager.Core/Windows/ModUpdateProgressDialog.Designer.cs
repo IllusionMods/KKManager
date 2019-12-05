@@ -1,4 +1,4 @@
-﻿namespace KKManager.Windows.Dialogs
+﻿namespace KKManager.Windows
 {
     partial class ModUpdateProgressDialog
     {
