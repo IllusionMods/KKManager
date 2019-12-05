@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("KKManager")]
 [assembly: AssemblyDescription("Manager for Koikatu cards, scenes and mods")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("https://github.com/IllusionMods/KKManager")]
 [assembly: AssemblyProduct("KKManager")]
 [assembly: AssemblyCopyright("Copyright © 2018")]
 [assembly: AssemblyTrademark("")]
