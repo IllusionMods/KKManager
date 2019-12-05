@@ -35,7 +35,7 @@ namespace StandaloneUpdater
 
                 if (args.Length < 3)
                 {
-                    MessageBox.Show("Not enough arguments - the following arguments are required in this order:\n- Path to game root directory\n- One or more links to update sources\n\nYou can also add -silent argument to not show the mod selection screen.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Not enough arguments - the following arguments are required in this order:\nPath to game root directory\nOne or more links to update sources\n\nYou can also add -silent argument to not show the mod selection screen.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
