@@ -15,12 +15,22 @@ namespace KKManager.Functions.Update
 
         public string ServerPath;
 
+        public string Name;
+        public string Guid;
+
         public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str)
         {
             var doc = XDocument.Load(str);
 
+            // todo relax checks
             foreach (var updateInfoElement in doc.Element("Updates").Elements("UpdateInfo"))
             {
+                var name = updateInfoElement.Element("Name")?.Value;
+                if (name == null) throw new ArgumentNullException(nameof(name));
+
+                var guid = updateInfoElement.Element("GUID")?.Value;
+                if (guid == null) throw new ArgumentNullException(nameof(guid));
+
                 var remotePath = updateInfoElement.Element("ServerPath")?.Value;
                 if (remotePath == null) throw new ArgumentNullException(nameof(remotePath));
 
@@ -33,7 +43,7 @@ namespace KKManager.Functions.Update
                 var recursive = string.Equals(updateInfoElement.Element("Recursive")?.Value, "true", StringComparison.OrdinalIgnoreCase);
                 var removeExtras = string.Equals(updateInfoElement.Element("RemoveExtraClientFiles")?.Value, "true", StringComparison.OrdinalIgnoreCase);
 
-                yield return new UpdateInfo {ClientPath = local, ServerPath = remotePath, Recursive = recursive, RemoveExtraClientFiles = removeExtras};
+                yield return new UpdateInfo { ClientPath = local, ServerPath = remotePath, Recursive = recursive, RemoveExtraClientFiles = removeExtras, Name = name, Guid = guid };
             }
         }
     }

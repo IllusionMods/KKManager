@@ -56,7 +56,7 @@ namespace KKManager.Functions.Update
                     var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
                     // todo change local.Exists to something else? allow per-file?
-                    allResults.Add(new UpdateTask(remote.Name, results, updateInfo.ClientPath.Exists));
+                    allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo.ClientPath.Exists));
                 }
             }
             return allResults;
