@@ -20,21 +20,26 @@ namespace KKManager.Windows
             InitializeComponent();
 
             objectListView1.EmptyListMsg = "All mods are up to date!";
+            olvColumnDate.AspectToStringConverter = value =>
+            {
+                if (value is DateTime dt)
+                    return dt == DateTime.MinValue ? "Unknown" : dt.ToShortDateString();
+                if (value == null)
+                    return "Unknown";
+                return value.ToString();
+            };
 
-            string DateConverter(object value)
+            objectListView2.EmptyListMsg = "Select a task to view its details.";
+            objectListView2.FormatRow += ObjectListView2_FormatRow;
+            olvColumnFileName.AspectGetter = rowObject => ((IUpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
+            olvColumnFileDate.AspectToStringConverter = value =>
             {
                 if (value is DateTime dt)
                     return dt == DateTime.MinValue ? "Will be removed" : dt.ToShortDateString();
                 if (value == null)
                     return "Will be removed";
                 return value.ToString();
-            }
-            olvColumnDate.AspectToStringConverter = DateConverter;
-            olvColumnFileDate.AspectToStringConverter = DateConverter;
-
-            objectListView2.EmptyListMsg = "Select a task to view its details.";
-            objectListView2.FormatRow += ObjectListView2_FormatRow;
-            olvColumnFileName.AspectGetter = rowObject => ((IUpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
+            };
         }
 
         public static List<UpdateTask> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
@@ -43,7 +48,8 @@ namespace KKManager.Windows
             {
                 using (var w = new ModUpdateSelectDialog())
                 {
-                    w.Icon = owner.Icon;
+                    if (owner.Icon != null)
+                        w.Icon = owner.Icon;
                     w.StartPosition = FormStartPosition.CenterParent;
                     w._updateTasks = updateTasks.OrderBy(x => x.UpToDate).ThenBy(x => x.TaskName).ToList();
                     w.ShowDialog();
