@@ -98,7 +98,7 @@ namespace KKManager.Functions.Update
 
                     var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.UncompressedSize;
                     if (!localIsUpToDate)
-                        results.Add(new ZipUpdateItem(remoteItem, localFile));
+                        results.Add(new ZipUpdateItem(remoteItem, localFile, this));
                 }
             }
 
@@ -129,10 +129,55 @@ namespace KKManager.Functions.Update
             return results;
         }
 
+        private async Task UpdateItem(ZipUpdateItem item, IProgress<double> progressCallback, CancellationToken cancellationToken)
+        {
+            var localFile = (FileInfo)item.TargetPath;
+            await Task.Run(
+                () =>
+                {
+                    var localDir = localFile.DirectoryName;
+                    var zipEntry = item.SourceItem;
+                    var extractedFileName = Path.Combine(localDir, Path.GetFileName(zipEntry.FileName));
+
+                    void OnExtractProgress(object sender, ExtractProgressEventArgs args)
+                    {
+                        if (args.CurrentEntry == zipEntry && args.TotalBytesToTransfer > 0)
+                            progressCallback.Report((args.BytesTransferred / args.TotalBytesToTransfer) * 100);
+                    }
+
+                    try
+                    {
+                        _zipfile.ExtractProgress += OnExtractProgress;
+
+                        zipEntry.Extract(localDir, ExtractExistingFileAction.OverwriteSilently);
+
+                        // Check if the file needs to be renamed
+                        if (!string.Equals(Path.GetFileName(zipEntry.FileName), localFile.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            File.Delete(localFile.FullName);
+                            File.Move(extractedFileName, localFile.FullName);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        File.Delete(extractedFileName);
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                    finally
+                    {
+                        _zipfile.ExtractProgress -= OnExtractProgress;
+                    }
+                }, cancellationToken);
+        }
+
         public sealed class ZipUpdateItem : IUpdateItem
         {
-            public ZipUpdateItem(ZipEntry item, FileSystemInfo targetPath)
+            private readonly ZipUpdater _owner;
+
+            public ZipUpdateItem(ZipEntry item, FileSystemInfo targetPath, ZipUpdater owner)
             {
+                _owner = owner;
                 TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
                 SourceItem = item ?? throw new ArgumentNullException(nameof(item));
                 ItemSize = FileSize.FromBytes(item.UncompressedSize);
@@ -144,32 +189,9 @@ namespace KKManager.Functions.Update
             public DateTime? ModifiedTime { get; }
             public FileSystemInfo TargetPath { get; }
 
-            public async Task Update(CancellationToken cancellationToken)
+            public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                var localFile = (FileInfo) TargetPath;
-                await Task.Run(
-                    () =>
-                    {
-                        var localDir = localFile.DirectoryName;
-                        var extractedFileName = Path.Combine(localDir, Path.GetFileName(SourceItem.FileName));
-                        try
-                        {
-                            SourceItem.Extract(localDir, ExtractExistingFileAction.OverwriteSilently);
-
-                            // Check if the file needs to be renamed
-                            if (!string.Equals(Path.GetFileName(SourceItem.FileName), localFile.Name, StringComparison.OrdinalIgnoreCase))
-                            {
-                                File.Delete(localFile.FullName);
-                                File.Move(extractedFileName, localFile.FullName);
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            File.Delete(extractedFileName);
-                            Console.WriteLine(e);
-                            throw;
-                        }
-                    }, cancellationToken);
+                await _owner.UpdateItem(this, progressCallback, cancellationToken);
             }
         }
     }

@@ -50,7 +50,7 @@ namespace KKManager.Functions.Update
         public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             var nodes = await GetNodesFromLinkAsync(cancellationToken);
-            return await CollectTasksAsync(nodes, cancellationToken);
+            return await CollectTasks(nodes, cancellationToken);
         }
 
         public async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
@@ -102,15 +102,6 @@ namespace KKManager.Functions.Update
 
                 results.Add(new UpdateTask(updateNode.Name, updateItems, updateInfo.ClientPath.Exists));
             }
-
-            return results;
-        }
-
-        private async Task<List<UpdateTask>> CollectTasksAsync(List<INode> nodes, CancellationToken cancellationToken)
-        {
-            List<UpdateTask> results = null;
-
-            await RetryHelper.RetryOnExceptionAsync(async () => { results = await CollectTasks(nodes, cancellationToken); }, 2, TimeSpan.FromSeconds(1), cancellationToken);
 
             return results;
         }
@@ -233,9 +224,9 @@ namespace KKManager.Functions.Update
             public DateTime? ModifiedTime { get; }
             public FileSystemInfo TargetPath { get; }
 
-            public async Task Update(CancellationToken cancellationToken)
+            public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                await _source.DownloadNodeAsync(this, null, cancellationToken);
+                await _source.DownloadNodeAsync(this, progressCallback, cancellationToken);
             }
         }
     }

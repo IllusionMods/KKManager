@@ -12,11 +12,10 @@ namespace KKManager.Util
     {
         public static async Task RetryOnExceptionAsync(Func<Task> operation, int times, TimeSpan delay, CancellationToken cancellationToken)
         {
-            await RetryOnExceptionAsync<Exception>(times, delay, operation, cancellationToken);
+            await RetryOnSpecificExceptionAsync<Exception>(operation, times, delay, cancellationToken);
         }
 
-        public static async Task RetryOnExceptionAsync<TException>(
-            int times, TimeSpan delay, Func<Task> operation, CancellationToken cancellationToken) where TException : Exception
+        public static async Task RetryOnSpecificExceptionAsync<TException>(Func<Task> operation, int times, TimeSpan delay, CancellationToken cancellationToken) where TException : Exception
         {
             if (times <= 0)
                 throw new ArgumentOutOfRangeException(nameof(times));
@@ -32,7 +31,7 @@ namespace KKManager.Util
                 }
                 catch (TException ex)
                 {
-                    if (ex is OperationCanceledException || attempts == times)
+                    if (ex is OperationCanceledException || attempts >= times)
                         throw;
 
                     await CreateDelayForException(times, attempts, delay, ex, cancellationToken);
@@ -43,11 +42,11 @@ namespace KKManager.Util
         private static Task CreateDelayForException(int times, int attempts, TimeSpan delay, Exception ex, CancellationToken cancellationToken)
         {
             //var delay = IncreasingDelayInSeconds(attempts);
-            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}.", ex);
+            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}. Exception: " + ex.Message);
             return Task.Delay(delay, cancellationToken);
         }
 
-        internal static int[] DelayPerAttemptInSeconds =
+        private static int[] DelayPerAttemptInSeconds =
         {
             (int) TimeSpan.FromSeconds(2).TotalSeconds,
             (int) TimeSpan.FromSeconds(30).TotalSeconds,

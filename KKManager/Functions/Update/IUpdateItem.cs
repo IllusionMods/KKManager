@@ -8,7 +8,7 @@ namespace KKManager.Functions.Update
 {
     public interface IUpdateItem
     {
-        Task Update(CancellationToken cancellationToken);
+        Task Update(Progress<double> progressCallback, CancellationToken cancellationToken);
         FileSystemInfo TargetPath { get; }
         FileSize ItemSize { get; }
         DateTime? ModifiedTime { get; }

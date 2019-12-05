@@ -90,18 +90,24 @@ namespace KKManager.Windows.Dialogs
             // olvColumnName
             // 
             this.olvColumnName.AspectName = "TaskName";
+            this.olvColumnName.FillsFreeSpace = true;
+            this.olvColumnName.Hideable = false;
+            this.olvColumnName.MinimumWidth = 60;
             this.olvColumnName.Text = "Task name";
             this.olvColumnName.Width = 332;
             // 
             // olvColumnDate
             // 
             this.olvColumnDate.AspectName = "ModifiedTime";
+            this.olvColumnDate.Hideable = false;
+            this.olvColumnDate.MinimumWidth = 60;
             this.olvColumnDate.Text = "Update date";
             this.olvColumnDate.Width = 132;
             // 
             // olvColumnSize
             // 
             this.olvColumnSize.AspectName = "TotalUpdateSize";
+            this.olvColumnSize.Hideable = false;
             this.olvColumnSize.MinimumWidth = 60;
             this.olvColumnSize.Text = "Update Size";
             this.olvColumnSize.Width = 82;
@@ -277,17 +283,24 @@ namespace KKManager.Windows.Dialogs
             // olvColumnFileName
             // 
             this.olvColumnFileName.AspectName = "";
+            this.olvColumnFileName.FillsFreeSpace = true;
+            this.olvColumnFileName.Hideable = false;
             this.olvColumnFileName.Text = "File name";
+            this.olvColumnFileName.Width = 333;
             // 
             // olvColumnFileDate
             // 
             this.olvColumnFileDate.AspectName = "ModifiedTime";
+            this.olvColumnFileDate.Hideable = false;
+            this.olvColumnFileDate.MinimumWidth = 60;
             this.olvColumnFileDate.Text = "Update date";
             this.olvColumnFileDate.Width = 132;
             // 
             // olvColumnFileSize
             // 
             this.olvColumnFileSize.AspectName = "ItemSize";
+            this.olvColumnFileSize.Hideable = false;
+            this.olvColumnFileSize.MinimumWidth = 60;
             this.olvColumnFileSize.Text = "File size";
             this.olvColumnFileSize.Width = 83;
             // 

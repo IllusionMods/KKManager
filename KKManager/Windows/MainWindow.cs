@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -23,7 +22,7 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private readonly IUpdateSource _megaUpdater;
+        private readonly IUpdateSource _updateSource;
 
         public MainWindow()
         {
@@ -43,7 +42,7 @@ namespace KKManager.Windows
 
             try
             {
-                _megaUpdater = GetUpdater(link);
+                _updateSource = GetUpdater(link);
             }
             catch (Exception e)
             {
@@ -329,7 +328,7 @@ namespace KKManager.Windows
             foreach (var window in sideWindows)
                 window.CancelListReload();
 
-            ModUpdateProgressDialog.StartUpdateDialog(this, _megaUpdater);
+            ModUpdateProgressDialog.StartUpdateDialog(this, _updateSource);
 
             foreach (var window in sideWindows)
                 window.ReloadList();
@@ -348,7 +347,7 @@ namespace KKManager.Windows
         {
             try
             {
-                var results = await _megaUpdater.GetUpdateItems(_checkForUpdatesCancel.Token);
+                var results = await _updateSource.GetUpdateItems(_checkForUpdatesCancel.Token);
                 var updates = results.Count(item => !item.UpToDate);
 
                 _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
@@ -360,6 +359,7 @@ namespace KKManager.Windows
                 }
             }
             catch (OperationCanceledException) { }
+            catch (Exception ex) { Console.WriteLine(ex); }
         }
 
         private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
