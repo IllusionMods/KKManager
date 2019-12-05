@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace KKManager.Util
 {
-    internal static class Extensions
+    public static class Extensions
     {
         public static void SafeInvoke(this Control obj, Action action)
         {

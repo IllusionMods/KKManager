@@ -5,7 +5,7 @@ using BrightIdeasSoftware;
 
 namespace KKManager.Util
 {
-    internal static class ListTools
+    public static class ListTools
     {
         public static object GetFirstCharacter(string name)
         {

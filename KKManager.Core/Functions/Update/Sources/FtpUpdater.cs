@@ -10,7 +10,7 @@ using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
-    internal class FtpUpdater : IUpdateSource
+    public class FtpUpdater : IUpdateSource
     {
         private readonly FtpClient _client;
 
@@ -140,9 +140,9 @@ namespace KKManager.Functions.Update
         {
             await Connect();
 
-            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName, 
-                FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw, 
-                new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)), 
+            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName,
+                FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
+                new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
                 cancellationToken);
         }
 
