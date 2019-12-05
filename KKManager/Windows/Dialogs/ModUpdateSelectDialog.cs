@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.Functions;
 using KKManager.Functions.Update;
 using KKManager.Util;
 
@@ -19,14 +20,21 @@ namespace KKManager.Windows.Dialogs
             InitializeComponent();
 
             objectListView1.EmptyListMsg = "All mods are up to date!";
-            //objectListView1.FormatRow += ObjectListView1_FormatRow;
 
-            olvColumnDate.AspectToStringConverter = value =>
+            string DateConverter(object value)
             {
                 if (value is DateTime dt)
                     return dt == DateTime.MinValue ? "Will be removed" : dt.ToShortDateString();
-                return value?.ToString();
-            };
+                if (value == null)
+                    return "Will be removed";
+                return value.ToString();
+            }
+            olvColumnDate.AspectToStringConverter = DateConverter;
+            olvColumnFileDate.AspectToStringConverter = DateConverter;
+
+            objectListView2.EmptyListMsg = "Select a task to view its details.";
+            objectListView2.FormatRow += ObjectListView2_FormatRow;
+            olvColumnFileName.AspectGetter = rowObject => ((IUpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
         }
 
         public static List<UpdateTask> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
@@ -67,16 +75,16 @@ namespace KKManager.Windows.Dialogs
             Close();
         }
 
-//        private static void ObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
-//        {
-//            if (e.Model is UpdateTask task)
-//            {
-//                if (!task.RemoteExists)
-//                    e.Item.ForeColor = Color.DarkRed;
-//                else if (!task.LocalExists)
-//                    e.Item.ForeColor = Color.Green;
-//            }
-//        }
+        private static void ObjectListView2_FormatRow(object sender, FormatRowEventArgs e)
+        {
+            if (e.Model is IUpdateItem task)
+            {
+                if (task is DeleteFileUpdateItem)
+                    e.Item.ForeColor = Color.DarkRed;
+                else if (!task.TargetPath.Exists)
+                    e.Item.ForeColor = Color.Green;
+            }
+        }
 
         private void UpdateListObjects()
         {
@@ -107,6 +115,12 @@ namespace KKManager.Windows.Dialogs
         {
             var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<UpdateTask>().Select(x => x.TotalUpdateSize));
             labelDownload.Text = (sumFileSizes == FileSize.Empty ? "Nothing" : sumFileSizes.ToString()) + " to download";
+        }
+
+        private void objectListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            var selection = objectListView1.SelectedObject as UpdateTask;
+            objectListView2.SetObjects(selection?.Items);
         }
     }
 }

@@ -117,8 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Select which mods to update. Mods marked in gray are already installed and up to date. Mods in green are new mods. 
-Mods in red are no longer necessary or are known to cause issues and will be removed.</value>
-  </data>
 </root>
