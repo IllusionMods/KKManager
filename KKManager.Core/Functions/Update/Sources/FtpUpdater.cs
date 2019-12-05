@@ -45,7 +45,7 @@ namespace KKManager.Functions.Update
                 if (!b) throw new FileNotFoundException("Failed to get the update list");
 
                 str.Seek(0, SeekOrigin.Begin);
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str))
+                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _client.Host))
                 {
                     // Clean up the path into a usable form
                     var serverPath = "/" + updateInfo.ServerPath.Trim(' ', '\\', '/');
@@ -55,8 +55,7 @@ namespace KKManager.Functions.Update
 
                     var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                    // todo change local.Exists to something else? allow per-file?
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo.ClientPath.Exists));
+                    allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo));
                 }
             }
             return allResults;

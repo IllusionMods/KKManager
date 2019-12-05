@@ -56,24 +56,12 @@ namespace KKManager.Windows
                 labelPercent.Text = "";
 
                 SetStatus("Searching for mod updates...");
-
-                // First start all of the sources, then wait until they all finish
-                var results = new ConcurrentBag<UpdateTask>();
-                var concurrentTasks = _updaters.Select(source => RetryHelper.RetryOnExceptionAsync(
-                    async () =>
-                    {
-                        foreach (var task in await source.GetUpdateItems(_cancelToken.Token))
-                            results.Add(task);
-                    },
-                    3, TimeSpan.FromSeconds(3), _cancelToken.Token)).ToList();
-                foreach (var task in concurrentTasks)
-                    await task;
+                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
 
-                var updateTasks = results.ToList();
                 if (updateTasks.All(x => x.UpToDate))
                 {
                     SetStatus("Everything is up to date!");
@@ -173,7 +161,7 @@ namespace KKManager.Windows
             if (writeToUi)
                 labelStatus.Text = status;
             if (writeToLog)
-                Console.WriteLine("[Updater]" + status);
+                Console.WriteLine("[Updater] " + status);
         }
 
         private void button1_Click(object sender, EventArgs e)

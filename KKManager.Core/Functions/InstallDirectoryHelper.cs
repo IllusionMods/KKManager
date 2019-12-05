@@ -5,17 +5,7 @@ namespace KKManager.Functions
 {
     public static class InstallDirectoryHelper
     {
-        private static DirectoryInfo _koikatuDirectory;
-
-        public static DirectoryInfo KoikatuDirectory
-        {
-            get => _koikatuDirectory;
-            set
-            {
-                if (!IsValidGamePath(value.FullName)) throw new ArgumentException("The directory is not a valid install directory");
-                _koikatuDirectory = value;
-            }
-        }
+        public static DirectoryInfo KoikatuDirectory { get; set; }
 
         public static string GetRelativePath(string fullPath)
         {

@@ -22,7 +22,7 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private readonly IUpdateSource _updateSource;
+        private readonly IUpdateSource[] _updateSources;
 
         public MainWindow()
         {
@@ -44,9 +44,12 @@ namespace KKManager.Windows
 
             try
             {
-                //todo
-                var link = new Uri(@"D:\test\test.zip");
-                _updateSource = UpdateSourceManager.GetUpdater(link);
+                _updateSources = new[]
+                {
+                    //todo
+                    UpdateSourceManager.GetUpdater(new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg")),
+                    //UpdateSourceManager.GetUpdater(new Uri(@"D:\test\test.zip"))
+                };
             }
             catch (Exception e)
             {
@@ -373,7 +376,7 @@ namespace KKManager.Windows
             foreach (var window in sideWindows)
                 window.CancelListReload();
 
-            ModUpdateProgressDialog.StartUpdateDialog(this, _updateSource);
+            ModUpdateProgressDialog.StartUpdateDialog(this, _updateSources);
 
             foreach (var window in sideWindows)
                 window.ReloadList();
@@ -392,7 +395,7 @@ namespace KKManager.Windows
         {
             try
             {
-                var results = await _updateSource.GetUpdateItems(_checkForUpdatesCancel.Token);
+                var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, _updateSources);
                 var updates = results.Count(item => !item.UpToDate);
 
                 _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();

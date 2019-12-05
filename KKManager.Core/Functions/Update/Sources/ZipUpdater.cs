@@ -32,7 +32,7 @@ namespace KKManager.Functions.Update
             if (manifestFile == null) throw new FileNotFoundException("Failed to get the update list");
             using (var str = manifestFile.OpenReader())
             {
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str))
+                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name))
                 {
                     // Clean up the path into a usable form
                     var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
@@ -42,8 +42,7 @@ namespace KKManager.Functions.Update
 
                     var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                    // todo change local.Exists to something else? allow per-file?
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo.ClientPath.Exists));
+                    allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo));
                 }
             }
             return allResults;

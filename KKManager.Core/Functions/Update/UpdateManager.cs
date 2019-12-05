@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using KKManager.Util;
 
 namespace KKManager.Functions.Update
 {
@@ -20,6 +26,37 @@ namespace KKManager.Functions.Update
                 default:
                     throw new NotSupportedException("Link format is not supported as an update source: " + link.Scheme);
             }
+        }
+
+        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, params IUpdateSource[] updateSources)
+        {
+            var results = new ConcurrentBag<UpdateTask>();
+
+            // First start all of the sources, then wait until they all finish
+            var concurrentTasks = updateSources.Select(source => RetryHelper.RetryOnExceptionAsync(
+                async () =>
+                {
+                    foreach (var task in await source.GetUpdateItems(cancellationToken))
+                        results.Add(task);
+                },
+                3, TimeSpan.FromSeconds(3), cancellationToken)).ToList();
+
+            foreach (var task in concurrentTasks)
+                await task;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var filteredTasks = new List<UpdateTask>();
+            foreach (var modGroup in results.GroupBy(x => x.Info.Guid))
+            {
+                var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
+#if DEBUG
+                if (ordered.Count > 1)
+                    Console.WriteLine($"Found {ordered.Count} entries for mod GUID {modGroup.Key} - taking the latest from {ordered[0].Info.Origin}");
+#endif
+                filteredTasks.Add(ordered[0]);
+            }
+            return filteredTasks;
         }
     }
 }

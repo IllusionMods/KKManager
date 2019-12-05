@@ -9,16 +9,44 @@ namespace KKManager.Functions.Update
     public sealed class UpdateInfo
     {
         public static readonly string UpdateFileName = "Updates.xml";
-        public DirectoryInfo ClientPath;
-        public bool Recursive;
-        public bool RemoveExtraClientFiles;
 
-        public string ServerPath;
+        /// <summary>
+        /// Where the update came from
+        /// </summary>
+        public string Origin { get; private set; }
 
-        public string Name;
-        public string Guid;
+        /// <summary>
+        /// Local path relative to game root to downlaod the mod files into
+        /// </summary>
+        public DirectoryInfo ClientPath { get; private set; }
+        /// <summary>
+        /// Relative server path to download the mod files from
+        /// </summary>
+        public string ServerPath { get; private set; }
 
-        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str)
+        /// <summary>
+        /// Should the files be downloaded recursively from specified server path. Directory structure is maintained.
+        /// </summary>
+        public bool Recursive { get; private set; }
+        /// <summary>
+        /// Should files existing in <see cref="ClientPath"/> but not in <see cref="ServerPath"/> be removed from client.
+        /// </summary>
+        public bool RemoveExtraClientFiles { get; private set; }
+        /// <summary>
+        /// Should the mod be always selected to be installed by default.
+        /// </summary>
+        public bool AlwaysInstall { get; private set; }
+
+        /// <summary>
+        /// Display name of the mod.
+        /// </summary>
+        public string Name { get; private set; }
+        /// <summary>
+        /// Identifier of the mod to be used when resolving conflicts between multiple sources.
+        /// </summary>
+        public string Guid { get; private set; }
+
+        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str, string origin)
         {
             var doc = XDocument.Load(str);
 
@@ -26,25 +54,44 @@ namespace KKManager.Functions.Update
             foreach (var updateInfoElement in doc.Element("Updates").Elements("UpdateInfo"))
             {
                 var name = updateInfoElement.Element("Name")?.Value;
-                if (name == null) throw new ArgumentNullException(nameof(name));
+                if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name), "The Name element is missing or empty");
 
                 var guid = updateInfoElement.Element("GUID")?.Value;
-                if (guid == null) throw new ArgumentNullException(nameof(guid));
+                if (string.IsNullOrEmpty(guid)) throw new ArgumentNullException(nameof(guid), "The GUID element is missing or empty in " + name);
 
                 var remotePath = updateInfoElement.Element("ServerPath")?.Value;
-                if (remotePath == null) throw new ArgumentNullException(nameof(remotePath));
+                if (string.IsNullOrEmpty(remotePath)) throw new ArgumentNullException(nameof(remotePath), "The ServerPath element is missing or empty in " + name);
 
                 var localPath = updateInfoElement.Element("ClientPath")?.Value;
-                if (localPath == null) throw new ArgumentNullException(nameof(localPath));
+                if (string.IsNullOrEmpty(localPath)) throw new ArgumentNullException(nameof(localPath), "The ClientPath element is missing or empty in " + name);
                 var local = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, localPath));
                 if (!local.FullName.StartsWith(InstallDirectoryHelper.KoikatuDirectory.FullName, StringComparison.OrdinalIgnoreCase))
                     throw new SecurityException("ClientPath points to a directory outside the game folder - " + localPath);
 
                 var recursive = string.Equals(updateInfoElement.Element("Recursive")?.Value, "true", StringComparison.OrdinalIgnoreCase);
                 var removeExtras = string.Equals(updateInfoElement.Element("RemoveExtraClientFiles")?.Value, "true", StringComparison.OrdinalIgnoreCase);
+                var alwaysInstall = string.Equals(updateInfoElement.Element("AlwaysInstall")?.Value, "true", StringComparison.OrdinalIgnoreCase);
 
-                yield return new UpdateInfo { ClientPath = local, ServerPath = remotePath, Recursive = recursive, RemoveExtraClientFiles = removeExtras, Name = name, Guid = guid };
+                yield return new UpdateInfo
+                {
+                    ClientPath = local,
+                    ServerPath = remotePath,
+                    Recursive = recursive,
+                    RemoveExtraClientFiles = removeExtras,
+                    Name = name,
+                    Guid = guid,
+                    AlwaysInstall = alwaysInstall,
+                    Origin = origin
+                };
             }
+        }
+
+        /// <summary>
+        /// Should the mod be selected to be installed by default.
+        /// </summary>
+        public bool IsEnabledByDefault()
+        {
+            return AlwaysInstall || ClientPath.Exists;
         }
     }
 }

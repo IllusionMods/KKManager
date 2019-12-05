@@ -42,6 +42,8 @@ namespace StandaloneUpdater
                 try
                 {
                     var gameDir = new DirectoryInfo(args[1]);
+                    if (!gameDir.Exists)
+                        throw new IOException("Directory doesn't exist");
                     InstallDirectoryHelper.KoikatuDirectory = gameDir;
                 }
                 catch (Exception e)

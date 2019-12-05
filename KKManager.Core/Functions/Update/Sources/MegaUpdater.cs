@@ -86,7 +86,7 @@ namespace KKManager.Functions.Update
 
             var result = await _client.DownloadAsync(updateManifest, null, cancellationToken);
 
-            foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result))
+            foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result, CurrentFolderLink.OriginalString))
             {
                 // Find the remote directory
                 var updateNode = root;
@@ -100,7 +100,7 @@ namespace KKManager.Functions.Update
 
                 var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo.ClientPath.Exists));
+                results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo));
             }
 
             return results;
