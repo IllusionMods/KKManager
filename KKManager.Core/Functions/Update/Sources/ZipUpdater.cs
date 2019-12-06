@@ -32,7 +32,7 @@ namespace KKManager.Functions.Update
             if (manifestFile == null) throw new FileNotFoundException("Failed to get the update list");
             using (var str = manifestFile.OpenReader())
             {
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name))
+                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name, 100))
                 {
                     // Clean up the path into a usable form
                     var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";

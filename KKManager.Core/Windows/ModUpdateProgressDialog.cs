@@ -156,7 +156,7 @@ namespace KKManager.Windows
             }
 
             Exception ex = null;
-            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).ToList();
+            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.SourcePriority).ToList();
             if (sourcesToAttempt.Count == 0) throw new InvalidOperationException("There are no working sources to download from. Check the log for reasons why the sources failed.");
             foreach (var source in sourcesToAttempt)
             {

@@ -45,7 +45,7 @@ namespace KKManager.Functions.Update
                 if (!b) throw new FileNotFoundException("Failed to get the update list");
 
                 str.Seek(0, SeekOrigin.Begin);
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _client.Host))
+                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _client.Host, 1))
                 {
                     // Clean up the path into a usable form
                     var serverPath = "/" + updateInfo.ServerPath.Trim(' ', '\\', '/');
