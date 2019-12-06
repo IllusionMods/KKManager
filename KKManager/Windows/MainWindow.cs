@@ -49,30 +49,27 @@ namespace KKManager.Windows
         {
             var updateSourcesPath = Path.Combine(Program.ProgramLocation, "UpdateSources");
 
-            if (File.Exists(updateSourcesPath))
-            {
-                Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
-
-                var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-                var results = new List<IUpdateSource>(updateSources.Count);
-                foreach (var updateSource in updateSources)
-                {
-                    try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
-                    catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
-                }
-
-                if(results.Count < updateSources.Count)
-                    SetStatusText($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
-
-                return results.ToArray();
-            }
-            else
+            if (!File.Exists(updateSourcesPath))
             {
                 Console.WriteLine("The UpdateSources file is missing, updating will not be available");
                 updateSideloaderModpackToolStripMenuItem.Enabled = false;
+                return new IUpdateSource[0];
             }
 
-            return new IUpdateSource[0];
+            Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
+
+            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+            var results = new List<IUpdateSource>(updateSources.Count);
+            foreach (var updateSource in updateSources)
+            {
+                try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
+                catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
+            }
+
+            if (results.Count < updateSources.Count)
+                SetStatusText($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
+
+            return results.ToArray();
         }
 
         private static DirectoryInfo GetKoikatuDirectory()
@@ -93,35 +90,49 @@ namespace KKManager.Windows
                         "Koikatu is either not registered properly or its install directory is missing or inaccessible.\n\nYou will have to select game directory manually.",
                         "Failed to find Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    var fb = new FolderBrowserDialog { Description = "Select Koikatsu! game directory" };
-                    retryFolderSelect:
-                    if (fb.ShowDialog() == DialogResult.OK)
-                    {
-                        path = fb.SelectedPath;
-                        if (!InstallDirectoryHelper.IsValidGamePath(path))
-                        {
-                            if (MessageBox.Show(
-                                    "The selected directory doesn't seem to contain the game. Make sure the directory is correct and try again.",
-                                    "Failed to find Koikatu install directory", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
-                                goto retryFolderSelect;
-                        }
-                    }
+                    path = ShowInstallDirectoryDialog();
+                }
+
+                if (string.IsNullOrEmpty(path) || !InstallDirectoryHelper.IsValidGamePath(path))
+                {
+                    MessageBox.Show(
+                        "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
+                        "Failed to get Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Environment.Exit(1);
                 }
 
                 Settings.Default.GamePath = path;
             }
 
-            if (string.IsNullOrEmpty(path) || !InstallDirectoryHelper.IsValidGamePath(path))
-            {
-                MessageBox.Show(
-                    "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
-                    "Failed to get Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(1);
-            }
-
             CheckInstallPathPermissions(path);
 
             return new DirectoryInfo(path);
+        }
+
+        private static string ShowInstallDirectoryDialog()
+        {
+            using (var fb = new FolderBrowserDialog())
+            {
+                fb.SelectedPath = InstallDirectoryHelper.KoikatuDirectory.FullName;
+                fb.ShowNewFolderButton = false;
+                fb.Description = "Select the install directory of the game.";
+
+                retryFolderSelect:
+                if (fb.ShowDialog() == DialogResult.OK)
+                {
+                    var path = fb.SelectedPath;
+                    if (!InstallDirectoryHelper.IsValidGamePath(path))
+                    {
+                        if (MessageBox.Show(
+                                "The selected directory doesn't seem to contain the game. Make sure the directory is correct and try again.",
+                                "Select install directory", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                            goto retryFolderSelect;
+                    }
+                    return path;
+                }
+
+                return null;
+            }
         }
 
         private static void CheckInstallPathPermissions(string path)
@@ -448,27 +459,12 @@ namespace KKManager.Windows
 
         private void changeGameInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                dialog.SelectedPath = InstallDirectoryHelper.KoikatuDirectory.FullName;
-                dialog.ShowNewFolderButton = false;
-                dialog.Description = "Select a new directory with an installed game.";
+            var folder = ShowInstallDirectoryDialog();
+            if (folder == null) return;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    if (!InstallDirectoryHelper.IsValidGamePath(dialog.SelectedPath))
-                    {
-                        MessageBox.Show("The selected directory does not contain a valid game installation.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
-                    CheckInstallPathPermissions(dialog.SelectedPath);
-
-                    Settings.Default.GamePath = dialog.SelectedPath;
-                    Settings.Default.Save();
-                    MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
+            Settings.Default.GamePath = folder;
+            Settings.Default.Save();
+            MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
