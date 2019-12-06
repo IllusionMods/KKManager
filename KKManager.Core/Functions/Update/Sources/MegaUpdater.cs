@@ -71,7 +71,6 @@ namespace KKManager.Functions.Update
                 throw;
             }
         }
-
         private async Task<List<UpdateTask>> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
         {
             var results = new List<UpdateTask>();
@@ -99,7 +98,7 @@ namespace KKManager.Functions.Update
 
                 var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo));
+                results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo, _latestModifiedDate));
             }
 
             return results;
@@ -134,6 +133,8 @@ namespace KKManager.Functions.Update
             return _allNodes.Where(x => x.ParentId == rootNode.Id);
         }
 
+        private DateTime _latestModifiedDate = DateTime.MinValue;
+
         private List<IUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, bool recursive, bool removeExtraClientFiles, CancellationToken cancellationToken)
         {
             var results = new List<IUpdateItem>();
@@ -160,6 +161,9 @@ namespace KKManager.Functions.Update
 
                             if (!localIsUpToDate)
                                 results.Add(new MegaUpdateItem(remoteItem, this, localFile));
+
+                            if (_latestModifiedDate < (remoteItem.ModificationDate ?? remoteItem.CreationDate))
+                                _latestModifiedDate = remoteItem.ModificationDate ?? remoteItem.CreationDate;
                         }
                         break;
 
@@ -216,7 +220,7 @@ namespace KKManager.Functions.Update
                 SourceItem = item ?? throw new ArgumentNullException(nameof(item));
                 _source = source ?? throw new ArgumentNullException(nameof(source));
                 ItemSize = FileSize.FromBytes(item.Size);
-                ModifiedTime = SourceItem.ModificationDate;
+                ModifiedTime = item.ModificationDate ?? item.CreationDate;
             }
 
             public INode SourceItem { get; }

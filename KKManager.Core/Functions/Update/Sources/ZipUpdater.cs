@@ -42,7 +42,7 @@ namespace KKManager.Functions.Update
 
                     var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo));
+                    allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo, _latestModifiedDate));
                 }
             }
             return allResults;
@@ -58,6 +58,8 @@ namespace KKManager.Functions.Update
                     return fname.StartsWith(directory.FileName) && fname.Count(c => c == '\\' || c == '/') == dirDepth;
                 });
         }
+
+        private DateTime _latestModifiedDate = DateTime.MinValue;
 
         private async Task<List<IUpdateItem>> ProcessDirectory(ZipEntry remoteDir, DirectoryInfo localDir, bool recursive, bool removeNotExisting, CancellationToken cancellationToken)
         {
@@ -99,6 +101,9 @@ namespace KKManager.Functions.Update
                     var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.UncompressedSize;
                     if (!localIsUpToDate)
                         results.Add(new ZipUpdateItem(remoteItem, localFile, this));
+
+                    if (_latestModifiedDate < remoteItem.LastModified)
+                        _latestModifiedDate = remoteItem.LastModified;
                 }
             }
 
