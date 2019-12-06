@@ -72,6 +72,8 @@ namespace KKManager.Windows
 
             objectListView1.UncheckAll();
             objectListView1.CheckObjects(_updateTasks.Where(x => !x.UpToDate && x.EnableByDefault));
+
+            objectListView1.AutoResizeColumns();
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)
@@ -127,6 +129,8 @@ namespace KKManager.Windows
         {
             var selection = objectListView1.SelectedObject as UpdateTask;
             objectListView2.SetObjects(selection?.Items);
+            if (objectListView2.GetItemCount() > 0)
+                objectListView2.AutoResizeColumns();
         }
     }
 }
