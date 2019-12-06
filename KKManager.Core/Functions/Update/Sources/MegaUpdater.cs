@@ -84,7 +84,7 @@ namespace KKManager.Functions.Update
 
             var result = await _client.DownloadAsync(updateManifest, null, cancellationToken);
 
-            foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result, CurrentFolderLink.OriginalString))
+            foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result, CurrentFolderLink.OriginalString, 10))
             {
                 // Find the remote directory
                 var updateNode = root;

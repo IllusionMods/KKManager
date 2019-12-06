@@ -11,11 +11,6 @@ namespace KKManager.Functions.Update
         public static readonly string UpdateFileName = "Updates.xml";
 
         /// <summary>
-        /// Where the update came from
-        /// </summary>
-        public string Origin { get; private set; }
-
-        /// <summary>
         /// Local path relative to game root to downlaod the mod files into
         /// </summary>
         public DirectoryInfo ClientPath { get; private set; }
@@ -46,7 +41,7 @@ namespace KKManager.Functions.Update
         /// </summary>
         public string Guid { get; private set; }
 
-        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str, string origin)
+        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str, string origin, int priority)
         {
             var doc = XDocument.Load(str);
 
@@ -81,10 +76,21 @@ namespace KKManager.Functions.Update
                     Name = name,
                     Guid = guid,
                     AlwaysInstall = alwaysInstall,
-                    Origin = origin
+                    Origin = origin,
+                    SourcePriority = priority
                 };
             }
         }
+
+        /// <summary>
+        /// Where the update came from
+        /// </summary>
+        public string Origin { get; private set; }
+
+        /// <summary>
+        /// Priority of the source if multiple sources for a download are available. Higher will be attempted to be downloaded first.
+        /// </summary>
+        public int SourcePriority { get; private set; }
 
         /// <summary>
         /// Should the mod be selected to be installed by default.
