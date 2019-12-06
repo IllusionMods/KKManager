@@ -42,7 +42,7 @@ namespace KKManager.Util
         private static Task CreateDelayForException(int times, int attempts, TimeSpan delay, Exception ex, CancellationToken cancellationToken)
         {
             //var delay = IncreasingDelayInSeconds(attempts);
-            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}. Exception: " + ex.Message);
+            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}. Exception: " + ex);
             return Task.Delay(delay, cancellationToken);
         }
 

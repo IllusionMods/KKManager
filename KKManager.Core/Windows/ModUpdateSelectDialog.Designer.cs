@@ -80,6 +80,7 @@ namespace KKManager.Windows
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
+            this.objectListView1.ShowItemToolTips = true;
             this.objectListView1.Size = new System.Drawing.Size(622, 181);
             this.objectListView1.TabIndex = 1;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
@@ -242,9 +243,10 @@ namespace KKManager.Windows
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
-            this.label1.Size = new System.Drawing.Size(393, 17);
+            this.label1.Size = new System.Drawing.Size(526, 17);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Mods that can be update. Select which updates to install and click Update below.";
+            this.label1.Text = "Mods that can be updated. Select which updates to download and install, then clic" +
+    "k the Update button below.";
             // 
             // objectListView2
             // 
@@ -262,8 +264,10 @@ namespace KKManager.Windows
             this.objectListView2.GridLines = true;
             this.objectListView2.HideSelection = false;
             this.objectListView2.Location = new System.Drawing.Point(0, 30);
+            this.objectListView2.MultiSelect = false;
             this.objectListView2.Name = "objectListView2";
             this.objectListView2.ShowGroups = false;
+            this.objectListView2.ShowItemToolTips = true;
             this.objectListView2.Size = new System.Drawing.Size(622, 173);
             this.objectListView2.TabIndex = 2;
             this.objectListView2.UseCompatibleStateImageBehavior = false;
@@ -283,7 +287,7 @@ namespace KKManager.Windows
             this.olvColumnFileDate.Hideable = false;
             this.olvColumnFileDate.MinimumWidth = 60;
             this.olvColumnFileDate.Text = "Update date";
-            this.olvColumnFileDate.Width = 132;
+            this.olvColumnFileDate.Width = 119;
             // 
             // olvColumnFileSize
             // 
@@ -291,7 +295,7 @@ namespace KKManager.Windows
             this.olvColumnFileSize.Hideable = false;
             this.olvColumnFileSize.MinimumWidth = 60;
             this.olvColumnFileSize.Text = "File size";
-            this.olvColumnFileSize.Width = 83;
+            this.olvColumnFileSize.Width = 79;
             // 
             // label2
             // 
@@ -302,9 +306,9 @@ namespace KKManager.Windows
             this.label2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
             this.label2.Size = new System.Drawing.Size(480, 30);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Contents of the update. All paths are relative to the game\'s root directory.\r\nFil" +
-    "es in green are completely new additions. Files in red are no longer necessary a" +
-    "nd will be removed.";
+            this.label2.Text = "Contents of the selected update. All paths are relative to the game\'s root direct" +
+    "ory.\r\nFiles in green are completely new additions. Files in red are no longer ne" +
+    "cessary and will be removed.";
             // 
             // ModUpdateSelectDialog
             // 

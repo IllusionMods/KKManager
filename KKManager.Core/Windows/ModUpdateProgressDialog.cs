@@ -140,7 +140,8 @@ namespace KKManager.Windows
         {
             var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
 
-            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}");
+            SetStatus($"Updating {task.TargetPath.Name}");
+            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}", false, true);
 
             // todo move logging to update methods
             if (task.TargetPath.Exists)
@@ -148,8 +149,6 @@ namespace KKManager.Windows
                 SetStatus($"Deleting old file {task.TargetPath.FullName}", false, true);
                 task.TargetPath.Delete();
             }
-
-            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}", false, true);
 
             await RetryHelper.RetryOnExceptionAsync(() => task.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
 
