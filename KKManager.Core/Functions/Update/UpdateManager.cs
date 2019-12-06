@@ -50,10 +50,11 @@ namespace KKManager.Functions.Update
             foreach (var modGroup in results.GroupBy(x => x.Info.Guid))
             {
                 var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
-#if DEBUG
                 if (ordered.Count > 1)
-                    Console.WriteLine($"Found {ordered.Count} entries for mod GUID {modGroup.Key} - taking the latest from {ordered[0].Info.Origin}");
-#endif
+                {
+                    ordered[0].AlternativeSources.AddRange(ordered.Skip(1));
+                    Console.WriteLine($"Found {ordered.Count} entries for mod GUID {modGroup.Key} - latest is from {ordered[0].Info.Origin}");
+                }
                 filteredTasks.Add(ordered[0]);
             }
             return filteredTasks;

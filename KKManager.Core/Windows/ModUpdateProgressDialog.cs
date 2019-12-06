@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -87,7 +86,12 @@ namespace KKManager.Windows
                 _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.TotalUpdateSize));
                 _completedSize = FileSize.Empty;
 
-                var allItems = updateTasks.SelectMany(x => x.Items).ToList();
+                var allItems = updateTasks.SelectMany(x => x.GetUpdateItems())
+                    // Try items with a single source first since they are the most risky
+                    .OrderBy(sources => sources.Count())
+                    .ToList();
+
+                SetStatus($"{allItems.Count(items => items.Count() > 1)} out of {allItems.Count} items have more than 1 source", false, true);
 
                 progressBar1.Maximum = allItems.Count;
 
@@ -98,11 +102,11 @@ namespace KKManager.Windows
                     var task = allItems[index];
 
                     labelProgress.Text = (index + 1) + " / " + allItems.Count;
-                    SetStatus("Downloading " + task.TargetPath.Name);
+                    SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
 
                     await UpdateSingleItem(task);
 
-                    _completedSize += task.ItemSize;
+                    _completedSize += task.First().Item2.ItemSize;
                     progressBar1.Value = index + 1;
                 }
 
@@ -135,24 +139,44 @@ namespace KKManager.Windows
                 button1.Text = "OK";
             }
         }
-
-        private async Task UpdateSingleItem(IUpdateItem task)
+        private List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();
+        private async Task UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, IUpdateItem>> task)
         {
-            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {task.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
+            var firstItem = task.First().Item2;
+            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {firstItem.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
 
-            SetStatus($"Updating {task.TargetPath.Name}");
-            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(task.TargetPath)}", false, true);
+            SetStatus($"Updating {firstItem.TargetPath.Name}");
+            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
 
             // todo move logging to update methods
-            if (task.TargetPath.Exists)
+            if (firstItem.TargetPath.Exists)
             {
-                SetStatus($"Deleting old file {task.TargetPath.FullName}", false, true);
-                task.TargetPath.Delete();
+                SetStatus($"Deleting old file {firstItem.TargetPath.FullName}", false, true);
+                firstItem.TargetPath.Delete();
             }
 
-            await RetryHelper.RetryOnExceptionAsync(() => task.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+            Exception ex = null;
+            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).ToList();
+            if (sourcesToAttempt.Count == 0) throw new InvalidOperationException("There are no working sources to download from. Check the log for reasons why the sources failed.");
+            foreach (var source in sourcesToAttempt)
+            {
+                try
+                {
+                    SetStatus($"Attempting download from source {source.Item1.Origin}", false, true);
+                    await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+                    ex = null;
+                }
+                catch (Exception e)
+                {
+                    ex = e;
+                    Console.WriteLine($"Marking source {source.Item1.Origin} as broken because of exception: {e}");
+                    _badUpdateSources.Add(source.Item1);
+                }
+            }
+            // Check if all sources failed, crash in that case
+            if (ex != null) throw ex;
 
-            SetStatus($"Download OK {task.ItemSize}", false, true);
+            SetStatus($"Download OK {firstItem.ItemSize}", false, true);
         }
 
         private void SetStatus(string status, bool writeToUi = true, bool writeToLog = false)
