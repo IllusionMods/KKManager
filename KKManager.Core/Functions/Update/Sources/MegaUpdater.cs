@@ -56,21 +56,20 @@ namespace KKManager.Functions.Update
         private async Task DownloadNodeAsync(MegaUpdateItem task, Progress<double> progress, CancellationToken cancellationToken)
         {
             await Connect();
-            await RetryHelper.RetryOnExceptionAsync(
-                async () =>
-                {
-                    task.TargetPath.Delete();
-                    try
-                    {
-                        await _client.DownloadFileAsync(task.SourceItem, task.TargetPath.FullName, progress, cancellationToken);
-                    }
-                    catch (Exception)
-                    {
-                        // Needed to avoid partially downloaded files causing issues
-                        task.TargetPath.Delete();
-                        throw;
-                    }
-                }, 2, TimeSpan.FromSeconds(1), cancellationToken);
+
+            ((FileInfo)task.TargetPath).Directory?.Create();
+            task.TargetPath.Delete();
+
+            try
+            {
+                await _client.DownloadFileAsync(task.SourceItem, task.TargetPath.FullName, progress, cancellationToken);
+            }
+            catch (Exception)
+            {
+                // Needed to avoid partially downloaded files causing issues
+                task.TargetPath.Delete();
+                throw;
+            }
         }
 
         private async Task<List<UpdateTask>> CollectTasks(List<INode> nodes, CancellationToken cancellationToken)
@@ -113,13 +112,14 @@ namespace KKManager.Functions.Update
             await RetryHelper.RetryOnExceptionAsync(
                 async () =>
                 {
+                    if (_client.IsLoggedIn) return;
                     if (_loginToken != null)
                         await _client.LoginAsync(_loginToken);
                     else if (_authInfos != null)
                         _loginToken = await _client.LoginAsync(_authInfos);
                     else
                         await _client.LoginAnonymousAsync();
-                }, 2, TimeSpan.FromSeconds(1), CancellationToken.None);
+                }, 2, TimeSpan.FromSeconds(2), CancellationToken.None);
         }
 
         private async Task<List<INode>> GetNodesFromLinkAsync(CancellationToken cancellationToken)
