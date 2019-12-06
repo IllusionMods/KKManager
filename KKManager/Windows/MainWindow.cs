@@ -42,20 +42,37 @@ namespace KKManager.Windows
 
             Task.Run((Action)PopulateStartMenu);
 
-            try
+            _updateSources = GetUpdateSources();
+        }
+
+        private IUpdateSource[] GetUpdateSources()
+        {
+            var updateSourcesPath = Path.Combine(Program.ProgramLocation, "UpdateSources");
+
+            if (File.Exists(updateSourcesPath))
             {
-                _updateSources = new[]
+                Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
+
+                var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+                var results = new List<IUpdateSource>(updateSources.Count);
+                foreach (var updateSource in updateSources)
                 {
-                    //todo
-                    UpdateSourceManager.GetUpdater(new Uri("https://mega.nz/#F!fkYzQa5K!nSc7wkY82OUqZ4Hlff7Rlg")),
-                    //UpdateSourceManager.GetUpdater(new Uri(@"D:\test\test.zip"))
-                };
+                    try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
+                    catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
+                }
+
+                if(results.Count < updateSources.Count)
+                    SetStatusText($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
+
+                return results.ToArray();
             }
-            catch (Exception e)
+            else
             {
-                MessageBox.Show(e.ToString(), "Failed to open update source", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine(e);
+                Console.WriteLine("The UpdateSources file is missing, updating will not be available");
+                updateSideloaderModpackToolStripMenuItem.Enabled = false;
             }
+
+            return new IUpdateSource[0];
         }
 
         private static DirectoryInfo GetKoikatuDirectory()
@@ -102,16 +119,21 @@ namespace KKManager.Windows
                 Environment.Exit(1);
             }
 
+            CheckInstallPathPermissions(path);
+
+            return new DirectoryInfo(path);
+        }
+
+        private static void CheckInstallPathPermissions(string path)
+        {
             if (!PathTools.DirectoryHasWritePermission(path) ||
-                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
-                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
+                            !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
+                            !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
             {
                 if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
                         "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     ProcessTools.FixPermissions(path)?.WaitForExit();
             }
-
-            return new DirectoryInfo(path);
         }
 
         private void PopulateStartMenu()
@@ -376,7 +398,16 @@ namespace KKManager.Windows
             foreach (var window in sideWindows)
                 window.CancelListReload();
 
-            ModUpdateProgressDialog.StartUpdateDialog(this, _updateSources);
+            try
+            {
+                ModUpdateProgressDialog.StartUpdateDialog(this, _updateSources);
+            }
+            catch (Exception ex)
+            {
+                var errorMsg = "Failed to start update - " + ex;
+                Console.WriteLine(errorMsg);
+                MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
             foreach (var window in sideWindows)
                 window.ReloadList();
@@ -413,6 +444,31 @@ namespace KKManager.Windows
         private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName)?.WaitForExit();
+        }
+
+        private void changeGameInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.SelectedPath = InstallDirectoryHelper.KoikatuDirectory.FullName;
+                dialog.ShowNewFolderButton = false;
+                dialog.Description = "Select a new directory with an installed game.";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (!InstallDirectoryHelper.IsValidGamePath(dialog.SelectedPath))
+                    {
+                        MessageBox.Show("The selected directory does not contain a valid game installation.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    CheckInstallPathPermissions(dialog.SelectedPath);
+
+                    Settings.Default.GamePath = dialog.SelectedPath;
+                    Settings.Default.Save();
+                    MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
     }
 }
