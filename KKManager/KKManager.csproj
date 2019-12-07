@@ -238,6 +238,10 @@
       <Project>{09fc4ef5-9694-4961-a136-dcfd8b5f1368}</Project>
       <Name>KKManager.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj">
+      <Project>{495a9ea6-b13c-48f9-a2e2-6667cecebfde}</Project>
+      <Name>PortableSettingsProvider</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
