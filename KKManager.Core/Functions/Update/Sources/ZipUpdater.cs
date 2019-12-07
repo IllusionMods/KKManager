@@ -34,18 +34,37 @@ namespace KKManager.Functions.Update
             {
                 foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name, 100))
                 {
+                    _latestModifiedDate = DateTime.MinValue;
+
                     // Clean up the path into a usable form
                     var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
 
                     var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
                     if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_zipfile.Name}");
 
-                    var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+                    var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+
+                    var results = await ProcessDirectory(remote, updateInfo.ClientPath,
+                        updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
+                        cancellationToken);
 
                     allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo, _latestModifiedDate));
                 }
             }
             return allResults;
+        }
+
+        private static Func<ZipEntry, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo)
+        {
+            switch (updateInfo.Versioning)
+            {
+                case UpdateInfo.VersioningMode.Size:
+                    return (item, info) => item.UncompressedSize == info.Length;
+                case UpdateInfo.VersioningMode.Date:
+                    return (item, info) => item.LastModified > info.LastWriteTimeUtc;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private IEnumerable<ZipEntry> GetChildren(ZipEntry directory)
@@ -61,7 +80,9 @@ namespace KKManager.Functions.Update
 
         private DateTime _latestModifiedDate = DateTime.MinValue;
 
-        private async Task<List<IUpdateItem>> ProcessDirectory(ZipEntry remoteDir, DirectoryInfo localDir, bool recursive, bool removeNotExisting, CancellationToken cancellationToken)
+        private async Task<List<IUpdateItem>> ProcessDirectory(ZipEntry remoteDir, DirectoryInfo localDir,
+            bool recursive, bool removeNotExisting, Func<ZipEntry, FileInfo, bool> versionEqualsComparer,
+            CancellationToken cancellationToken)
         {
             if (!remoteDir.IsDirectory) throw new DirectoryNotFoundException();
 
@@ -87,7 +108,7 @@ namespace KKManager.Functions.Update
                         else
                             localContents.Remove(localItem);
 
-                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, cancellationToken));
+                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken));
                     }
                 }
                 else
@@ -98,7 +119,7 @@ namespace KKManager.Functions.Update
                     else
                         localContents.Remove(localFile);
 
-                    var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.UncompressedSize;
+                    var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
                     if (!localIsUpToDate)
                         results.Add(new ZipUpdateItem(remoteItem, localFile, this));
 

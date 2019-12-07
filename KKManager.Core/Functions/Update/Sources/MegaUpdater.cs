@@ -87,6 +87,8 @@ namespace KKManager.Functions.Update
 
             foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(result, CurrentFolderLink.OriginalString, 10))
             {
+                _latestModifiedDate = DateTime.MinValue;
+
                 // Find the remote directory
                 var updateNode = root;
                 var pathParts = updateInfo.ServerPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
@@ -97,12 +99,29 @@ namespace KKManager.Functions.Update
                         throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: mega");
                 }
 
-                var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+                var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+
+                var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath,
+                    updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
+                    cancellationToken);
 
                 results.Add(new UpdateTask(updateInfo.Name ?? updateNode.Name, updateItems, updateInfo, _latestModifiedDate));
             }
 
             return results;
+        }
+
+        private static Func<INode, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo)
+        {
+            switch (updateInfo.Versioning)
+            {
+                case UpdateInfo.VersioningMode.Size:
+                    return (item, info) => item.Size == info.Length;
+                case UpdateInfo.VersioningMode.Date:
+                    return (item, info) => (item.ModificationDate ?? item.CreationDate) > info.LastWriteTimeUtc;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private async Task Connect()
@@ -136,7 +155,9 @@ namespace KKManager.Functions.Update
 
         private DateTime _latestModifiedDate = DateTime.MinValue;
 
-        private List<IUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir, bool recursive, bool removeExtraClientFiles, CancellationToken cancellationToken)
+        private List<IUpdateItem> ProcessDirectory(INode remoteDir, DirectoryInfo localDir,
+            bool recursive, bool removeExtraClientFiles, Func<INode, FileInfo, bool> versionEqualsComparer,
+            CancellationToken cancellationToken)
         {
             var results = new List<IUpdateItem>();
 
@@ -158,7 +179,7 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localFile);
 
-                            var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
+                            var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
 
                             if (!localIsUpToDate)
                                 results.Add(new MegaUpdateItem(remoteItem, this, localFile));
@@ -177,7 +198,7 @@ namespace KKManager.Functions.Update
                             else
                                 localContents.Remove(localItem);
 
-                            results.AddRange(ProcessDirectory(remoteItem, localItem, recursive, removeExtraClientFiles, cancellationToken));
+                            results.AddRange(ProcessDirectory(remoteItem, localItem, recursive, removeExtraClientFiles, versionEqualsComparer, cancellationToken));
                         }
                         break;
 

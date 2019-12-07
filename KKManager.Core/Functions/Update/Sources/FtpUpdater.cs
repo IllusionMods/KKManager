@@ -58,16 +58,35 @@ namespace KKManager.Functions.Update
 
                     foreach (var updateInfo in updateInfos)
                     {
+                        _latestModifiedDate = DateTime.MinValue;
+
                         var remote = GetNode(updateInfo.ServerPath);
                         if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_client.Host}");
 
-                        var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+
+                        var results = await ProcessDirectory(remote, updateInfo.ClientPath, 
+                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer, 
+                            cancellationToken);
 
                         allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
                     }
                 }
             }
             return allResults;
+        }
+
+        private static Func<FtpListItem, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo)
+        {
+            switch (updateInfo.Versioning)
+            {
+                case UpdateInfo.VersioningMode.Size:
+                    return (item, info) => item.Size == info.Length;
+                case UpdateInfo.VersioningMode.Date:
+                    return (item, info) => GetDate(item) > info.LastWriteTimeUtc;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private async Task Connect()
@@ -110,8 +129,10 @@ namespace KKManager.Functions.Update
                            itemFilename.Count(c => c == '/' || c == '\\') == remoteDirDepth;
                 });
         }
-
-        private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir, bool recursive, bool removeNotExisting, CancellationToken cancellationToken)
+        
+        private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir, 
+            bool recursive, bool removeNotExisting, Func<FtpListItem, FileInfo, bool> versionEqualsComparer, 
+            CancellationToken cancellationToken)
         {
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new DirectoryNotFoundException();
 
@@ -135,7 +156,7 @@ namespace KKManager.Functions.Update
                         else
                             localContents.Remove(localItem);
 
-                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, cancellationToken));
+                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken));
                     }
                 }
                 else if (remoteItem.Type == FtpFileSystemObjectType.File)
@@ -149,7 +170,7 @@ namespace KKManager.Functions.Update
                     else
                         localContents.Remove(localFile);
 
-                    var localIsUpToDate = localFile.Exists && localFile.Length == remoteItem.Size;
+                    var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
                     if (!localIsUpToDate)
                         results.Add(new FtpUpdateItem(remoteItem, this, localFile));
                 }

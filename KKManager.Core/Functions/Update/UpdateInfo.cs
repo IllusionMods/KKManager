@@ -31,6 +31,10 @@ namespace KKManager.Functions.Update
         /// Should the mod be always selected to be installed by default.
         /// </summary>
         public bool AlwaysInstall { get; private set; }
+        /// <summary>
+        /// How the file versions are compared to decide if they should be updated.
+        /// </summary>
+        public VersioningMode Versioning { get; private set; }
 
         /// <summary>
         /// Display name of the mod.
@@ -45,7 +49,6 @@ namespace KKManager.Functions.Update
         {
             var doc = XDocument.Load(str);
 
-            // todo relax checks
             foreach (var updateInfoElement in doc.Element("Updates").Elements("UpdateInfo"))
             {
                 var name = updateInfoElement.Element("Name")?.Value;
@@ -63,9 +66,11 @@ namespace KKManager.Functions.Update
                 if (!local.FullName.StartsWith(InstallDirectoryHelper.KoikatuDirectory.FullName, StringComparison.OrdinalIgnoreCase))
                     throw new SecurityException("ClientPath points to a directory outside the game folder - " + localPath);
 
-                var recursive = string.Equals(updateInfoElement.Element("Recursive")?.Value, "true", StringComparison.OrdinalIgnoreCase);
-                var removeExtras = string.Equals(updateInfoElement.Element("RemoveExtraClientFiles")?.Value, "true", StringComparison.OrdinalIgnoreCase);
-                var alwaysInstall = string.Equals(updateInfoElement.Element("AlwaysInstall")?.Value, "true", StringComparison.OrdinalIgnoreCase);
+                if (!bool.TryParse(updateInfoElement.Element("Recursive")?.Value, out var recursive)) recursive = false;
+                if (!bool.TryParse(updateInfoElement.Element("RemoveExtraClientFiles")?.Value, out var removeExtras)) removeExtras = false;
+                if (!bool.TryParse(updateInfoElement.Element("AlwaysInstall")?.Value, out var alwaysInstall)) alwaysInstall = false;
+
+                if (!Enum.TryParse<VersioningMode>(updateInfoElement.Element("VersioningMode")?.Value, true, out var versioningMode)) versioningMode = VersioningMode.Size;
 
                 yield return new UpdateInfo
                 {
@@ -77,7 +82,8 @@ namespace KKManager.Functions.Update
                     Guid = guid,
                     AlwaysInstall = alwaysInstall,
                     Origin = origin,
-                    SourcePriority = priority
+                    SourcePriority = priority,
+                    Versioning = versioningMode
                 };
             }
         }
@@ -98,6 +104,12 @@ namespace KKManager.Functions.Update
         public bool IsEnabledByDefault()
         {
             return AlwaysInstall || ClientPath.Exists;
+        }
+
+        public enum VersioningMode
+        {
+            Size,
+            Date
         }
     }
 }
