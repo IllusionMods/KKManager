@@ -53,13 +53,13 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -187,40 +187,40 @@
             // installDirectoryToolStripMenuItem
             // 
             this.installDirectoryToolStripMenuItem.Name = "installDirectoryToolStripMenuItem";
-            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.installDirectoryToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.installDirectoryToolStripMenuItem.Text = "Install directory";
             this.installDirectoryToolStripMenuItem.Click += new System.EventHandler(this.installDirectoryToolStripMenuItem_Click);
             // 
             // screenshotsToolStripMenuItem
             // 
             this.screenshotsToolStripMenuItem.Name = "screenshotsToolStripMenuItem";
-            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.screenshotsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.screenshotsToolStripMenuItem.Text = "Screenshots";
             this.screenshotsToolStripMenuItem.Click += new System.EventHandler(this.screenshotsToolStripMenuItem_Click);
             // 
             // charactersToolStripMenuItem
             // 
             this.charactersToolStripMenuItem.Name = "charactersToolStripMenuItem";
-            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.charactersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.charactersToolStripMenuItem.Text = "Characters";
             this.charactersToolStripMenuItem.Click += new System.EventHandler(this.charactersToolStripMenuItem_Click);
             // 
             // scenesToolStripMenuItem
             // 
             this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
-            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scenesToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.scenesToolStripMenuItem.Text = "Scenes";
             this.scenesToolStripMenuItem.Click += new System.EventHandler(this.scenesToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(152, 6);
             // 
             // kKManagerToolStripMenuItem
             // 
             this.kKManagerToolStripMenuItem.Name = "kKManagerToolStripMenuItem";
-            this.kKManagerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.kKManagerToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.kKManagerToolStripMenuItem.Text = "KK Manager";
             this.kKManagerToolStripMenuItem.Click += new System.EventHandler(this.kKManagerToolStripMenuItem_Click);
             // 
@@ -261,6 +261,13 @@
             this.fixFileAndFolderPermissionsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.fixFileAndFolderPermissionsToolStripMenuItem.Text = "Fix file and folder permissions";
             this.fixFileAndFolderPermissionsToolStripMenuItem.Click += new System.EventHandler(this.fixFileAndFolderPermissionsToolStripMenuItem_Click);
+            // 
+            // changeGameInstallDirectoryToolStripMenuItem
+            // 
+            this.changeGameInstallDirectoryToolStripMenuItem.Name = "changeGameInstallDirectoryToolStripMenuItem";
+            this.changeGameInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.changeGameInstallDirectoryToolStripMenuItem.Text = "Change game install directory...";
+            this.changeGameInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.changeGameInstallDirectoryToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -308,13 +315,6 @@
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
             // 
-            // changeGameInstallDirectoryToolStripMenuItem
-            // 
-            this.changeGameInstallDirectoryToolStripMenuItem.Name = "changeGameInstallDirectoryToolStripMenuItem";
-            this.changeGameInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.changeGameInstallDirectoryToolStripMenuItem.Text = "Change game install directory...";
-            this.changeGameInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.changeGameInstallDirectoryToolStripMenuItem_Click);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -326,7 +326,7 @@
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainWindow";
-            this.Text = "KK Manager - Chikarin technician edition";
+            this.Text = "KK Manager";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.menuStrip1.ResumeLayout(false);
