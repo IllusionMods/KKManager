@@ -29,7 +29,7 @@ namespace KKManager.Functions.Update
             var allResults = new List<UpdateTask>();
 
             var manifestFile = _zipfile.Entries.FirstOrDefault(entry => string.Equals(Path.GetFileName(entry.FileName), UpdateInfo.UpdateFileName, StringComparison.OrdinalIgnoreCase));
-            if (manifestFile == null) throw new FileNotFoundException("Failed to get the update list");
+            if (manifestFile == null) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: {_zipfile.Name}");
             using (var str = manifestFile.OpenReader())
             {
                 foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name, 100))
@@ -38,7 +38,7 @@ namespace KKManager.Functions.Update
                     var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
 
                     var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
-                    if (remote == null) throw new ArgumentNullException(nameof(remote));
+                    if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_zipfile.Name}");
 
                     var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
