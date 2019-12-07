@@ -97,7 +97,7 @@ namespace KKManager.Functions.Update
             if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
 
-            var remoteDirName = PathTools.SanitizeFileName(remoteDir.FullName);
+            var remoteDirName = PathTools.SanitizeFileName(remoteDir.FullName) + "/";
             var remoteDirDepth = remoteDirName.Count(c => c == '/' || c == '\\');
 
             return _allNodes.Where(
