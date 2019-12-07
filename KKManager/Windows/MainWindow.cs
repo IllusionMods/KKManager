@@ -65,7 +65,7 @@ namespace KKManager.Windows
                         "Koikatu is either not registered properly or its install directory is missing or inaccessible.\n\nYou will have to select game directory manually.",
                         "Failed to find Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    path = ShowInstallDirectoryDialog();
+                    path = ShowInstallDirectoryDialog(path);
                 }
 
                 if (string.IsNullOrEmpty(path) || !InstallDirectoryHelper.IsValidGamePath(path))
@@ -84,11 +84,12 @@ namespace KKManager.Windows
             return new DirectoryInfo(path);
         }
 
-        private static string ShowInstallDirectoryDialog()
+        private static string ShowInstallDirectoryDialog(string currentPath)
         {
             using (var fb = new FolderBrowserDialog())
             {
-                fb.SelectedPath = InstallDirectoryHelper.KoikatuDirectory.FullName;
+                fb.RootFolder = Environment.SpecialFolder.MyComputer;
+                fb.SelectedPath = currentPath ?? "";
                 fb.ShowNewFolderButton = false;
                 fb.Description = "Select the install directory of the game.";
 
@@ -434,7 +435,7 @@ namespace KKManager.Windows
 
         private void changeGameInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var folder = ShowInstallDirectoryDialog();
+            var folder = ShowInstallDirectoryDialog(Settings.Default.GamePath);
             if (folder == null) return;
 
             Settings.Default.GamePath = folder;
