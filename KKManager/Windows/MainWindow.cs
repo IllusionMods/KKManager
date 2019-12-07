@@ -38,13 +38,18 @@ namespace KKManager.Windows
 
             SetupTabs();
 
-            Text = $"{Text} - {Assembly.GetExecutingAssembly().GetName().Version}";
-
             Task.Run((Action)PopulateStartMenu);
 
             _updateSources = UpdateSourceManager.GetUpdateSources(Program.ProgramLocation);
             if (_updateSources.Length == 0)
                 updateSideloaderModpackToolStripMenuItem.Enabled = false;
+
+#if DEBUG
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+#else
+            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+#endif
+            Text = $"KK Manager {version} (Fancy updates edition) - {InstallDirectoryHelper.KoikatuDirectory.FullName}";
         }
 
         private static DirectoryInfo GetKoikatuDirectory()
