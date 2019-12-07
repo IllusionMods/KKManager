@@ -65,8 +65,8 @@ namespace KKManager.Functions.Update
 
                         var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
 
-                        var results = await ProcessDirectory(remote, updateInfo.ClientPath, 
-                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer, 
+                        var results = await ProcessDirectory(remote, updateInfo.ClientPath,
+                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
                             cancellationToken);
 
                         allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
@@ -116,22 +116,22 @@ namespace KKManager.Functions.Update
             if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
 
-            var remoteDirName = PathTools.SanitizeFileName(remoteDir.FullName) + "/";
+            var remoteDirName = PathTools.NormalizePath(remoteDir.FullName) + "/";
             var remoteDirDepth = remoteDirName.Count(c => c == '/' || c == '\\');
 
             return _allNodes.Where(
                 item =>
                 {
                     if (item == remoteDir) return false;
-                    var itemFilename = PathTools.SanitizeFileName(item.FullName);
+                    var itemFilename = PathTools.NormalizePath(item.FullName);
                     // Make sure it's inside the directory and not inside one of the subdirectories
                     return itemFilename.StartsWith(remoteDirName, StringComparison.OrdinalIgnoreCase) &&
                            itemFilename.Count(c => c == '/' || c == '\\') == remoteDirDepth;
                 });
         }
-        
-        private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir, 
-            bool recursive, bool removeNotExisting, Func<FtpListItem, FileInfo, bool> versionEqualsComparer, 
+
+        private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir,
+            bool recursive, bool removeNotExisting, Func<FtpListItem, FileInfo, bool> versionEqualsComparer,
             CancellationToken cancellationToken)
         {
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new DirectoryNotFoundException();
