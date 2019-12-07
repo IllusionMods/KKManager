@@ -42,34 +42,9 @@ namespace KKManager.Windows
 
             Task.Run((Action)PopulateStartMenu);
 
-            _updateSources = GetUpdateSources();
-        }
-
-        private IUpdateSource[] GetUpdateSources()
-        {
-            var updateSourcesPath = Path.Combine(Program.ProgramLocation, "UpdateSources");
-
-            if (!File.Exists(updateSourcesPath))
-            {
-                Console.WriteLine("The UpdateSources file is missing, updating will not be available");
+            _updateSources = UpdateSourceManager.GetUpdateSources(Program.ProgramLocation);
+            if (_updateSources.Length == 0)
                 updateSideloaderModpackToolStripMenuItem.Enabled = false;
-                return new IUpdateSource[0];
-            }
-
-            Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
-
-            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-            var results = new List<IUpdateSource>(updateSources.Count);
-            foreach (var updateSource in updateSources)
-            {
-                try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
-                catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
-            }
-
-            if (results.Count < updateSources.Count)
-                SetStatusText($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
-
-            return results.ToArray();
         }
 
         private static DirectoryInfo GetKoikatuDirectory()

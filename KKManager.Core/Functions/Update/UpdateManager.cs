@@ -59,5 +59,31 @@ namespace KKManager.Functions.Update
             }
             return filteredTasks;
         }
+
+        public static IUpdateSource[] GetUpdateSources(string searchDirectory)
+        {
+            var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
+
+            if (!File.Exists(updateSourcesPath))
+            {
+                Console.WriteLine("The UpdateSources file is missing, updating will not be available");
+                return new IUpdateSource[0];
+            }
+
+            Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
+
+            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
+            var results = new List<IUpdateSource>(updateSources.Count);
+            foreach (var updateSource in updateSources)
+            {
+                try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
+                catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
+            }
+
+            if (results.Count < updateSources.Count)
+                Console.WriteLine($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
+
+            return results.ToArray();
+        }
     }
 }
