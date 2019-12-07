@@ -207,27 +207,9 @@ namespace KKManager.Functions.Update
                 }
             }
 
+            // Remove all files that were not on the remote
             if (removeExtraClientFiles)
-            {
-                // Remove all files that were not on the remote //todo not only zip
-                foreach (var localItem in localContents)
-                {
-                    if (!localItem.Exists) continue;
-
-                    switch (localItem)
-                    {
-                        case FileInfo fi:
-                            if (fi.Extension.ToLowerInvariant().StartsWith(".zip"))
-                                results.Add(new DeleteFileUpdateItem(fi));
-                            break;
-
-                        case DirectoryInfo di:
-                            foreach (var subFi in di.GetFiles("*", SearchOption.AllDirectories).Where(x => x.Extension.ToLowerInvariant().StartsWith(".zip")))
-                                results.Add(new DeleteFileUpdateItem(subFi));
-                            break;
-                    }
-                }
-            }
+                results.AddRange(UpdateSourceManager.FileInfosToDeleteItems(localContents));
 
             return results;
         }

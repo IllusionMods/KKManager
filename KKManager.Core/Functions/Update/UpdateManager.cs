@@ -85,5 +85,26 @@ namespace KKManager.Functions.Update
 
             return results.ToArray();
         }
+
+        public static IEnumerable<IUpdateItem> FileInfosToDeleteItems(IEnumerable<FileSystemInfo> localContents)
+        {
+            var results = new List<IUpdateItem>();
+            foreach (var localItem in localContents)
+            {
+                if (!localItem.Exists) continue;
+
+                switch (localItem)
+                {
+                    case FileInfo fi:
+                        results.Add(new DeleteFileUpdateItem(fi));
+                        break;
+
+                    case DirectoryInfo di:
+                        results.AddRange(di.GetFiles("*", SearchOption.AllDirectories).Select(subFi => new DeleteFileUpdateItem(subFi)));
+                        break;
+                }
+            }
+            return results;
+        }
     }
 }
