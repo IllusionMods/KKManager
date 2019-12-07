@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKManager.Core", "KKManager
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandaloneUpdater", "StandaloneUpdater\StandaloneUpdater.csproj", "{AE2AF306-3A62-4EFE-982B-2E448B4C113A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableSettingsProvider", "PortableSettingsProvider\PortableSettingsProvider.csproj", "{495A9EA6-B13C-48F9-A2E2-6667CECEBFDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AE2AF306-3A62-4EFE-982B-2E448B4C113A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE2AF306-3A62-4EFE-982B-2E448B4C113A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE2AF306-3A62-4EFE-982B-2E448B4C113A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{495A9EA6-B13C-48F9-A2E2-6667CECEBFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{495A9EA6-B13C-48F9-A2E2-6667CECEBFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{495A9EA6-B13C-48F9-A2E2-6667CECEBFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{495A9EA6-B13C-48F9-A2E2-6667CECEBFDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
