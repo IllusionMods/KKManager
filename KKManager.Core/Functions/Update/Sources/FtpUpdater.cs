@@ -14,6 +14,9 @@ namespace KKManager.Functions.Update
     {
         private readonly FtpClient _client;
 
+        private FtpListItem[] _allNodes;
+        private DateTime _latestModifiedDate = DateTime.MinValue;
+
         public FtpUpdater(Uri serverUri, NetworkCredential credentials = null)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
@@ -38,6 +41,8 @@ namespace KKManager.Functions.Update
 
         public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
+            await Connect();
+
             var allResults = new List<UpdateTask>();
             using (var str = new MemoryStream())
             {
@@ -45,17 +50,21 @@ namespace KKManager.Functions.Update
                 if (!b) throw new FileNotFoundException("Failed to get the update list");
 
                 str.Seek(0, SeekOrigin.Begin);
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _client.Host, 1))
+                var updateInfos = UpdateInfo.ParseUpdateManifest(str, _client.Host, 1).ToList();
+
+                if (updateInfos.Any())
                 {
-                    // Clean up the path into a usable form
-                    var serverPath = "/" + updateInfo.ServerPath.Trim(' ', '\\', '/');
+                    _allNodes = _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size);
 
-                    var remote = await _client.GetObjectInfoAsync(serverPath);
-                    if (remote == null) throw new ArgumentNullException(nameof(remote));
+                    foreach (var updateInfo in updateInfos)
+                    {
+                        var remote = GetNode(updateInfo.ServerPath);
+                        if (remote == null) throw new ArgumentNullException(nameof(remote));
 
-                    var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
+                        var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
+                        allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
+                    }
                 }
             }
             return allResults;
@@ -64,10 +73,43 @@ namespace KKManager.Functions.Update
         private async Task Connect()
         {
             if (!_client.IsConnected)
+            {
                 await _client.AutoConnectAsync();
+                if (_client.ServerType == FtpServer.VsFTPd)
+                    _client.RecursiveList = true;
+            }
         }
 
-        private DateTime _latestModifiedDate = DateTime.MinValue;
+        private static DateTime GetDate(FtpListItem ftpListItem)
+        {
+            if (ftpListItem == null) throw new ArgumentNullException(nameof(ftpListItem));
+            return ftpListItem.Modified != DateTime.MinValue ? ftpListItem.Modified : ftpListItem.Created;
+        }
+
+        private FtpListItem GetNode(string path)
+        {
+            if (path == null) throw new ArgumentNullException(nameof(path));
+            return _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, path));
+        }
+
+        private IEnumerable<FtpListItem> GetSubNodes(FtpListItem remoteDir)
+        {
+            if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
+            if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
+
+            var remoteDirName = PathTools.SanitizeFileName(remoteDir.FullName);
+            var remoteDirDepth = remoteDirName.Count(c => c == '/' || c == '\\');
+
+            return _allNodes.Where(
+                item =>
+                {
+                    if (item == remoteDir) return false;
+                    var itemFilename = PathTools.SanitizeFileName(item.FullName);
+                    // Make sure it's inside the directory and not inside one of the subdirectories
+                    return itemFilename.StartsWith(remoteDirName, StringComparison.OrdinalIgnoreCase) &&
+                           itemFilename.Count(c => c == '/' || c == '\\') == remoteDirDepth;
+                });
+        }
 
         private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir, bool recursive, bool removeNotExisting, CancellationToken cancellationToken)
         {
@@ -79,7 +121,7 @@ namespace KKManager.Functions.Update
             if (localDir.Exists)
                 localContents.AddRange(localDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly));
 
-            foreach (var remoteItem in await _client.GetListingAsync(remoteDir.FullName, FtpListOption.Size | FtpListOption.DerefLinks, cancellationToken))
+            foreach (var remoteItem in GetSubNodes(remoteDir))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -87,7 +129,7 @@ namespace KKManager.Functions.Update
                 {
                     if (recursive)
                     {
-                        var localItem = localContents.OfType<DirectoryInfo>().FirstOrDefault(x => String.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
+                        var localItem = localContents.OfType<DirectoryInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                         if (localItem == null)
                             localItem = new DirectoryInfo(Path.Combine(localDir.FullName, remoteItem.Name));
                         else
@@ -101,7 +143,7 @@ namespace KKManager.Functions.Update
                     var itemDate = GetDate(remoteItem);
                     if (itemDate > _latestModifiedDate) _latestModifiedDate = itemDate;
 
-                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => String.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
+                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                     if (localFile == null)
                         localFile = new FileInfo(Path.Combine(localDir.FullName, remoteItem.Name));
                     else
@@ -144,7 +186,8 @@ namespace KKManager.Functions.Update
         {
             await Connect();
 
-            await _client.DownloadFileAsync(item.TargetPath.FullName, item.SourceItem.FullName,
+            await _client.DownloadFileAsync(
+                item.TargetPath.FullName, item.SourceItem.FullName,
                 FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
                 cancellationToken);
@@ -172,11 +215,6 @@ namespace KKManager.Functions.Update
             {
                 await _source.UpdateItem(this, progressCallback, cancellationToken);
             }
-        }
-
-        private static DateTime GetDate(FtpListItem ftpListItem)
-        {
-            return ftpListItem.Modified == DateTime.MinValue ? ftpListItem.Created : ftpListItem.Modified;
         }
     }
 }
