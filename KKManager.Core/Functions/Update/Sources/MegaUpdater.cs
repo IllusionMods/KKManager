@@ -81,6 +81,7 @@ namespace KKManager.Functions.Update
 
             var subNodes = GetSubNodes(root).ToList();
             var updateManifest = subNodes.FirstOrDefault(x => x.Type == NodeType.File && x.Name == UpdateInfo.UpdateFileName);
+            if (updateManifest == null) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: mega");
 
             var result = await _client.DownloadAsync(updateManifest, null, cancellationToken);
 
@@ -93,7 +94,7 @@ namespace KKManager.Functions.Update
                 {
                     updateNode = GetSubNodes(updateNode).FirstOrDefault(node => node.Type == NodeType.Directory && string.Equals(node.Name, pathPart, StringComparison.OrdinalIgnoreCase));
                     if (updateNode == null)
-                        throw new ArgumentNullException(nameof(updateNode));
+                        throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: mega");
                 }
 
                 var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);

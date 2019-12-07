@@ -47,7 +47,7 @@ namespace KKManager.Functions.Update
             using (var str = new MemoryStream())
             {
                 var b = await _client.DownloadAsync(str, UpdateInfo.UpdateFileName, 0, null, cancellationToken);
-                if (!b) throw new FileNotFoundException("Failed to get the update list");
+                if (!b) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: {_client.Host}");
 
                 str.Seek(0, SeekOrigin.Begin);
                 var updateInfos = UpdateInfo.ParseUpdateManifest(str, _client.Host, 1).ToList();
@@ -59,7 +59,7 @@ namespace KKManager.Functions.Update
                     foreach (var updateInfo in updateInfos)
                     {
                         var remote = GetNode(updateInfo.ServerPath);
-                        if (remote == null) throw new ArgumentNullException(nameof(remote));
+                        if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_client.Host}");
 
                         var results = await ProcessDirectory(remote, updateInfo.ClientPath, updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, cancellationToken);
 
