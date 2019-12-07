@@ -17,9 +17,9 @@ namespace StandaloneUpdater
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += (sender, arg) => Console.WriteLine("UNHANDLED EXCEPTION: " + arg.ExceptionObject);
             AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
 
             using (LogWriter.StartLogging())
@@ -27,13 +27,11 @@ namespace StandaloneUpdater
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var args = Environment.GetCommandLineArgs();
-
                 var isSilent = args.Any(s => string.Equals(s, "-silent", StringComparison.OrdinalIgnoreCase));
 
                 args = args.Where(x => !x.StartsWith("-")).ToArray();
 
-                if (args.Length < 3)
+                if (args.Length < 2)
                 {
                     MessageBox.Show("Not enough arguments - the following arguments are required in this order:\nPath to game root directory\nOne or more links to update sources\n\nYou can also add -silent argument to not show the mod selection screen.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -41,19 +39,19 @@ namespace StandaloneUpdater
 
                 try
                 {
-                    var gameDir = new DirectoryInfo(args[1]);
+                    var gameDir = new DirectoryInfo(args[0]);
                     if (!gameDir.Exists)
                         throw new IOException("Directory doesn't exist");
                     InstallDirectoryHelper.KoikatuDirectory = gameDir;
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Error opening game directory: {args[1]}\n\n{e}", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error opening game directory: {args[0]}\n\n{e}", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Console.WriteLine(e);
                     return;
                 }
 
-                var updateSources = args.Skip(2).Select(x =>
+                var updateSources = args.Skip(1).Select(x =>
                 {
                     try
                     {
