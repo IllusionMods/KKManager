@@ -30,7 +30,7 @@ namespace KKManager.Functions.Update
         /// <summary>
         /// Should the mod be always selected to be installed by default.
         /// </summary>
-        public bool AlwaysInstall { get; private set; }
+        public InstallByDefaultMode InstallByDefault { get; private set; }
         /// <summary>
         /// How the file versions are compared to decide if they should be updated.
         /// </summary>
@@ -68,8 +68,8 @@ namespace KKManager.Functions.Update
 
                 if (!bool.TryParse(updateInfoElement.Element("Recursive")?.Value, out var recursive)) recursive = false;
                 if (!bool.TryParse(updateInfoElement.Element("RemoveExtraClientFiles")?.Value, out var removeExtras)) removeExtras = false;
-                if (!bool.TryParse(updateInfoElement.Element("AlwaysInstall")?.Value, out var alwaysInstall)) alwaysInstall = false;
 
+                if (!Enum.TryParse<InstallByDefaultMode>(updateInfoElement.Element("InstallByDefault")?.Value, true, out var installByDefault)) installByDefault = InstallByDefaultMode.Never;
                 if (!Enum.TryParse<VersioningMode>(updateInfoElement.Element("VersioningMode")?.Value, true, out var versioningMode)) versioningMode = VersioningMode.Size;
 
                 yield return new UpdateInfo
@@ -80,7 +80,7 @@ namespace KKManager.Functions.Update
                     RemoveExtraClientFiles = removeExtras,
                     Name = name,
                     Guid = guid,
-                    AlwaysInstall = alwaysInstall,
+                    InstallByDefault = installByDefault,
                     Origin = origin,
                     SourcePriority = priority,
                     Versioning = versioningMode
@@ -103,13 +103,35 @@ namespace KKManager.Functions.Update
         /// </summary>
         public bool IsEnabledByDefault()
         {
-            return AlwaysInstall || ClientPath.Exists;
+            return InstallByDefault == InstallByDefaultMode.Always || InstallByDefault == InstallByDefaultMode.IfExists && ClientPath.Exists;
         }
 
         public enum VersioningMode
         {
+            /// <summary>
+            /// Update if file sizes differ, or if local file doesn't exist.
+            /// </summary>
             Size,
+            /// <summary>
+            /// Update if remote file modify/create date is newer than the local one, or if local file doesn't exist.
+            /// </summary>
             Date
+        }
+
+        public enum InstallByDefaultMode
+        {
+            /// <summary>
+            /// Never install by default, user has to select every time
+            /// </summary>
+            Never,
+            /// <summary>
+            /// Always select to install by default
+            /// </summary>
+            Always,
+            /// <summary>
+            /// Only select to install by default if the mod's local install directory already exists
+            /// </summary>
+            IfExists,
         }
     }
 }
