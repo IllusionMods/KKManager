@@ -104,13 +104,19 @@ namespace KKManager.Windows
                     labelProgress.Text = (index + 1) + " / " + allItems.Count;
                     SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
 
-                    await UpdateSingleItem(task);
+                    if (await UpdateSingleItem(task))
+                        _completedSize += task.First().Item2.ItemSize;
 
-                    _completedSize += task.First().Item2.ItemSize;
                     progressBar1.Value = index + 1;
                 }
 
-                var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks!";
+                var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks.";
+                if (_failedItems.Any())
+                {
+                    s += $"\n\nFailed to update {_failedItems.Count} files because some of the sources raised errors.";
+                    if (_failedExceptions.Any())
+                        s += " Reason(s) for failing:\n" + string.Join("\n", _failedExceptions.Select(x => x.Message).Distinct());
+                }
                 SetStatus(s, true, true);
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -139,8 +145,12 @@ namespace KKManager.Windows
                 button1.Text = "OK";
             }
         }
-        private List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();
-        private async Task UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, IUpdateItem>> task)
+
+        private readonly List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();
+        private readonly List<IGrouping<string, Tuple<UpdateInfo, IUpdateItem>>> _failedItems = new List<IGrouping<string, Tuple<UpdateInfo, IUpdateItem>>>();
+        private readonly List<Exception> _failedExceptions = new List<Exception>();
+
+        private async Task<bool> UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, IUpdateItem>> task)
         {
             var firstItem = task.First().Item2;
             var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {firstItem.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
@@ -155,28 +165,47 @@ namespace KKManager.Windows
                 firstItem.TargetPath.Delete();
             }
 
-            Exception ex = null;
             var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.SourcePriority).ToList();
-            if (sourcesToAttempt.Count == 0) throw new InvalidOperationException("There are no working sources to download from. Check the log for reasons why the sources failed.");
+            if (sourcesToAttempt.Count == 0)
+            {
+                Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
+
+                _failedItems.Add(task);
+                return false;
+            }
+
+            Exception ex = null;
             foreach (var source in sourcesToAttempt)
             {
                 try
                 {
                     SetStatus($"Attempting download from source {source.Item1.Origin}", false, true);
+
                     await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+
                     ex = null;
+                    break;
                 }
                 catch (Exception e)
                 {
-                    ex = e;
                     Console.WriteLine($"Marking source {source.Item1.Origin} as broken because of exception: {e}");
+
+                    ex = e;
                     _badUpdateSources.Add(source.Item1);
                 }
             }
-            // Check if all sources failed, crash in that case
-            if (ex != null) throw ex;
+            // Check if all sources failed
+            if (ex != null)
+            {
+                Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
+
+                _failedItems.Add(task);
+                _failedExceptions.Add(ex);
+                return false;
+            }
 
             SetStatus($"Download OK {firstItem.ItemSize}", false, true);
+            return true;
         }
 
         private void SetStatus(string status, bool writeToUi = true, bool writeToLog = false)
