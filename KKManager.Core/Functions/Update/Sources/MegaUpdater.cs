@@ -118,7 +118,7 @@ namespace KKManager.Functions.Update
                 case UpdateInfo.VersioningMode.Size:
                     return (item, info) => item.Size == info.Length;
                 case UpdateInfo.VersioningMode.Date:
-                    return (item, info) => (item.ModificationDate ?? item.CreationDate) > info.LastWriteTimeUtc;
+                    return (item, info) => (item.ModificationDate ?? item.CreationDate) <= info.LastWriteTimeUtc;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
