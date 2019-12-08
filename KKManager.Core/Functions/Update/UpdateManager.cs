@@ -42,7 +42,16 @@ namespace KKManager.Functions.Update
                 3, TimeSpan.FromSeconds(3), cancellationToken)).ToList();
 
             foreach (var task in concurrentTasks)
-                await task;
+            {
+                try
+                {
+                    await task;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("[ERROR] Unexpected error while collecting updates from one of the sources, skipping the source. " + e);
+                }
+            }
 
             cancellationToken.ThrowIfCancellationRequested();
 
