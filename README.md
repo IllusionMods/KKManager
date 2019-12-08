@@ -16,8 +16,8 @@ While the app is already useful, it's still in beta. Expect some bugs and lackin
 If there are any mod updates available, the update menu button on top will turn green after a while. You can click it without waiting to check for updates immediately.
 
 ## Screenshots
-![preview2](https://user-images.githubusercontent.com/39247311/53917964-0f5b6300-4066-11e9-81e0-10aa6c03e6df.PNG)
-![preview](https://user-images.githubusercontent.com/39247311/53917965-0f5b6300-4066-11e9-804e-66c08eeb4b0d.PNG)
+![kkmanager cards preview](https://user-images.githubusercontent.com/39247311/70395199-ae99f600-19fc-11ea-99b2-ee31a9081468.PNG)
+![kkmanager plugins preview](https://user-images.githubusercontent.com/39247311/70395200-af328c80-19fc-11ea-90b8-b2baed0b3521.PNG)
 ![kkmanager updater preview](https://user-images.githubusercontent.com/39247311/70381094-dded2c00-1944-11ea-9502-db5ced9dd3e0.PNG)
 
 You can support development of this tool through the [patreon page](https://www.patreon.com/ManlyMarco).
