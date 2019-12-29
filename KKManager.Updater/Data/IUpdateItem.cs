@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Data
 {
     public interface IUpdateItem
     {

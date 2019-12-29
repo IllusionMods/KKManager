@@ -1,4 +1,4 @@
-namespace KKManager.Windows
+namespace KKManager.Updater.Windows
 {
 	partial class ModUpdateSelectDialog
 	{

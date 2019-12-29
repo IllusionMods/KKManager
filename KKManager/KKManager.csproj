@@ -45,9 +45,6 @@
     <Reference Include="DotNetZip, Version=1.13.4.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.13.4\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
-    <Reference Include="MegaApiClient, Version=1.7.1.495, Culture=neutral, PublicKeyToken=0480d311efbeb4e2, processorArchitecture=MSIL">
-      <HintPath>..\packages\MegaApiClient.1.7.1\lib\net46\MegaApiClient.dll</HintPath>
-    </Reference>
     <Reference Include="MessagePack, Version=1.8.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>..\packages\MessagePack.1.8.80\lib\net45\MessagePack.dll</HintPath>
     </Reference>
@@ -237,6 +234,10 @@
     <ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj">
       <Project>{09fc4ef5-9694-4961-a136-dcfd8b5f1368}</Project>
       <Name>KKManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KKManager.Updater\KKManager.Updater.csproj">
+      <Project>{b64c974d-9687-4e69-aeea-3f04f769e556}</Project>
+      <Name>KKManager.Updater</Name>
     </ProjectReference>
     <ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj">
       <Project>{495a9ea6-b13c-48f9-a2e2-6667cecebfde}</Project>

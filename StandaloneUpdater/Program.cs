@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KKManager.Functions;
-using KKManager.Functions.Update;
+using KKManager.Updater;
+using KKManager.Updater.Data;
+using KKManager.Updater.Windows;
 using KKManager.Util;
-using KKManager.Windows;
 
 namespace StandaloneUpdater
 {

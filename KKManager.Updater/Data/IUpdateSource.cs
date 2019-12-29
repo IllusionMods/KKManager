@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace KKManager.Functions.Update {
+namespace KKManager.Updater.Data
+{
     public interface IUpdateSource : IDisposable
     {
         //bool IsValidUri(Uri source);

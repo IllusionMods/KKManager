@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security;
 using System.Xml.Linq;
+using KKManager.Functions;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Data
 {
     public sealed class UpdateInfo
     {

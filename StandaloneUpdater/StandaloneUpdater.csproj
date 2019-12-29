@@ -60,6 +60,10 @@
       <Project>{09fc4ef5-9694-4961-a136-dcfd8b5f1368}</Project>
       <Name>KKManager.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KKManager.Updater\KKManager.Updater.csproj">
+      <Project>{b64c974d-9687-4e69-aeea-3f04f769e556}</Project>
+      <Name>KKManager.Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

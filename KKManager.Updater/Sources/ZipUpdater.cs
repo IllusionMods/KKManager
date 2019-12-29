@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using KKManager.Updater.Data;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Sources
 {
     public class ZipUpdater : IUpdateSource
     {

@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Updater.Data;
+using KKManager.Updater.Sources;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater
 {
     public static class UpdateSourceManager
     {

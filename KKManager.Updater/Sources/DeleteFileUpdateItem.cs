@@ -2,9 +2,10 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Updater.Data;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Sources
 {
     internal sealed class DeleteFileUpdateItem : IUpdateItem
     {

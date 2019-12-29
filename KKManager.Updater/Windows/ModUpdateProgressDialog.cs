@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
-using KKManager.Functions.Update;
+using KKManager.Updater.Data;
 using KKManager.Util;
 
-namespace KKManager.Windows
+namespace KKManager.Updater.Windows
 {
     public partial class ModUpdateProgressDialog : Form
     {

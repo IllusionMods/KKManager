@@ -6,9 +6,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
+using KKManager.Updater.Data;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Sources
 {
     public class FtpUpdater : IUpdateSource
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using KKManager.Util;
 
-namespace KKManager.Functions.Update
+namespace KKManager.Updater.Data
 {
     public sealed class UpdateTask
     {

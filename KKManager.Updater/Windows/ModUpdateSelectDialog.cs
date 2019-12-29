@@ -5,10 +5,11 @@ using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Functions;
-using KKManager.Functions.Update;
+using KKManager.Updater.Data;
+using KKManager.Updater.Sources;
 using KKManager.Util;
 
-namespace KKManager.Windows
+namespace KKManager.Updater.Windows
 {
     public partial class ModUpdateSelectDialog : Form
     {
