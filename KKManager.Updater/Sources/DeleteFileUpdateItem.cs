@@ -23,5 +23,6 @@ namespace KKManager.Updater.Sources
         public FileSystemInfo TargetPath { get; }
         public FileSize ItemSize => FileSize.Empty;
         public DateTime? ModifiedTime => null;
+        public bool UpToDate { get; }
     }
 }

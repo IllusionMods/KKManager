@@ -102,7 +102,7 @@ namespace KKManager.Updater.Sources
 
                 var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
 
-                var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPath,
+                var updateItems = ProcessDirectory(updateNode, updateInfo.ClientPathInfo,
                     updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
                     cancellationToken);
 
@@ -231,6 +231,7 @@ namespace KKManager.Updater.Sources
             public INode SourceItem { get; }
             public FileSize ItemSize { get; }
             public DateTime? ModifiedTime { get; }
+            public bool UpToDate { get; }
             public FileSystemInfo TargetPath { get; }
 
             public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)

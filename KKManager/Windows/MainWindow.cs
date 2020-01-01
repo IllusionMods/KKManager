@@ -18,6 +18,7 @@ using KKManager.Util;
 using KKManager.Windows.Content;
 using KKManager.Windows.ToolWindows.Properties;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows
@@ -93,17 +94,22 @@ namespace KKManager.Windows
 
         private static string ShowInstallDirectoryDialog(string currentPath)
         {
-            using (var fb = new FolderBrowserDialog())
+            using (var fb = new CommonOpenFileDialog
             {
-                fb.RootFolder = Environment.SpecialFolder.MyComputer;
-                fb.SelectedPath = currentPath ?? "";
-                fb.ShowNewFolderButton = false;
-                fb.Description = "Select the install directory of the game.";
-
+                IsFolderPicker = true,
+                InitialDirectory = currentPath,
+                AllowNonFileSystemItems = false,
+                AddToMostRecentlyUsedList = false,
+                EnsurePathExists = true,
+                EnsureFileExists = true,
+                Multiselect = false,
+                Title = "Select the install directory of the game."
+            })
+            {
                 retryFolderSelect:
-                if (fb.ShowDialog() == DialogResult.OK)
+                if (fb.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    var path = fb.SelectedPath;
+                    var path = fb.FileName;
                     if (!InstallDirectoryHelper.IsValidGamePath(path))
                     {
                         if (MessageBox.Show(
@@ -413,7 +419,8 @@ namespace KKManager.Windows
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
-            CheckForUpdates();
+            // todo make more efficient?
+            //CheckForUpdates();
         }
 
         private async void CheckForUpdates()
@@ -448,6 +455,14 @@ namespace KKManager.Windows
             Settings.Default.GamePath = folder;
             Settings.Default.Save();
             MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void generateContentsOfUpdatexmlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var w = new UpdateInfoEditorWindow())
+            {
+                w.ShowDialog(this);
+            }
         }
     }
 }

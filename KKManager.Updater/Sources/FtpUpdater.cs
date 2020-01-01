@@ -53,6 +53,16 @@ namespace KKManager.Updater.Sources
                 str.Seek(0, SeekOrigin.Begin);
                 var updateInfos = UpdateInfo.ParseUpdateManifest(str, _client.Host, 1).ToList();
 
+                updateInfos.RemoveAll(info =>
+                {
+                    if (!info.CheckConditions())
+                    {
+                        Console.WriteLine("Skipping " + info.GUID + " because of conditions");
+                        return true;
+                    }
+                    return false;
+                });
+
                 if (updateInfos.Any())
                 {
                     _allNodes = _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size);
@@ -64,20 +74,45 @@ namespace KKManager.Updater.Sources
                         var remote = GetNode(updateInfo.ServerPath);
                         if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_client.Host}");
 
-                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo, remote);
 
-                        var results = await ProcessDirectory(remote, updateInfo.ClientPath,
+                        var results = await ProcessDirectory(remote, updateInfo.ClientPathInfo,
                             updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
                             cancellationToken);
 
                         allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
+                    }
+
+                    // If a task is expanded by other tasks, remove the items that other tasks expand from it
+                    foreach (var resultTask in allResults)
+                    {
+                        if (!string.IsNullOrEmpty(resultTask.Info.ExpandsGUID))
+                        {
+                            Console.WriteLine($"Expanding task {resultTask.Info.ExpandsGUID} with task {resultTask.Info.GUID}");
+                            ApplyExtendedItems(resultTask.Info.ExpandsGUID, resultTask.Items, allResults);
+                        }
                     }
                 }
             }
             return allResults;
         }
 
-        private static Func<FtpListItem, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo)
+        private static void ApplyExtendedItems(string targetGuid, List<IUpdateItem> itemsToReplace, List<UpdateTask> allResults)
+        {
+            foreach (var targetTask in allResults.Where(x => x.Info.GUID == targetGuid))
+            {
+                targetTask.Items.RemoveAll(x => itemsToReplace.Any(y => PathTools.PathsEqual(x.TargetPath, y.TargetPath)));
+
+                if (!string.IsNullOrEmpty(targetTask.Info.ExpandsGUID))
+                {
+                    // Walk down the expanding stack
+                    Console.WriteLine($"Also expanding task {targetTask.Info.ExpandsGUID} because it is expanded by {targetTask.Info.GUID}");
+                    ApplyExtendedItems(targetTask.Info.ExpandsGUID, itemsToReplace, allResults);
+                }
+            }
+        }
+
+        private static Func<FtpListItem, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo, FtpListItem updateRoot)
         {
             switch (updateInfo.Versioning)
             {
@@ -85,6 +120,24 @@ namespace KKManager.Updater.Sources
                     return (item, info) => item.Size == info.Length;
                 case UpdateInfo.VersioningMode.Date:
                     return (item, info) => GetDate(item) <= info.LastWriteTimeUtc;
+                case UpdateInfo.VersioningMode.Contents:
+                    if (!updateInfo.ContentHashes.Any())
+                    {
+                        Console.WriteLine("No hashes found in " + updateInfo.GUID + " while VersioningMode was set to Contents, falling back to Size");
+                        goto case UpdateInfo.VersioningMode.Size;
+                    }
+
+                    var rootLength = updateRoot.FullName.Length;
+                    return (item, info) =>
+                    {
+                        var match = updateInfo.ContentHashes.FirstOrDefault(x => PathTools.PathsEqual(x.RelativeFileName, item.FullName.Substring(rootLength)));
+                        if (match == null || match.Hash == 0)
+                        {
+                            Console.WriteLine($"No hash found on remote for file {item.FullName.Substring(rootLength)} - comparing size instead");
+                            return item.Size == info.Length;
+                        }
+                        return FileContentsCalculator.GetFileHash(info) == match.Hash;
+                    };
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -172,8 +225,7 @@ namespace KKManager.Updater.Sources
                         localContents.Remove(localFile);
 
                     var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
-                    if (!localIsUpToDate)
-                        results.Add(new FtpUpdateItem(remoteItem, this, localFile));
+                    results.Add(new FtpUpdateItem(remoteItem, this, localFile, localIsUpToDate));
                 }
             }
 
@@ -201,8 +253,9 @@ namespace KKManager.Updater.Sources
         {
             private readonly FtpUpdater _source;
 
-            public FtpUpdateItem(FtpListItem item, FtpUpdater source, FileSystemInfo targetPath)
+            public FtpUpdateItem(FtpListItem item, FtpUpdater source, FileSystemInfo targetPath, bool upToDate)
             {
+                UpToDate = upToDate;
                 TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
                 SourceItem = item ?? throw new ArgumentNullException(nameof(item));
                 _source = source ?? throw new ArgumentNullException(nameof(source));
@@ -214,6 +267,7 @@ namespace KKManager.Updater.Sources
             public FileSize ItemSize { get; }
             public DateTime? ModifiedTime { get; }
             public FileSystemInfo TargetPath { get; }
+            public bool UpToDate { get; }
 
             public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
             {

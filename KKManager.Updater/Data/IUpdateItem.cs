@@ -12,5 +12,6 @@ namespace KKManager.Updater.Data
         FileSystemInfo TargetPath { get; }
         FileSize ItemSize { get; }
         DateTime? ModifiedTime { get; }
+        bool UpToDate { get; }
     }
 }

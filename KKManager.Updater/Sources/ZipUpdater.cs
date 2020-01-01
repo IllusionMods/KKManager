@@ -45,7 +45,7 @@ namespace KKManager.Updater.Sources
 
                     var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
 
-                    var results = await ProcessDirectory(remote, updateInfo.ClientPath,
+                    var results = await ProcessDirectory(remote, updateInfo.ClientPathInfo,
                         updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
                         cancellationToken);
 
@@ -196,6 +196,7 @@ namespace KKManager.Updater.Sources
             public ZipEntry SourceItem { get; }
             public FileSize ItemSize { get; }
             public DateTime? ModifiedTime { get; }
+            public bool UpToDate { get; }
             public FileSystemInfo TargetPath { get; }
 
             public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)

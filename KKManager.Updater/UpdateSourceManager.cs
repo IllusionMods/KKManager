@@ -39,7 +39,10 @@ namespace KKManager.Updater
                 async () =>
                 {
                     foreach (var task in await source.GetUpdateItems(cancellationToken))
+                    {
+                        task.Items.RemoveAll(x => x.UpToDate);
                         results.Add(task);
+                    }
                 },
                 3, TimeSpan.FromSeconds(3), cancellationToken)).ToList();
 
@@ -58,7 +61,7 @@ namespace KKManager.Updater
             cancellationToken.ThrowIfCancellationRequested();
 
             var filteredTasks = new List<UpdateTask>();
-            foreach (var modGroup in results.GroupBy(x => x.Info.Guid))
+            foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
             {
                 var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
                 if (ordered.Count > 1)
