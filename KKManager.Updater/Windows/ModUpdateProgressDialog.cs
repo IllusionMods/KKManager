@@ -14,6 +14,7 @@ namespace KKManager.Updater.Windows
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
         private IUpdateSource[] _updaters;
+        private string[] _autoInstallGuids;
         private FileSize _overallSize;
         private FileSize _completedSize;
 
@@ -22,11 +23,9 @@ namespace KKManager.Updater.Windows
             InitializeComponent();
         }
 
-        public bool Silent { get; set; }
-
-        public static void StartUpdateDialog(Form owner, params IUpdateSource[] updaters)
+        public static void StartUpdateDialog(Form owner, IUpdateSource[] updaters, string[] autoInstallGuids = null)
         {
-            using (var w = CreateUpdateDialog(updaters))
+            using (var w = CreateUpdateDialog(updaters, autoInstallGuids))
             {
                 w.Icon = owner.Icon;
                 w.StartPosition = FormStartPosition.CenterParent;
@@ -34,12 +33,13 @@ namespace KKManager.Updater.Windows
             }
         }
 
-        public static ModUpdateProgressDialog CreateUpdateDialog(params IUpdateSource[] updaters)
+        public static ModUpdateProgressDialog CreateUpdateDialog(IUpdateSource[] updaters, string[] autoInstallGuids = null)
         {
             if (updaters == null || updaters.Length == 0) throw new ArgumentException("Need at least one update source.", nameof(updaters));
 
             var w = new ModUpdateProgressDialog();
             w._updaters = updaters;
+            w._autoInstallGuids = autoInstallGuids;
             return w;
         }
 
@@ -55,7 +55,7 @@ namespace KKManager.Updater.Windows
                 labelPercent.Text = "";
 
                 SetStatus("Searching for mod updates...");
-                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters);
+                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -69,15 +69,15 @@ namespace KKManager.Updater.Windows
                     return;
                 }
 
-                if (!Silent)
+                if (_autoInstallGuids == null || _autoInstallGuids.Length == 0)
                 {
                     SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
                     updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
                 }
                 else
                 {
-                    var skipped = updateTasks.RemoveAll(x => x.UpToDate || !x.EnableByDefault);
-                    SetStatus($"Found {updateTasks.Count} updates in silent mode, skipped {skipped}.", true, true);
+                    var skipped = updateTasks.RemoveAll(x => x.UpToDate);
+                    SetStatus($"Found {updateTasks.Count} update tasks in silent mode, {skipped} are already up-to-date.", true, true);
                 }
 
                 if (updateTasks == null)
@@ -143,6 +143,8 @@ namespace KKManager.Updater.Windows
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
                 button1.Text = "OK";
+
+                if (_autoInstallGuids == null || _autoInstallGuids.Length == 0) Close();
             }
         }
 

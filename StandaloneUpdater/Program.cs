@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,7 +14,8 @@ namespace StandaloneUpdater
 {
     internal static class Program
     {
-        public static string ProgramLocation => Path.GetDirectoryName(typeof(Program).Assembly.Location);
+        private static readonly string _exeLocation = typeof(Program).Assembly.Location;
+        private static readonly string _exeDirectory = Path.GetDirectoryName(_exeLocation);
 
         /// <summary>
         /// The main entry point for the application.
@@ -29,13 +31,17 @@ namespace StandaloneUpdater
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var isSilent = args.Any(s => string.Equals(s, "-silent", StringComparison.OrdinalIgnoreCase));
+                const string guidValueName = "-guid:";
+                var silentInstallGuids = args.Where(x => x.StartsWith(guidValueName)).Select(x => x.Substring(guidValueName.Length).Trim(' ', '"')).ToArray();
 
                 args = args.Where(x => !x.StartsWith("-")).ToArray();
 
                 if (args.Length == 0)
                 {
-                    MessageBox.Show("Not enough arguments - the following arguments are required in this order:\nPath to game root directory\nOne or more links to update sources\n\nYou can also add -silent argument to not show the mod selection screen. If no update source links are provided then UpdateSources file is used.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Not enough arguments - the following arguments are supported:\n" +
+                                    "Path to game root directory. This is mandatory and has to be the 1st argument.\n" +
+                                    "One or more links to update sources. If no update source links are provided then UpdateSources file is used.\n\n" +
+                                    "You can also add -guid:UPDATE_GUID arguments to not show the mod selection screen, and instead automatically install mods with the specified GUIDs.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -58,8 +64,8 @@ namespace StandaloneUpdater
                 if (updateSources == null || !updateSources.Any())
                     return;
 
-                var window = ModUpdateProgressDialog.CreateUpdateDialog(updateSources);
-                window.Silent = isSilent;
+                var window = ModUpdateProgressDialog.CreateUpdateDialog(updateSources, silentInstallGuids);
+                window.Icon = Icon.ExtractAssociatedIcon(typeof(Program).Assembly.Location);
                 Application.Run(window);
             }
         }
@@ -68,7 +74,7 @@ namespace StandaloneUpdater
         {
             if (sourceArgs.Length == 0)
             {
-                var updateSources = UpdateSourceManager.GetUpdateSources(ProgramLocation);
+                var updateSources = UpdateSourceManager.GetUpdateSources(_exeDirectory);
                 if (updateSources == null || updateSources.Length == 0)
                     MessageBox.Show("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\nAdd one or more links to update sources as arguments or edit the UpdateSources file.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return updateSources;

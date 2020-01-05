@@ -30,7 +30,7 @@ namespace KKManager.Updater
             }
         }
 
-        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, params IUpdateSource[] updateSources)
+        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, IUpdateSource[] updateSources, string[] filterByGuids = null)
         {
             var results = new ConcurrentBag<UpdateTask>();
 
@@ -40,6 +40,10 @@ namespace KKManager.Updater
                 {
                     foreach (var task in await source.GetUpdateItems(cancellationToken))
                     {
+                        // todo move further inside or decouple getting update tasks and actually processing them
+                        if(filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
+                            continue;
+
                         task.Items.RemoveAll(x => x.UpToDate);
                         results.Add(task);
                     }
