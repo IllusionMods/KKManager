@@ -40,6 +40,8 @@ namespace KKManager.SB3UGS
 
                     extr.ExtractAll(_directoryName.FullName, true, true);
 
+                    _directoryName.Refresh();
+                    _pluginDirName.Refresh();
                     if (!_directoryName.Exists || !_pluginDirName.Exists)
                         throw new IOException("Archive " + target.Name + " did not contain the correct files or it failed to extract");
                 }

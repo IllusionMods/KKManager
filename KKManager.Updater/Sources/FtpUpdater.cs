@@ -53,6 +53,20 @@ namespace KKManager.Updater.Sources
                 str.Seek(0, SeekOrigin.Begin);
                 var updateInfos = UpdateInfo.ParseUpdateManifest(str, _client.Host, 1).ToList();
 
+                str.Seek(0, SeekOrigin.Begin);
+                try
+                {
+                    if (await _client.DownloadAsync(str, "Updates1.xml", 0, null, cancellationToken))
+                    {
+                        str.Seek(0, SeekOrigin.Begin);
+                        updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, _client.Host, 1));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+
                 updateInfos.RemoveAll(info =>
                 {
                     if (!info.CheckConditions())

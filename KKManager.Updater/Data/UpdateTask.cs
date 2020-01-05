@@ -13,12 +13,13 @@ namespace KKManager.Updater.Data
             TaskName = taskName ?? throw new ArgumentNullException(nameof(taskName));
             Items = items ?? throw new ArgumentNullException(nameof(items));
             Info = info ?? throw new ArgumentNullException(nameof(info));
-            TotalUpdateSize = FileSize.SumFileSizes(Items.Select(x => x.ItemSize));
         }
 
         public string TaskName { get; }
         public bool EnableByDefault => Info.IsEnabledByDefault();
-        public FileSize TotalUpdateSize { get; }
+
+        public FileSize TotalUpdateSize => FileSize.SumFileSizes(Items.Where(x => !x.UpToDate).Select(x => x.ItemSize));
+
         public bool UpToDate => Items.Count == 0;
         public DateTime? ModifiedTime { get; }
         public UpdateInfo Info { get; }

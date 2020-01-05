@@ -236,6 +236,8 @@ namespace KKManager.Updater.Data
             [XmlElement("UpdateInfo")]
             [TypeConverter(typeof(ListConverter))]
             public List<UpdateInfo> UpdateInfos { get; set; } = new List<UpdateInfo>();
+
+            public int Version { get; set; } = 1;
         }
 
         public enum InstallByDefaultMode

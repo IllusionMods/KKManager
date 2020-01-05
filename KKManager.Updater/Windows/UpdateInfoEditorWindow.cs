@@ -111,13 +111,10 @@ namespace KKManager.Updater.Windows
                     {
                         var directory = new DirectoryInfo(fb.FileName);
                         var fileHashes = FileContentsCalculator.GetFileHashes(directory, true);
-                        var results = fileHashes.Select(x => new UpdateInfo.ContentHash { RelativeFileName = x.Key.FullName.Substring(directory.FullName.Length), Hash = x.Value }).ToList();
+                        var results = fileHashes.Select(x => new UpdateInfo.ContentHash { RelativeFileName = x.Key.FullName.Substring(directory.FullName.Length).Replace('\\', '/').TrimStart('/'), Hash = x.Value }).ToList();
                         uinfo.ContentHashes = results;
                         propertyGrid1.Refresh();
                         MessageBox.Show("File hashes have been added to currently opened object", "Generate file hashes", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        //var serialized = UpdateInfo.SerializeHashesToXml(results);
-                        //Clipboard.SetText(serialized, TextDataFormat.Text);
-                        //MessageBox.Show("Serialized file hashes have been copied to clipboard. Place them inside ContentHashes XML element of UpdateInfo\n\n" + string.Join("\n", results.Take(5).Select(x => x.Key + " - " + x.Value)), "Generate file hashes", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
