@@ -94,13 +94,20 @@ namespace KKManager.Windows.Content
 
         public static CardWindow TryLoadFromPersistString(string ps)
         {
-            var parts = ps.Split(new[] { "|||" }, StringSplitOptions.None);
-            if (parts.Length == 2 && parts[1].Length > 0)
+            var parts = ps.Split(new[] { "|||" }, 3, StringSplitOptions.None);
+            if (parts.Length >= 2 && parts[1].Length > 0)
             {
                 if (parts[0] == typeof(CardWindow).ToString())
                 {
                     var cardWindow = new CardWindow();
                     cardWindow.OpenCardDirectory(new DirectoryInfo(parts[1]));
+
+                    if (parts.Length >= 3)
+                    {
+                        try { cardWindow.listView.RestoreState(Convert.FromBase64String(parts[2])); }
+                        catch { }
+                    }
+
                     return cardWindow;
                 }
             }
@@ -123,7 +130,7 @@ namespace KKManager.Windows.Content
 
         protected override string GetPersistString()
         {
-            return base.GetPersistString() + "|||" + _currentDirectory?.FullName;
+            return base.GetPersistString() + "|||" + _currentDirectory?.FullName + "|||" + Convert.ToBase64String(listView.SaveState());
         }
 
         private void addressBar_KeyDown(object sender, KeyEventArgs e)
