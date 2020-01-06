@@ -78,6 +78,8 @@ namespace KKManager.Updater.Windows
                         UpdateInfo.TestConstraints(info);
                     UpdateInfo.Serialize(file, CurrentUpdateInfos);
                 }
+
+                MessageBox.Show("Saved sccessfully to " + textBox1.Text, "Save file", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -123,6 +125,11 @@ namespace KKManager.Updater.Windows
                     }
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            propertyGrid1.Refresh();
         }
     }
 }
