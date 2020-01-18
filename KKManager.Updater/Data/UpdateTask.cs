@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using KKManager.Util;
 
-namespace KKManager.Updater.Data
-{
+namespace KKManager.Updater.Data {
     public sealed class UpdateTask
     {
-        public UpdateTask(string taskName, List<IUpdateItem> items, UpdateInfo info, DateTime modifiedTime)
+        public UpdateTask(string taskName, List<UpdateItem> items, UpdateInfo info, DateTime modifiedTime)
         {
             ModifiedTime = modifiedTime;
             TaskName = taskName ?? throw new ArgumentNullException(nameof(taskName));
@@ -18,23 +17,25 @@ namespace KKManager.Updater.Data
         public string TaskName { get; }
         public bool EnableByDefault => Info.IsEnabledByDefault();
 
-        public FileSize TotalUpdateSize => FileSize.SumFileSizes(Items.Where(x => !x.UpToDate).Select(x => x.ItemSize));
+        public FileSize TotalUpdateSize => FileSize.FromBytes(Items.Where(x => !x.UpToDate && x.RemoteFile != null).Sum(x => x.RemoteFile.ItemSize));
 
         public bool UpToDate => Items.Count == 0;
         public DateTime? ModifiedTime { get; }
         public UpdateInfo Info { get; }
 
-        public List<IUpdateItem> Items { get; }
+        public List<UpdateItem> Items { get; }
         public List<UpdateTask> AlternativeSources { get; } = new List<UpdateTask>();
 
-        public IGrouping<string, Tuple<UpdateInfo, IUpdateItem>>[] GetUpdateItems()
+        public IGrouping<string, Tuple<UpdateInfo, UpdateItem>>[] GetUpdateItems()
         {
             // Find identical versions of items available at other sources
-            var alternativeItems = AlternativeSources
-                .SelectMany(task => task.Items.Where(altItem => Items.Any(localItem => string.Equals(localItem.TargetPath.FullName, altItem.TargetPath.FullName, StringComparison.OrdinalIgnoreCase) && localItem.ItemSize == altItem.ItemSize))
-                .Select(item => new Tuple<UpdateInfo, IUpdateItem>(task.Info, item)));
+            var alternativeItems = AlternativeSources.SelectMany(
+                task => task.Items.Where(
+                    altItem => Items.Any(
+                        localItem => string.Equals(localItem.TargetPath.FullName, altItem.TargetPath.FullName, StringComparison.OrdinalIgnoreCase) && localItem.RemoteFile?.ItemSize == altItem.RemoteFile?.ItemSize))
+                        .Select(item => new Tuple<UpdateInfo, UpdateItem>(task.Info, item)));
 
-            return Items.Select(x => new Tuple<UpdateInfo, IUpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
+            return Items.Select(x => new Tuple<UpdateInfo, UpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
         }
     }
 }

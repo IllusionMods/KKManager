@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Management;
 using System.Security.Principal;
 using System.Windows.Forms;
 
@@ -53,8 +56,26 @@ namespace KKManager.Util
 
         public static Process FixPermissions(string path)
         {
+            // false for cancel
+            if (ProcessWaiter.ProcessWaiter.CheckForRunningProcesses(new[] {path}) == false)
+                return null;
+
             path = path.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar, ' '); 
             return SafeStartProcess(new ProcessStartInfo("cmd", $"/C echo off & cls & title Fixing permissions... & takeown /f \"{ path }\" /r /SKIPSL /d y & icacls \"{ path }\" /grant everyone:F /t /c /l & pause"), true);
+        }
+
+        /// <summary>
+        ///     Get IDs of all child processes
+        /// </summary>
+        public static IEnumerable<int> GetChildProcesses(int pid)
+        {
+            var searcher = new ManagementObjectSearcher
+                ("Select * From Win32_Process Where ParentProcessID=" + pid);
+
+            using (var moc = searcher.Get())
+            {
+                return moc.Cast<ManagementObject>().Select(mo => Convert.ToInt32(mo["ProcessID"])).ToList();
+            }
         }
     }
 }

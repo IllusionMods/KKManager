@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Updater.Data;
+using KKManager.Updater.Sources;
 using KKManager.Util;
+using KKManager.Util.ProcessWaiter;
 
 namespace KKManager.Updater.Windows
 {
     public partial class ModUpdateProgressDialog : Form
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
-        private IUpdateSource[] _updaters;
+        private UpdateSourceBase[] _updaters;
         private string[] _autoInstallGuids;
         private FileSize _overallSize;
         private FileSize _completedSize;
@@ -23,7 +25,7 @@ namespace KKManager.Updater.Windows
             InitializeComponent();
         }
 
-        public static void StartUpdateDialog(Form owner, IUpdateSource[] updaters, string[] autoInstallGuids = null)
+        public static void StartUpdateDialog(Form owner, UpdateSourceBase[] updaters, string[] autoInstallGuids = null)
         {
             using (var w = CreateUpdateDialog(updaters, autoInstallGuids))
             {
@@ -33,7 +35,7 @@ namespace KKManager.Updater.Windows
             }
         }
 
-        public static ModUpdateProgressDialog CreateUpdateDialog(IUpdateSource[] updaters, string[] autoInstallGuids = null)
+        public static ModUpdateProgressDialog CreateUpdateDialog(UpdateSourceBase[] updaters, string[] autoInstallGuids = null)
         {
             if (updaters == null || updaters.Length == 0) throw new ArgumentException("Need at least one update source.", nameof(updaters));
 
@@ -53,6 +55,10 @@ namespace KKManager.Updater.Windows
 
                 labelProgress.Text = "N/A";
                 labelPercent.Text = "";
+
+                SetStatus("Preparing...");
+                if (ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) == false)
+                    throw new OperationCanceledException();
 
                 SetStatus("Searching for mod updates...");
                 var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids);
@@ -105,7 +111,7 @@ namespace KKManager.Updater.Windows
                     SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
 
                     if (await UpdateSingleItem(task))
-                        _completedSize += task.First().Item2.ItemSize;
+                        _completedSize += task.First().Item2.GetDownloadSize();
 
                     progressBar1.Value = index + 1;
                 }
@@ -149,13 +155,14 @@ namespace KKManager.Updater.Windows
         }
 
         private readonly List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();
-        private readonly List<IGrouping<string, Tuple<UpdateInfo, IUpdateItem>>> _failedItems = new List<IGrouping<string, Tuple<UpdateInfo, IUpdateItem>>>();
+        private readonly List<IGrouping<string, Tuple<UpdateInfo, UpdateItem>>> _failedItems = new List<IGrouping<string, Tuple<UpdateInfo, UpdateItem>>>();
         private readonly List<Exception> _failedExceptions = new List<Exception>();
 
-        private async Task<bool> UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, IUpdateItem>> task)
+        private async Task<bool> UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, UpdateItem>> task)
         {
             var firstItem = task.First().Item2;
-            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {firstItem.ItemSize}.  Overall: {_completedSize} / {_overallSize}.");
+            var itemSize = firstItem.GetDownloadSize().ToString();
+            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {itemSize}.  Overall: {_completedSize} / {_overallSize}.");
 
             SetStatus($"Updating {firstItem.TargetPath.Name}");
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
@@ -206,7 +213,7 @@ namespace KKManager.Updater.Windows
                 return false;
             }
 
-            SetStatus($"Download OK {firstItem.ItemSize}", false, true);
+            SetStatus($"Download OK {itemSize}", false, true);
             return true;
         }
 

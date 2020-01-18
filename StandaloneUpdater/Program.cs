@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Updater;
-using KKManager.Updater.Data;
+using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
 using KKManager.Util;
 
@@ -70,7 +70,7 @@ namespace StandaloneUpdater
             }
         }
 
-        private static IUpdateSource[] GetUpdateSources(string[] sourceArgs)
+        private static UpdateSourceBase[] GetUpdateSources(string[] sourceArgs)
         {
             if (sourceArgs.Length == 0)
             {
@@ -80,7 +80,7 @@ namespace StandaloneUpdater
                 return updateSources;
             }
 
-            var results = new List<IUpdateSource>();
+            var results = new List<UpdateSourceBase>();
             foreach (var source in sourceArgs)
             {
                 try

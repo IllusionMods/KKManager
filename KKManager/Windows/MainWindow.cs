@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Properties;
 using KKManager.Updater;
-using KKManager.Updater.Data;
+using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
 using KKManager.Util;
 using KKManager.Windows.Content;
@@ -25,7 +25,7 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private readonly IUpdateSource[] _updateSources;
+        private readonly UpdateSourceBase[] _updateSources;
 
         public MainWindow()
         {
@@ -417,14 +417,13 @@ namespace KKManager.Windows
 
         private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
 
-        private void MainWindow_Shown(object sender, EventArgs e)
+        private async void MainWindow_Shown(object sender, EventArgs e)
         {
+#if DEBUG
+            return;
+#endif
+            // Check For Updates
             // todo make more efficient?
-            //CheckForUpdates();
-        }
-
-        private async void CheckForUpdates()
-        {
             try
             {
                 var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, _updateSources);

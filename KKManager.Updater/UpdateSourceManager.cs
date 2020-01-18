@@ -13,7 +13,7 @@ namespace KKManager.Updater
 {
     public static class UpdateSourceManager
     {
-        public static IUpdateSource GetUpdater(Uri link)
+        public static UpdateSourceBase GetUpdater(Uri link)
         {
             switch (link.Scheme)
             {
@@ -30,7 +30,7 @@ namespace KKManager.Updater
             }
         }
 
-        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, IUpdateSource[] updateSources, string[] filterByGuids = null)
+        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids = null)
         {
             var results = new ConcurrentBag<UpdateTask>();
 
@@ -41,7 +41,7 @@ namespace KKManager.Updater
                     foreach (var task in await source.GetUpdateItems(cancellationToken))
                     {
                         // todo move further inside or decouple getting update tasks and actually processing them
-                        if(filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
+                        if (filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
                             continue;
 
                         task.Items.RemoveAll(x => x.UpToDate);
@@ -78,20 +78,20 @@ namespace KKManager.Updater
             return filteredTasks;
         }
 
-        public static IUpdateSource[] GetUpdateSources(string searchDirectory)
+        public static UpdateSourceBase[] GetUpdateSources(string searchDirectory)
         {
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
 
             if (!File.Exists(updateSourcesPath))
             {
                 Console.WriteLine("The UpdateSources file is missing, updating will not be available");
-                return new IUpdateSource[0];
+                return new UpdateSourceBase[0];
             }
 
             Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
 
             var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
-            var results = new List<IUpdateSource>(updateSources.Count);
+            var results = new List<UpdateSourceBase>(updateSources.Count);
             foreach (var updateSource in updateSources)
             {
                 try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
@@ -104,9 +104,9 @@ namespace KKManager.Updater
             return results.ToArray();
         }
 
-        public static IEnumerable<IUpdateItem> FileInfosToDeleteItems(IEnumerable<FileSystemInfo> localContents)
+        public static IEnumerable<UpdateItem> FileInfosToDeleteItems(IEnumerable<FileSystemInfo> localContents)
         {
-            var results = new List<IUpdateItem>();
+            var results = new List<UpdateItem>();
             foreach (var localItem in localContents)
             {
                 if (!localItem.Exists) continue;

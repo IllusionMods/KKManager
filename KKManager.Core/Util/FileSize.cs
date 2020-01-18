@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace KKManager.Util
 {
-    public struct FileSize : IXmlSerializable
+    public struct FileSize
     {
         public enum SizeRange
         {
@@ -24,7 +21,7 @@ namespace KKManager.Util
         }
 
         public static readonly FileSize Empty = new FileSize(0);
-        private long _sizeInKb;
+        private readonly long _sizeInKb;
 
         public FileSize(long kiloBytes)
         {
@@ -33,7 +30,7 @@ namespace KKManager.Util
 
         public static bool operator !=(FileSize a, FileSize b)
         {
-            return !a.Equals(b);
+            return a._sizeInKb != b._sizeInKb;
         }
 
         public static FileSize operator +(FileSize a, FileSize b)
@@ -48,7 +45,7 @@ namespace KKManager.Util
 
         public static bool operator ==(FileSize a, FileSize b)
         {
-            return a.Equals(b);
+            return a._sizeInKb == b._sizeInKb;
         }
 
         public static FileSize FromBytes(long bytes)
@@ -155,28 +152,6 @@ namespace KKManager.Util
             }
 
             return rangeName;
-        }
-
-
-        public XmlSchema GetSchema() { return null; }
-
-        public void ReadXml(XmlReader reader)
-        {
-            if (reader.MoveToContent() == XmlNodeType.Element)
-            {
-                reader.Read();
-                if (reader.HasValue)
-                {
-                    _sizeInKb = long.Parse(reader.Value);
-                    reader.Read();
-                }
-                reader.ReadEndElement();
-            }
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            writer.WriteValue(_sizeInKb);
         }
     }
 }

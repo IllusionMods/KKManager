@@ -32,15 +32,15 @@ namespace KKManager.Updater.Windows
 
             objectListView2.EmptyListMsg = "Select a task to view its details.";
             objectListView2.FormatRow += ObjectListView2_FormatRow;
-            olvColumnFileName.AspectGetter = rowObject => ((IUpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
-            olvColumnFileDate.AspectToStringConverter = value =>
+            olvColumnFileName.AspectGetter = rowObject => ((UpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
+            olvColumnFileDate.AspectGetter = rowObject =>
             {
-                if (value is DateTime dt)
-                    return dt == DateTime.MinValue ? "Will be removed" : dt.ToShortDateString();
-                if (value == null)
+                var date = ((UpdateItem) rowObject).RemoteFile?.ModifiedTime;
+                if (date == null || date == DateTime.MinValue)
                     return "Will be removed";
-                return value.ToString();
+                return date.Value.ToShortDateString();
             };
+            olvColumnFileSize.AspectGetter = rowObject => ((UpdateItem) rowObject).GetDownloadSize();
         }
 
         public static List<UpdateTask> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
@@ -86,9 +86,9 @@ namespace KKManager.Updater.Windows
 
         private static void ObjectListView2_FormatRow(object sender, FormatRowEventArgs e)
         {
-            if (e.Model is IUpdateItem task)
+            if (e.Model is UpdateItem task)
             {
-                if (task is DeleteFileUpdateItem)
+                if (task is DeleteFileUpdateItem || task.RemoteFile == null)
                     e.Item.ForeColor = Color.DarkRed;
                 else if (!task.TargetPath.Exists)
                     e.Item.ForeColor = Color.Green;

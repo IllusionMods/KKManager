@@ -6,66 +6,50 @@ using System.Threading;
 using System.Threading.Tasks;
 using Ionic.Zip;
 using KKManager.Updater.Data;
-using KKManager.Util;
 
 namespace KKManager.Updater.Sources
 {
-    public class ZipUpdater : IUpdateSource
+    public class ZipUpdater : UpdateSourceBase
     {
         private readonly ZipFile _zipfile;
 
-        public ZipUpdater(FileInfo archive)
+        public ZipUpdater(FileInfo archive) : base(archive.Name, 100)
         {
             _zipfile = ZipFile.Read(archive.FullName);
             _zipfile.FlattenFoldersOnExtract = true;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _zipfile.Dispose();
         }
-
-        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        
+        protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
-            var allResults = new List<UpdateTask>();
-
-            var manifestFile = _zipfile.Entries.FirstOrDefault(entry => string.Equals(Path.GetFileName(entry.FileName), UpdateInfo.UpdateFileName, StringComparison.OrdinalIgnoreCase));
-            if (manifestFile == null) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: {_zipfile.Name}");
-            using (var str = manifestFile.OpenReader())
+            try
             {
-                foreach (var updateInfo in UpdateInfo.ParseUpdateManifest(str, _zipfile.Name, 100))
-                {
-                    _latestModifiedDate = DateTime.MinValue;
-
-                    // Clean up the path into a usable form
-                    var serverPath = updateInfo.ServerPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
-
-                    var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
-                    if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_zipfile.Name}");
-
-                    var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
-
-                    var results = await ProcessDirectory(remote, updateInfo.ClientPathInfo,
-                        updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
-                        cancellationToken);
-
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? Path.GetFileName(remote.FileName.Trim(' ', '\\', '/')), results, updateInfo, _latestModifiedDate));
-                }
+                return await Task.Run(() => (Stream)GetZipEntry(updateFileName)?.OpenReader(), cancellationToken);
             }
-            return allResults;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to read file {updateFileName} from zip archive - {ex}");
+                return null;
+            }
         }
 
-        private static Func<ZipEntry, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo)
+        protected override IRemoteItem GetRemoteRootItem(string serverPath)
         {
-            switch (updateInfo.Versioning)
-            {
-                case UpdateInfo.VersioningMode.Size:
-                    return (item, info) => item.UncompressedSize == info.Length;
-                case UpdateInfo.VersioningMode.Date:
-                    return (item, info) => item.LastModified <= info.LastWriteTimeUtc;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var remote = GetZipEntry(serverPath);
+            if (remote == null) return null;
+            return new ZipUpdateItem(remote, this, remote.FileName);
+        }
+
+        private ZipEntry GetZipEntry(string serverPath)
+        {
+            // Clean up the path into a usable form
+            serverPath = serverPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
+            var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
+            return remote;
         }
 
         private IEnumerable<ZipEntry> GetChildren(ZipEntry directory)
@@ -79,73 +63,12 @@ namespace KKManager.Updater.Sources
                 });
         }
 
-        private DateTime _latestModifiedDate = DateTime.MinValue;
-
-        private async Task<List<IUpdateItem>> ProcessDirectory(ZipEntry remoteDir, DirectoryInfo localDir,
-            bool recursive, bool removeNotExisting, Func<ZipEntry, FileInfo, bool> versionEqualsComparer,
-            CancellationToken cancellationToken)
+        private async Task UpdateItem(ZipEntry zipEntry, FileInfo downloadTarget, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
-            if (!remoteDir.IsDirectory) throw new DirectoryNotFoundException();
-
-            var results = new List<IUpdateItem>();
-
-            var localContents = new List<FileSystemInfo>();
-            if (localDir.Exists)
-                localContents.AddRange(localDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly));
-
-            foreach (var remoteItem in GetChildren(remoteDir))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var remoteFilename = Path.GetFileName(remoteItem.FileName.TrimEnd('\\', '/'));
-
-                if (remoteItem.IsDirectory)
-                {
-                    if (recursive)
-                    {
-                        var localItem = localContents.OfType<DirectoryInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteFilename, StringComparison.OrdinalIgnoreCase));
-                        if (localItem == null)
-                            localItem = new DirectoryInfo(Path.Combine(localDir.FullName, remoteFilename));
-                        else
-                            localContents.Remove(localItem);
-
-                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken));
-                    }
-                }
-                else
-                {
-                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteFilename, StringComparison.OrdinalIgnoreCase));
-                    if (localFile == null)
-                        localFile = new FileInfo(Path.Combine(localDir.FullName, remoteFilename));
-                    else
-                        localContents.Remove(localFile);
-
-                    var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
-                    if (!localIsUpToDate)
-                        results.Add(new ZipUpdateItem(remoteItem, localFile, this));
-
-                    if (_latestModifiedDate < remoteItem.LastModified)
-                        _latestModifiedDate = remoteItem.LastModified;
-                }
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // Remove all files that were not on the remote
-            if (removeNotExisting)
-                results.AddRange(UpdateSourceManager.FileInfosToDeleteItems(localContents));
-
-            return results;
-        }
-
-        private async Task UpdateItem(ZipUpdateItem item, IProgress<double> progressCallback, CancellationToken cancellationToken)
-        {
-            var localFile = (FileInfo)item.TargetPath;
             await Task.Run(
                 () =>
                 {
-                    var localDir = localFile.DirectoryName;
-                    var zipEntry = item.SourceItem;
+                    var localDir = downloadTarget.DirectoryName;
                     var extractedFileName = Path.Combine(localDir, Path.GetFileName(zipEntry.FileName));
 
                     void OnExtractProgress(object sender, ExtractProgressEventArgs args)
@@ -161,10 +84,10 @@ namespace KKManager.Updater.Sources
                         zipEntry.Extract(localDir, ExtractExistingFileAction.OverwriteSilently);
 
                         // Check if the file needs to be renamed
-                        if (!string.Equals(Path.GetFileName(zipEntry.FileName), localFile.Name, StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals(Path.GetFileName(zipEntry.FileName), downloadTarget.Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            File.Delete(localFile.FullName);
-                            File.Move(extractedFileName, localFile.FullName);
+                            File.Delete(downloadTarget.FullName);
+                            File.Move(extractedFileName, downloadTarget.FullName);
                         }
                     }
                     catch (Exception e)
@@ -180,28 +103,45 @@ namespace KKManager.Updater.Sources
                 }, cancellationToken);
         }
 
-        public sealed class ZipUpdateItem : IUpdateItem
+        public sealed class ZipUpdateItem : IRemoteItem
         {
             private readonly ZipUpdater _owner;
+            private readonly ZipEntry _sourceItem;
+            private readonly string _rootFolder;
 
-            public ZipUpdateItem(ZipEntry item, FileSystemInfo targetPath, ZipUpdater owner)
+            public ZipUpdateItem(ZipEntry item, ZipUpdater owner, string rootFolder)
             {
                 _owner = owner;
-                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
-                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
-                ItemSize = FileSize.FromBytes(item.UncompressedSize);
-                ModifiedTime = SourceItem.LastModified;
+                _sourceItem = item ?? throw new ArgumentNullException(nameof(item));
+                ItemSize = item.UncompressedSize;
+                ModifiedTime = _sourceItem.LastModified;
+                Name = Path.GetFileName(item.FileName);
+                IsDirectory = item.IsDirectory;
+                IsFile = !item.IsDirectory;
+
+                if (rootFolder != null)
+                {
+                    _rootFolder = rootFolder;
+                    if (!_sourceItem.FileName.StartsWith(_rootFolder)) throw new IOException($"Remote item full path {_sourceItem.FileName} doesn't start with the specified root path {_rootFolder}");
+                    ClientRelativeFileName = _sourceItem.FileName.Substring(_rootFolder.Length);
+                }
             }
 
-            public ZipEntry SourceItem { get; }
-            public FileSize ItemSize { get; }
-            public DateTime? ModifiedTime { get; }
-            public bool UpToDate { get; }
-            public FileSystemInfo TargetPath { get; }
+            public string Name { get; }
+            public long ItemSize { get; }
+            public DateTime ModifiedTime { get; }
+            public bool IsDirectory { get; }
+            public bool IsFile { get; }
+            public string ClientRelativeFileName { get; }
 
-            public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
+            public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {
-                await _owner.UpdateItem(this, progressCallback, cancellationToken);
+                return _owner.GetChildren(_sourceItem).Select(entry => (IRemoteItem)new ZipUpdateItem(entry, _owner, _rootFolder)).ToArray();
+            }
+
+            public Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
+            {
+                return _owner.UpdateItem(_sourceItem, downloadTarget, progressCallback, cancellationToken);
             }
         }
     }

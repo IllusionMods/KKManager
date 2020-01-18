@@ -283,7 +283,7 @@ namespace KKManager.Updater.Windows
             // 
             // olvColumnFileDate
             // 
-            this.olvColumnFileDate.AspectName = "ModifiedTime";
+            this.olvColumnFileDate.AspectName = "";
             this.olvColumnFileDate.Hideable = false;
             this.olvColumnFileDate.MinimumWidth = 60;
             this.olvColumnFileDate.Text = "Update date";
@@ -291,7 +291,7 @@ namespace KKManager.Updater.Windows
             // 
             // olvColumnFileSize
             // 
-            this.olvColumnFileSize.AspectName = "ItemSize";
+            this.olvColumnFileSize.AspectName = "";
             this.olvColumnFileSize.Hideable = false;
             this.olvColumnFileSize.MinimumWidth = 60;
             this.olvColumnFileSize.Text = "File size";

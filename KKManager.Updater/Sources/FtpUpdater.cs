@@ -11,20 +11,19 @@ using KKManager.Util;
 
 namespace KKManager.Updater.Sources
 {
-    public class FtpUpdater : IUpdateSource
+    public partial class FtpUpdater : UpdateSourceBase
     {
         private readonly FtpClient _client;
 
         private FtpListItem[] _allNodes;
-        private DateTime _latestModifiedDate = DateTime.MinValue;
 
-        public FtpUpdater(Uri serverUri, NetworkCredential credentials = null)
+        public FtpUpdater(Uri serverUri, NetworkCredential credentials = null) : base(serverUri.Host, 1)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
 
             if (credentials == null)
             {
-                var info = serverUri.UserInfo.Split(new[] { ':' }, 2, StringSplitOptions.None);
+                var info = serverUri.UserInfo.Split(new[] {':'}, 2, StringSplitOptions.None);
                 if (info.Length == 2)
                     credentials = new NetworkCredential(info[0], info[1]);
             }
@@ -35,126 +34,42 @@ namespace KKManager.Updater.Sources
                 _client = new FtpClient(serverUri.Host, serverUri.Port, credentials);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _client.Dispose();
         }
 
-        public async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             await Connect();
-
-            var allResults = new List<UpdateTask>();
-            using (var str = new MemoryStream())
-            {
-                var b = await _client.DownloadAsync(str, UpdateInfo.UpdateFileName, 0, null, cancellationToken);
-                if (!b) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: {_client.Host}");
-
-                str.Seek(0, SeekOrigin.Begin);
-                var updateInfos = UpdateInfo.ParseUpdateManifest(str, _client.Host, 1).ToList();
-
-                str.Seek(0, SeekOrigin.Begin);
-                try
-                {
-                    if (await _client.DownloadAsync(str, "Updates1.xml", 0, null, cancellationToken))
-                    {
-                        str.Seek(0, SeekOrigin.Begin);
-                        updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, _client.Host, 1));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-
-                updateInfos.RemoveAll(info =>
-                {
-                    if (!info.CheckConditions())
-                    {
-                        Console.WriteLine("Skipping " + info.GUID + " because of conditions");
-                        return true;
-                    }
-                    return false;
-                });
-
-                if (updateInfos.Any())
-                {
-                    _allNodes = _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size);
-
-                    foreach (var updateInfo in updateInfos)
-                    {
-                        _latestModifiedDate = DateTime.MinValue;
-
-                        var remote = GetNode(updateInfo.ServerPath);
-                        if (remote == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {_client.Host}");
-
-                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo, remote);
-
-                        var results = await ProcessDirectory(remote, updateInfo.ClientPathInfo,
-                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
-                            cancellationToken);
-
-                        allResults.Add(new UpdateTask(updateInfo.Name ?? remote.Name, results, updateInfo, _latestModifiedDate));
-                    }
-
-                    // If a task is expanded by other tasks, remove the items that other tasks expand from it
-                    foreach (var resultTask in allResults)
-                    {
-                        if (!string.IsNullOrEmpty(resultTask.Info.ExpandsGUID))
-                        {
-                            Console.WriteLine($"Expanding task {resultTask.Info.ExpandsGUID} with task {resultTask.Info.GUID}");
-                            ApplyExtendedItems(resultTask.Info.ExpandsGUID, resultTask.Items, allResults);
-                        }
-                    }
-                }
-            }
-            return allResults;
+            _allNodes = _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size);
+            return await base.GetUpdateItems(cancellationToken);
         }
 
-        private static void ApplyExtendedItems(string targetGuid, List<IUpdateItem> itemsToReplace, List<UpdateTask> allResults)
+        protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
-            foreach (var targetTask in allResults.Where(x => x.Info.GUID == targetGuid))
+            var str = new MemoryStream();
+            try
             {
-                targetTask.Items.RemoveAll(x => itemsToReplace.Any(y => PathTools.PathsEqual(x.TargetPath, y.TargetPath)));
-
-                if (!string.IsNullOrEmpty(targetTask.Info.ExpandsGUID))
-                {
-                    // Walk down the expanding stack
-                    Console.WriteLine($"Also expanding task {targetTask.Info.ExpandsGUID} because it is expanded by {targetTask.Info.GUID}");
-                    ApplyExtendedItems(targetTask.Info.ExpandsGUID, itemsToReplace, allResults);
-                }
+                if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
+                    return str;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to download file {updateFileName} - {ex}");
+            }
+            // Cleanup if download fails
+            str.Dispose();
+            return null;
         }
 
-        private static Func<FtpListItem, FileInfo, bool> GetVersionEqualsComparer(UpdateInfo updateInfo, FtpListItem updateRoot)
+        protected override IRemoteItem GetRemoteRootItem(string serverPath)
         {
-            switch (updateInfo.Versioning)
-            {
-                case UpdateInfo.VersioningMode.Size:
-                    return (item, info) => item.Size == info.Length;
-                case UpdateInfo.VersioningMode.Date:
-                    return (item, info) => GetDate(item) <= info.LastWriteTimeUtc;
-                case UpdateInfo.VersioningMode.Contents:
-                    if (!updateInfo.ContentHashes.Any())
-                    {
-                        Console.WriteLine("No hashes found in " + updateInfo.GUID + " while VersioningMode was set to Contents, falling back to Size");
-                        goto case UpdateInfo.VersioningMode.Size;
-                    }
-
-                    var rootLength = updateRoot.FullName.Length;
-                    return (item, info) =>
-                    {
-                        var match = updateInfo.ContentHashes.FirstOrDefault(x => PathTools.PathsEqual(x.RelativeFileName, item.FullName.Substring(rootLength)));
-                        if (match == null || match.Hash == 0)
-                        {
-                            Console.WriteLine($"No hash found on remote for file {item.FullName.Substring(rootLength)} - comparing size instead");
-                            return item.Size == info.Length;
-                        }
-                        return FileContentsCalculator.GetFileHash(info) == match.Hash;
-                    };
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (serverPath == null) throw new ArgumentNullException(nameof(serverPath));
+            var remote = _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, serverPath));
+            if (remote == null) return null;
+            var remoteItem = new FtpRemoteItem(remote, this, remote.FullName);
+            return remoteItem;
         }
 
         private async Task Connect()
@@ -171,12 +86,6 @@ namespace KKManager.Updater.Sources
         {
             if (ftpListItem == null) throw new ArgumentNullException(nameof(ftpListItem));
             return ftpListItem.Modified != DateTime.MinValue ? ftpListItem.Modified : ftpListItem.Created;
-        }
-
-        private FtpListItem GetNode(string path)
-        {
-            if (path == null) throw new ArgumentNullException(nameof(path));
-            return _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, path));
         }
 
         private IEnumerable<FtpListItem> GetSubNodes(FtpListItem remoteDir)
@@ -198,94 +107,57 @@ namespace KKManager.Updater.Sources
                 });
         }
 
-        private async Task<List<IUpdateItem>> ProcessDirectory(FtpListItem remoteDir, DirectoryInfo localDir,
-            bool recursive, bool removeNotExisting, Func<FtpListItem, FileInfo, bool> versionEqualsComparer,
-            CancellationToken cancellationToken)
-        {
-            if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new DirectoryNotFoundException();
-
-            var results = new List<IUpdateItem>();
-
-            var localContents = new List<FileSystemInfo>();
-            if (localDir.Exists)
-                localContents.AddRange(localDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly));
-
-            foreach (var remoteItem in GetSubNodes(remoteDir))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                if (remoteItem.Type == FtpFileSystemObjectType.Directory)
-                {
-                    if (recursive)
-                    {
-                        var localItem = localContents.OfType<DirectoryInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
-                        if (localItem == null)
-                            localItem = new DirectoryInfo(Path.Combine(localDir.FullName, remoteItem.Name));
-                        else
-                            localContents.Remove(localItem);
-
-                        results.AddRange(await ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken));
-                    }
-                }
-                else if (remoteItem.Type == FtpFileSystemObjectType.File)
-                {
-                    var itemDate = GetDate(remoteItem);
-                    if (itemDate > _latestModifiedDate) _latestModifiedDate = itemDate;
-
-                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
-                    if (localFile == null)
-                        localFile = new FileInfo(Path.Combine(localDir.FullName, remoteItem.Name));
-                    else
-                        localContents.Remove(localFile);
-
-                    var localIsUpToDate = localFile.Exists && versionEqualsComparer(remoteItem, localFile);
-                    results.Add(new FtpUpdateItem(remoteItem, this, localFile, localIsUpToDate));
-                }
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // Remove all files that were not on the remote
-            if (removeNotExisting)
-                results.AddRange(UpdateSourceManager.FileInfosToDeleteItems(localContents));
-
-            return results;
-        }
-
-        private async Task UpdateItem(FtpUpdateItem item, IProgress<double> progressCallback, CancellationToken cancellationToken)
+        private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
             await Connect();
 
             await _client.DownloadFileAsync(
-                item.TargetPath.FullName, item.SourceItem.FullName,
+                targetPath.FullName, sourceItem.FullName,
                 FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
                 cancellationToken);
         }
 
-        public sealed class FtpUpdateItem : IUpdateItem
+        private sealed class FtpRemoteItem : IRemoteItem
         {
-            private readonly FtpUpdater _source;
+            private readonly string _rootFolder;
 
-            public FtpUpdateItem(FtpListItem item, FtpUpdater source, FileSystemInfo targetPath, bool upToDate)
+            public FtpRemoteItem(FtpListItem sourceItem, FtpUpdater source, string rootFolder)
             {
-                UpToDate = upToDate;
-                TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
-                SourceItem = item ?? throw new ArgumentNullException(nameof(item));
-                _source = source ?? throw new ArgumentNullException(nameof(source));
-                ItemSize = FileSize.FromBytes(item.Size);
+                if (sourceItem == null) throw new ArgumentNullException(nameof(sourceItem));
+                if (source == null) throw new ArgumentNullException(nameof(source));
+
+                if (rootFolder != null)
+                {
+                    _rootFolder = rootFolder;
+                    if (!sourceItem.FullName.StartsWith(_rootFolder)) throw new IOException($"Remote item full path {sourceItem.FullName} doesn't start with the specified root path {_rootFolder}");
+                    ClientRelativeFileName = sourceItem.FullName.Substring(_rootFolder.Length);
+                }
+
+                SourceItem = sourceItem;
+                Source = source;
+                ItemSize = SourceItem.Size;
                 ModifiedTime = GetDate(SourceItem);
             }
 
-            public FtpListItem SourceItem { get; }
-            public FileSize ItemSize { get; }
-            public DateTime? ModifiedTime { get; }
-            public FileSystemInfo TargetPath { get; }
-            public bool UpToDate { get; }
+            public string Name => SourceItem.Name;
+            public long ItemSize { get; }
+            public DateTime ModifiedTime { get; }
+            public bool IsDirectory => SourceItem.Type == FtpFileSystemObjectType.Directory;
+            public bool IsFile => SourceItem.Type == FtpFileSystemObjectType.File;
+            public string ClientRelativeFileName { get; }
 
-            public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
+            public FtpUpdater Source { get; }
+            public FtpListItem SourceItem { get; }
+
+            public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {
-                await _source.UpdateItem(this, progressCallback, cancellationToken);
+                return Source.GetSubNodes(SourceItem).Select(x => (IRemoteItem)new FtpRemoteItem(x, Source, _rootFolder)).ToArray();
+            }
+
+            public async Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
+            {
+                await Source.UpdateItem(SourceItem, downloadTarget, progressCallback, cancellationToken);
             }
         }
     }

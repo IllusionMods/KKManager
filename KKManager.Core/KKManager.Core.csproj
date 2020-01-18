@@ -52,6 +52,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="System.Numerics">
       <Private>False</Private>
@@ -97,6 +98,18 @@
     <Compile Include="Util\LogWriter.cs" />
     <Compile Include="Util\PathTools.cs" />
     <Compile Include="Util\ProcessTools.cs" />
+    <Compile Include="Util\ProcessWaiter\ProcessWaiter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Util\ProcessWaiter\ProcessWaiter.designer.cs">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Util\ProcessWaiter\ProcessWaiterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Util\ProcessWaiter\ProcessWaiterControl.designer.cs">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Util\ResourceUtils.cs" />
     <Compile Include="Util\RetryHelper.cs" />
     <Compile Include="Util\SimpleExpandTypeConverter.cs" />
@@ -106,6 +119,20 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.resx">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.ru.resx">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.resx">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.ru.resx">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

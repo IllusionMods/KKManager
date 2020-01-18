@@ -107,14 +107,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Sources\DeleteFileUpdateItem.cs" />
-    <Compile Include="Data\IUpdateItem.cs" />
-    <Compile Include="Data\IUpdateSource.cs" />
+    <Compile Include="Sources\UpdateSourceBase.cs" />
     <Compile Include="Sources\FtpUpdater.cs" />
+    <Compile Include="Data\IRemoteItem.cs" />
     <Compile Include="Sources\MegaUpdater.cs" />
+    <Compile Include="Data\UpdateItem.cs" />
+    <Compile Include="Data\UpdateTask.cs" />
     <Compile Include="Sources\ZipUpdater.cs" />
     <Compile Include="Data\UpdateInfo.cs" />
     <Compile Include="UpdateSourceManager.cs" />
-    <Compile Include="Data\UpdateTask.cs" />
     <Compile Include="Windows\ModUpdateProgressDialog.cs">
       <SubType>Form</SubType>
     </Compile>
