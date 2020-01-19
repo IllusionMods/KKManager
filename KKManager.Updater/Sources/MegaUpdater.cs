@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CG.Web.MegaApiClient;
 using KKManager.Updater.Data;
+using KKManager.Updater.Windows;
 using KKManager.Util;
 using Newtonsoft.Json;
 
@@ -17,12 +18,12 @@ namespace KKManager.Updater.Sources
         private static readonly string _authPath = typeof(MegaUpdater).Assembly.Location + ".authInfos";
         private static readonly string _tokenPath = typeof(MegaUpdater).Assembly.Location + ".logonSessionToken";
 
-        private MegaApiClient.AuthInfos _authInfos;
-
         private readonly MegaApiClient _client;
 
         private List<INode> _allNodes;
-        private MegaApiClient.LogonSessionToken _loginToken;
+        private static MegaApiClient.LogonSessionToken _loginToken;
+        private static MegaApiClient.AuthInfos _authInfos;
+        private static bool _anonymous;
 
         public MegaUpdater(Uri serverUri, NetworkCredential credentials) : base(serverUri.OriginalString, 10)
         {
@@ -36,7 +37,7 @@ namespace KKManager.Updater.Sources
             try
             {
                 if (credentials != null)
-                    SetAuthInfos(credentials, false);
+                    _authInfos = _client.GenerateAuthInfos(credentials.UserName, credentials.Password);
                 else if (File.Exists(_authPath))
                     _authInfos = JsonSerializer.CreateDefault().Deserialize<MegaApiClient.AuthInfos>(new JsonTextReader(File.OpenText(_authPath)));
             }
@@ -53,21 +54,6 @@ namespace KKManager.Updater.Sources
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to read stored MegaApiClient.LogonSessionToken - " + ex);
-            }
-        }
-
-        private void SetAuthInfos(NetworkCredential credentials, bool remember)
-        {
-            _authInfos = _client.GenerateAuthInfos(credentials.UserName, credentials.Password);
-            if (!remember) return;
-            try
-            {
-                File.Delete(_authPath);
-                JsonSerializer.CreateDefault().Serialize(File.CreateText(_authPath), _authInfos);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to save new MegaApiClient.AuthInfos - " + ex);
             }
         }
 
@@ -89,7 +75,7 @@ namespace KKManager.Updater.Sources
 
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
-            await Connect();
+            await Connect(false);
             await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(_currentFolderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
             return await base.GetUpdateItems(cancellationToken);
         }
@@ -130,18 +116,26 @@ namespace KKManager.Updater.Sources
 
         private async Task DownloadNodeAsync(MegaUpdateItem task, FileInfo downloadTarget, Progress<double> progress, CancellationToken cancellationToken)
         {
-            await Connect();
+            await Connect(true);
             await _client.DownloadFileAsync(task.SourceItem, downloadTarget.FullName, progress, cancellationToken);
         }
 
-        private async Task Connect()
+        private async Task Connect(bool askToLogin)
         {
-            await RetryHelper.RetryOnExceptionAsync(async () => await ConnectImpl(), 2, TimeSpan.FromSeconds(2), CancellationToken.None);
+            await RetryHelper.RetryOnExceptionAsync(async () => await ConnectImpl(askToLogin), 2, TimeSpan.FromSeconds(2), CancellationToken.None);
         }
 
-        private async Task ConnectImpl()
+        private async Task ConnectImpl(bool askToLogin)
         {
-            if (_client.IsLoggedIn) return;
+            if (_client.IsLoggedIn)
+            {
+                if (askToLogin && !_anonymous && _loginToken == null)
+                {
+                    await _client.LogoutAsync();
+                    goto retryLoginWithAuth;
+                }
+                return;
+            }
 
             if (_loginToken != null)
             {
@@ -164,23 +158,45 @@ namespace KKManager.Updater.Sources
                 if (_client.IsLoggedIn) return;
             }
 
-            //todo ask for login info, if not then too bad
-            if(false)
+            if (_anonymous || !askToLogin)
             {
-                try
-                {
-                    File.Delete(_tokenPath);
-                    JsonSerializer.CreateDefault().Serialize(File.CreateText(_tokenPath), _loginToken);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Failed to save MegaApiClient.LogonSessionToken - " + ex);
-                }
-                goto retryLoginWithAuth;
+                await _client.LoginAnonymousAsync();
+                if (_client.IsLoggedIn) return;
             }
 
-            // fall back to anonymous login if all fails
-            await _client.LoginAnonymousAsync();
+            if (!askToLogin) return;
+
+            var result = MegaLoginWindow.ShowDialog(_authInfos?.Email, _client);
+            if (result == null)
+                throw new OperationCanceledException();
+
+            _authInfos = result.Item1;
+            _loginToken = result.Item2;
+            _anonymous = _loginToken == null;
+
+            try
+            {
+                File.Delete(_tokenPath);
+                if (_loginToken != null)
+                    JsonSerializer.CreateDefault().Serialize(File.CreateText(_tokenPath), _loginToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to save MegaApiClient.LogonSessionToken - " + ex);
+            }
+            try
+            {
+                File.Delete(_authPath);
+                if (_authInfos != null)
+                    JsonSerializer.CreateDefault().Serialize(File.CreateText(_authPath), _authInfos);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to save new MegaApiClient.AuthInfos - " + ex);
+            }
+
+            if (!_client.IsLoggedIn)
+                goto retryLoginWithAuth;
         }
 
         private IEnumerable<INode> GetSubNodes(INode rootNode)
