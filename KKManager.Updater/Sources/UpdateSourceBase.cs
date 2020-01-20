@@ -27,25 +27,27 @@ namespace KKManager.Updater.Sources
         public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             var updateInfos = new List<UpdateInfo>();
-            using (var str = await DownloadFileAsync(UpdateInfo.UpdateFileName, cancellationToken))
-            {
-                if (str == null) throw new FileNotFoundException($"Failed to get the update list - {UpdateInfo.UpdateFileName} is missing in host: {Origin}");
 
-                updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, Origin, Priority));
-            }
+            var filenamesToTry = new[] { UpdateInfo.UpdateFileName, "Updates1.xml", "Updates2.xml" };
 
-            try
+            foreach (var fn in filenamesToTry)
             {
-                using (var str = await DownloadFileAsync("Updates1.xml", cancellationToken))
+                try
                 {
-                    if (str != null)
-                        updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, Origin, Priority));
+                    using (var str = await DownloadFileAsync(fn, cancellationToken))
+                    {
+                        if (str != null)
+                            updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, Origin, Priority));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+
+            if (updateInfos.Count == 0)
+                throw new FileNotFoundException($"Failed to get update list from host {Origin} - check log for details.");
 
             updateInfos.RemoveAll(
                 info =>
