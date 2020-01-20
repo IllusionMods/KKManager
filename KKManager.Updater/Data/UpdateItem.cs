@@ -60,6 +60,8 @@ namespace KKManager.Updater.Data
         public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
         {
             var downloadTarget = GetTempDownloadFilename();
+            // Need to store the filename because MoveTo changes it to the new filename
+            var downloadFilename = downloadTarget.FullName;
 
             if (RemoteFile != null)
             {
@@ -87,19 +89,17 @@ namespace KKManager.Updater.Data
             catch (SecurityException ex)
             {
                 if (MessageBox.Show($"Failed to apply update {TargetPath.FullName} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.",
-                        "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
-                {
-                    var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName);
-                    if (fixPermissions == null) throw new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex);
-                    fixPermissions.WaitForExit();
-                    goto retryDelete;
-                }
-                else throw;
+                        "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
+                    throw;
+
+                var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName);
+                if (fixPermissions == null) throw new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex);
+                fixPermissions.WaitForExit();
+                goto retryDelete;
             }
             finally
             {
-                // Not critical
-                try { downloadTarget.Delete(); }
+                try { File.Delete(downloadFilename); }
                 catch (SystemException ex) { Console.WriteLine(ex); }
             }
         }
@@ -110,7 +110,7 @@ namespace KKManager.Updater.Data
 
         public FileSize GetDownloadSize()
         {
-            if(RemoteFile == null) return FileSize.Empty;
+            if (RemoteFile == null) return FileSize.Empty;
             return FileSize.FromBytes(RemoteFile.ItemSize);
         }
     }
