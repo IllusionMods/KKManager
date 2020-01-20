@@ -4,126 +4,78 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Ionic.Zip;
 using KKManager.Updater.Data;
+using KKManager.Util;
+using SharpCompress.Archives;
 
 namespace KKManager.Updater.Sources
 {
     public class ZipUpdater : UpdateSourceBase
     {
-        private readonly ZipFile _zipfile;
+        private readonly IArchive _archive;
 
-        public ZipUpdater(FileInfo archive) : base(archive.Name, 100)
+        public ZipUpdater(FileInfo archive) : base(archive.Name, 101)
         {
-            _zipfile = ZipFile.Read(archive.FullName);
-            _zipfile.FlattenFoldersOnExtract = true;
+            _archive = ArchiveFactory.Open(archive);
         }
-
         public override void Dispose()
         {
-            _zipfile.Dispose();
+            _archive.Dispose();
         }
-        
+
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
-            try
-            {
-                return await Task.Run(() => (Stream)GetZipEntry(updateFileName)?.OpenReader(), cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to read file {updateFileName} from zip archive - {ex}");
-                return null;
-            }
+            var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, updateFileName));
+            if (f == null) return null;
+            return f.OpenEntryStream();
         }
 
         protected override IRemoteItem GetRemoteRootItem(string serverPath)
         {
-            var remote = GetZipEntry(serverPath);
-            if (remote == null) return null;
-            return new ZipUpdateItem(remote, this, remote.FileName);
+            var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, serverPath));
+            if (f == null) return null;
+            return new ArchiveItem(f, f.Key);
         }
 
-        private ZipEntry GetZipEntry(string serverPath)
+        private static string NormalizePath(string path)
         {
-            // Clean up the path into a usable form
-            serverPath = serverPath.Trim(' ', '\\', '/').Replace('\\', '/') + "/";
-            var remote = _zipfile.Entries.FirstOrDefault(entry => string.Equals(entry.FileName, serverPath, StringComparison.OrdinalIgnoreCase));
-            return remote;
+            return path.Replace('\\', '/').Trim('/', ' ');
         }
 
-        private IEnumerable<ZipEntry> GetChildren(ZipEntry directory)
+        private static IEnumerable<IArchiveEntry> GetSubItems(IArchiveEntry sourceItem)
         {
-            var dirDepth = directory.FileName.Count(c => c == '\\' || c == '/');
-            return _zipfile.Entries.Where(
+            var sourcePath = NormalizePath(sourceItem.Key) + '/';
+            var sourceDepth = sourcePath.Count(c => c == '/');
+            var subItems = sourceItem.Archive.Entries.Where(
                 x =>
                 {
-                    var fname = x.FileName.TrimEnd('\\', '/');
-                    return fname.StartsWith(directory.FileName) && fname.Count(c => c == '\\' || c == '/') == dirDepth;
+                    var otherPath = NormalizePath(x.Key);
+                    return otherPath.StartsWith(sourcePath) && otherPath.Count(c => c == '/') == sourceDepth;
                 });
+            return subItems;
         }
 
-        private async Task UpdateItem(ZipEntry zipEntry, FileInfo downloadTarget, IProgress<double> progressCallback, CancellationToken cancellationToken)
+        public sealed class ArchiveItem : IRemoteItem
         {
-            await Task.Run(
-                () =>
-                {
-                    var localDir = downloadTarget.DirectoryName;
-                    var extractedFileName = Path.Combine(localDir, Path.GetFileName(zipEntry.FileName));
-
-                    void OnExtractProgress(object sender, ExtractProgressEventArgs args)
-                    {
-                        if (args.CurrentEntry == zipEntry && args.TotalBytesToTransfer > 0)
-                            progressCallback.Report((args.BytesTransferred / args.TotalBytesToTransfer) * 100);
-                    }
-
-                    try
-                    {
-                        _zipfile.ExtractProgress += OnExtractProgress;
-
-                        zipEntry.Extract(localDir, ExtractExistingFileAction.OverwriteSilently);
-
-                        // Check if the file needs to be renamed
-                        if (!string.Equals(Path.GetFileName(zipEntry.FileName), downloadTarget.Name, StringComparison.OrdinalIgnoreCase))
-                        {
-                            File.Delete(downloadTarget.FullName);
-                            File.Move(extractedFileName, downloadTarget.FullName);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        File.Delete(extractedFileName);
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                    finally
-                    {
-                        _zipfile.ExtractProgress -= OnExtractProgress;
-                    }
-                }, cancellationToken);
-        }
-
-        public sealed class ZipUpdateItem : IRemoteItem
-        {
-            private readonly ZipUpdater _owner;
-            private readonly ZipEntry _sourceItem;
+            private readonly IArchiveEntry _sourceItem;
             private readonly string _rootFolder;
 
-            public ZipUpdateItem(ZipEntry item, ZipUpdater owner, string rootFolder)
+
+            public ArchiveItem(IArchiveEntry item, string rootFolder)
             {
-                _owner = owner;
                 _sourceItem = item ?? throw new ArgumentNullException(nameof(item));
-                ItemSize = item.UncompressedSize;
-                ModifiedTime = _sourceItem.LastModified;
-                Name = Path.GetFileName(item.FileName);
+
+                ItemSize = item.Size;
+                ModifiedTime = _sourceItem.LastModifiedTime ?? _sourceItem.CreatedTime ?? _sourceItem.ArchivedTime ?? _sourceItem.LastAccessedTime ?? DateTime.MinValue;
+                Name = Path.GetFileName(item.Key);
                 IsDirectory = item.IsDirectory;
                 IsFile = !item.IsDirectory;
 
                 if (rootFolder != null)
                 {
                     _rootFolder = rootFolder;
-                    if (!_sourceItem.FileName.StartsWith(_rootFolder)) throw new IOException($"Remote item full path {_sourceItem.FileName} doesn't start with the specified root path {_rootFolder}");
-                    ClientRelativeFileName = _sourceItem.FileName.Substring(_rootFolder.Length);
+                    if (!item.Key.StartsWith(_rootFolder)) throw new IOException($"Remote item full path {_sourceItem.Key} doesn't start with the specified root path {_rootFolder}");
+                    ClientRelativeFileName = item.Key.Substring(_rootFolder.Length);
                 }
             }
 
@@ -136,12 +88,14 @@ namespace KKManager.Updater.Sources
 
             public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {
-                return _owner.GetChildren(_sourceItem).Select(entry => (IRemoteItem)new ZipUpdateItem(entry, _owner, _rootFolder)).ToArray();
+                var subItems = GetSubItems(_sourceItem);
+                return subItems.Select(x => (IRemoteItem)new ArchiveItem(x, _rootFolder)).ToArray();
             }
 
             public Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                return _owner.UpdateItem(_sourceItem, downloadTarget, progressCallback, cancellationToken);
+                // todo reimplement with streams to have progress
+                return Task.Run(() => _sourceItem.WriteToFile(downloadTarget.FullName), cancellationToken);
             }
         }
     }
