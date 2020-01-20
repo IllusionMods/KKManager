@@ -4,27 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using SB3Utility;
+using SharpCompress.Archives;
+using SharpCompress.Readers;
 
 namespace KKManager.SB3UGS
 {
     public class SB3UGS_Initializer
     {
-        private static DirectoryInfo _directoryName;
         private static DirectoryInfo _pluginDirName;
         private static Dictionary<string, FileInfo> _sb3uDlls;
 
         private static void Initialize()
         {
-            if (_pluginDirName != null && _pluginDirName.Exists) return;
+            if (_pluginDirName != null) return;
 
             var assLocation = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            _directoryName = new DirectoryInfo(Path.Combine(assLocation.FullName, "SB3UGS"));
-            _pluginDirName = new DirectoryInfo(Path.Combine(_directoryName.FullName, "plugins"));
+            var directoryName = new DirectoryInfo(Path.Combine(assLocation.FullName, "SB3UGS"));
+            _pluginDirName = new DirectoryInfo(Path.Combine(directoryName.FullName, "plugins"));
 
-            if (!_directoryName.Exists || !_pluginDirName.Exists)
+            if (!_pluginDirName.Exists)
             {
-                try { _directoryName.Delete(true); }
-                catch (Exception ex) { Console.WriteLine(ex); }
+                if (directoryName.Exists)
+                    directoryName.Delete(true);
 
                 Console.WriteLine("Could not find a valid SB3UGS install, attempting to install a fresh one");
 
@@ -33,25 +34,37 @@ namespace KKManager.SB3UGS
                 {
                     Console.WriteLine("Found " + target.Name + " - attempting to extract");
 
-                    var extr = new SevenZipNET.SevenZipExtractor(target.FullName);
+                    var extr = ArchiveFactory.Open(target);
 
-                    if (!extr.TestArchive())
+                    if (!extr.IsComplete)
                         throw new IOException("Archive " + target.Name + " is not valid or is corrupted");
 
-                    extr.ExtractAll(_directoryName.FullName, true, true);
+                    directoryName.Create();
+                    ExtractArchiveToDirectory(extr, directoryName.FullName);
 
-                    _directoryName.Refresh();
                     _pluginDirName.Refresh();
-                    if (!_directoryName.Exists || !_pluginDirName.Exists)
+                    if (!_pluginDirName.Exists)
                         throw new IOException("Archive " + target.Name + " did not contain the correct files or it failed to extract");
                 }
             }
 
-            _sb3uDlls = _pluginDirName.GetFiles("*.dll").Concat(_directoryName.GetFiles("*.dll")).ToDictionary(x => Path.GetFileNameWithoutExtension(x.Name), x => x);
+            _sb3uDlls = _pluginDirName.GetFiles("*.dll").Concat(directoryName.GetFiles("*.dll")).ToDictionary(x => Path.GetFileNameWithoutExtension(x.Name), x => x);
 
             AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
             LoadPlugin(Path.Combine(_pluginDirName.FullName, "SB3UtilityPlugins.dll"));
+        }
+
+        private static void ExtractArchiveToDirectory(IArchive extr, string directoryPath)
+        {
+            Directory.CreateDirectory(directoryPath);
+            var extractor = extr.ExtractAllEntries();
+            while (extractor.MoveToNextEntry())
+            {
+                var path = Path.Combine(directoryPath, extractor.Entry.Key);
+                if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
+                else extractor.WriteEntryTo(path);
+            }
         }
 
         public static bool CheckIsAvailable()

@@ -34,9 +34,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="7z.NET, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\7z.NET.1.0.3\lib\net462\7z.NET.dll</HintPath>
-    </Reference>
     <Reference Include="SB3Utility">
       <HintPath>..\libs\SB3UGS\SB3Utility.dll</HintPath>
       <Private>False</Private>
@@ -44,6 +41,9 @@
     <Reference Include="SB3UtilityPlugins">
       <HintPath>..\libs\SB3UGS\plugins\SB3UtilityPlugins.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.24.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.24.0\lib\net45\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,19 +74,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <Content Include="SB3UGS_v20.1.2.7z">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\7z.NET.1.0.3\build\7z.NET.targets" Condition="Exists('..\packages\7z.NET.1.0.3\build\7z.NET.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\7z.NET.1.0.3\build\7z.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\7z.NET.1.0.3\build\7z.NET.targets'))" />
-  </Target>
   <PropertyGroup>
     <PreBuildEvent>IF NOT EXIST $(SolutionDir)libs\SB3UGS\ (
   for /f %25%25x in ('DIR /b "$(SolutionDir)KKManager.SB3UGS\SB3UGS*.7z"') do set NEWEST="$(SolutionDir)KKManager.SB3UGS\%25%25x" &amp; goto DONE
