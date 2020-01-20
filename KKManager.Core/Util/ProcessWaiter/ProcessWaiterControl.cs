@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
@@ -18,11 +19,11 @@ namespace KKManager.Util.ProcessWaiter
         private readonly Timer _timer = new Timer(600);
         private static readonly string DefaultImageKey = "Default";
 
-        public void Initialize(int[] processIDs, bool processChildren)
+        public async Task Initialize(int[] processIDs, bool processChildren)
         {
             treeView1.ShowRootLines = processChildren;
 
-            SetNodes(processIDs, processChildren);
+            await SetNodes(processIDs, processChildren);
         }
 
         public bool ProcessesStillRunning => treeView1.Nodes.Count > 0;
@@ -46,12 +47,9 @@ namespace KKManager.Util.ProcessWaiter
             get { return treeView1.Nodes.Cast<TreeNode>().Select(x => x.Tag as Process); }
         }
 
-        private void SetNodes(int[] processIDs, bool processChildren)
+        private List<Tuple<Process, Icon>> FindProcesses(int[] processIDs)
         {
-            var results = new List<TreeNode>();
-            var il = new ImageList();
-            il.Images.Add(DefaultImageKey, SystemIcons.Application);
-            treeView1.ImageKey = DefaultImageKey;
+            var results = new List<Tuple<Process, Icon>>();
 
             foreach (var id in processIDs)
             {
@@ -60,48 +58,17 @@ namespace KKManager.Util.ProcessWaiter
                     var p = Process.GetProcessById(id);
                     if (p.HasExited) continue;
 
-                    var mainPrName = string.IsNullOrEmpty(p.MainWindowTitle) ? p.ProcessName : p.MainWindowTitle;
-                    var node = new TreeNode(mainPrName)
-                    {
-                        SelectedImageKey = mainPrName,
-                        ImageKey = mainPrName,
-                        Tag = p
-                    };
-                    results.Add(node);
-
+                    Icon ico = null;
                     try
                     {
-                        var ico = Icon.ExtractAssociatedIcon(p.MainModule.FileName);
-                        if (ico != null) il.Images.Add(mainPrName, ico);
+                        ico = Icon.ExtractAssociatedIcon(p.MainModule.FileName);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
                     }
 
-                    if (!processChildren) continue;
-                    try
-                    {
-                        var children = ProcessTools.GetChildProcesses(id);
-                        node.Nodes.AddRange(children.Select(x =>
-                        {
-                            var pr = Process.GetProcessById(x);
-                            var name = string.IsNullOrEmpty(pr.MainWindowTitle)
-                                ? pr.ProcessName
-                                : pr.MainWindowTitle;
-                            return new TreeNode(name)
-                            {
-                                SelectedImageKey = mainPrName,
-                                ImageKey = mainPrName,
-                                Tag = pr
-                            };
-                        }).ToArray());
-                    }
-                    catch (Exception ex)
-                    {
-                        // Ignore, probably the process exited by now. The child nodes are not important
-                        Console.WriteLine(ex);
-                    }
+                    results.Add(new Tuple<Process, Icon>(p, ico));
                 }
                 catch (Exception ex)
                 {
@@ -110,12 +77,67 @@ namespace KKManager.Util.ProcessWaiter
                 }
             }
 
+            return results;
+        }
+
+        private async Task SetNodes(int[] processIDs, bool processChildren)
+        {
+            var il = new ImageList();
+            il.Images.Add(DefaultImageKey, SystemIcons.Application);
+            treeView1.ImageKey = DefaultImageKey;
+
+            //(ParentForm ?? Parent).Enabled = false;
+            var results = await AddProcesses(processIDs, processChildren, il);
+            
             treeView1.Nodes.Clear();
             var prev = treeView1.ImageList;
             treeView1.ImageList = il;
             prev?.Dispose();
 
             treeView1.Nodes.AddRange(results.ToArray());
+
+            //(ParentForm ?? Parent).Enabled = true;
+        }
+
+        private async Task<List<TreeNode>> AddProcesses(int[] processIDs, bool processChildren, ImageList il)
+        {
+            List<Tuple<Process, Icon>> processes = null;
+            await Task.Run(() => processes = FindProcesses(processIDs));
+
+            var results = new List<TreeNode>();
+            if (processes == null) return results;
+
+            foreach (var process in processes)
+            {
+                var mainPrName = string.IsNullOrEmpty(process.Item1.MainWindowTitle) ? process.Item1.ProcessName : process.Item1.MainWindowTitle;
+                var node = new TreeNode(mainPrName)
+                {
+                    SelectedImageKey = mainPrName,
+                    ImageKey = mainPrName,
+                    Tag = process.Item1
+                };
+                results.Add(node);
+
+                if (process.Item2 != null)
+                    il.Images.Add(mainPrName, process.Item2);
+
+                if (processChildren)
+                {
+                    try
+                    {
+                        var children = ProcessTools.GetChildProcesses(process.Item1.Id);
+
+                        var childProcesses = await AddProcesses(children.ToArray(), processChildren, il);
+                        node.Nodes.AddRange(childProcesses.ToArray());
+                    }
+                    catch (Exception ex)
+                    {
+                        // Ignore, probably the process exited by now. The child nodes are not important
+                        Console.WriteLine(ex);
+                    }
+                }
+            }
+            return results;
         }
 
         public bool ShowIgnoreAndCancel

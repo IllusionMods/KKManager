@@ -19,7 +19,7 @@ namespace KKManager.Updater.Data
             UpToDate = upToDate;
         }
 
-        public static FileInfo GetTempDownloadFilename()
+        public static async Task<FileInfo> GetTempDownloadFilename()
         {
             var tempPath = Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "temp\\KKManager_downloads");
 
@@ -37,7 +37,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
+                if (await ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
                     throw new IOException($"Failed to create file in directory {tempPath} because of an IO issue - {ex.Message}", ex);
 
                 goto retryCreate;
@@ -59,7 +59,7 @@ namespace KKManager.Updater.Data
         /// <exception cref="IOException">Failed to apply the update.</exception>
         public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
         {
-            var downloadTarget = GetTempDownloadFilename();
+            var downloadTarget = await GetTempDownloadFilename();
             // Need to store the filename because MoveTo changes it to the new filename
             var downloadFilename = downloadTarget.FullName;
 
@@ -81,7 +81,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
+                if (await ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
                     throw new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex);
 
                 goto retryDelete;

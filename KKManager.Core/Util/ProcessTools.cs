@@ -57,7 +57,7 @@ namespace KKManager.Util
         public static Process FixPermissions(string path)
         {
             // false for cancel
-            if (ProcessWaiter.ProcessWaiter.CheckForRunningProcesses(new[] {path}) == false)
+            if (ProcessWaiter.ProcessWaiter.CheckForRunningProcesses(new[] {path}).Result == false)
                 return null;
 
             path = path.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar, ' '); 
