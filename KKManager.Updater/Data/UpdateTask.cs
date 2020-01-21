@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using KKManager.Util;
 
-namespace KKManager.Updater.Data {
+namespace KKManager.Updater.Data
+{
     public sealed class UpdateTask
     {
         public UpdateTask(string taskName, List<UpdateItem> items, UpdateInfo info, DateTime modifiedTime)
@@ -32,9 +33,12 @@ namespace KKManager.Updater.Data {
             var alternativeItems = AlternativeSources.SelectMany(
                 task => task.Items.Where(
                     altItem => Items.Any(
-                        localItem => string.Equals(localItem.TargetPath.FullName, altItem.TargetPath.FullName, StringComparison.OrdinalIgnoreCase) && localItem.RemoteFile?.ItemSize == altItem.RemoteFile?.ItemSize))
+                        localItem => PathTools.PathsEqual(localItem.TargetPath.FullName, altItem.TargetPath.FullName) && localItem.RemoteFile?.ItemSize == altItem.RemoteFile?.ItemSize))
                         .Select(item => new Tuple<UpdateInfo, UpdateItem>(task.Info, item)));
 
+#if DEBUG
+            var _ = Items.Select(x => x.TargetPath.FullName).Except(alternativeItems.Select(x => x.Item2.TargetPath.FullName).ToList()).ToList();
+#endif
             return Items.Select(x => new Tuple<UpdateInfo, UpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
         }
     }
