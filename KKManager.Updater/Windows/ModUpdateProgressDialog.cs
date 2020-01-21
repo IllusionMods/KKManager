@@ -190,6 +190,10 @@ namespace KKManager.Updater.Windows
                 {
                     SetStatus($"Attempting download from source {source.Item1.Origin}", false, true);
 
+                    // Needed because ZipUpdater doesn't support progress
+                    if (source.Item2.RemoteFile is ZipUpdater.ArchiveItem)
+                        labelPercent.Text = $"Extracting... Overall progress: {_completedSize} / {_overallSize}.";
+
                     await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
 
                     ex = null;

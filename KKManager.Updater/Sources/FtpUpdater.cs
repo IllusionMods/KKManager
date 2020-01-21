@@ -52,7 +52,10 @@ namespace KKManager.Updater.Sources
             try
             {
                 if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
+                {
+                    str.Seek(0, SeekOrigin.Begin);
                     return str;
+                }
             }
             catch (Exception ex)
             {

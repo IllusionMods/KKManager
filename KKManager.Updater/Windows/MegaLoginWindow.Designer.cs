@@ -107,8 +107,6 @@
             // checkBoxRemember
             // 
             this.checkBoxRemember.AutoSize = true;
-            this.checkBoxRemember.Checked = true;
-            this.checkBoxRemember.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemember.Dock = System.Windows.Forms.DockStyle.Top;
             this.checkBoxRemember.Location = new System.Drawing.Point(153, 63);
             this.checkBoxRemember.Name = "checkBoxRemember";
@@ -131,7 +129,7 @@
             this.tableLayoutPanel1.Controls.Add(this.textBoxPassw, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelEmail, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 64);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 77);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8);
             this.tableLayoutPanel1.RowCount = 3;
@@ -150,10 +148,9 @@
             this.label3.Padding = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.label3.Size = new System.Drawing.Size(136, 19);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Remember me";
+            this.label3.Text = "Remember (?)";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.label3, "The password will be stored as a hash, not in plain text.\r\n\r\nIf you choose to not" +
-        " remember the credentials then you will be asked to log in again");
+            this.toolTip1.SetToolTip(this.label3, resources.GetString("label3.ToolTip"));
             // 
             // labelPass
             // 
@@ -185,7 +182,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 6);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(359, 52);
+            this.label4.Size = new System.Drawing.Size(356, 65);
             this.label4.TabIndex = 5;
             this.label4.Text = resources.GetString("label4.Text");
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -198,7 +195,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(6);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(384, 64);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(384, 77);
             this.flowLayoutPanel1.TabIndex = 6;
             // 
             // flowLayoutPanel2
@@ -209,7 +206,7 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonAcc);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 154);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 167);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(384, 29);
             this.flowLayoutPanel2.TabIndex = 7;
@@ -227,11 +224,14 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(400, 2000);
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(400, 40);
             this.Name = "MegaLoginWindow";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Log in to mega.nz";
+            this.Text = "Updater - Log in to mega.nz";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);

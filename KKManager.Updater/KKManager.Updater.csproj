@@ -111,6 +111,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Sources\DeleteFileUpdateItem.cs" />
     <Compile Include="Sources\UpdateSourceBase.cs" />
     <Compile Include="Sources\FtpUpdater.cs" />
@@ -177,8 +183,16 @@
       <Project>{b8b55e55-d95b-4e6a-9f33-c3737ad4487f}</Project>
       <Name>KKManager.SB3UGS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj">
+      <Project>{495a9ea6-b13c-48f9-a2e2-6667cecebfde}</Project>
+      <Name>PortableSettingsProvider</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Resources\chikajump.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

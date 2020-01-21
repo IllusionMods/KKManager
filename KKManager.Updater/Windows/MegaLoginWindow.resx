@@ -120,11 +120,16 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>This will remember your login and password to automatically log in in the future. This is usually not necessary because your session will still be saved if Remember is turned off.
+
+The password will be stored as a hash, not in plain text.
+
+If you choose to not remember the credentials then you will be asked to log in again after a few days (after the session expires).</value>
+  </data>
   <data name="label4.Text" xml:space="preserve">
-    <value>Mega.nz is used as one of the download sources to provide high speed downloads. There is a download limit that might force KK Manager to use a slower source. To avoid this limit you can log in to your mega.nz account if you have one. Please note that free accounts might not increase the limit.</value>
+    <value>Mega.nz is used as one of the download sources to provide high speed downloads.There is a download limit that might force KK Manager to use a slower source.
+To avoid this limit you can log in to your mega.nz account if you have one. Please note that free accounts might not increase the limit.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

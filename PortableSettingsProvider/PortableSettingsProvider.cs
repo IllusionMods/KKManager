@@ -24,13 +24,15 @@ namespace PortableSettingsProvider
         {
             get
             {
-                if (Application.ProductName.Trim().Length > 0)
-                {
-                    return Application.ProductName;
-                }
-
-                var fi = new FileInfo(Application.ExecutablePath);
-                return fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
+                // Share settings between all .exe files
+                return "KKManager";
+                //if (Application.ProductName.Trim().Length > 0)
+                //{
+                //    return Application.ProductName;
+                //}
+                //
+                //var fi = new FileInfo(Application.ExecutablePath);
+                //return fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length);
             }
             //Do nothing
             set { }

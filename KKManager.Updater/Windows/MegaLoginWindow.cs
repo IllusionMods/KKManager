@@ -24,7 +24,7 @@ namespace KKManager.Updater.Windows
                 w.textBoxLogin.Text = currentLogin ?? "";
                 w._client = client;
 
-                switch (w.ShowDialog())
+                switch (w.ShowDialog(ActiveForm))
                 {
                     case DialogResult.OK:
                         return new Tuple<MegaApiClient.AuthInfos, MegaApiClient.LogonSessionToken>(w.checkBoxRemember.Checked ? w._authInfos : null, w._token);
@@ -53,7 +53,8 @@ namespace KKManager.Updater.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to log in with the specified login and password. Please make sure that they are correct and you are connected to the internet, then try again.\n\nError message: " + ex.Message);
+                MessageBox.Show("Failed to log in with the specified login and password. Please make sure that they are correct and you are connected to the internet, then try again.\n\nError message: " + ex.Message, 
+                    "Log in to mega.nz", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
             }
         }
@@ -76,7 +77,8 @@ namespace KKManager.Updater.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to log in as an anonymous user. Please make sure that you are connected to the internet, then try again.\n\nError message: " + ex.Message);
+                MessageBox.Show("Failed to log in as an anonymous user. Please make sure that you are connected to the internet, then try again.\n\nError message: " + ex.Message, 
+                    "Log in to mega.nz", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
             }
         }

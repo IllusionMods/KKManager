@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CG.Web.MegaApiClient;
 using KKManager.Updater.Data;
+using KKManager.Updater.Properties;
 using KKManager.Updater.Windows;
 using KKManager.Util;
 using Newtonsoft.Json;
@@ -15,15 +16,14 @@ namespace KKManager.Updater.Sources
 {
     public class MegaUpdater : UpdateSourceBase
     {
-        private static readonly string _authPath = typeof(MegaUpdater).Assembly.Location + ".authInfos";
-        private static readonly string _tokenPath = typeof(MegaUpdater).Assembly.Location + ".logonSessionToken";
-
-        private readonly MegaApiClient _client;
-
-        private List<INode> _allNodes;
+        // Keep login info global to share between instances
         private static MegaApiClient.LogonSessionToken _loginToken;
         private static MegaApiClient.AuthInfos _authInfos;
         private static bool _anonymous;
+
+        private readonly Uri _currentFolderLink;
+        private readonly MegaApiClient _client;
+        private List<INode> _allNodes;
 
         public MegaUpdater(Uri serverUri, NetworkCredential credentials) : base(serverUri.OriginalString, 10)
         {
@@ -38,8 +38,8 @@ namespace KKManager.Updater.Sources
             {
                 if (credentials != null)
                     _authInfos = _client.GenerateAuthInfos(credentials.UserName, credentials.Password);
-                else if (File.Exists(_authPath))
-                    _authInfos = JsonSerializer.CreateDefault().Deserialize<MegaApiClient.AuthInfos>(new JsonTextReader(File.OpenText(_authPath)));
+                else if (!string.IsNullOrWhiteSpace(Settings.Default.mega_authInfos))
+                    _authInfos = JsonConvert.DeserializeObject<MegaApiClient.AuthInfos>(Settings.Default.mega_authInfos);
             }
             catch (Exception ex)
             {
@@ -48,16 +48,14 @@ namespace KKManager.Updater.Sources
 
             try
             {
-                if (File.Exists(_tokenPath))
-                    _loginToken = JsonSerializer.CreateDefault().Deserialize<MegaApiClient.LogonSessionToken>(new JsonTextReader(File.OpenText(_tokenPath)));
+                if (!string.IsNullOrWhiteSpace(Settings.Default.mega_sessionToken))
+                    _loginToken = JsonConvert.DeserializeObject<MegaApiClient.LogonSessionToken>(Settings.Default.mega_sessionToken);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to read stored MegaApiClient.LogonSessionToken - " + ex);
             }
         }
-
-        private readonly Uri _currentFolderLink;
 
         public override void Dispose()
         {
@@ -84,7 +82,9 @@ namespace KKManager.Updater.Sources
         {
             try
             {
-                return await _client.DownloadAsync(GetNodeAtPath(updateFileName), new Progress<double>(), cancellationToken);
+                var nodeAtPath = GetNodeAtPath(updateFileName);
+                if (nodeAtPath == null) throw new FileNotFoundException("File doesn't exist on host");
+                return await _client.DownloadAsync(nodeAtPath, new Progress<double>(), cancellationToken);
             }
             catch (Exception ex)
             {
@@ -107,7 +107,7 @@ namespace KKManager.Updater.Sources
             var pathParts = serverPath.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var pathPart in pathParts)
             {
-                updateNode = GetSubNodes(updateNode).FirstOrDefault(node => node.Type == NodeType.Directory || node.Type == NodeType.File && string.Equals(node.Name, pathPart, StringComparison.OrdinalIgnoreCase));
+                updateNode = GetSubNodes(updateNode).FirstOrDefault(node => (node.Type == NodeType.Directory || node.Type == NodeType.File) && string.Equals(node.Name, pathPart, StringComparison.OrdinalIgnoreCase));
                 if (updateNode == null)
                     break;
             }
@@ -176,9 +176,10 @@ namespace KKManager.Updater.Sources
 
             try
             {
-                File.Delete(_tokenPath);
+                Settings.Default.mega_sessionToken = string.Empty;
                 if (_loginToken != null)
-                    JsonSerializer.CreateDefault().Serialize(File.CreateText(_tokenPath), _loginToken);
+                    Settings.Default.mega_sessionToken = JsonConvert.SerializeObject(_loginToken);
+                Settings.Default.Save();
             }
             catch (Exception ex)
             {
@@ -186,9 +187,10 @@ namespace KKManager.Updater.Sources
             }
             try
             {
-                File.Delete(_authPath);
+                Settings.Default.mega_authInfos = string.Empty;
                 if (_authInfos != null)
-                    JsonSerializer.CreateDefault().Serialize(File.CreateText(_authPath), _authInfos);
+                    Settings.Default.mega_authInfos = JsonConvert.SerializeObject(_authInfos);
+                Settings.Default.Save();
             }
             catch (Exception ex)
             {
