@@ -7,7 +7,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Ionic.Zip;
+using KKManager.Util;
 
 namespace KKManager.Data.Zipmods
 {
@@ -73,20 +73,19 @@ namespace KKManager.Data.Zipmods
             if (!IsValidZipmodExtension(location.Extension))
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
-            using (var zf = ZipFile.Read(location.FullName))
+            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(location))
             {
-                var manifestEntry = zf.Entries.FirstOrDefault(x =>
-                    x.FileName.Equals("manifest.xml", StringComparison.OrdinalIgnoreCase));
+                var manifestEntry = zf.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, "manifest.xml"));
 
                 if (manifestEntry == null)
                 {
-                    if(zf.Entries.Any(x => x.IsDirectory && x.FileName.StartsWith("abdata", StringComparison.OrdinalIgnoreCase)))
+                    if (zf.Entries.Any(x => x.IsDirectory && PathTools.PathsEqual(x.Key, "abdata")))
                         throw new NotSupportedException("The file is a hardmod and cannot be installed automatically. It's recommeded to look for a sideloader version.");
 
                     throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
                 }
 
-                using (var fileStream = manifestEntry.OpenReader())
+                using (var fileStream = manifestEntry.OpenEntryStream())
                 {
                     var manifest = XDocument.Load(fileStream, LoadOptions.None);
 
@@ -103,13 +102,13 @@ namespace KKManager.Data.Zipmods
                     var images = new List<Image>();
                     // TODO load from drive instead of caching to ram
                     foreach (var imageFile in zf.Entries
-                        .Where(x => ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
-                                    ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase))
-                        .OrderBy(x => x.FileName).Take(3))
+                        .Where(x => ".jpg".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase) ||
+                                    ".png".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase))
+                        .OrderBy(x => x.Key).Take(3))
                     {
                         try
                         {
-                            using (var stream = imageFile.OpenReader())
+                            using (var stream = imageFile.OpenEntryStream())
                             using (var img = Image.FromStream(stream))
                             {
                                 images.Add(img.GetThumbnailImage(200, 200, null, IntPtr.Zero));
@@ -117,11 +116,11 @@ namespace KKManager.Data.Zipmods
                         }
                         catch (SystemException ex)
                         {
-                            Console.WriteLine($"Failed to load image \"{imageFile.FileName}\" from mod archive \"{zf.Name}\" with error: {ex.Message}");
+                            Console.WriteLine($"Failed to load image \"{imageFile.Key}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
                         }
                     }
 
-                    var contents = zf.EntryFileNames.Select(x => x.Replace('/', '\\')).ToList();
+                    var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.Key.Replace('/', '\\')).ToList();
 
                     return new SideloaderModInfo(location, guid, name, version, author, description, website, images, contents);
                 }

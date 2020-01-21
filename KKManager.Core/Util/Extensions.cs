@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Forms;
+using SharpCompress.Archives;
+using SharpCompress.Readers;
 
 namespace KKManager.Util
 {
@@ -29,6 +32,18 @@ namespace KKManager.Util
                 {
                     action();
                 }
+            }
+        }
+
+        public static void ExtractArchiveToDirectory(this IArchive archive, string targetDirectory)
+        {
+            Directory.CreateDirectory(targetDirectory);
+            var extractor = archive.ExtractAllEntries();
+            while (extractor.MoveToNextEntry())
+            {
+                var path = Path.Combine(targetDirectory, extractor.Entry.Key);
+                if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
+                else extractor.WriteEntryTo(path);
             }
         }
     }

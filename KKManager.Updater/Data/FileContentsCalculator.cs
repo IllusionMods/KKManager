@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Ionic.Crc;
 using KKManager.SB3UGS;
+using KKManager.Updater.Utils;
 using MessagePack;
 
 namespace KKManager.Updater.Data

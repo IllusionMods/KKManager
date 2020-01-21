@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using KKManager.Util;
 using SB3Utility;
 using SharpCompress.Archives;
-using SharpCompress.Readers;
 
 namespace KKManager.SB3UGS
 {
@@ -40,7 +40,7 @@ namespace KKManager.SB3UGS
                         throw new IOException("Archive " + target.Name + " is not valid or is corrupted");
 
                     directoryName.Create();
-                    ExtractArchiveToDirectory(extr, directoryName.FullName);
+                    extr.ExtractArchiveToDirectory(directoryName.FullName);
 
                     _pluginDirName.Refresh();
                     if (!_pluginDirName.Exists)
@@ -53,18 +53,6 @@ namespace KKManager.SB3UGS
             AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
             LoadPlugin(Path.Combine(_pluginDirName.FullName, "SB3UtilityPlugins.dll"));
-        }
-
-        private static void ExtractArchiveToDirectory(IArchive extr, string directoryPath)
-        {
-            Directory.CreateDirectory(directoryPath);
-            var extractor = extr.ExtractAllEntries();
-            while (extractor.MoveToNextEntry())
-            {
-                var path = Path.Combine(directoryPath, extractor.Entry.Key);
-                if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
-                else extractor.WriteEntryTo(path);
-            }
         }
 
         public static bool CheckIsAvailable()

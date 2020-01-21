@@ -4,10 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
-using Ionic.Zip;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
-using KKManager.Util;
 
 namespace KKManager.Functions
 {
@@ -53,18 +51,18 @@ namespace KKManager.Functions
             throw new InvalidDataException("The file format is not supported, or the file is broken");
         }
 
-        private static void InstallFromArchive(string fileName)
+        /*private static void InstallFromArchive(string fileName)
         {
-            using (var archive = ZipFile.Read(fileName))
+            using (var archive = SharpCompress.Archives.ArchiveFactory.Open(fileName))
             {
                 var any = false;
-                var bepin = archive.Entries.FirstOrDefault(x => x.IsDirectory && StringTools.PathsEqual(x.FileName, "bepinex"));
+                var bepin = archive.Entries.FirstOrDefault(x => x.IsDirectory && PathTools.PathsEqual(x.Key, "bepinex"));
                 if (bepin != null)
                 {
-                    //bug refuses to work, throws access denied when trying to extract over existing bepinex
+                    // refuses to work, throws access denied when trying to extract over existing bepinex
                     bepin.Extract(InstallDirectoryHelper.KoikatuDirectory.FullName, ExtractExistingFileAction.OverwriteSilently);
                     any = true;
-                    /* Alternative way? Go file per file and create dirs as needed and delete old files as needed
+                    // Alternative way? Go file per file and create dirs as needed and delete old files as needed
                     using (ZipFile zip1 = ZipFile.Read(fileName))
                     {
                         var selection = (from e in zip1.Entries
@@ -78,10 +76,10 @@ namespace KKManager.Functions
                         {
                             e.Extract(outputDirectory);
                         }
-                    }*/
+                    }
                 }
 
-                var mods = archive.Entries.FirstOrDefault(x => x.IsDirectory && StringTools.PathsEqual(x.FileName, "mods"));
+                var mods = archive.Entries.FirstOrDefault(x => x.IsDirectory && PathTools.PathsEqual(x.Key, "mods"));
                 if (mods != null)
                 {
                     mods.Extract(InstallDirectoryHelper.KoikatuDirectory.FullName, ExtractExistingFileAction.OverwriteSilently);
@@ -91,7 +89,7 @@ namespace KKManager.Functions
                 if (!any)
                     throw new InvalidDataException("The archive is in an unknown format. If it contains a mod extract it and try again.");
 
-                /*if (!any)
+                if (!any)
                 {
                     var entries = archive.Where(x => !x.IsDirectory)
                         .Select(x => new { entry = x, ext = Path.GetExtension(x.FileName) })
@@ -124,9 +122,9 @@ namespace KKManager.Functions
                             container.Extract();
                         }
                     }
-                }*/
+                }
             }
-        }
+        }*/
 
         private static void InstallPlugin(string fileName)
         {
