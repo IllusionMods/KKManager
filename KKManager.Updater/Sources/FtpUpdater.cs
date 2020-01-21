@@ -42,7 +42,7 @@ namespace KKManager.Updater.Sources
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             await Connect();
-            _allNodes = _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size);
+            _allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size);
             return await base.GetUpdateItems(cancellationToken);
         }
 

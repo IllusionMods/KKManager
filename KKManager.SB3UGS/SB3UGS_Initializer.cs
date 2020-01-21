@@ -22,6 +22,7 @@ namespace KKManager.SB3UGS
             var directoryName = new DirectoryInfo(Path.Combine(assLocation.FullName, "SB3UGS"));
             _pluginDirName = new DirectoryInfo(Path.Combine(directoryName.FullName, "plugins"));
 
+            // bug this can sometimes fail to extract or to load the dlls
             if (!_pluginDirName.Exists)
             {
                 if (directoryName.Exists)
