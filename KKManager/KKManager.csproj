@@ -46,10 +46,10 @@
       <HintPath>..\packages\DotNetZip.1.13.5\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.2.0.323\lib\netstandard2.0\MessagePack.dll</HintPath>
+      <HintPath>..\packages\MessagePack.2.0.335\lib\netstandard2.0\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack.Annotations, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.Annotations.2.0.323\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
+      <HintPath>..\packages\MessagePack.Annotations.2.0.335\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Windows7APICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
