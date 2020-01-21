@@ -150,7 +150,7 @@ namespace KKManager.Updater.Windows
                 button1.Enabled = true;
                 button1.Text = "OK";
 
-                if (_autoInstallGuids == null || _autoInstallGuids.Length == 0) Close();
+                if (_autoInstallGuids != null && _autoInstallGuids.Length > 0) Close();
             }
         }
 
