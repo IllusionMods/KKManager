@@ -413,6 +413,7 @@ namespace KKManager.Windows
                 window.ReloadList();
 
             updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
+            updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;
         }
 
         private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
@@ -435,6 +436,11 @@ namespace KKManager.Windows
                 {
                     SetStatusText($"Found {updates} mod updates!");
                     updateSideloaderModpackToolStripMenuItem.BackColor = Color.Lime;
+                }
+                else
+                {
+                    SetStatusText("No mod updates were found");
+                    updateSideloaderModpackToolStripMenuItem.ForeColor = Color.Gray;
                 }
             }
             catch (OperationCanceledException) { }
