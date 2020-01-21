@@ -11,7 +11,7 @@ using KKManager.Util;
 
 namespace KKManager.Updater.Sources
 {
-    public partial class FtpUpdater : UpdateSourceBase
+    public class FtpUpdater : UpdateSourceBase
     {
         private readonly FtpClient _client;
 
