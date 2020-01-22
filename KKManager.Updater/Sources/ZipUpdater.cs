@@ -14,7 +14,7 @@ namespace KKManager.Updater.Sources
     {
         private readonly IArchive _archive;
 
-        public ZipUpdater(FileInfo archive) : base(archive.Name, 101)
+        public ZipUpdater(FileInfo archive, int discoveryPriority, int downloadPriority = 101) : base(archive.Name, discoveryPriority, downloadPriority)
         {
             _archive = ArchiveFactory.Open(archive);
         }
@@ -26,7 +26,7 @@ namespace KKManager.Updater.Sources
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
             var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, updateFileName));
-            if (f == null) return null;
+            if (f == null) throw new FileNotFoundException("File doesn't exist in archive");
             return f.OpenEntryStream();
         }
 

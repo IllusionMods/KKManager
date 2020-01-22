@@ -13,17 +13,17 @@ namespace KKManager.Updater
 {
     public static class UpdateSourceManager
     {
-        public static UpdateSourceBase GetUpdater(Uri link)
+        public static UpdateSourceBase GetUpdater(Uri link, int listingPriority)
         {
             switch (link.Scheme)
             {
                 case "file":
-                    return new ZipUpdater(new FileInfo(link.LocalPath));
+                    return new ZipUpdater(new FileInfo(link.LocalPath), listingPriority);
                 case "ftp":
-                    return new FtpUpdater(link);
+                    return new FtpUpdater(link, listingPriority);
                 case "https":
                     if (link.Host.ToLower() == "mega.nz")
-                        return new MegaUpdater(link, null);
+                        return new MegaUpdater(link, listingPriority);
                     throw new NotSupportedException("Host is not supported as an update source: " + link.Host);
                 default:
                     throw new NotSupportedException("Link format is not supported as an update source: " + link.Scheme);
@@ -32,10 +32,11 @@ namespace KKManager.Updater
 
         public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids = null)
         {
+            Console.WriteLine("Starting update search...");
             var results = new ConcurrentBag<UpdateTask>();
 
             // First start all of the sources, then wait until they all finish
-            var concurrentTasks = updateSources.Select(source => RetryHelper.RetryOnExceptionAsync(
+            var concurrentTasks = updateSources.Select(source => new { task = RetryHelper.RetryOnExceptionAsync(
                 async () =>
                 {
                     foreach (var task in await source.GetUpdateItems(cancellationToken))
@@ -48,17 +49,17 @@ namespace KKManager.Updater
                         results.Add(task);
                     }
                 },
-                3, TimeSpan.FromSeconds(3), cancellationToken)).ToList();
+                3, TimeSpan.FromSeconds(3), cancellationToken), source}).ToList();
 
             foreach (var task in concurrentTasks)
             {
                 try
                 {
-                    await task;
+                    await task.task;
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("[ERROR] Unexpected error while collecting updates from one of the sources, skipping the source. " + e);
+                    Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e}");
                 }
             }
 
@@ -67,14 +68,16 @@ namespace KKManager.Updater
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
             {
-                var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
+                var ordered = modGroup.OrderByDescending(x => x.Info.Source.DiscoveryPriority).ThenByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
                 if (ordered.Count > 1)
                 {
                     ordered[0].AlternativeSources.AddRange(ordered.Skip(1));
-                    Console.WriteLine($"Found {ordered.Count} entries for mod GUID {modGroup.Key} - latest is from {ordered[0].Info.Origin}");
+                    Console.WriteLine($"Found {ordered.Count} sources for mod GUID {modGroup.Key} - choosing {ordered[0].Info.Source.Origin} as latest");
                 }
                 filteredTasks.Add(ordered[0]);
             }
+
+            Console.WriteLine($"Update search finished. Found {filteredTasks.Count} update tasks.");
             return filteredTasks;
         }
 
@@ -90,16 +93,32 @@ namespace KKManager.Updater
 
             Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
 
-            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !String.IsNullOrWhiteSpace(x)).ToList();
-            var results = new List<UpdateSourceBase>(updateSources.Count);
-            foreach (var updateSource in updateSources)
+            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            return GetUpdateSources(updateSources);
+        }
+
+        /// <summary>
+        /// Order is important. First items have higher priority in determining if there are updates, lower priorities are only used as mirrors
+        /// </summary>
+        public static UpdateSourceBase[] GetUpdateSources(string[] updateSourceUrls)
+        {
+            var results = new List<UpdateSourceBase>(updateSourceUrls.Length);
+            // Higher on the list means higher priority
+            for (var index = 0; index < updateSourceUrls.Length; index++)
             {
-                try { results.Add(UpdateSourceManager.GetUpdater(new Uri(updateSource))); }
-                catch (Exception ex) { Console.WriteLine($"Could not open update source: {updateSource} - {ex}"); }
+                var updateSource = updateSourceUrls[index];
+                try
+                {
+                    results.Add(GetUpdater(new Uri(updateSource), -index));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not open update source: {updateSource} - {ex}");
+                }
             }
 
-            if (results.Count < updateSources.Count)
-                Console.WriteLine($"Could not open {updateSources.Count - results.Count} out of {updateSources.Count} update sources, check log for details");
+            if (results.Count < updateSourceUrls.Length)
+                Console.WriteLine($"Could not open {updateSourceUrls.Length - results.Count} out of {updateSourceUrls.Length} update sources, check log for details");
 
             return results.ToArray();
         }

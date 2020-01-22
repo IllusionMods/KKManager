@@ -7,6 +7,7 @@ using System.Security;
 using System.Xml;
 using System.Xml.Serialization;
 using KKManager.Functions;
+using KKManager.Updater.Sources;
 using KKManager.Util;
 
 namespace KKManager.Updater.Data
@@ -85,7 +86,7 @@ namespace KKManager.Updater.Data
         /// </summary>
         [Browsable(false)]
         [XmlIgnore]
-        public string Origin { get; private set; }
+        public UpdateSourceBase Source { get; private set; }
 
         /// <summary>
         /// Should the files be downloaded recursively from specified server path. Directory structure is maintained.
@@ -101,15 +102,7 @@ namespace KKManager.Updater.Data
         /// Relative server path to download the mod files from
         /// </summary>
         public string ServerPath { get; set; }
-
-        /// <summary>
-        /// Priority of the source if multiple sources for a download are available. Higher will be attempted to be downloaded
-        /// first.
-        /// </summary>
-        [Browsable(false)]
-        [XmlIgnore]
-        public int SourcePriority { get; private set; }
-
+        
         /// <summary>
         /// How the file versions are compared to decide if they should be updated.
         /// </summary>
@@ -144,17 +137,14 @@ namespace KKManager.Updater.Data
             return InstallByDefault == InstallByDefaultMode.Always || InstallByDefault == InstallByDefaultMode.IfExists && ClientPathInfo.Exists;
         }
 
-        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str, string origin, int priority)
+        public static IEnumerable<UpdateInfo> ParseUpdateManifest(Stream str, UpdateSourceBase origin)
         {
             var updateInfos = Deserialize(str);
 
             foreach (var deserialized in updateInfos.UpdateInfos)
             {
                 TestConstraints(deserialized);
-
-                deserialized.Origin = origin;
-                deserialized.SourcePriority = priority;
-
+                deserialized.Source = origin;
                 yield return deserialized;
             }
         }

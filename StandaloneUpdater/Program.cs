@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace StandaloneUpdater
                 const string guidValueName = "-guid:";
                 var silentInstallGuids = args.Where(x => x.StartsWith(guidValueName)).Select(x => x.Substring(guidValueName.Length).Trim(' ', '"')).ToArray();
 
-                args = args.Where(x => !x.StartsWith("-")).ToArray();
+                args = args.Where(x => !x.StartsWith("-")).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
                 if (args.Length == 0)
                 {
@@ -72,30 +71,13 @@ namespace StandaloneUpdater
 
         private static UpdateSourceBase[] GetUpdateSources(string[] sourceArgs)
         {
-            if (sourceArgs.Length == 0)
-            {
-                var updateSources = UpdateSourceManager.GetUpdateSources(_exeDirectory);
-                if (updateSources == null || updateSources.Length == 0)
-                    MessageBox.Show("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\nAdd one or more links to update sources as arguments or edit the UpdateSources file.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return updateSources;
-            }
+            if (sourceArgs.Length > 0)
+                return UpdateSourceManager.GetUpdateSources(sourceArgs);
 
-            var results = new List<UpdateSourceBase>();
-            foreach (var source in sourceArgs)
-            {
-                try
-                {
-                    var link = new Uri(source);
-                    results.Add(UpdateSourceManager.GetUpdater(link));
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show($"Error opening update source link: {source}\n\n{e}", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Console.WriteLine(e);
-                    return null;
-                }
-            }
-            return results.ToArray();
+            var updateSources = UpdateSourceManager.GetUpdateSources(_exeDirectory);
+            if (updateSources == null || updateSources.Length == 0)
+                MessageBox.Show("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\nAdd one or more links to update sources as arguments or edit the UpdateSources file.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return updateSources;
         }
     }
 }

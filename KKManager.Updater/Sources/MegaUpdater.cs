@@ -25,7 +25,7 @@ namespace KKManager.Updater.Sources
         private readonly MegaApiClient _client;
         private List<INode> _allNodes;
 
-        public MegaUpdater(Uri serverUri, NetworkCredential credentials) : base(serverUri.OriginalString, 10)
+        public MegaUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 10, NetworkCredential credentials = null) : base(serverUri.OriginalString, discoveryPriority, downloadPriority)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
             if (serverUri.Host.ToLower() != "mega.nz")
@@ -80,17 +80,10 @@ namespace KKManager.Updater.Sources
 
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
-            try
-            {
-                var nodeAtPath = GetNodeAtPath(updateFileName);
-                if (nodeAtPath == null) throw new FileNotFoundException("File doesn't exist on host");
-                return await _client.DownloadAsync(nodeAtPath, new Progress<double>(), cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to download file {updateFileName} - {ex}");
-            }
-            return null;
+            var nodeAtPath = GetNodeAtPath(updateFileName);
+            if (nodeAtPath == null) throw new FileNotFoundException("File doesn't exist on host");
+            cancellationToken.ThrowIfCancellationRequested();
+            return await _client.DownloadAsync(nodeAtPath, new Progress<double>(), cancellationToken);
         }
 
         protected override IRemoteItem GetRemoteRootItem(string serverPath)

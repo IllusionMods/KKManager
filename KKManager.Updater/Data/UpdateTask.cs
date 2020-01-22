@@ -34,12 +34,19 @@ namespace KKManager.Updater.Data
                 task => task.Items.Where(
                     altItem => Items.Any(
                         localItem => PathTools.PathsEqual(localItem.TargetPath.FullName, altItem.TargetPath.FullName) && localItem.RemoteFile?.ItemSize == altItem.RemoteFile?.ItemSize))
-                        .Select(item => new Tuple<UpdateInfo, UpdateItem>(task.Info, item)));
+                        .Select(item => new Tuple<UpdateInfo, UpdateItem>(task.Info, item)))
+                        .ToList();
 
+            var mergedItems = Items.Select(x => new Tuple<UpdateInfo, UpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
 #if DEBUG
-            var _ = Items.Select(x => x.TargetPath.FullName).Except(alternativeItems.Select(x => x.Item2.TargetPath.FullName).ToList()).ToList();
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                // Updates missing a mirror
+                var _ = Items.Select(x => x.TargetPath.FullName).Except(alternativeItems.Select(x => x.Item2.TargetPath.FullName)).ToList();
+                System.Diagnostics.Debugger.Break();
+            }
 #endif
-            return Items.Select(x => new Tuple<UpdateInfo, UpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
+            return mergedItems;
         }
     }
 }

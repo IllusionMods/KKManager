@@ -17,13 +17,13 @@ namespace KKManager.Updater.Sources
 
         private FtpListItem[] _allNodes;
 
-        public FtpUpdater(Uri serverUri, NetworkCredential credentials = null) : base(serverUri.Host, 1)
+        public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null) : base(serverUri.Host, discoveryPriority, downloadPriority)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
 
             if (credentials == null)
             {
-                var info = serverUri.UserInfo.Split(new[] {':'}, 2, StringSplitOptions.None);
+                var info = serverUri.UserInfo.Split(new[] { ':' }, 2, StringSplitOptions.None);
                 if (info.Length == 2)
                     credentials = new NetworkCredential(info[0], info[1]);
             }
@@ -48,31 +48,35 @@ namespace KKManager.Updater.Sources
 
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
+            var item = GetRemoteItem(updateFileName);
+            if (item == null)
+                throw new FileNotFoundException("File doesn't exist on host");
+
+            cancellationToken.ThrowIfCancellationRequested();
             var str = new MemoryStream();
-            try
+            if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
             {
-                if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
-                {
-                    str.Seek(0, SeekOrigin.Begin);
-                    return str;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to download file {updateFileName} - {ex}");
+                str.Seek(0, SeekOrigin.Begin);
+                return str;
             }
             // Cleanup if download fails
             str.Dispose();
-            return null;
+            cancellationToken.ThrowIfCancellationRequested();
+            throw new IOException("Failed to download file");
         }
 
         protected override IRemoteItem GetRemoteRootItem(string serverPath)
         {
             if (serverPath == null) throw new ArgumentNullException(nameof(serverPath));
-            var remote = _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, serverPath));
+            FtpListItem remote = GetRemoteItem(serverPath);
             if (remote == null) return null;
             var remoteItem = new FtpRemoteItem(remote, this, remote.FullName);
             return remoteItem;
+        }
+
+        private FtpListItem GetRemoteItem(string serverPath)
+        {
+            return _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, serverPath));
         }
 
         private async Task Connect()

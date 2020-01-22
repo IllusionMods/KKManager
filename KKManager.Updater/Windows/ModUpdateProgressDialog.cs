@@ -177,7 +177,7 @@ namespace KKManager.Updater.Windows
                 firstItem.TargetPath.Delete();
             }
 
-            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.SourcePriority).ToList();
+            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.Source.DownloadPriority).ToList();
             if (sourcesToAttempt.Count == 0)
             {
                 Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
@@ -191,7 +191,7 @@ namespace KKManager.Updater.Windows
             {
                 try
                 {
-                    SetStatus($"Attempting download from source {source.Item1.Origin}", false, true);
+                    SetStatus($"Attempting download from source {source.Item1.Source.Origin}", false, true);
 
                     // Needed because ZipUpdater doesn't support progress
                     if (source.Item2.RemoteFile is ZipUpdater.ArchiveItem)
@@ -204,7 +204,7 @@ namespace KKManager.Updater.Windows
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Marking source {source.Item1.Origin} as broken because of exception: {e}");
+                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e}");
 
                     ex = e;
                     _badUpdateSources.Add(source.Item1);

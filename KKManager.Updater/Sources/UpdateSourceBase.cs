@@ -13,14 +13,27 @@ namespace KKManager.Updater.Sources
     {
         private DateTime _latestModifiedDate = DateTime.MinValue;
 
-        protected UpdateSourceBase(string origin, int priority)
+        protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority)
         {
             Origin = origin;
-            Priority = priority;
+            DiscoveryPriority = discoveryPriority;
+            DownloadPriority = downloadPriority;
         }
 
-        protected string Origin { get; }
-        protected int Priority { get; }
+        /// <summary>
+        /// Where the source pulls updates from.
+        /// </summary>
+        public string Origin { get; }
+
+        /// <summary>
+        /// Priority of the source if multiple sources for a download are available. Higher will be considered as having newer update info.
+        /// </summary>
+        public int DiscoveryPriority { get; }
+
+        /// <summary>
+        /// Priority of the source if multiple sources for a download are available. Higher will be attempted to be downloaded first.
+        /// </summary>
+        public int DownloadPriority { get; }
 
         public abstract void Dispose();
 
@@ -32,17 +45,29 @@ namespace KKManager.Updater.Sources
 
             foreach (var fn in filenamesToTry)
             {
+                Stream str = null;
                 try
                 {
-                    using (var str = await DownloadFileAsync(fn, cancellationToken))
-                    {
-                        if (str != null)
-                            updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, Origin, Priority));
-                    }
+                    str = await DownloadFileAsync(fn, cancellationToken);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine($"Failed to download file {fn} from {Origin} - {ex.Message}");
+                }
+                if (str != null)
+                {
+                    try
+                    {
+                        updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, this));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex}");
+                    }
+                    finally
+                    {
+                        str.Dispose();
+                    }
                 }
             }
 
