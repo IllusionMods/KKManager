@@ -156,6 +156,7 @@ namespace KKManager.Updater.Sources
 
             public FtpUpdater Source { get; }
             public FtpListItem SourceItem { get; }
+            UpdateSourceBase IRemoteItem.Source => Source;
 
             public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {

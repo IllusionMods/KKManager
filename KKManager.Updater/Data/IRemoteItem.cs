@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Updater.Sources;
 
 namespace KKManager.Updater.Data
 {
@@ -13,6 +14,7 @@ namespace KKManager.Updater.Data
         bool IsDirectory { get; }
         bool IsFile { get; }
         string ClientRelativeFileName { get; }
+        UpdateSourceBase Source { get; }
 
         IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken);
         Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken);

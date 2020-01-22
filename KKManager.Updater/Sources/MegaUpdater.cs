@@ -203,6 +203,7 @@ namespace KKManager.Updater.Sources
         {
             private readonly MegaUpdateItem _owner;
             private readonly MegaUpdater _source;
+            UpdateSourceBase IRemoteItem.Source => _source;
             public INode SourceItem { get; }
 
             public MegaUpdateItem(INode item, MegaUpdater source, MegaUpdateItem owner)

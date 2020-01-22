@@ -65,18 +65,25 @@ namespace KKManager.Updater.Data
 
             if (RemoteFile != null)
             {
+                Console.WriteLine($"Attempting download from source {RemoteFile.Source.Origin}");
                 await RetryHelper.RetryOnExceptionAsync(async () => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken), 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
                 if (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)
                     throw new IOException($"Failed to download the update file {RemoteFile.Name} - the downloaded file doesn't exist or is corrupted");
+
+                Console.WriteLine($"Downloaded {downloadTarget.Length} bytes successfully");
             }
 
             retryDelete:
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName));
-                TargetPath.Delete();
+                if (TargetPath.Exists)
+                {
+                    Console.WriteLine($"Deleting old file {TargetPath.FullName}");
+                    TargetPath.Delete();
+                }
                 if (RemoteFile != null)
                     downloadTarget.MoveTo(TargetPath.FullName);
             }

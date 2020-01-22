@@ -34,7 +34,7 @@ namespace KKManager.Updater.Sources
         {
             var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, serverPath));
             if (f == null) return null;
-            return new ArchiveItem(f, f.Key);
+            return new ArchiveItem(f, f.Key, this);
         }
 
         private static string NormalizePath(string path)
@@ -59,10 +59,11 @@ namespace KKManager.Updater.Sources
         {
             private readonly IArchiveEntry _sourceItem;
             private readonly string _rootFolder;
+            public UpdateSourceBase Source { get; }
 
-
-            public ArchiveItem(IArchiveEntry item, string rootFolder)
+            public ArchiveItem(IArchiveEntry item, string rootFolder, ZipUpdater source)
             {
+                Source = source;
                 _sourceItem = item ?? throw new ArgumentNullException(nameof(item));
 
                 ItemSize = item.Size;
@@ -89,7 +90,7 @@ namespace KKManager.Updater.Sources
             public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {
                 var subItems = GetSubItems(_sourceItem);
-                return subItems.Select(x => (IRemoteItem)new ArchiveItem(x, _rootFolder)).ToArray();
+                return subItems.Select(x => (IRemoteItem)new ArchiveItem(x, _rootFolder, (ZipUpdater)Source)).ToArray();
             }
 
             public Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)

@@ -169,14 +169,7 @@ namespace KKManager.Updater.Windows
 
             SetStatus($"Updating {firstItem.TargetPath.Name}");
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
-
-            // todo move logging to update methods
-            if (firstItem.TargetPath.Exists)
-            {
-                SetStatus($"Deleting old file {firstItem.TargetPath.FullName}", false, true);
-                firstItem.TargetPath.Delete();
-            }
-
+            
             var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.Source.DownloadPriority).ToList();
             if (sourcesToAttempt.Count == 0)
             {
@@ -191,8 +184,6 @@ namespace KKManager.Updater.Windows
             {
                 try
                 {
-                    SetStatus($"Attempting download from source {source.Item1.Source.Origin}", false, true);
-
                     // Needed because ZipUpdater doesn't support progress
                     if (source.Item2.RemoteFile is ZipUpdater.ArchiveItem)
                         labelPercent.Text = $"Extracting... Overall progress: {_completedSize} / {_overallSize}.";
@@ -220,7 +211,6 @@ namespace KKManager.Updater.Windows
                 return false;
             }
 
-            SetStatus($"Download OK {itemSize}", false, true);
             return true;
         }
 
