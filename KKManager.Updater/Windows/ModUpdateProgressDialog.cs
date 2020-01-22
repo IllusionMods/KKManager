@@ -57,7 +57,7 @@ namespace KKManager.Updater.Windows
                 labelPercent.Text = "";
 
                 SetStatus("Preparing...");
-                if (await ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) == false)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() == false)
                     throw new OperationCanceledException();
 
                 SetStatus("Searching for mod updates...");

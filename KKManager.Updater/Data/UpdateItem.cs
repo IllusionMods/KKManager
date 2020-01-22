@@ -37,7 +37,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (await ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
                     throw new IOException($"Failed to create file in directory {tempPath} because of an IO issue - {ex.Message}", ex);
 
                 goto retryCreate;
@@ -89,7 +89,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (await ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }) != true)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
                     throw new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex);
 
                 goto retryDelete;

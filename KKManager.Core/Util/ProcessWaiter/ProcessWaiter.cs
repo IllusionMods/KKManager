@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -56,7 +57,7 @@ namespace KKManager.Util.ProcessWaiter
         /// <summary>
         /// true if user accepted, false if user cancelled, null if no applications were found so dialog was not shown.
         /// </summary>
-        public static async Task<bool?> CheckForRunningProcesses(string[] filters, Form parentForm = null)
+        public static async Task<bool?> CheckForRunningProcesses(string[] filters, string[] processNameExcludeRegexes, Form parentForm = null)
         {
             if (!IsAdministrator)
             {
@@ -65,7 +66,7 @@ namespace KKManager.Util.ProcessWaiter
             }
 
             int[] idsToCheck = { };
-            await Task.Run(() => idsToCheck = GetRelatedProcessIds(filters));
+            await Task.Run(() => idsToCheck = GetRelatedProcessIds(filters, processNameExcludeRegexes));
 
             if (idsToCheck.Length == 0) return null;
 
@@ -89,7 +90,7 @@ namespace KKManager.Util.ProcessWaiter
             }
         }
 
-        private static int[] GetRelatedProcessIds(string[] filters)
+        private static int[] GetRelatedProcessIds(string[] filenamesToSearch, string[] processNameExcludeRegexes)
         {
             var myProcessId = Process.GetCurrentProcess().Id;
             var idsToCheck = new List<int>();
@@ -97,7 +98,7 @@ namespace KKManager.Util.ProcessWaiter
             {
                 try
                 {
-                    if (pr.Id == myProcessId || pr.HasExited)
+                    if (pr.Id == myProcessId || pr.HasExited || processNameExcludeRegexes.Any(x => Regex.IsMatch(pr.ProcessName, x)))
                         continue;
 
                     var filenames = pr.Modules.Cast<ProcessModule>()
@@ -105,7 +106,7 @@ namespace KKManager.Util.ProcessWaiter
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Distinct();
 
-                    if (filenames.Any(filename => filters.Any(filter =>
+                    if (filenames.Any(filename => filenamesToSearch.Any(filter =>
                     {
                         if (string.IsNullOrEmpty(filename))
                             return false;
