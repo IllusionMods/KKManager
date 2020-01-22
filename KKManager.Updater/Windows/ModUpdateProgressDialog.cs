@@ -118,13 +118,16 @@ namespace KKManager.Updater.Windows
 
                 var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks.";
                 if (_failedItems.Any())
-                {
-                    s += $"\n\nFailed to update {_failedItems.Count} files because some of the sources raised errors.";
-                    if (_failedExceptions.Any())
-                        s += " Reason(s) for failing:\n" + string.Join("\n", _failedExceptions.Select(x => x.Message).Distinct());
-                }
+                    s += $"\nFailed to update {_failedItems.Count} files because some sources crashed. Check log for details.";
                 SetStatus(s, true, true);
+                if (_failedExceptions.Any())
+                {
+                    var failDetails = "Reason(s) for failing:\n" + string.Join("\n", _failedExceptions.Select(x => x.Message).Distinct());
+                    Console.WriteLine(failDetails);
+                    s += " " + failDetails;
+                }
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                PerformAutoScale();
             }
             catch (OperationCanceledException)
             {
