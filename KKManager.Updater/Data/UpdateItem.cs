@@ -75,6 +75,7 @@ namespace KKManager.Updater.Data
             retryDelete:
             try
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName));
                 TargetPath.Delete();
                 if (RemoteFile != null)
                     downloadTarget.MoveTo(TargetPath.FullName);
