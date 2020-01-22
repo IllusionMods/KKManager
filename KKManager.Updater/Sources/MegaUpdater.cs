@@ -226,9 +226,9 @@ namespace KKManager.Updater.Sources
                 {
                     _owner = owner;
 
-                    var current = this;
-                    var result = string.Empty;
-                    while (current != null)
+                    var current = owner;
+                    var result = Name;
+                    while (current?._owner != null)
                     {
                         result = current.Name + "/" + result;
                         current = current._owner;
