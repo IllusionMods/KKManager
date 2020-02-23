@@ -9,9 +9,10 @@ Mod, plugin and card manager for Koikatu! and Koikatsu Party. It can:
 While the app is already useful, it's still in beta. Expect some bugs and lacking features. You can report issues on [GitHub Issues page](https://github.com/bbepis/KKManager/issues), or on the [Koikatu! discord server](https://discord.gg/urDt8CK).
 
 ## How to use
-1. Extract to a new folder anywhere.
-2. Start KKManager.exe, create a shortcut to it if you want.
-3. If the game directory was not automatically detected, select where you installed KK.
+1. Download the latest release from the [releases](https://github.com/IllusionMods/KKManager/releases) page.
+2. Extract to a new folder anywhere, or into your current KK Manager install folder and replace old files.
+3. Start KKManager.exe, create a shortcut to it if you want.
+4. If the game directory was not automatically detected, select where you installed KK.
 
 If there are any mod updates available, the update menu button on top will turn green after a while. You can click it without waiting to check for updates immediately.
 
