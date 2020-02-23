@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using UnityPlugin;
 
@@ -23,6 +26,35 @@ namespace KKManager.SB3UGS
                 fs.Close();
             }
             return Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "UnityFS";
+        }
+
+        public static void CompressBundle(string unity3DFilePath, bool randomizeCab)
+        {
+            SB3UGS_Initializer.ThrowIfNotAvailable();
+            // Avoid loading the sb3ugs types before above has a chance to init them
+            CompressBundleImpl(unity3DFilePath, randomizeCab);
+        }
+        private static readonly RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void CompressBundleImpl(string unity3DFilePath, bool randomizeCab)
+        {
+            using (var parser = Plugins.OpenUnity3d(unity3DFilePath))
+            using (var editor = new Unity3dEditor(parser, false))
+            {
+                // GetAssetNames does more than the name suggests, needs to stay
+                var _ = editor.GetAssetNames(true);
+
+                if (randomizeCab)
+                {
+                    var rnbuf = new byte[16];
+                    rng.GetBytes(rnbuf);
+                    var newCab = "CAB-" + string.Concat(rnbuf.Select((x) => ((int)x).ToString("X2")).ToArray()).ToLower();
+                    editor.RenameCabinet(0, newCab);
+                }
+
+                editor.SaveUnity3d(false, ".unit-y3d", false, true, -1, 2, 262144);
+            }
         }
 
         public static int HashFileContents(string unity3DFilePath)

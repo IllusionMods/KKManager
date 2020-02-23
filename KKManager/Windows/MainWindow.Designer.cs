@@ -54,15 +54,17 @@
             this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateContentsOfUpdatexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.generateContentsOfUpdatexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -95,7 +97,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -246,10 +248,11 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fixesToolStripMenuItem,
             this.changeGameInstallDirectoryToolStripMenuItem,
+            this.compressGameFilesToolStripMenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // fixesToolStripMenuItem
@@ -263,7 +266,7 @@
             // fixFileAndFolderPermissionsToolStripMenuItem
             // 
             this.fixFileAndFolderPermissionsToolStripMenuItem.Name = "fixFileAndFolderPermissionsToolStripMenuItem";
-            this.fixFileAndFolderPermissionsToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
+            this.fixFileAndFolderPermissionsToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.fixFileAndFolderPermissionsToolStripMenuItem.Text = "Fix file and folder permissions";
             this.fixFileAndFolderPermissionsToolStripMenuItem.Click += new System.EventHandler(this.fixFileAndFolderPermissionsToolStripMenuItem_Click);
             // 
@@ -273,6 +276,41 @@
             this.changeGameInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
             this.changeGameInstallDirectoryToolStripMenuItem.Text = "Change game install directory...";
             this.changeGameInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.changeGameInstallDirectoryToolStripMenuItem_Click);
+            // 
+            // compressGameFilesToolStripMenuItem
+            // 
+            this.compressGameFilesToolStripMenuItem.Name = "compressGameFilesToolStripMenuItem";
+            this.compressGameFilesToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.compressGameFilesToolStripMenuItem.Text = "Compress game files...";
+            this.compressGameFilesToolStripMenuItem.Click += new System.EventHandler(this.compressGameFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
+            // 
+            // developersToolStripMenuItem
+            // 
+            this.developersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateContentsOfUpdatexmlToolStripMenuItem,
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem});
+            this.developersToolStripMenuItem.Name = "developersToolStripMenuItem";
+            this.developersToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.developersToolStripMenuItem.Text = "Developers";
+            // 
+            // generateContentsOfUpdatexmlToolStripMenuItem
+            // 
+            this.generateContentsOfUpdatexmlToolStripMenuItem.Name = "generateContentsOfUpdatexmlToolStripMenuItem";
+            this.generateContentsOfUpdatexmlToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.generateContentsOfUpdatexmlToolStripMenuItem.Text = "Generate contents of Update.xml...";
+            this.generateContentsOfUpdatexmlToolStripMenuItem.Click += new System.EventHandler(this.generateContentsOfUpdatexmlToolStripMenuItem_Click);
+            // 
+            // compressBundlesAndRandomizeCABsToolStripMenuItem
+            // 
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem.Name = "compressBundlesAndRandomizeCABsToolStripMenuItem";
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem.Text = "Compress bundles in a folder...";
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem.Click += new System.EventHandler(this.compressBundlesAndRandomizeCABsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -319,26 +357,6 @@
             // 
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
-            // 
-            // developersToolStripMenuItem
-            // 
-            this.developersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.generateContentsOfUpdatexmlToolStripMenuItem});
-            this.developersToolStripMenuItem.Name = "developersToolStripMenuItem";
-            this.developersToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.developersToolStripMenuItem.Text = "Developers";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(238, 6);
-            // 
-            // generateContentsOfUpdatexmlToolStripMenuItem
-            // 
-            this.generateContentsOfUpdatexmlToolStripMenuItem.Name = "generateContentsOfUpdatexmlToolStripMenuItem";
-            this.generateContentsOfUpdatexmlToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
-            this.generateContentsOfUpdatexmlToolStripMenuItem.Text = "Generate contents of Update.xml...";
-            this.generateContentsOfUpdatexmlToolStripMenuItem.Click += new System.EventHandler(this.generateContentsOfUpdatexmlToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -400,5 +418,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem developersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateContentsOfUpdatexmlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compressGameFilesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compressBundlesAndRandomizeCABsToolStripMenuItem;
     }
 }

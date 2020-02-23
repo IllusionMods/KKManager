@@ -91,6 +91,13 @@
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\FileSize.cs" />
     <Compile Include="Util\ListTools.cs" />
+    <Compile Include="Util\LoadingDialog\LoadingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Util\LoadingDialog\LoadingDialog.designer.cs">
+      <DependentUpon>LoadingDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Util\LoadingDialog\LoadingDialogInterface.cs" />
     <Compile Include="Util\LogWriter.cs" />
     <Compile Include="Util\PathTools.cs" />
     <Compile Include="Util\ProcessTools.cs" />
@@ -116,6 +123,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Util\LoadingDialog\LoadingDialog.resx">
+      <DependentUpon>LoadingDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.resx">
       <DependentUpon>ProcessWaiter.cs</DependentUpon>
     </EmbeddedResource>
@@ -129,5 +139,6 @@
       <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

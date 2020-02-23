@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Properties;
+using KKManager.SB3UGS;
 using KKManager.Updater;
 using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
@@ -472,6 +474,88 @@ namespace KKManager.Windows
             using (var w = new UpdateInfoEditorWindow())
             {
                 w.ShowDialog(this);
+            }
+        }
+
+        private void compressGameFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                    "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.",
+                    "Compress files", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                var directories = InstallDirectoryHelper.KoikatuDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                    .Where(directory => directory.Name.EndsWith("_Data", StringComparison.OrdinalIgnoreCase) ||
+                                        directory.Name.Equals("abdata", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                var files = directories.SelectMany(dir => dir.GetFiles("*", SearchOption.AllDirectories)).Where(SB3UGS_Utils.FileIsAssetBundle).ToList();
+
+                CompressFiles(files, false);
+            }
+        }
+
+        private void CompressFiles(IReadOnlyList<FileInfo> files, bool randomizeCab)
+        {
+            if (!SB3UGS_Initializer.CheckIsAvailable())
+            {
+                MessageBox.Show(
+                    "SB3UGS has not been found in KK Manager directory or it failed to be loaded. Reinstall KK Manager and try again.",
+                    "Compress files", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            LoadingDialog.ShowDialog(this, "Compressing asset bundle files", dialogInterface =>
+            {
+                dialogInterface.SetMaximum(files.Count);
+
+                var excs = new ConcurrentBag<Exception>();
+                long totalSizeSaved = 0;
+                var count = 0;
+
+                Parallel.ForEach(files, file =>
+                {
+                    dialogInterface.SetProgress(count++, "Compressing " + file.Name);
+
+                    try
+                    {
+                        var origSize = file.Length;
+                        SB3UGS_Utils.CompressBundle(file.FullName, randomizeCab);
+                        file.Refresh();
+                        totalSizeSaved += origSize - file.Length;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to compress file {file.FullName}", ex);
+                        excs.Add(ex);
+                    }
+                });
+
+                if (excs.Any())
+                    MessageBox.Show($"Successfully compressed {files.Count - excs.Count} out of {files.Count} files, see log for details. Saved {FileSize.FromBytes(totalSizeSaved).ToString()}.", "Compress files", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else
+                    MessageBox.Show($"Successfully compressed {files.Count} files. Saved {FileSize.FromBytes(totalSizeSaved).ToString()}.", "Compress files", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            });
+        }
+
+        private void compressBundlesAndRandomizeCABsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var d = new CommonOpenFileDialog("Compress bundles and randomize CABs")
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true,
+                EnsureFileExists = true
+            })
+            {
+                if (d.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    var files = new DirectoryInfo(d.FileName).GetFiles("*", SearchOption.AllDirectories).Where(SB3UGS_Utils.FileIsAssetBundle).ToList();
+
+                    var randomize = MessageBox.Show("Do you want to randomize CABs of the compressed files? Click No to keep the original CAB strings.",
+                                        "Compress bundles in a folder...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                                    DialogResult.Yes;
+
+                    CompressFiles(files, randomize);
+                }
             }
         }
     }

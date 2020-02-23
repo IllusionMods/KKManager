@@ -83,7 +83,7 @@ namespace KKManager.SB3UGS
         public static void ThrowIfNotAvailable()
         {
             if (!CheckIsAvailable())
-                throw new IOException("SB3UGS is not available");
+                throw new NotSupportedException("SB3UGS is not available");
         }
 
         private static Assembly ResolveAssembly(object sender, ResolveEventArgs e)

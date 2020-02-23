@@ -192,6 +192,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
@@ -252,6 +253,10 @@
     <ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj">
       <Project>{09fc4ef5-9694-4961-a136-dcfd8b5f1368}</Project>
       <Name>KKManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KKManager.SB3UGS\KKManager.SB3UGS.csproj">
+      <Project>{b8b55e55-d95b-4e6a-9f33-c3737ad4487f}</Project>
+      <Name>KKManager.SB3UGS</Name>
     </ProjectReference>
     <ProjectReference Include="..\KKManager.Updater\KKManager.Updater.csproj">
       <Project>{b64c974d-9687-4e69-aeea-3f04f769e556}</Project>
