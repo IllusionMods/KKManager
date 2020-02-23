@@ -226,7 +226,12 @@ namespace KKManager.Windows
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine("Failed to read opened tabs from config: " + ex); }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to read opened tabs from config: " + ex);
+                foreach (var content in dockPanel.Contents) content.DockHandler.Close();
+                dockPanel.ResumeLayout(true, true);
+            }
 
             OpenOrGetCardWindow(InstallDirectoryHelper.GetMaleCardDir());
             OpenOrGetCardWindow(InstallDirectoryHelper.GetFemaleCardDir());
