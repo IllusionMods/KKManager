@@ -157,13 +157,20 @@ namespace KKManager.Updater.Sources
 
                     return (remote, local) =>
                     {
+                        var h = FileContentsCalculator.GetFileHash(local);
                         var match = updateInfo.ContentHashes.FirstOrDefault(hash => PathTools.PathsEqual(hash.RelativeFileName, remote.ClientRelativeFileName));
-                        if (match == null || match.Hash == 0)
+
+                        if (match != null && h != null)
                         {
-                            Console.WriteLine($"No hash found on remote for file {remote.ClientRelativeFileName} - comparing size instead");
-                            return remote.ItemSize == local.Length;
+                            if (h.SB3UHash != 0 && match.Hash != 0)
+                                return h.SB3UHash == match.Hash;
+
+                            if (h.FileHash != 0 && match.FileHash != 0)
+                                return h.FileHash == match.FileHash;
                         }
-                        return FileContentsCalculator.GetFileHash(local) == match.Hash;
+
+                        Console.WriteLine($"No hash found on remote for file {remote.ClientRelativeFileName}, comparing file size instead");
+                        return remote.ItemSize == local.Length;
                     };
                 default:
                     throw new ArgumentOutOfRangeException();

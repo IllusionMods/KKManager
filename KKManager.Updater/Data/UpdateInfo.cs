@@ -211,11 +211,14 @@ namespace KKManager.Updater.Data
             public int Hash { get; set; }
 
             [XmlAttribute]
+            public int FileHash { get; set; }
+
+            [XmlAttribute]
             public string RelativeFileName { get; set; }
 
             public override string ToString()
             {
-                return RelativeFileName + " Hash: " + Hash;
+                return $"{RelativeFileName} SB3UHash={Hash} FileHash={FileHash}";
             }
         }
 

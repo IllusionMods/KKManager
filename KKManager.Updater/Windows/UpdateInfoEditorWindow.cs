@@ -113,7 +113,12 @@ namespace KKManager.Updater.Windows
                     {
                         var directory = new DirectoryInfo(fb.FileName);
                         var fileHashes = FileContentsCalculator.GetFileHashes(directory, true);
-                        var results = fileHashes.Select(x => new UpdateInfo.ContentHash { RelativeFileName = x.Key.FullName.Substring(directory.FullName.Length).Replace('\\', '/').TrimStart('/'), Hash = x.Value }).ToList();
+                        var results = fileHashes.Select(x => new UpdateInfo.ContentHash
+                        {
+                            RelativeFileName = x.Key.FullName.Substring(directory.FullName.Length).Replace('\\', '/').TrimStart('/'), 
+                            Hash = x.Value.SB3UHash != 0 ? x.Value.SB3UHash : x.Value.FileHash,  // Default to filehash to keep backwards compatibility TODO remove at some point
+                            FileHash = x.Value.FileHash
+                        }).ToList();
                         uinfo.ContentHashes = results;
                         propertyGrid1.Refresh();
                         MessageBox.Show("File hashes have been added to currently opened object", "Generate file hashes", MessageBoxButtons.OK, MessageBoxIcon.Information);
