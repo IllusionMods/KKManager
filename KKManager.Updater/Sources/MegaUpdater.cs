@@ -31,7 +31,9 @@ namespace KKManager.Updater.Sources
             if (serverUri.Host.ToLower() != "mega.nz")
                 throw new NotSupportedException("The link doesn't point to mega.nz - " + serverUri);
 
-            _client = new MegaApiClient();
+            _client = new MegaApiClient(new Options("0RVyzAhJ", true, 3));
+            _client.ApiRequestFailed += (sender, args) => Console.WriteLine($@"MEGA API ERROR: {args.ApiResult}   {args.Exception}");
+
             _currentFolderLink = serverUri;
 
             try
