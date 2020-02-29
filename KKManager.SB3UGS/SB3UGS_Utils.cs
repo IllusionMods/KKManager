@@ -78,7 +78,7 @@ namespace KKManager.SB3UGS
                     sbResult.AppendFormat(CultureInfo.InvariantCulture, "{0}\0{1}\0{2}\0{3}\n", asset.pathID, asset.classID1, asset.classID2, names[i]);
                     //Console.WriteLine("PathID=" + asset.pathID.ToString("D") + " id1=" + (int)asset.classID1 + "/" + asset.classID1 + " id2=" + asset.classID2 + " " + names[i]);
                     if (asset is NotLoaded notLoaded)
-                        sbResult.AppendFormat(CultureInfo.InvariantCulture, "{0}\0{1}\n", notLoaded.offset, notLoaded.size);
+                        sbResult.AppendFormat(CultureInfo.InvariantCulture, "{0}\n", notLoaded.size);
                 }
 
                 return GetStableHashCode(sbResult);
