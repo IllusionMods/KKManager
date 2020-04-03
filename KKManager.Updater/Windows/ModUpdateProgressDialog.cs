@@ -93,8 +93,11 @@ namespace KKManager.Updater.Windows
                 _completedSize = FileSize.Empty;
 
                 var allItems = updateTasks.SelectMany(x => x.GetUpdateItems())
+                    // Remove unnecessary to avoid potential conflicts if the update is aborted midway and a newer version is added
+                    .OrderByDescending(sources => sources.Any(x => x.Item2 is DeleteFileUpdateItem))
                     // Try items with a single source first since they are the most risky
-                    .OrderBy(sources => sources.Count())
+                    .ThenBy(sources => sources.Count())
+                    .ThenBy(sources => sources.FirstOrDefault()?.Item2.TargetPath.FullName)
                     .ToList();
 
                 SetStatus($"{allItems.Count(items => items.Count() > 1)} out of {allItems.Count} items have more than 1 source", false, true);
@@ -169,7 +172,7 @@ namespace KKManager.Updater.Windows
 
             SetStatus($"Updating {firstItem.TargetPath.Name}");
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
-            
+
             var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.Source.DownloadPriority).ToList();
             if (sourcesToAttempt.Count == 0)
             {
