@@ -35,6 +35,9 @@ namespace KKManager.Updater
             Console.WriteLine("Starting update search...");
             var results = new ConcurrentBag<UpdateTask>();
 
+            var ignoreListPath = "ignorelist.txt";
+            var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath) : new string[0];
+
             // First start all of the sources, then wait until they all finish
             var concurrentTasks = updateSources.Select(source => new { task = RetryHelper.RetryOnExceptionAsync(
                 async () =>
@@ -45,7 +48,7 @@ namespace KKManager.Updater
                         if (filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
                             continue;
 
-                        task.Items.RemoveAll(x => x.UpToDate);
+                        task.Items.RemoveAll(x => x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
                         results.Add(task);
                     }
                 },
