@@ -35,7 +35,8 @@ namespace KKManager.Updater
             Console.WriteLine("Starting update search...");
             var results = new ConcurrentBag<UpdateTask>();
 
-            var ignoreList = File.ReadAllLines("ignorelist.txt");
+            var ignoreListPath = "ignorelist.txt";
+            var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath) : new string[0];
 
             // First start all of the sources, then wait until they all finish
             var concurrentTasks = updateSources.Select(source => new { task = RetryHelper.RetryOnExceptionAsync(
