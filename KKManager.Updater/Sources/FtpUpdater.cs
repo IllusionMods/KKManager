@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -84,8 +85,9 @@ namespace KKManager.Updater.Sources
             if (!_client.IsConnected)
             {
                 await _client.AutoConnectAsync();
-                if (_client.ServerType == FtpServer.VsFTPd)
-                    _client.RecursiveList = true;
+                // todo hack, different server types don't announce it either
+                //if (_client.ServerType == FtpServer.VsFTPd)
+                _client.RecursiveList = true;
             }
         }
 
