@@ -102,7 +102,7 @@ namespace KKManager.Updater.Data
         /// Relative server path to download the mod files from
         /// </summary>
         public string ServerPath { get; set; }
-        
+
         /// <summary>
         /// How the file versions are compared to decide if they should be updated.
         /// </summary>
@@ -208,7 +208,22 @@ namespace KKManager.Updater.Data
         public sealed class ContentHash
         {
             [XmlAttribute]
-            public int Hash { get; set; }
+            [Obsolete]
+            [Browsable(false)]
+            public int Hash
+            {
+                get => SB3UHash != 0 ? SB3UHash : FileHash;
+                set
+                {
+                    if (SB3UHash == 0)
+                        SB3UHash = value;
+                    if (FileHash == 0)
+                        FileHash = value;
+                }
+            }
+
+            [XmlAttribute]
+            public int SB3UHash { get; set; }
 
             [XmlAttribute]
             public int FileHash { get; set; }
@@ -218,7 +233,7 @@ namespace KKManager.Updater.Data
 
             public override string ToString()
             {
-                return $"{RelativeFileName} SB3UHash={Hash} FileHash={FileHash}";
+                return $"{RelativeFileName} SB3UHash={SB3UHash} FileHash={FileHash}";
             }
         }
 

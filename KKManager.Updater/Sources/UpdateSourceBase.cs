@@ -162,8 +162,8 @@ namespace KKManager.Updater.Sources
 
                         if (match != null && h != null)
                         {
-                            if (h.SB3UHash != 0 && match.Hash != 0)
-                                return h.SB3UHash == match.Hash;
+                            if (h.SB3UHash != 0 && match.SB3UHash != 0)
+                                return h.SB3UHash == match.SB3UHash;
 
                             if (h.FileHash != 0 && match.FileHash != 0)
                                 return h.FileHash == match.FileHash;

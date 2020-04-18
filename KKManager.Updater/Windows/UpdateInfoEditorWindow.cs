@@ -116,7 +116,7 @@ namespace KKManager.Updater.Windows
                         var results = fileHashes.Select(x => new UpdateInfo.ContentHash
                         {
                             RelativeFileName = x.Key.FullName.Substring(directory.FullName.Length).Replace('\\', '/').TrimStart('/'), 
-                            Hash = x.Value.SB3UHash != 0 ? x.Value.SB3UHash : x.Value.FileHash,  // Default to filehash to keep backwards compatibility TODO remove at some point
+                            SB3UHash = x.Value.SB3UHash,
                             FileHash = x.Value.FileHash
                         }).ToList();
                         uinfo.ContentHashes = results;
