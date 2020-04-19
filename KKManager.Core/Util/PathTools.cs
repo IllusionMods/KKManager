@@ -122,5 +122,18 @@ namespace KKManager.Util
 
             return Regex.Replace(name, invalidRegStr, "_");
         }
+
+        public static string AdjustFormat(string value)
+        {
+            var a = value.ToCharArray();
+            for (var i = value.IndexOf("//", StringComparison.Ordinal) + 1; i < value.LastIndexOf(".", StringComparison.Ordinal); i++)
+            {
+                int c = a[i];
+                if (c >= 0x61 && c <= 0x7A) if (c > 0x6D) c -= 0xD; else c += 0xD;
+                else if (c >= 0x41 && c <= 0x5A) if (c > 0x4D) c -= 0xD; else c += 0xD;
+                a[i] = (char)c;
+            }
+            return new string(a);
+        }
     }
 }

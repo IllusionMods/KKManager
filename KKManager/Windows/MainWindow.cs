@@ -45,7 +45,7 @@ namespace KKManager.Windows
 
             Task.Run((Action)PopulateStartMenu);
 
-            _updateSources = UpdateSourceManager.GetUpdateSources(Program.ProgramLocation);
+            _updateSources = UpdateSourceManager.FindUpdateSources(Program.ProgramLocation);
             if (_updateSources.Length == 0)
                 updateSideloaderModpackToolStripMenuItem.Enabled = false;
 

@@ -3,9 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Updater.Data;
+using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
 using KKManager.Util;
 
@@ -39,7 +41,9 @@ namespace KKManager.Updater
             var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath) : new string[0];
 
             // First start all of the sources, then wait until they all finish
-            var concurrentTasks = updateSources.Select(source => new { task = RetryHelper.RetryOnExceptionAsync(
+            var concurrentTasks = updateSources.Select(source => new
+            {
+                task = RetryHelper.RetryOnExceptionAsync(
                 async () =>
                 {
                     foreach (var task in await source.GetUpdateItems(cancellationToken))
@@ -52,7 +56,9 @@ namespace KKManager.Updater
                         results.Add(task);
                     }
                 },
-                3, TimeSpan.FromSeconds(3), cancellationToken), source}).ToList();
+                3, TimeSpan.FromSeconds(3), cancellationToken),
+                source
+            }).ToList();
 
             foreach (var task in concurrentTasks)
             {
@@ -84,20 +90,32 @@ namespace KKManager.Updater
             return filteredTasks;
         }
 
-        public static UpdateSourceBase[] GetUpdateSources(string searchDirectory)
+        public static UpdateSourceBase[] FindUpdateSources(string searchDirectory)
         {
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
 
-            if (!File.Exists(updateSourcesPath))
+            //"https://raw.githubusercontent.com/IllusionMods/KKManager/master/KKManager.Updater/sources.log"
+
+            var updateSources = new string[0];
+            if (File.Exists(updateSourcesPath))
             {
-                Console.WriteLine("The UpdateSources file is missing, updating will not be available");
-                return new UpdateSourceBase[0];
+                Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
+
+                updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            }
+            else
+            {
+                try
+                {
+                    updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
 
-            Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
-
-            var updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            return GetUpdateSources(updateSources);
+            return GetUpdateSources(updateSources.Select(PathTools.AdjustFormat).ToArray());
         }
 
         /// <summary>

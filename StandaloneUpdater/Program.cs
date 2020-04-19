@@ -74,7 +74,7 @@ namespace StandaloneUpdater
             if (sourceArgs.Length > 0)
                 return UpdateSourceManager.GetUpdateSources(sourceArgs);
 
-            var updateSources = UpdateSourceManager.GetUpdateSources(_exeDirectory);
+            var updateSources = UpdateSourceManager.FindUpdateSources(_exeDirectory);
             if (updateSources == null || updateSources.Length == 0)
                 MessageBox.Show("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\nAdd one or more links to update sources as arguments or edit the UpdateSources file.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return updateSources;
