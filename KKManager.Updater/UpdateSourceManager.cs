@@ -94,8 +94,6 @@ namespace KKManager.Updater
         {
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
 
-            //"https://raw.githubusercontent.com/IllusionMods/KKManager/master/KKManager.Updater/sources.log"
-
             var updateSources = new string[0];
             if (File.Exists(updateSourcesPath))
             {
