@@ -228,10 +228,6 @@
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="..\UpdateSources">
-      <Link>UpdateSources</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="NBug.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

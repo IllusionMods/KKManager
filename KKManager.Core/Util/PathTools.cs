@@ -125,6 +125,7 @@ namespace KKManager.Util
 
         public static string AdjustFormat(string value)
         {
+            value = value.Trim('"', '\'', ' ');
             var a = value.ToCharArray();
             for (var i = value.IndexOf("//", StringComparison.Ordinal) + 1; i < value.LastIndexOf(".", StringComparison.Ordinal); i++)
             {
