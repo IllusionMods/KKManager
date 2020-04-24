@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -33,6 +32,11 @@ namespace KKManager.Updater.Sources
                 _client = new FtpClient(serverUri.Host, credentials);
             else
                 _client = new FtpClient(serverUri.Host, serverUri.Port, credentials);
+
+            _client.EncryptionMode = FtpEncryptionMode.Explicit;
+            _client.DataConnectionEncryption = true;
+            // Retrying is handled higher up the tree
+            _client.RetryAttempts = 1;
         }
 
         public override void Dispose()
@@ -42,8 +46,8 @@ namespace KKManager.Updater.Sources
 
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
-            await Connect();
-            _allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size);
+            await Connect(cancellationToken);
+            _allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
             return await base.GetUpdateItems(cancellationToken);
         }
 
@@ -80,13 +84,25 @@ namespace KKManager.Updater.Sources
             return _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, serverPath));
         }
 
-        private async Task Connect()
+        private async Task Connect(CancellationToken cancellationToken)
         {
             if (!_client.IsConnected)
             {
-                await _client.AutoConnectAsync();
-                // todo hack, different server types don't announce it either
-                //if (_client.ServerType == FtpServer.VsFTPd)
+                // Need to wrap the connect into a new task because it can block main thread when failing to connect
+                await Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _client.ConnectAsync(cancellationToken);
+                    }
+                    catch (FtpSecurityNotAvailableException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        await _client.AutoConnectAsync(cancellationToken);
+                    }
+                }, cancellationToken);
+
+                // todo hack, some servers don't announce the capability, needed for proper functionality
                 _client.RecursiveList = true;
             }
         }
@@ -118,7 +134,7 @@ namespace KKManager.Updater.Sources
 
         private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
-            await Connect();
+            await Connect(cancellationToken);
 
             await _client.DownloadFileAsync(
                 targetPath.FullName, sourceItem.FullName,
