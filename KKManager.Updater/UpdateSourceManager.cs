@@ -99,7 +99,7 @@ namespace KKManager.Updater
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
 
             var updateSources = new string[0];
-            if (File.Exists(updateSourcesPath))
+            if (File.Exists(updateSourcesPath) && File.ReadAllText(updateSourcesPath).Length > 0)
             {
                 Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
 
@@ -107,6 +107,7 @@ namespace KKManager.Updater
             }
             else
             {
+                Console.WriteLine("Looking for update sources...");
                 try
                 {
                     updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split();
