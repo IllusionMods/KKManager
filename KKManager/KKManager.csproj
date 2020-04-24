@@ -71,6 +71,7 @@
       <HintPath>..\packages\System.Buffers.4.5.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
@@ -98,6 +99,7 @@
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
@@ -127,6 +129,12 @@
     </Compile>
     <Compile Include="Windows\Dialogs\RenameCards.Designer.cs">
       <DependentUpon>RenameCards.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ToolWindows\LogViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\ToolWindows\LogViewer.Designer.cs">
+      <DependentUpon>LogViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
       <SubType>UserControl</SubType>
@@ -212,6 +220,9 @@
     </Compile>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\LogViewer.resx">
+      <DependentUpon>LogViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.resx">
       <DependentUpon>PluginViewer.cs</DependentUpon>

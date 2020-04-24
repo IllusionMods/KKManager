@@ -10,6 +10,7 @@ namespace KKManager
 {
     internal static class Program
     {
+        public static LogWriter Logger { get; private set; }
         public static SynchronizationContext MainSynchronizationContext { get; internal set; }
 
         public static string ProgramLocation => Path.GetDirectoryName(typeof(Program).Assembly.Location);
@@ -23,7 +24,8 @@ namespace KKManager
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);
             AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
 
-            using (LogWriter.StartLogging())
+            Logger = LogWriter.StartLogging();
+            using (Logger)
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

@@ -129,7 +129,9 @@ namespace KKManager.Updater
                 try
                 {
                     results.Add(GetUpdater(new Uri(updateSource), -index));
+#if DEBUG
                     Console.WriteLine($"Added {updateSource}");
+#endif
                 }
                 catch (Exception ex)
                 {

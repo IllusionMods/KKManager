@@ -18,6 +18,7 @@ using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
 using KKManager.Util;
 using KKManager.Windows.Content;
+using KKManager.Windows.ToolWindows;
 using KKManager.Windows.ToolWindows.Properties;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -244,6 +245,9 @@ namespace KKManager.Windows
             dockPanel.DockRightPortion = 400;
             var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
             propertiesToolWindow.DockState = DockState.DockRight;
+
+            var logWindow = GetOrCreateWindow<LogViewer>();
+            logWindow.DockState = DockState.DockBottomAutoHide;
         }
 
         private static IDockContent DeserializeTab(string persistString)
@@ -557,6 +561,11 @@ namespace KKManager.Windows
                     CompressFiles(files, randomize);
                 }
             }
+        }
+
+        private void openLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetOrCreateWindow<LogViewer>().Show(dockPanel, DockState.DockBottom);
         }
     }
 }

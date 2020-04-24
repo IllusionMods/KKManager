@@ -43,7 +43,7 @@ namespace KKManager.Updater.Data
             {
                 // Updates missing a mirror
                 var _ = Items.Select(x => x.TargetPath.FullName).Except(alternativeItems.Select(x => x.Item2.TargetPath.FullName)).ToList();
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
             }
 #endif
             return mergedItems;

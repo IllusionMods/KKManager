@@ -9,6 +9,8 @@ namespace KKManager.Util
 {
     public sealed class LogWriter : StreamWriter
     {
+        public string LogFilePath { get; }
+
         private static string CreateLogFilenameForAssembly(Assembly assembly)
         {
             var location = assembly.Location;
@@ -18,8 +20,9 @@ namespace KKManager.Util
             return location;
         }
 
-        private LogWriter(string path) : base(path, true, Encoding.UTF8)
+        private LogWriter(string logFilePath) : base(logFilePath, true, Encoding.UTF8)
         {
+            LogFilePath = logFilePath;
         }
 
         protected override void Dispose(bool disposing)
@@ -94,12 +97,29 @@ namespace KKManager.Util
 
             ConsoleOut?.WriteLine(value);
 
-            base.AutoFlush = false;
-            base.Write('[');
-            base.Write(DateTime.UtcNow.ToString("T", CultureInfo.InvariantCulture));
-            base.Write(']');
-            base.WriteLine(value);
-            base.AutoFlush = true;
+            var fullEntry = '[' + DateTime.UtcNow.ToString("T", CultureInfo.InvariantCulture) + ']' + value;
+            base.WriteLine(fullEntry);
+
+            try
+            {
+                OnLogWrite?.Invoke(this, new LogEventArgs(fullEntry));
+            }
+            catch (Exception ex)
+            {
+                base.WriteLine("Exception in OnLogWrite subscriber - " + ex);
+            }
         }
+
+        public class LogEventArgs : EventArgs
+        {
+            public LogEventArgs(string message)
+            {
+                Message = message;
+            }
+
+            public string Message { get; }
+        }
+
+        public event EventHandler<LogEventArgs> OnLogWrite;
     }
 }

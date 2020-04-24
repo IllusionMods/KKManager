@@ -65,6 +65,7 @@
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.openLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -107,7 +108,8 @@
             this.openCardBrowserToolStripMenuItem,
             this.sideloaderModsToolStripMenuItem,
             this.openPluginBrowserToolStripMenuItem,
-            this.openPropertiesToolStripMenuItem});
+            this.openPropertiesToolStripMenuItem,
+            this.openLogViewerToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -358,6 +360,13 @@
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
             // 
+            // openLogViewerToolStripMenuItem
+            // 
+            this.openLogViewerToolStripMenuItem.Name = "openLogViewerToolStripMenuItem";
+            this.openLogViewerToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.openLogViewerToolStripMenuItem.Text = "Open log viewer";
+            this.openLogViewerToolStripMenuItem.Click += new System.EventHandler(this.openLogViewerToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -420,5 +429,6 @@
         private System.Windows.Forms.ToolStripMenuItem generateContentsOfUpdatexmlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressGameFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressBundlesAndRandomizeCABsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openLogViewerToolStripMenuItem;
     }
 }
