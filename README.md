@@ -10,11 +10,11 @@ While the app is already useful, it's still in beta. Expect some bugs and lackin
 
 ## How to use
 1. Download the latest release from the [releases](https://github.com/IllusionMods/KKManager/releases) page.
-2. Extract to a new folder anywhere, or into your current KK Manager install folder and replace old files.
+2. Extract to a new folder anywhere. If you want to update your current KK Manager install then it's recommended to remove all old files except for the .settings file.
 3. Start KKManager.exe, create a shortcut to it if you want.
 4. If the game directory was not automatically detected, select where you installed KK.
 
-If there are any mod updates available, the update menu button on top will turn green after a while. You can click it without waiting to check for updates immediately.
+You can turn on automatic checking for updates in the Tools menu. If there are any mod updates available, the update menu button on top will turn green after a while. You can observe update process through the log window.
 
 ## Screenshots
 ![kkmanager cards preview](https://user-images.githubusercontent.com/39247311/70395199-ae99f600-19fc-11ea-99b2-ee31a9081468.PNG)
