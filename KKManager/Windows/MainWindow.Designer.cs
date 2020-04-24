@@ -40,6 +40,7 @@
             this.sideloaderModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPluginBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openPropertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startTheGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.installDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +66,8 @@
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openLogViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -172,6 +174,13 @@
             this.openPropertiesToolStripMenuItem.Text = "Open properties";
             this.openPropertiesToolStripMenuItem.Click += new System.EventHandler(this.openPropertiesToolStripMenuItem_Click);
             // 
+            // openLogViewerToolStripMenuItem
+            // 
+            this.openLogViewerToolStripMenuItem.Name = "openLogViewerToolStripMenuItem";
+            this.openLogViewerToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.openLogViewerToolStripMenuItem.Text = "Open log viewer";
+            this.openLogViewerToolStripMenuItem.Click += new System.EventHandler(this.openLogViewerToolStripMenuItem_Click);
+            // 
             // startTheGameToolStripMenuItem
             // 
             this.startTheGameToolStripMenuItem.Name = "startTheGameToolStripMenuItem";
@@ -248,6 +257,8 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkForUpdatesOnStartupToolStripMenuItem,
+            this.toolStripSeparator4,
             this.fixesToolStripMenuItem,
             this.changeGameInstallDirectoryToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
@@ -360,12 +371,16 @@
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
             // 
-            // openLogViewerToolStripMenuItem
+            // checkForUpdatesOnStartupToolStripMenuItem
             // 
-            this.openLogViewerToolStripMenuItem.Name = "openLogViewerToolStripMenuItem";
-            this.openLogViewerToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.openLogViewerToolStripMenuItem.Text = "Open log viewer";
-            this.openLogViewerToolStripMenuItem.Click += new System.EventHandler(this.openLogViewerToolStripMenuItem_Click);
+            this.checkForUpdatesOnStartupToolStripMenuItem.Name = "checkForUpdatesOnStartupToolStripMenuItem";
+            this.checkForUpdatesOnStartupToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.checkForUpdatesOnStartupToolStripMenuItem.Text = "Check for updates on startup";
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(238, 6);
             // 
             // MainWindow
             // 
@@ -430,5 +445,7 @@
         private System.Windows.Forms.ToolStripMenuItem compressGameFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressBundlesAndRandomizeCABsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openLogViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesOnStartupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }

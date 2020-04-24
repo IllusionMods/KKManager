@@ -56,6 +56,9 @@ namespace KKManager.Windows
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
             Text = $"KK Manager {version} (Fancy updates edition) - {InstallDirectoryHelper.KoikatuDirectory.FullName}";
+
+            Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
+            Settings.Default.Binder.SendUpdates(this);
         }
 
         private static DirectoryInfo GetKoikatuDirectory()
@@ -434,6 +437,7 @@ namespace KKManager.Windows
 #if DEBUG
             return;
 #endif
+            if (!Settings.Default.AutoUpdateSearch) return;
             // Check For Updates
             // todo make more efficient?
             try
