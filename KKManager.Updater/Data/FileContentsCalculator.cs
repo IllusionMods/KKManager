@@ -33,7 +33,7 @@ namespace KKManager.Updater.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to save hash cache: " + e);
+                    Console.WriteLine("Failed to save hash cache: " + e.Message);
                 }
             };
 
@@ -46,7 +46,7 @@ namespace KKManager.Updater.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Failed to load hash cache: " + e);
+                    Console.WriteLine("Failed to load hash cache: " + e.Message);
                 }
             }
         }

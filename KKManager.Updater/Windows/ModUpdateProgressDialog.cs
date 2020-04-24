@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -238,7 +239,7 @@ Speed: {speed:F1}KB/s";
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e}");
+                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e.ToStringDemystified()}");
 
                     ex = e;
                     _badUpdateSources.Add(source.Item1);

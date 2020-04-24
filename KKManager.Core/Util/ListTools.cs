@@ -39,7 +39,6 @@ namespace KKManager.Util
                 catch (SystemException ex)
                 {
                     Console.WriteLine(ex);
-
                 }
             }
         }

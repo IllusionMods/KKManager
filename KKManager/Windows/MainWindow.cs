@@ -231,7 +231,7 @@ namespace KKManager.Windows
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to read opened tabs from config: " + ex);
+                Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
                 foreach (var content in dockPanel.Contents) content.DockHandler.Close();
                 dockPanel.ResumeLayout(true, true);
             }
@@ -415,7 +415,7 @@ namespace KKManager.Windows
             }
             catch (Exception ex)
             {
-                var errorMsg = "Failed to start update - " + ex;
+                var errorMsg = "Failed to start update - " + ex.ToStringDemystified();
                 Console.WriteLine(errorMsg);
                 MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -529,7 +529,7 @@ namespace KKManager.Windows
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to compress file {file.FullName}", ex);
+                        Console.WriteLine($"Failed to compress file {file.FullName} - {ex.Message}");
                         excs.Add(ex);
                     }
                 });

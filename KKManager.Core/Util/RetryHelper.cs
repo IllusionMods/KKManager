@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,6 +35,9 @@ namespace KKManager.Util
                     if (ex is OperationCanceledException || attempts >= times)
                         throw;
 
+                    // Deal with exceptions caused by cancellation
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await CreateDelayForException(times, attempts, delay, ex, cancellationToken);
                 }
             } while (true);
@@ -42,7 +46,7 @@ namespace KKManager.Util
         private static Task CreateDelayForException(int times, int attempts, TimeSpan delay, Exception ex, CancellationToken cancellationToken)
         {
             //var delay = IncreasingDelayInSeconds(attempts);
-            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}. Exception: " + ex);
+            Console.WriteLine($"Exception on attempt {attempts} of {times}. Will retry after sleeping for {delay}. Exception: " + ex.ToStringDemystified());
             return Task.Delay(delay, cancellationToken);
         }
 

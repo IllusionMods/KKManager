@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -66,9 +67,12 @@ namespace KKManager.Updater
                 {
                     await task.task;
                 }
+                catch (OperationCanceledException)
+                {
+                }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e}");
+                    Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
                 }
             }
 
@@ -135,7 +139,7 @@ namespace KKManager.Updater
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not open update source: {updateSource} - {ex}");
+                    Console.WriteLine($"Could not open update source: {updateSource} - {ex.ToStringDemystified()}");
                 }
             }
 

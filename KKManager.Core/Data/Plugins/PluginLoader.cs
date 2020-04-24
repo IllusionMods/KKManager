@@ -83,7 +83,7 @@ namespace KKManager.Data.Plugins
             }
 
             try { Task.Run((Action)ReadPluginsAsync, cancellationToken); }
-            catch (TaskCanceledException) { }
+            catch (OperationCanceledException) { }
 
             return subject;
         }

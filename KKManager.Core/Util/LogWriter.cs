@@ -91,6 +91,22 @@ namespace KKManager.Util
             base.WriteLine("--------------------------------------------------");
         }
 
+        public override void WriteLine(object value)
+        {
+            if (value is Exception ex)
+                WriteLine(ex.ToStringDemystified());
+            else
+                base.WriteLine(value);
+        }
+
+        public override void Write(object value)
+        {
+            if (value is Exception ex)
+                base.Write(ex.ToStringDemystified());
+            else
+                base.Write(value);
+        }
+
         public override void WriteLine(string value)
         {
             if (Disposed) return;
@@ -106,7 +122,7 @@ namespace KKManager.Util
             }
             catch (Exception ex)
             {
-                base.WriteLine("Exception in OnLogWrite subscriber - " + ex);
+                base.WriteLine("Exception in OnLogWrite subscriber - " + ex.ToStringDemystified());
             }
         }
 

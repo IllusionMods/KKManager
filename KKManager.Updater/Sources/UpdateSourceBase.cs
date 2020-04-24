@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -62,7 +63,7 @@ namespace KKManager.Updater.Sources
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex}");
+                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex.ToStringDemystified()}");
                     }
                     finally
                     {

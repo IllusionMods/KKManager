@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -45,7 +46,7 @@ namespace KKManager.Updater.Sources
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to create MegaApiClient.AuthInfos - " + ex);
+                Console.WriteLine("Failed to create MegaApiClient.AuthInfos - " + ex.ToStringDemystified());
             }
 
             try
@@ -55,7 +56,7 @@ namespace KKManager.Updater.Sources
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to read stored MegaApiClient.LogonSessionToken - " + ex);
+                Console.WriteLine("Failed to read stored MegaApiClient.LogonSessionToken - " + ex.ToStringDemystified());
             }
         }
 
@@ -142,7 +143,7 @@ namespace KKManager.Updater.Sources
                 catch (Exception ex)
                 {
                     _loginToken = null;
-                    Console.WriteLine($"Failed to log in to mega with token, retrying full login - {ex}");
+                    Console.WriteLine($"Failed to log in to mega with token, retrying full login - {ex.ToStringDemystified()}");
                 }
             }
 
@@ -178,7 +179,7 @@ namespace KKManager.Updater.Sources
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to save MegaApiClient.LogonSessionToken - " + ex);
+                Console.WriteLine("Failed to save MegaApiClient.LogonSessionToken - " + ex.ToStringDemystified());
             }
             try
             {
@@ -189,7 +190,7 @@ namespace KKManager.Updater.Sources
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to save new MegaApiClient.AuthInfos - " + ex);
+                Console.WriteLine("Failed to save new MegaApiClient.AuthInfos - " + ex.ToStringDemystified());
             }
 
             if (!_client.IsLoggedIn)
