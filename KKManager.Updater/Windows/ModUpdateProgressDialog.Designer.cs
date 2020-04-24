@@ -34,9 +34,9 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.labelProgress = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -47,7 +47,7 @@
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar1.Location = new System.Drawing.Point(9, 9);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(308, 35);
+            this.progressBar1.Size = new System.Drawing.Size(370, 35);
             this.progressBar1.TabIndex = 0;
             this.progressBar1.Value = 33;
             // 
@@ -60,20 +60,22 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 210);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(474, 88);
+            this.panel1.Size = new System.Drawing.Size(474, 120);
             this.panel1.TabIndex = 1;
             // 
             // labelPercent
             // 
-            this.labelPercent.AutoSize = true;
             this.labelPercent.Dock = System.Windows.Forms.DockStyle.Top;
             this.labelPercent.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPercent.Location = new System.Drawing.Point(0, 64);
+            this.labelPercent.MaximumSize = new System.Drawing.Size(1337, 56);
+            this.labelPercent.MinimumSize = new System.Drawing.Size(0, 56);
             this.labelPercent.Name = "labelPercent";
             this.labelPercent.Padding = new System.Windows.Forms.Padding(8, 2, 8, 6);
-            this.labelPercent.Size = new System.Drawing.Size(361, 24);
+            this.labelPercent.Size = new System.Drawing.Size(474, 56);
             this.labelPercent.TabIndex = 2;
-            this.labelPercent.Text = "This item: 70% out of 20 MB.  Overall: 50% out of 1221 MB.";
+            this.labelPercent.Text = "This item: 70% done (1MB / 20 MB)\r\nOverall: 50% done (111MB / 1221 MB)\r\nSpeed: 12" +
+    "34KB/s (average 1111KB/s)";
             this.labelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelStatus
@@ -105,24 +107,14 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.progressBar1);
-            this.panel2.Controls.Add(this.labelProgress);
+            this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 298);
+            this.panel2.Location = new System.Drawing.Point(0, 330);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(9);
             this.panel2.Size = new System.Drawing.Size(474, 53);
             this.panel2.TabIndex = 2;
-            // 
-            // labelProgress
-            // 
-            this.labelProgress.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelProgress.Location = new System.Drawing.Point(317, 9);
-            this.labelProgress.Name = "labelProgress";
-            this.labelProgress.Size = new System.Drawing.Size(73, 35);
-            this.labelProgress.TabIndex = 2;
-            this.labelProgress.Text = "1234 / 5678";
-            this.labelProgress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button1
             // 
@@ -145,6 +137,14 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            // 
+            // panel3
+            // 
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel3.Location = new System.Drawing.Point(379, 9);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(11, 35);
+            this.panel3.TabIndex = 2;
             // 
             // ModUpdateProgressDialog
             // 
@@ -182,9 +182,9 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label labelProgress;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelPercent;
+        private System.Windows.Forms.Panel panel3;
     }
 }

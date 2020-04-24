@@ -53,7 +53,6 @@ namespace KKManager.Updater.Windows
                 progressBar1.Value = 0;
                 progressBar1.Maximum = 1;
 
-                labelProgress.Text = "N/A";
                 labelPercent.Text = "";
 
                 SetStatus("Preparing...");
@@ -102,7 +101,7 @@ namespace KKManager.Updater.Windows
 
                 SetStatus($"{allItems.Count(items => items.Count() > 1)} out of {allItems.Count} items have more than 1 source", false, true);
 
-                progressBar1.Maximum = allItems.Count;
+                progressBar1.Maximum = 1000;
 
                 for (var index = 0; index < allItems.Count; index++)
                 {
@@ -110,13 +109,10 @@ namespace KKManager.Updater.Windows
 
                     var task = allItems[index];
 
-                    labelProgress.Text = (index + 1) + " / " + allItems.Count;
                     SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
 
                     if (await UpdateSingleItem(task))
                         _completedSize += task.First().Item2.GetDownloadSize();
-
-                    progressBar1.Value = index + 1;
                 }
 
                 var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks.";
@@ -148,9 +144,13 @@ namespace KKManager.Updater.Windows
             }
             finally
             {
+                var wasCancelled = _cancelToken.IsCancellationRequested;
                 _cancelToken.Cancel();
 
-                labelPercent.Text = _completedSize == FileSize.Empty ? "" : $"Downloaded {_completedSize} out of {_overallSize}.";
+                labelPercent.Text = wasCancelled ? "Update was cancelled" : "Update finished";
+
+                if (_completedSize != FileSize.Empty)
+                    labelPercent.Text += $"\nSuccessfully downloaded {_completedSize} out of {_overallSize}.";
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
@@ -167,8 +167,39 @@ namespace KKManager.Updater.Windows
         private async Task<bool> UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, UpdateItem>> task)
         {
             var firstItem = task.First().Item2;
-            var itemSize = firstItem.GetDownloadSize().ToString();
-            var progress = new Progress<double>(d => labelPercent.Text = $"Downloaded {d:F1}% of {itemSize}.  Overall: {_completedSize} / {_overallSize}.");
+            var itemSize = firstItem.GetDownloadSize();
+
+            var lastTimestamp = DateTime.UtcNow;
+            var lastDownloadedKBytes = 0l;
+
+            var progress = new Progress<double>(thisPercent =>
+            {
+                var timeNow = DateTime.UtcNow;
+                var secondsSinceLastUpdate = (timeNow - lastTimestamp).TotalSeconds;
+
+                if (secondsSinceLastUpdate < 1 && thisPercent < 100) return;
+
+                //This item: 70% done (1MB / 20MB)
+                //Overall: 50% done (111MB / 1221MB)
+                //Speed: 1234KB/s (average 1111KB/s)
+
+                var downloadedKBytes = (long)(itemSize.GetRawSize() * thisPercent / 100d);
+                var downloadedSize = FileSize.FromKilobytes(downloadedKBytes);
+                var totalDownloadedSize = _completedSize + downloadedSize;
+                var totalPercent = (double)totalDownloadedSize.GetRawSize() / (double)_overallSize.GetRawSize() * 100d;
+
+                var speed = (downloadedKBytes - lastDownloadedKBytes) / secondsSinceLastUpdate;
+                if (double.IsNaN(speed)) speed = 0;
+                lastDownloadedKBytes = downloadedKBytes;
+                lastTimestamp = timeNow;
+
+                labelPercent.Text =
+$@"This item: {thisPercent:F1}% done ({downloadedSize} / {itemSize})
+Overall: {totalPercent:F1}% done ({totalDownloadedSize} / {_overallSize})
+Speed: {speed:F1}KB/s";
+
+                progressBar1.Value = (int)(totalPercent * 10);
+            });
 
             SetStatus($"Updating {firstItem.TargetPath.Name}");
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
