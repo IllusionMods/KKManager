@@ -55,6 +55,15 @@ namespace KKManager.Updater.Windows
 
                 labelPercent.Text = "";
 
+                var random = new Random();
+                if (random.Next(0, 10) >= 9)
+                {
+                    var offset = random.Next(0, 136);
+                    var offsetStr = new string(Enumerable.Repeat(' ', offset).ToArray());
+                    labelPercent.Text = offsetStr + " ( )  ( )\n";
+                    labelPercent.Text += offsetStr + "( o . o)";
+                }
+
                 SetStatus("Preparing...");
                 if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() == false)
                     throw new OperationCanceledException();
