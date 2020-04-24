@@ -258,7 +258,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <Content Include="Licence.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj">

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows
 {
+    // Removing and reading the log file doesn't work because the file is locked
     public partial class LogViewer : DockContent
     {
         public LogViewer()
@@ -12,10 +14,13 @@ namespace KKManager.Windows.ToolWindows
             Program.Logger.OnLogWrite += Logger_OnLogWrite;
         }
 
-        private void Logger_OnLogWrite(object sender, Util.LogWriter.LogEventArgs e)
+        private void Logger_OnLogWrite(object sender, LogWriter.LogEventArgs e)
         {
-            textBox1.AppendText(e.Message);
-            textBox1.AppendText("\r\n");
+            textBox1.SafeInvoke(() =>
+            {
+                textBox1.AppendText(e.Message);
+                textBox1.AppendText("\r\n");
+            });
         }
 
         private void toolStripButtonClear_Click(object sender, EventArgs e)
@@ -25,31 +30,12 @@ namespace KKManager.Windows.ToolWindows
 
         private void toolStripButtonRead_Click(object sender, EventArgs e)
         {
-            try { Process.Start(Program.Logger.LogFilePath); }
+            try
+            {
+                Program.Logger.Flush();
+                Process.Start(Program.Logger.LogFilePath);
+            }
             catch (Exception ex) { Console.WriteLine(ex); }
-            //try
-            //{
-            //    Program.Logger.Flush();
-            //    textBox1.Text = File.ReadAllText(Program.Logger.LogFilePath);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Failed to read log file - " + ex.Message);
-            //}
-        }
-
-        private void toolStripButtonDelete_Click(object sender, EventArgs e)
-        {
-            //try
-            //{
-            //    Program.Logger.Flush();
-            //    File.Delete(Program.Logger.LogFilePath);
-            //    textBox1.Text = Program.Logger.LogFilePath + " has been deleted";
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine("Failed to delete log file - " + ex.Message);
-            //}
         }
     }
 }
