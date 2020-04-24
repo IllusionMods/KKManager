@@ -28,7 +28,8 @@ namespace KKManager.Windows
 {
     public sealed partial class MainWindow : Form
     {
-        private readonly UpdateSourceBase[] _updateSources;
+        private UpdateSourceBase[] _updateSources;
+        public UpdateSourceBase[] GetUpdateSources() => _updateSources ?? (_updateSources = UpdateSourceManager.FindUpdateSources(Program.ProgramLocation));
 
         public MainWindow()
         {
@@ -45,10 +46,6 @@ namespace KKManager.Windows
             SetupTabs();
 
             Task.Run((Action)PopulateStartMenu);
-
-            _updateSources = UpdateSourceManager.FindUpdateSources(Program.ProgramLocation);
-            if (_updateSources.Length == 0)
-                updateSideloaderModpackToolStripMenuItem.Enabled = false;
 
 #if DEBUG
             var version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -414,7 +411,9 @@ namespace KKManager.Windows
 
             try
             {
-                ModUpdateProgressDialog.StartUpdateDialog(this, _updateSources);
+                var updateSources = GetUpdateSources();
+                if (!updateSources.Any()) throw new IOException("No update sources are available");
+                ModUpdateProgressDialog.StartUpdateDialog(this, updateSources);
             }
             catch (Exception ex)
             {
@@ -434,15 +433,14 @@ namespace KKManager.Windows
 
         private async void MainWindow_Shown(object sender, EventArgs e)
         {
-#if DEBUG
-            return;
-#endif
             if (!Settings.Default.AutoUpdateSearch) return;
             // Check For Updates
             // todo make more efficient?
             try
             {
-                var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, _updateSources);
+                var updateSources = GetUpdateSources();
+                if (!updateSources.Any()) return;
+                var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources);
                 var updates = results.Count(item => !item.UpToDate);
 
                 _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
