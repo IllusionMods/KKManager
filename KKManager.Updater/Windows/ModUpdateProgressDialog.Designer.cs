@@ -34,9 +34,9 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -116,6 +116,14 @@
             this.panel2.Size = new System.Drawing.Size(474, 53);
             this.panel2.TabIndex = 2;
             // 
+            // panel3
+            // 
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel3.Location = new System.Drawing.Point(379, 9);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(11, 35);
+            this.panel3.TabIndex = 2;
+            // 
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Right;
@@ -138,25 +146,17 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // panel3
-            // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(379, 9);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(11, 35);
-            this.panel3.TabIndex = 2;
-            // 
             // ModUpdateProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(474, 401);
+            this.ClientSize = new System.Drawing.Size(474, 383);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(490, 99999);
             this.MinimizeBox = false;
