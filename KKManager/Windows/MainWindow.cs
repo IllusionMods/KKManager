@@ -364,7 +364,7 @@ namespace KKManager.Windows
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var ab = new AboutBox())
-                ab.Show(this);
+                ab.ShowDialog(this);
         }
 
         private void installDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
