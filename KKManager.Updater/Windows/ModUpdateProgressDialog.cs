@@ -232,10 +232,15 @@ Speed: {speed:F1}KB/s";
                     if (source.Item2.RemoteFile is ZipUpdater.ArchiveItem)
                         labelPercent.Text = $"Extracting... Overall progress: {_completedSize} / {_overallSize}.";
 
-                    await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3, TimeSpan.FromSeconds(3), _cancelToken.Token);
+                    await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3,
+                        TimeSpan.FromSeconds(3), _cancelToken.Token);
 
                     ex = null;
                     break;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
