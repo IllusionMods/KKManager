@@ -1,10 +1,10 @@
 # KKManager
 Mod, plugin and card manager for Koikatu! and Koikatsu Party. It can:
-- browse cards and scenes (supports drag and drop so you can drag cards into the game to load them).
-- browse installed zipmods and plugins, and view information about them.
-- automatically find and install mod updates from the internet.
-- fix some common issues with the game.
-- install plugins and mods for you.
+- Browse cards and scenes (supports drag and drop so you can drag cards into the game to load them).
+- Browse installed zipmods and plugins, and view information about them.
+- Automatically find and install mod updates from the internet.
+- Fix some common issues with the game.
+- Install plugins and mods for you.
 
 While the app is already useful, it's still in beta. Expect some bugs and lacking features. You can report issues on [GitHub Issues page](https://github.com/bbepis/KKManager/issues), or on the [Koikatu! discord server](https://discord.gg/urDt8CK).
 
