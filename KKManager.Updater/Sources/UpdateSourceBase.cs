@@ -51,10 +51,18 @@ namespace KKManager.Updater.Sources
                 {
                     str = await DownloadFileAsync(fn, cancellationToken);
                 }
+                catch (FileNotFoundException)
+                {
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to download file {fn} from {Origin} - {ex.Message}");
+                    Console.WriteLine($"Failed to download Updates file {fn} from {Origin} - {ex.Message}");
                 }
+
                 if (str != null)
                 {
                     try
