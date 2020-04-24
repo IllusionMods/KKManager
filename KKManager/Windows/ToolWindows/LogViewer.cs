@@ -20,6 +20,8 @@ namespace KKManager.Windows.ToolWindows
             {
                 textBox1.AppendText(e.Message);
                 textBox1.AppendText("\r\n");
+                textBox1.Select(textBox1.TextLength, 0);
+                textBox1.ScrollToCaret();
             });
         }
 
