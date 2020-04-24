@@ -145,15 +145,36 @@ namespace KKManager.Windows
             var pluginPath = InstallDirectoryHelper.GetPluginPath();
             var allExes = InstallDirectoryHelper.KoikatuDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
             var filteredExes = allExes.Where(x => !x.Name.Equals("bepinex.patcher.exe", StringComparison.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
-            foreach (var file in filteredExes.OrderBy(x => x.Name))
+
+            var first = true;
+            foreach (var folder in filteredExes.GroupBy(x => x.DirectoryName, StringComparer.OrdinalIgnoreCase).OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
             {
-                var item = new ToolStripMenuItem(file.Name);
-                item.AutoToolTip = false;
-                item.ToolTipText = file.FullName;
-                item.Click += (o, args) => { ProcessTools.SafeStartProcess(file.FullName); };
-                toAdd.Add(item);
+                if (!first) toAdd.Add(new ToolStripSeparator());
+                first = false;
+
+                foreach (var file in folder.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    // Trim .exe but leave other extensions
+                    var trimmedName = file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? file.Name.Substring(0, file.Name.Length - 4) : file.Name;
+                    var item = new ToolStripMenuItem(trimmedName);
+
+                    item.AutoToolTip = false;
+                    item.ToolTipText = file.FullName;
+
+                    item.Click += (o, args) => { ProcessTools.SafeStartProcess(file.FullName); };
+
+                    try { item.Image = Icon.ExtractAssociatedIcon(file.FullName)?.ToBitmap(); }
+                    catch { item.Image = null; }
+
+                    toAdd.Add(item);
+                }
             }
-            this.SafeInvoke(() => startTheGameToolStripMenuItem.DropDownItems.AddRange(toAdd.ToArray()));
+
+            this.SafeInvoke(() =>
+            {
+                foreach (var item in toAdd)
+                    startTheGameToolStripMenuItem.DropDownItems.Add(item);
+            });
         }
 
         public static MainWindow Instance { get; private set; }
