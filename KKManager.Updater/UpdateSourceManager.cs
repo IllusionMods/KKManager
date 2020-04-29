@@ -41,6 +41,8 @@ namespace KKManager.Updater
             var ignoreListPath = "ignorelist.txt";
             var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath) : new string[0];
 
+            var anySuccessful = false;
+
             // First start all of the sources, then wait until they all finish
             var concurrentTasks = updateSources.Select(source => new
             {
@@ -52,6 +54,8 @@ namespace KKManager.Updater
                         // todo move further inside or decouple getting update tasks and actually processing them
                         if (filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
                             continue;
+
+                        if (task.Items.Any()) anySuccessful = true;
 
                         task.Items.RemoveAll(x => x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
                         results.Add(task);
@@ -77,6 +81,8 @@ namespace KKManager.Updater
             }
 
             cancellationToken.ThrowIfCancellationRequested();
+
+            if(!anySuccessful) throw new InvalidDataException("No valid update sources were found. Your UpdateSources file might be corrupted or in an old format.");
 
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))

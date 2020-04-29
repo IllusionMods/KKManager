@@ -149,7 +149,7 @@ namespace KKManager.Updater.Windows
                 SetStatus("Crash while updating mods, aborting.", true, true);
                 SetStatus(string.Join("\n---\n", exceptions), false, true);
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
-                                "and that you did not hit your download limit on Mega, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
+                                "and that you did not hit your download limits, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
                                 "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
