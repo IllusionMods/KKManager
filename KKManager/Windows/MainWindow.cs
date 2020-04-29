@@ -478,7 +478,7 @@ namespace KKManager.Windows
                 }
             }
             catch (OperationCanceledException) { }
-            catch (Exception ex) { Console.WriteLine(ex); }
+            catch (Exception ex) { Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}"); }
         }
 
         private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
