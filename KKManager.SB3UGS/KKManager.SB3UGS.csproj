@@ -103,11 +103,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>IF NOT EXIST $(SolutionDir)libs\SB3UGS\ (
-  for /f %25%25x in ('DIR /b "$(SolutionDir)KKManager.SB3UGS\SB3UGS*.7z"') do set NEWEST="$(SolutionDir)KKManager.SB3UGS\%25%25x" &amp; goto DONE
-  :DONE
-  "$(SolutionDir)\packages\7z.NET.1.0.3\build\7za.exe" x %25NEWEST%25 -o"$(SolutionDir)libs\SB3UGS\"
-)</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
