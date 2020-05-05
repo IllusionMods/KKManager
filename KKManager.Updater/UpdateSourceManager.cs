@@ -82,7 +82,7 @@ namespace KKManager.Updater
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if(!anySuccessful) throw new InvalidDataException("No valid update sources were found. Your UpdateSources file might be corrupted or in an old format.");
+            if (!anySuccessful) throw new InvalidDataException("No valid update sources were found. Your UpdateSources file might be corrupted or in an old format.");
 
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
@@ -103,24 +103,40 @@ namespace KKManager.Updater
         public static UpdateSourceBase[] FindUpdateSources(string searchDirectory)
         {
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
+            var updateSourcesPathDebug = Path.Combine(searchDirectory, "UpdateSourcesDebug");
 
             var updateSources = new string[0];
-            if (File.Exists(updateSourcesPath) && File.ReadAllText(updateSourcesPath).Length > 0)
+
+            Console.WriteLine("Looking for update sources...");
+
+            if (File.Exists(updateSourcesPathDebug) && File.ReadAllText(updateSourcesPathDebug).Length > 0)
             {
-                Console.WriteLine("Found UpdateSources file at " + updateSourcesPath);
+                Console.WriteLine("Loading sources from UpdateSourcesDebug file at " + updateSourcesPathDebug);
 
                 updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
             else
             {
-                Console.WriteLine("Looking for update sources...");
                 try
                 {
                     updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split();
+                    Console.WriteLine($"Found {updateSources.Length} sources");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Console.WriteLine("Failed to get update sources: " + ex.Message);
+                }
+
+                // If any sources were found, save them to the cache. If not, try loading the cached sources
+                if (updateSources.Any())
+                {
+                    File.WriteAllLines(updateSourcesPath, updateSources);
+                }
+                else if (File.Exists(updateSourcesPath) && File.ReadAllText(updateSourcesPath).Length > 0)
+                {
+                    Console.WriteLine("Loading cached sources from UpdateSources file at " + updateSourcesPath);
+
+                    updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                 }
             }
 
