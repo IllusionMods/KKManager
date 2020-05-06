@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MessagePack;
 
-namespace KKManager.Data.Cards.Internal
+namespace KKManager.Data.Cards.KK
 {
 	[MessagePackObject(true)]
 	public class BlockHeader

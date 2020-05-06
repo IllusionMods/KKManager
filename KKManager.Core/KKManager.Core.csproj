@@ -101,9 +101,9 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Data\Cards\Card.cs" />
     <Compile Include="Data\Cards\CardLoader.cs" />
-    <Compile Include="Data\Cards\Internal\BlockHeader.cs" />
-    <Compile Include="Data\Cards\Internal\ChaFileExtended.cs" />
-    <Compile Include="Data\Cards\Internal\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\KK\BlockHeader.cs" />
+    <Compile Include="Data\Cards\KK\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\Utility.cs" />
     <Compile Include="Data\IFileInfoBase.cs" />
     <Compile Include="Data\ModInfoBase.cs" />

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using KKManager.Util;
 using MessagePack;
 
-namespace KKManager.Data.Cards.Internal
+namespace KKManager.Data.Cards.KK
 {
     [MessagePackObject(true)]
     [ReadOnly(true)]

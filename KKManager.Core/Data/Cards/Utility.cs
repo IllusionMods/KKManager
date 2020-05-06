@@ -6,7 +6,7 @@ namespace KKManager.Data.Cards
     {
         public static string GetPersonalityName(int personality)
         {
-            string[] personalityLookup = 
+            string[] personalityLookup =
             {
                 "Sexy",
                 "Ojousama",
@@ -60,16 +60,17 @@ namespace KKManager.Data.Cards
 
         public const int BufferSize = 4096;
 
-        private static readonly byte[] IENDChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+        private static readonly byte[] PngEndChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
+        private static readonly byte[] PngStartChunk = { 0x89, 0x50, 0x4E, 0x47, 0x0D };
 
-        public static long SearchForIEND(Stream stream)
+        public static long SearchForSequence(Stream stream, byte[] sequence)
         {
             long origPos = stream.Position;
 
             byte[] buffer = new byte[BufferSize];
             int read;
 
-            byte scanByte = IENDChunk[0];
+            byte scanByte = sequence[0];
 
             while ((read = stream.Read(buffer, 0, BufferSize)) > 0)
             {
@@ -80,7 +81,7 @@ namespace KKManager.Data.Cards
 
                     bool flag = true;
 
-                    for (int x = 1; x < IENDChunk.Length; x++)
+                    for (int x = 1; x < sequence.Length; x++)
                     {
                         i++;
 
@@ -92,7 +93,7 @@ namespace KKManager.Data.Cards
                             i = 0;
                         }
 
-                        if (buffer[i] != IENDChunk[x])
+                        if (buffer[i] != sequence[x])
                         {
                             flag = false;
                             break;
@@ -101,7 +102,7 @@ namespace KKManager.Data.Cards
 
                     if (flag)
                     {
-                        long result = (stream.Position + 1) - (BufferSize - i);
+                        long result = (stream.Position + 1) - (BufferSize - i) - sequence.Length;
                         stream.Position = origPos;
                         return result;
                     }
@@ -109,6 +110,18 @@ namespace KKManager.Data.Cards
             }
 
             return -1;
+        }
+
+        public static long SearchForPngEnd(Stream stream)
+        {
+            var result = SearchForSequence(stream, PngEndChunk);
+            if (result >= 0) result += PngEndChunk.Length;
+            return result;
+        }
+
+        public static long SearchForPngStart(Stream stream)
+        {
+            return SearchForSequence(stream, PngStartChunk);
         }
     }
 }
