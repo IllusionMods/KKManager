@@ -41,10 +41,10 @@ namespace KKManager.Windows.Content
             this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonEnable = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDisable = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenModsDir = new System.Windows.Forms.ToolStripButton();
@@ -77,7 +77,6 @@ namespace KKManager.Windows.Content
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Location = new System.Drawing.Point(0, 25);
-            this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
@@ -87,6 +86,7 @@ namespace KKManager.Windows.Content
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseHyperlinks = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.VirtualMode = true;
             this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
             // 
             // olvColumnEnabled
@@ -137,6 +137,15 @@ namespace KKManager.Windows.Content
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripSeparator1,
+            this.toolStripButtonEnable,
+            this.toolStripButtonDisable,
+            this.toolStripSeparator2,
+            this.toolStripButtonDelete,
+            this.toolStripSeparator3,
+            this.toolStripButtonOpenModsDir});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(891, 25);
@@ -153,10 +162,10 @@ namespace KKManager.Windows.Content
             this.toolStripButton1.Text = "Refresh";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // toolStripSeparator2
+            // toolStripSeparator1
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonEnable
             // 
@@ -178,10 +187,10 @@ namespace KKManager.Windows.Content
             this.toolStripButtonDisable.Text = "Disable";
             this.toolStripButtonDisable.Click += new System.EventHandler(this.toolStripButtonDisable_Click);
             // 
-            // toolStripSeparator1
+            // toolStripSeparator2
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonDelete
             // 
@@ -198,10 +207,9 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButtonOpenDir
+            // toolStripButtonOpenModsDir
             // 
             this.toolStripButtonOpenModsDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonOpenModsDir.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpenDir.Image")));
             this.toolStripButtonOpenModsDir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOpenModsDir.Name = "toolStripButtonOpenModsDir";
             this.toolStripButtonOpenModsDir.Size = new System.Drawing.Size(123, 22);
@@ -224,7 +232,6 @@ namespace KKManager.Windows.Content
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-            toolStrip1.Items.AddRange(new ToolStripItem[]{ toolStripButton1, toolStripSeparator1, toolStripButtonEnable, toolStripButtonDisable, toolStripSeparator2, toolStripButtonDelete, toolStripSeparator3, toolStripButtonOpenModsDir });
 
         }
 
