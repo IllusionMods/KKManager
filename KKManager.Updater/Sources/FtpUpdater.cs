@@ -91,15 +91,7 @@ namespace KKManager.Updater.Sources
                 // Need to wrap the connect into a new task because it can block main thread when failing to connect
                 await Task.Run(async () =>
                 {
-                    try
-                    {
-                        await _client.ConnectAsync(cancellationToken);
-                    }
-                    catch (FtpSecurityNotAvailableException e)
-                    {
-                        Console.WriteLine(e.Message);
-                        await _client.AutoConnectAsync(cancellationToken);
-                    }
+                    await _client.AutoConnectAsync(cancellationToken);
                 }, cancellationToken);
 
                 // todo hack, some servers don't announce the capability, needed for proper functionality
