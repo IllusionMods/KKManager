@@ -30,15 +30,7 @@ namespace KKManager.Windows.Content
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CardWindow));
-            this.ctxCards = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changeGenderToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.maleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fermaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnSex = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -63,59 +55,9 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxCards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // ctxCards
-            // 
-            this.ctxCards.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renameToolStripMenuItem,
-            this.deleteToolStripMenuItem,
-            this.changeGenderToToolStripMenuItem,
-            this.moveToolStripMenuItem});
-            this.ctxCards.Name = "ctxCards";
-            this.ctxCards.Size = new System.Drawing.Size(179, 92);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            // 
-            // changeGenderToToolStripMenuItem
-            // 
-            this.changeGenderToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.maleToolStripMenuItem,
-            this.fermaleToolStripMenuItem});
-            this.changeGenderToToolStripMenuItem.Name = "changeGenderToToolStripMenuItem";
-            this.changeGenderToToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.changeGenderToToolStripMenuItem.Text = "Change gender to...";
-            // 
-            // maleToolStripMenuItem
-            // 
-            this.maleToolStripMenuItem.Name = "maleToolStripMenuItem";
-            this.maleToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.maleToolStripMenuItem.Text = "Male";
-            // 
-            // fermaleToolStripMenuItem
-            // 
-            this.fermaleToolStripMenuItem.Name = "fermaleToolStripMenuItem";
-            this.fermaleToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.fermaleToolStripMenuItem.Text = "Fermale";
-            // 
-            // moveToolStripMenuItem
-            // 
-            this.moveToolStripMenuItem.Name = "moveToolStripMenuItem";
-            this.moveToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.moveToolStripMenuItem.Text = "Move";
             // 
             // listView
             // 
@@ -133,10 +75,10 @@ namespace KKManager.Windows.Content
             this.olvColumnExtended,
             this.olvColumnModDate,
             this.olvColumnFilename});
-            this.listView.ContextMenuStrip = this.ctxCards;
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
+            this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 25);
             this.listView.Name = "listView";
             this.listView.ShowGroups = false;
@@ -323,7 +265,7 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonTools.Image")));
             this.toolStripDropDownButtonTools.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonTools.Name = "toolStripDropDownButtonTools";
-            this.toolStripDropDownButtonTools.Size = new System.Drawing.Size(48, 22);
+            this.toolStripDropDownButtonTools.Size = new System.Drawing.Size(47, 22);
             this.toolStripDropDownButtonTools.Text = "Tools";
             this.toolStripDropDownButtonTools.ToolTipText = "Tools";
             // 
@@ -354,7 +296,6 @@ namespace KKManager.Windows.Content
             this.Text = "Cards";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CardWindow_FormClosed);
             this.Load += new System.EventHandler(this.formMain_Load);
-            this.ctxCards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.listView)).EndInit();
             this.toolStrip.ResumeLayout(false);
             this.toolStrip.PerformLayout();
@@ -364,13 +305,6 @@ namespace KKManager.Windows.Content
 		}
 
 		#endregion
-		private System.Windows.Forms.ContextMenuStrip ctxCards;
-		private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem changeGenderToToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem maleToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem fermaleToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem moveToolStripMenuItem;
         private BrightIdeasSoftware.FastObjectListView listView;
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnModDate;
