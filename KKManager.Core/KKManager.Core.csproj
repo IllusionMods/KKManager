@@ -120,6 +120,7 @@
     <Compile Include="Data\Zipmods\SideloaderModInfo.cs" />
     <Compile Include="Data\Zipmods\SideloaderModLoader.cs" />
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />
+    <Compile Include="Functions\GameType.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
     <Compile Include="Functions\ModInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

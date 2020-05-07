@@ -52,7 +52,7 @@ namespace KKManager.Windows
 #else
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
-            Text = $"KK Manager {version} (Fancy updates edition) - {InstallDirectoryHelper.KoikatuDirectory.FullName}";
+            Text = $"KK Manager {version} (AIS support edition) - [{InstallDirectoryHelper.GetGameType().GetFancyGameName()}] in {InstallDirectoryHelper.KoikatuDirectory.FullName}";
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
             Settings.Default.Binder.SendUpdates(this);
@@ -78,7 +78,7 @@ namespace KKManager.Windows
                         "Your game's install directory could not be detected or is inaccessible.\n\nYou will have to select the game directory manually.",
                         "Failed to find game install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    if(string.IsNullOrWhiteSpace(path))
+                    if (string.IsNullOrWhiteSpace(path))
                     {
                         // Get a plausible initial path
                         try
@@ -99,7 +99,7 @@ namespace KKManager.Windows
                         "Failed to find game install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Environment.Exit(1);
                 }
-                
+
                 Settings.Default.GamePath = path;
             }
 

@@ -52,6 +52,33 @@ namespace KKManager.Functions
             }
         }
 
+        public static GameType GetGameType()
+        {
+            var path = KoikatuDirectory.FullName;
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                if (File.Exists(Path.Combine(path, "AI-Syoujyo.exe"))) return GameType.AiShoujo;
+                if (File.Exists(Path.Combine(path, "AI-Shoujo.exe"))) return GameType.AiShoujoSteam;
+                if (File.Exists(Path.Combine(path, "Koikatu.exe"))) return GameType.Koikatsu;
+                if (File.Exists(Path.Combine(path, "Koikatsu.exe"))) return GameType.KoikatsuSteam;
+            }
+            return GameType.Unknown;
+        }
+
+        public static string GetFancyGameName(this GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.Unknown: return "UNKNOWN GAME";
+                case GameType.Koikatsu: return "Koikatu!";
+                case GameType.KoikatsuSteam: return "Koikatsu Party";
+                case GameType.AiShoujo: return "AI-Syoujyo";
+                case GameType.AiShoujoSteam: return "AI-Shoujo";
+
+                default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
+            }
+        }
+
         public static DirectoryInfo GetMaleCardDir()
         {
             var path = Path.Combine(KoikatuDirectory.FullName, @"UserData\chara\male");
