@@ -105,7 +105,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Settings.cs" />
+    <Compile Include="Properties\Settings.cs" />
     <Compile Include="Windows\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
