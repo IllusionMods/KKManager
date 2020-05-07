@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace KKManager.Functions
 {
@@ -33,16 +34,17 @@ namespace KKManager.Functions
             {
                 if (!Directory.Exists(path)) return false;
 
-                var exeExist = File.Exists(Path.Combine(path, "Koikatu.exe")) ||
-                               File.Exists(Path.Combine(path, "Koikatsu Party.exe")) ||
-                               File.Exists(Path.Combine(path, "CharaStudio.exe"));
+                //var exeExist = File.Exists(Path.Combine(path, "Koikatu.exe")) ||
+                //               File.Exists(Path.Combine(path, "Koikatsu Party.exe")) ||
+                //               File.Exists(Path.Combine(path, "CharaStudio.exe"));
+
+                var anyDatas = Directory.GetDirectories(path).Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
+                var abdataExist = File.Exists(Path.Combine(path, "abdata/abdata"));
 
                 // todo use this to offer to install bepinex and other mods / run update wizzard
-                var modsExist = Directory.Exists(Path.Combine(path, "bepinex")) && Directory.Exists(Path.Combine(path, "mods"));
+                //var modsExist = Directory.Exists(Path.Combine(path, "bepinex")) && Directory.Exists(Path.Combine(path, "mods"));
 
-                if (!exeExist && !modsExist) return false;
-
-                return true;
+                return anyDatas && abdataExist;
             }
             catch
             {

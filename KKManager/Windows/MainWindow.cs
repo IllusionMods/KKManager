@@ -41,7 +41,7 @@ namespace KKManager.Windows
 
             InitializeComponent();
 
-            InstallDirectoryHelper.KoikatuDirectory = GetKoikatuDirectory();
+            InstallDirectoryHelper.KoikatuDirectory = GetGameDirectory();
 
             SetupTabs();
 
@@ -58,35 +58,48 @@ namespace KKManager.Windows
             Settings.Default.Binder.SendUpdates(this);
         }
 
-        private static DirectoryInfo GetKoikatuDirectory()
+        private static DirectoryInfo GetGameDirectory()
         {
             var path = Settings.Default.GamePath;
             if (!InstallDirectoryHelper.IsValidGamePath(path))
             {
-                try
+                for (var dir = new DirectoryInfo(Program.ProgramLocation); dir.Exists && dir.Parent != null; dir = dir.Parent)
                 {
-                    path = Registry.CurrentUser.OpenSubKey(@"Software\Illusion\Koikatu\koikatu")
-                        ?.GetValue("INSTALLDIR") as string;
+                    if (InstallDirectoryHelper.IsValidGamePath(dir.FullName))
+                    {
+                        path = dir.FullName;
+                        break;
+                    }
                 }
-                catch (SystemException) { }
 
                 if (!InstallDirectoryHelper.IsValidGamePath(path))
                 {
                     MessageBox.Show(
-                        "Koikatu is either not registered properly or its install directory is missing or inaccessible.\n\nYou will have to select game directory manually.",
-                        "Failed to find Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Your game's install directory could not be detected or is inaccessible.\n\nYou will have to select the game directory manually.",
+                        "Failed to find game install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    if(string.IsNullOrWhiteSpace(path))
+                    {
+                        // Get a plausible initial path
+                        try
+                        {
+                            path = Registry.CurrentUser.OpenSubKey(@"Software\Illusion\Koikatu\koikatu")
+                                ?.GetValue("INSTALLDIR") as string;
+                        }
+                        catch (SystemException) { }
+                    }
 
                     path = ShowInstallDirectoryDialog(path);
                 }
 
-                if (string.IsNullOrEmpty(path) || !InstallDirectoryHelper.IsValidGamePath(path))
+                if (!InstallDirectoryHelper.IsValidGamePath(path))
                 {
                     MessageBox.Show(
-                        "Koikatu is either not registered properly or its install directory is missing or inaccessible.",
-                        "Failed to get Koikatu install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Your game is either not registered properly or its install directory is missing or inaccessible.",
+                        "Failed to find game install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Environment.Exit(1);
                 }
-
+                
                 Settings.Default.GamePath = path;
             }
 
@@ -97,6 +110,9 @@ namespace KKManager.Windows
 
         private static string ShowInstallDirectoryDialog(string currentPath)
         {
+            if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = Program.ProgramLocation;
+
             using (var fb = new CommonOpenFileDialog
             {
                 IsFolderPicker = true,
@@ -106,7 +122,7 @@ namespace KKManager.Windows
                 EnsurePathExists = true,
                 EnsureFileExists = true,
                 Multiselect = false,
-                Title = "Select the install directory of the game."
+                Title = "Select the install directory of your game"
             })
             {
                 retryFolderSelect:
