@@ -146,8 +146,9 @@ namespace KKManager.Windows
         private static void CheckInstallPathPermissions(string path)
         {
             if (!PathTools.DirectoryHasWritePermission(path) ||
-                            !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
-                            !PathTools.DirectoryHasWritePermission(Path.Combine(path, "userdata")))
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "BepInEx/config")) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "mods")) ||
+                !PathTools.DirectoryHasWritePermission(Path.Combine(path, "UserData")))
             {
                 if (MessageBox.Show("KK Manager doesn't have write permissions to the game directory! This can cause issues for both KK Manager and the game itself.\n\nDo you want KK Manager to fix permissions of the entire Koikatu folder?",
                         "No write access to game directory", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
