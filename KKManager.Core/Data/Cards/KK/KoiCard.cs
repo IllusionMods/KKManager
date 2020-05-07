@@ -18,7 +18,7 @@ namespace KKManager.Data.Cards.KK
             Parameter = parameter;
         }
 
-        public static Card ParseKoiChara(FileInfo file, BinaryReader reader, CardType gameType)
+        public static KoiCard ParseKoiChara(FileInfo file, BinaryReader reader, CardType gameType)
         {
             var loadVersion = new Version(reader.ReadString());
             if (0 > new Version("0.0.0").CompareTo(loadVersion))

@@ -4,6 +4,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.KK;
 
 namespace KKManager.Data.Cards
@@ -93,12 +94,16 @@ namespace KKManager.Data.Cards
                             card = KoiCard.ParseKoiChara(file, reader, gameType);
                             break;
 
+                        case CardType.AiSyoujyo:
+                            card = AiCard.ParseAiChara(file, reader, gameType);
+                            break;
+
                         case CardType.Unknown:
                             card = null;
                             break;
 
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(gameType + " is not supported");
                     }
                 }
                 catch (EndOfStreamException)
@@ -120,6 +125,8 @@ namespace KKManager.Data.Cards
                     return CardType.KoikatsuParty;
                 case "【KoiKatuCharaSP】":
                     return CardType.KoikatsuPartySpecialPatch;
+                case "【AIS_Chara】":
+                    return CardType.AiSyoujyo;
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;

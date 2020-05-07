@@ -99,6 +99,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Data\Cards\AI\BlockHeader.cs" />
+    <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\PluginData.cs" />
     <Compile Include="Data\Cards\Card.cs" />
     <Compile Include="Data\Cards\CardLoader.cs" />
     <Compile Include="Data\Cards\CardType.cs" />
@@ -106,6 +110,7 @@
     <Compile Include="Data\Cards\KK\BlockHeader.cs" />
     <Compile Include="Data\Cards\KK\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\AI\KoiCard.cs" />
     <Compile Include="Data\Cards\KK\KoiCard.cs" />
     <Compile Include="Data\Cards\Utility.cs" />
     <Compile Include="Data\IFileInfoBase.cs" />

@@ -6,5 +6,6 @@
         Koikatu,
         KoikatsuParty,
         KoikatsuPartySpecialPatch,
+        AiSyoujyo
     }
 }

@@ -320,7 +320,7 @@ namespace KKManager.Windows.Content
                     try
                     {
                         var key = card.Location.FullName;
-                        using (var img = large ? card.GetCardImage() : card.GetCardFaceImage())
+                        using (var img = large ? card.GetCardImage() : card.GetCardFaceImage() ?? card.GetCardImage())
                         {
                             var thumb = img.GetThumbnailImage(width, height, null, IntPtr.Zero);
                             imageList.Images.Add(key, thumb);

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using MessagePack;
+﻿using MessagePack;
 
-namespace KKManager.Data.Cards.KK
+namespace KKManager.Data.Cards.AI
 {
 	public class ChaFileExtended
 	{
