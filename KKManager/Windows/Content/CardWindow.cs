@@ -3,6 +3,7 @@ using System.Collections;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -75,11 +76,10 @@ namespace KKManager.Windows.Content
 
         public void OpenCardDirectory(DirectoryInfo directory)
         {
-            StartNewLoadProcess();
-
             CurrentDirectory = directory;
 
-            RefreshCurrentFolder();
+            if (Visible)
+                RefreshCurrentFolder();
         }
 
         public static string ShowCardFolderBrowseDialog(IWin32Window owner)
@@ -141,7 +141,7 @@ namespace KKManager.Windows.Content
 
         private void CardWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            StartNewLoadProcess();
+            CancelCurrentLoadProcess();
         }
 
         private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -152,6 +152,7 @@ namespace KKManager.Windows.Content
         private void formMain_Load(object sender, EventArgs e)
         {
             listView.Sort(olvColumnModDate, SortOrder.Descending);
+            RefreshCurrentFolder();
         }
 
         private void Details(object sender, EventArgs e)
@@ -211,7 +212,7 @@ namespace KKManager.Windows.Content
 
         private void RefreshCurrentFolder()
         {
-            var cancellationToken = StartNewLoadProcess();
+            CancelCurrentLoadProcess();
 
             listView.ClearObjects();
             listView.SmallImageList.Images.Clear();
@@ -231,11 +232,11 @@ namespace KKManager.Windows.Content
                 return;
             }
 
-            var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, cancellationToken);
+            var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, _cancellationTokenSource.Token);
 
             var processedCount = 0;
             cardLoadObservable
-                .Buffer(TimeSpan.FromSeconds(3))
+                .Buffer(TimeSpan.FromSeconds(3), TaskPoolScheduler.Default)
                 .ObserveOn(this)
                 .Subscribe(
                     list =>
@@ -252,7 +253,7 @@ namespace KKManager.Windows.Content
 
                         MainWindow.SetStatusText("Done loading cards");
                     },
-                    cancellationToken);
+                    _cancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -470,7 +471,7 @@ namespace KKManager.Windows.Content
             }
         }
 
-        private CancellationToken StartNewLoadProcess()
+        private void CancelCurrentLoadProcess()
         {
             lock (this)
             {
@@ -478,8 +479,6 @@ namespace KKManager.Windows.Content
                 CancelThumbnailRefresh();
 
                 _cancellationTokenSource = new CancellationTokenSource();
-
-                return _cancellationTokenSource.Token;
             }
         }
 
