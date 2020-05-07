@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lsvCardExtData = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -41,6 +39,9 @@
             this.txtCardFirstName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtCardLastName = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lsvCardExtData = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.imgCard = new System.Windows.Forms.PictureBox();
             this.imgCardFace = new System.Windows.Forms.PictureBox();
@@ -48,9 +49,13 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -67,8 +72,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
-            this.splitContainer2.Panel1.Controls.Add(this.groupBox2);
+            this.splitContainer2.Panel1.Controls.Add(this.splitContainer1);
             // 
             // splitContainer2.Panel2
             // 
@@ -77,45 +81,33 @@
             this.splitContainer2.SplitterDistance = 299;
             this.splitContainer2.TabIndex = 0;
             // 
-            // groupBox1
+            // splitContainer1
             // 
-            this.groupBox1.Controls.Add(this.lsvCardExtData);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 400);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(299, 216);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Extended Save Data";
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // lsvCardExtData
+            // splitContainer1.Panel1
             // 
-            this.lsvCardExtData.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.lsvCardExtData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lsvCardExtData.GridLines = true;
-            this.lsvCardExtData.HideSelection = false;
-            this.lsvCardExtData.Location = new System.Drawing.Point(3, 16);
-            this.lsvCardExtData.Name = "lsvCardExtData";
-            this.lsvCardExtData.Size = new System.Drawing.Size(293, 197);
-            this.lsvCardExtData.TabIndex = 0;
-            this.lsvCardExtData.UseCompatibleStateImageBehavior = false;
-            this.lsvCardExtData.View = System.Windows.Forms.View.Details;
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             // 
-            // columnHeader1
+            // splitContainer1.Panel2
             // 
-            this.columnHeader1.Text = "Data Name";
-            this.columnHeader1.Width = 405;
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer1.Size = new System.Drawing.Size(299, 616);
+            this.splitContainer1.SplitterDistance = 387;
+            this.splitContainer1.TabIndex = 8;
             // 
             // groupBox2
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.propertyGrid1);
             this.groupBox2.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(299, 400);
+            this.groupBox2.Size = new System.Drawing.Size(299, 387);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Info";
@@ -127,7 +119,7 @@
             this.propertyGrid1.Location = new System.Drawing.Point(3, 76);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-            this.propertyGrid1.Size = new System.Drawing.Size(293, 321);
+            this.propertyGrid1.Size = new System.Drawing.Size(293, 308);
             this.propertyGrid1.TabIndex = 7;
             this.propertyGrid1.ToolbarVisible = false;
             // 
@@ -207,6 +199,36 @@
             this.txtCardLastName.Size = new System.Drawing.Size(127, 20);
             this.txtCardLastName.TabIndex = 4;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.lsvCardExtData);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(299, 225);
+            this.groupBox1.TabIndex = 6;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Extended Save Data";
+            // 
+            // lsvCardExtData
+            // 
+            this.lsvCardExtData.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.lsvCardExtData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lsvCardExtData.GridLines = true;
+            this.lsvCardExtData.HideSelection = false;
+            this.lsvCardExtData.Location = new System.Drawing.Point(3, 16);
+            this.lsvCardExtData.Name = "lsvCardExtData";
+            this.lsvCardExtData.Size = new System.Drawing.Size(293, 206);
+            this.lsvCardExtData.TabIndex = 0;
+            this.lsvCardExtData.UseCompatibleStateImageBehavior = false;
+            this.lsvCardExtData.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Data Name";
+            this.columnHeader1.Width = 405;
+            // 
             // splitContainer3
             // 
             this.splitContainer3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
@@ -258,11 +280,15 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
@@ -290,5 +316,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
