@@ -19,7 +19,7 @@ namespace KKManager.Windows
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = AssemblyDescription;
+            this.textBoxDescription.Text = AssemblyDescription + "\r\n\r\nSpecial credits:\r\nAvocado Kai - AIS update image (AI version of Chika)";
         }
 
         #region Assembly Attribute Accessors
