@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Updater.Data;
+using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
 using KKManager.Util;
 using KKManager.Util.ProcessWaiter;
@@ -24,6 +25,24 @@ namespace KKManager.Updater.Windows
         private ModUpdateProgressDialog()
         {
             InitializeComponent();
+
+            switch (InstallDirectoryHelper.GetGameType())
+            {
+                case GameType.PlayHome:
+                case GameType.AiShoujoSteam:
+                case GameType.AiShoujo:
+                    pictureBox1.Image = Resources.aichika;
+                    break;
+
+                case GameType.Koikatsu:
+                case GameType.KoikatsuSteam:
+                case GameType.EmotionCreators:
+                    pictureBox1.Image = Resources.chikajump;
+                    break;
+
+                case GameType.Unknown:
+                    break;
+            }
         }
 
         public static void StartUpdateDialog(Form owner, UpdateSourceBase[] updaters, string[] autoInstallGuids = null)

@@ -63,6 +63,16 @@ namespace KKManager.Updater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap aichika {
+            get {
+                object obj = ResourceManager.GetObject("aichika", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap chikajump {
             get {
                 object obj = ResourceManager.GetObject("chikajump", resourceCulture);
