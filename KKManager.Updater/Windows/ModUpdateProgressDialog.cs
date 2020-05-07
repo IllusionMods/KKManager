@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -238,7 +239,7 @@ Speed: {speed:F1}KB/s";
             SetStatus($"Updating {firstItem.TargetPath.Name}");
             SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
 
-            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderByDescending(x => x.Item1.Source.DownloadPriority).ToList();
+            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderBy(x => GetPing(x.Item1)).ToList();
             if (sourcesToAttempt.Count == 0)
             {
                 Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
@@ -285,6 +286,25 @@ Speed: {speed:F1}KB/s";
             }
 
             return true;
+        }
+
+        private static long GetPing(UpdateInfo info)
+        {
+            if (info.Source is ZipUpdater) return -1;
+            try
+            {
+                var p = new Ping();
+                var reply = p.Send(info.Source.Origin, 4);
+                if (reply != null)
+                {
+                    var result = reply.RoundtripTime;
+                    Console.WriteLine($"Ping {info.Source.Origin} in {reply.RoundtripTime}");
+                    if (reply.Status == IPStatus.Success) return result;
+                }
+            }
+            catch (Exception exc) { Console.WriteLine(exc); }
+            return long.MaxValue;
+            //return x.Item1.Source.DownloadPriority;
         }
 
         private void SetStatus(string status, bool writeToUi = true, bool writeToLog = false)
