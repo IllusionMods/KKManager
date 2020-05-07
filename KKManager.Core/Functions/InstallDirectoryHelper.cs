@@ -61,6 +61,8 @@ namespace KKManager.Functions
                 if (File.Exists(Path.Combine(path, "AI-Shoujo.exe"))) return GameType.AiShoujoSteam;
                 if (File.Exists(Path.Combine(path, "Koikatu.exe"))) return GameType.Koikatsu;
                 if (File.Exists(Path.Combine(path, "Koikatsu.exe"))) return GameType.KoikatsuSteam;
+                if (File.Exists(Path.Combine(path, "EmotionCreators.exe"))) return GameType.EmotionCreators;
+                if (File.Exists(Path.Combine(path, "PlayHome64bit.exe"))) return GameType.PlayHome;
             }
             return GameType.Unknown;
         }
@@ -74,7 +76,8 @@ namespace KKManager.Functions
                 case GameType.KoikatsuSteam: return "Koikatsu Party";
                 case GameType.AiShoujo: return "AI-Syoujyo";
                 case GameType.AiShoujoSteam: return "AI-Shoujo";
-
+                case GameType.PlayHome: return "PlayHome";
+                case GameType.EmotionCreators: return "EmotionCreators";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
         }
