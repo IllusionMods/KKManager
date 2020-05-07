@@ -153,6 +153,7 @@ namespace KKManager.Updater
             for (var index = 0; index < updateSourceUrls.Length; index++)
             {
                 var updateSource = updateSourceUrls[index];
+                if (string.IsNullOrWhiteSpace(updateSource)) continue;
                 try
                 {
                     results.Add(GetUpdater(new Uri(updateSource), -index));
