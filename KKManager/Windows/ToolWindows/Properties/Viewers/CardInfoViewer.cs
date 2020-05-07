@@ -10,7 +10,7 @@ namespace KKManager.Windows.ToolWindows.Properties.Viewers
         public CardInfoViewerBase()
         {
             InitializeComponent();
-            SupportedTypes = new[] {typeof(Card)};
+            SupportedTypes = new[] { typeof(Card) };
         }
 
         public Card CurrentCard
@@ -20,13 +20,13 @@ namespace KKManager.Windows.ToolWindows.Properties.Viewers
             {
                 _currentCard = value;
 
-                propertyGrid1.SelectedObject = _currentCard?.Parameter;
+                propertyGrid1.SelectedObject = _currentCard;
 
                 imgCard.Image?.Dispose();
                 imgCardFace.Image?.Dispose();
                 imgCard.Image = _currentCard?.GetCardImage();
                 imgCardFace.Image = _currentCard?.GetCardFaceImage();
-                
+
                 lsvCardExtData.Items.Clear();
                 if (_currentCard?.Extended != null)
                 {

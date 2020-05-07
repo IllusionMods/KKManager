@@ -94,6 +94,7 @@
             this.columnHeader1});
             this.lsvCardExtData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lsvCardExtData.GridLines = true;
+            this.lsvCardExtData.HideSelection = false;
             this.lsvCardExtData.Location = new System.Drawing.Point(3, 16);
             this.lsvCardExtData.Name = "lsvCardExtData";
             this.lsvCardExtData.Size = new System.Drawing.Size(293, 197);

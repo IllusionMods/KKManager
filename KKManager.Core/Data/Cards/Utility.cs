@@ -4,90 +4,32 @@ namespace KKManager.Data.Cards
 {
     public static class Utility
     {
-        public static string GetPersonalityName(int personality)
-        {
-            string[] personalityLookup =
-            {
-                "Sexy",
-                "Ojousama",
-                "Snobby",
-                "Kouhai",
-                "Mysterious",
-                "Weirdo",
-                "Yamato Nadeshiko",
-                "Tomboy",
-                "Pure",
-                "Simple",
-                "Delusional",
-                "Motherly",
-                "Big Sisterly",
-                "Gyaru",
-                "Delinquent",
-                "Wild",
-                "Wannabe",
-                "Reluctant",
-                "Jinxed",
-                "Bookish",
-                "Timid",
-                "Typical Schoolgirl",
-                "Trendy",
-                "Otaku",
-                "Yandere",
-                "Lazy",
-                "Quiet",
-                "Stubborn",
-                "Old-Fashioned",
-                "Humble",
-                "Friendly",
-                "Willful",
-                "Honest",
-                "Glamorous",
-                "Returnee",
-                "Slangy",
-                "Sadistic",
-                "Emotionless",
-                "Perfectionist"
-            };
-
-            if (personality < 0 || personality > 90) return "Invalid";
-
-            if (personalityLookup.Length > personality) return personalityLookup[personality];
-
-            if (personality >= 80 && personality <= 86) return "Story-only " + personality;
-
-            return "Unknown";
-        }
-
-        public const int BufferSize = 4096;
-
-        private static readonly byte[] PngEndChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
-        private static readonly byte[] PngStartChunk = { 0x89, 0x50, 0x4E, 0x47, 0x0D };
-
         public static long SearchForSequence(Stream stream, byte[] sequence)
         {
-            long origPos = stream.Position;
+            const int bufferSize = 4096;
+            var origPos = stream.Position;
 
-            byte[] buffer = new byte[BufferSize];
+            var buffer = new byte[bufferSize];
             int read;
 
-            byte scanByte = sequence[0];
+            var scanByte = sequence[0];
 
-            while ((read = stream.Read(buffer, 0, BufferSize)) > 0)
+            while ((read = stream.Read(buffer, 0, bufferSize)) > 0)
             {
-                for (int i = 0; i < read; i++)
+                for (var i = 0; i < read; i++)
                 {
                     if (buffer[i] != scanByte)
                         continue;
 
-                    bool flag = true;
+                    var flag = true;
 
-                    for (int x = 1; x < sequence.Length; x++)
+                    for (var x = 1; x < sequence.Length; x++)
                     {
                         i++;
 
-                        if (i >= BufferSize)
+                        if (i >= bufferSize)
                         {
-                            if ((read = stream.Read(buffer, 0, BufferSize)) < BufferSize)
+                            if ((read = stream.Read(buffer, 0, bufferSize)) < bufferSize)
                                 return -1;
 
                             i = 0;
@@ -102,7 +44,7 @@ namespace KKManager.Data.Cards
 
                     if (flag)
                     {
-                        long result = (stream.Position + 1) - (BufferSize - i) - sequence.Length;
+                        var result = (stream.Position + 1) - (bufferSize - i) - sequence.Length;
                         stream.Position = origPos;
                         return result;
                     }
@@ -112,16 +54,18 @@ namespace KKManager.Data.Cards
             return -1;
         }
 
+        private static readonly byte[] _pngEndChunk = { 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82 };
         public static long SearchForPngEnd(Stream stream)
         {
-            var result = SearchForSequence(stream, PngEndChunk);
-            if (result >= 0) result += PngEndChunk.Length;
+            var result = SearchForSequence(stream, _pngEndChunk);
+            if (result >= 0) result += _pngEndChunk.Length;
             return result;
         }
 
+        private static readonly byte[] _pngStartChunk = { 0x89, 0x50, 0x4E, 0x47, 0x0D };
         public static long SearchForPngStart(Stream stream)
         {
-            return SearchForSequence(stream, PngStartChunk);
+            return SearchForSequence(stream, _pngStartChunk);
         }
     }
 }

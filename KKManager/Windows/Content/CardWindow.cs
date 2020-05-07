@@ -44,8 +44,8 @@ namespace KKManager.Windows.Content
             olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.Name;
             olvColumnFilename.AspectGetter = rowObject => (rowObject as Card)?.Location.Name;
             olvColumnModDate.AspectGetter = rowObject => (rowObject as Card)?.Location.LastWriteTime;
-            olvColumnSex.AspectGetter = rowObject => (rowObject as Card)?.Parameter.sex == 0 ? "Male" : "Female";
-            olvColumnPersonality.AspectGetter = rowObject => Utility.GetPersonalityName((rowObject as Card)?.Parameter.personality ?? -1);
+            olvColumnSex.AspectGetter = rowObject => (rowObject as Card)?.Sex;
+            olvColumnPersonality.AspectGetter = rowObject => (rowObject as Card)?.PersonalityName;
             olvColumnExtended.AspectGetter = rowObject => (rowObject as Card)?.Extended?.Count.ToString() ?? "-";
 
             Details(this, EventArgs.Empty);
@@ -515,7 +515,7 @@ namespace KKManager.Windows.Content
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            var sexes = _typedListView.SelectedObjects.GroupBy(x => x.Parameter.sex).ToList();
+            var sexes = _typedListView.SelectedObjects.GroupBy(x => x.Sex).ToList();
 
             if (sexes.Count < 2)
             {
@@ -525,7 +525,7 @@ namespace KKManager.Windows.Content
 
             foreach (var sex in sexes)
             {
-                var dirpath = Path.Combine(_currentDirectory.FullName, sex.Key == 0 ? "male" : "female");
+                var dirpath = Path.Combine(_currentDirectory.FullName, sex.Key.ToString());
                 Directory.CreateDirectory(dirpath);
                 foreach (var card in sex)
                     card.Location.MoveTo(Path.Combine(dirpath, card.Location.Name));

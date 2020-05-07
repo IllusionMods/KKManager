@@ -7,6 +7,7 @@ namespace KKManager.Data.Cards.KK
 {
     [MessagePackObject(true)]
     [ReadOnly(true)]
+    [TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileParameter>))]
     public class ChaFileParameter
     {
         [IgnoreMember] public static readonly string BlockName = "Parameter";

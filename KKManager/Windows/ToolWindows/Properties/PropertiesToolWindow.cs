@@ -92,12 +92,21 @@ namespace KKManager.Windows.ToolWindows.Properties
         {
             if (targetObject != null)
             {
-                _propertyViewers.TryGetValue(targetObject.GetType(), out var targetViewer);
-                if (targetViewer == null) targetViewer = _defaultPropertyViewer;
+                var targetType = targetObject.GetType();
+                while (targetType != null)
+                {
+                    _propertyViewers.TryGetValue(targetType, out var targetViewer);
+                    if (targetViewer != null)
+                    {
+                        ShowViewer(targetViewer);
+                        targetViewer.DisplayObjectProperties(targetObject, source);
+                        return targetViewer;
+                    }
 
-                ShowViewer(targetViewer);
-                targetViewer.DisplayObjectProperties(targetObject, source);
-                return targetViewer;
+                    targetType = targetType.BaseType;
+                }
+
+                return _defaultPropertyViewer;
             }
             return null;
         }
