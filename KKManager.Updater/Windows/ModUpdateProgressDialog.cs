@@ -138,6 +138,11 @@ namespace KKManager.Updater.Windows
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 PerformAutoScale();
             }
+            catch (OutdatedVersionException ex)
+            {
+                SetStatus("KK Manager needs to be updated to get updates.", true, true);
+                MessageBox.Show(ex.Message, "KK Manager is outdated", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (OperationCanceledException)
             {
                 SetStatus("Operation was cancelled by the user.", true, true);

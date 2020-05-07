@@ -135,6 +135,7 @@
     </Compile>
     <Compile Include="Util\LoadingDialog\LoadingDialogInterface.cs" />
     <Compile Include="Util\LogWriter.cs" />
+    <Compile Include="Util\OutdatedVersionException.cs" />
     <Compile Include="Util\PathTools.cs" />
     <Compile Include="Util\ProcessTools.cs" />
     <Compile Include="Util\ProcessWaiter\ProcessWaiter.cs">

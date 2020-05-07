@@ -43,22 +43,35 @@ namespace KKManager.Updater
 
             var anySuccessful = false;
 
+            Exception criticalException = null;
+
             // First start all of the sources, then wait until they all finish
             var concurrentTasks = updateSources.Select(source => new
             {
                 task = RetryHelper.RetryOnExceptionAsync(
                 async () =>
                 {
-                    foreach (var task in await source.GetUpdateItems(cancellationToken))
+                    try
                     {
-                        // todo move further inside or decouple getting update tasks and actually processing them
-                        if (filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID))
-                            continue;
+                        foreach (var task in await source.GetUpdateItems(cancellationToken))
+                        {
+                            if (cancellationToken.IsCancellationRequested || criticalException != null) break;
 
-                        if (task.Items.Any()) anySuccessful = true;
+                            // todo move further inside or decouple getting update tasks and actually processing them
+                            if (filterByGuids != null && filterByGuids.Length > 0 &&
+                                !filterByGuids.Contains(task.Info.GUID))
+                                continue;
 
-                        task.Items.RemoveAll(x => x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
-                        results.Add(task);
+                            if (task.Items.Any()) anySuccessful = true;
+
+                            task.Items.RemoveAll(x =>
+                                x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
+                            results.Add(task);
+                        }
+                    }
+                    catch (OutdatedVersionException ex)
+                    {
+                        criticalException = ex;
                     }
                 },
                 3, TimeSpan.FromSeconds(3), cancellationToken),
@@ -81,6 +94,8 @@ namespace KKManager.Updater
             }
 
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (criticalException != null) throw criticalException;
 
             if (!anySuccessful) throw new InvalidDataException("No valid update sources were found. Your UpdateSources file might be corrupted or in an old format.");
 

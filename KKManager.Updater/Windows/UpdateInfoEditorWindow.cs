@@ -76,6 +76,9 @@ namespace KKManager.Updater.Windows
                 {
                     foreach (var info in CurrentUpdateInfos.UpdateInfos)
                         UpdateInfo.TestConstraints(info);
+
+                    CurrentUpdateInfos.Version = UpdateInfo.Updates.CurrentUpdateInfoVersion;
+                    propertyGrid1.Refresh();
                     UpdateInfo.Serialize(file, CurrentUpdateInfos);
                 }
 

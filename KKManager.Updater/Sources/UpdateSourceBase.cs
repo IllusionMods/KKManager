@@ -69,6 +69,11 @@ namespace KKManager.Updater.Sources
                     {
                         updateInfos.AddRange(UpdateInfo.ParseUpdateManifest(str, this));
                     }
+                    catch (OutdatedVersionException ex)
+                    {
+                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex.Message}");
+                        throw;
+                    }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex.ToStringDemystified()}");

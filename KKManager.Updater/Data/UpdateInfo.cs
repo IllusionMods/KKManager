@@ -61,6 +61,9 @@ namespace KKManager.Updater.Data
         [TypeConverter(typeof(ListConverter))]
         public List<ContentHash> ContentHashes { get; set; } = new List<ContentHash>();
 
+        [TypeConverter(typeof(ListConverter))]
+        public List<GameType> SupportedGames { get; set; } = new List<GameType>();
+
         /// <summary>
         /// Marks this update info as being an expansion for another update info.
         /// </summary>
@@ -110,6 +113,10 @@ namespace KKManager.Updater.Data
 
         public bool CheckConditions()
         {
+            var supportsAny = SupportedGames == null || SupportedGames.Count == 0;
+            var isSupported = supportsAny || SupportedGames.Contains(InstallDirectoryHelper.GetGameType());
+            if (!isSupported) return false;
+
             foreach (var condition in Conditions)
             {
                 switch (condition.Type)
@@ -126,6 +133,7 @@ namespace KKManager.Updater.Data
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
             return true;
         }
 
@@ -170,7 +178,9 @@ namespace KKManager.Updater.Data
 
         public static Updates Deserialize(Stream stream)
         {
-            return (Updates)_serializer.Deserialize(stream);
+            var updates = (Updates)_serializer.Deserialize(stream);
+            if(updates.Version > Updates.CurrentUpdateInfoVersion) throw new OutdatedVersionException("The update data is in a new format that is not supported by this version of KK Manager. Please update KK Manager and try again.");
+            return updates;
         }
 
         public static UpdateInfo Deserialize(XmlReader reader)
@@ -180,7 +190,7 @@ namespace KKManager.Updater.Data
 
         public override string ToString()
         {
-            return $"{(string.IsNullOrEmpty(GUID) ? "NO GUID" : GUID)} - {(string.IsNullOrEmpty(Name) ? "NO NAME" : Name)} ({Conditions?.Count} conditions, {ContentHashes?.Count} hashes)";
+            return $"{(string.IsNullOrEmpty(GUID) ? "NO GUID" : GUID)} - {(string.IsNullOrEmpty(Name) ? "NO NAME" : Name)} ({Conditions?.Count} conditions, {ContentHashes?.Count} hashes. Supported games: {string.Join(",", SupportedGames?.Select(x => x.ToString()) ?? new[] { GameType.Unknown.ToString() })})";
         }
 
         [TypeConverter(typeof(SimpleExpandTypeConverter<Condition>))]
@@ -189,7 +199,7 @@ namespace KKManager.Updater.Data
             public enum ConditionType
             {
                 ClientFileExists,
-                ClientFileNotExists
+                ClientFileNotExists,
             }
 
             [XmlAttribute]
@@ -241,11 +251,14 @@ namespace KKManager.Updater.Data
         [TypeConverter(typeof(SimpleExpandTypeConverter<Updates>))]
         public class Updates
         {
+            public const int CurrentUpdateInfoVersion = 2;
+
             [XmlElement("UpdateInfo")]
             [TypeConverter(typeof(ListConverter))]
             public List<UpdateInfo> UpdateInfos { get; set; } = new List<UpdateInfo>();
 
-            public int Version { get; set; } = 1;
+            [ReadOnly(true)]
+            public int Version { get; set; } = CurrentUpdateInfoVersion;
         }
 
         public enum InstallByDefaultMode

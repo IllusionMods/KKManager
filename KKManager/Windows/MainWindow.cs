@@ -495,6 +495,7 @@ namespace KKManager.Windows
                 }
             }
             catch (OperationCanceledException) { }
+            catch (OutdatedVersionException) { MessageBox.Show("There's a newer version of KK Manager available. Visit github.com/IllusionMods/KKManager to get the latest update. Mod updates might not work until you update.", "KK Manager is outdated", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             catch (Exception ex) { Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}"); }
         }
 
