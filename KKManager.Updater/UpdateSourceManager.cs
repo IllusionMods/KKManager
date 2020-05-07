@@ -124,7 +124,7 @@ namespace KKManager.Updater
 
             Console.WriteLine("Looking for update sources...");
 
-            if (File.Exists(updateSourcesPathDebug) && File.ReadAllText(updateSourcesPathDebug).Length > 0)
+            if (File.Exists(updateSourcesPathDebug) && File.ReadAllText(updateSourcesPathDebug).Trim().Length > 0)
             {
                 Console.WriteLine("Loading sources from UpdateSourcesDebug file at " + updateSourcesPathDebug);
 
@@ -134,7 +134,7 @@ namespace KKManager.Updater
             {
                 try
                 {
-                    updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split();
+                    updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split().Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                     Console.WriteLine($"Found {updateSources.Length} sources");
                 }
                 catch (Exception ex)
