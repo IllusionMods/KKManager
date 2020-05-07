@@ -102,7 +102,7 @@ namespace KKManager.Updater
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
             {
-                var ordered = modGroup.OrderByDescending(x => x.Info.Source.DiscoveryPriority).ThenByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ToList();
+                var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ThenByDescending(x => x.Info.Source.DiscoveryPriority).ToList();
                 if (ordered.Count > 1)
                 {
                     ordered[0].AlternativeSources.AddRange(ordered.Skip(1));
