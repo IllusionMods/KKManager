@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
 using KKManager.Updater.Data;
 using KKManager.Util;
 
@@ -191,6 +193,22 @@ namespace KKManager.Updater.Sources
             }
         }
 
+        private static string GetEnabledName(FileInfo file)
+        {
+            if (SideloaderModLoader.IsValidZipmodExtension(file.Extension))
+            {
+                return SideloaderModInfo.EnabledLocation(file).Name;
+            }
+            else if (PluginLoader.IsValidPluginExtension(file.Extension))
+            {
+                return PluginInfo.EnabledLocation(file).Name;
+            }
+            else
+            {
+                return file.Name;
+            }
+        }
+
         private List<UpdateItem> ProcessDirectory(IRemoteItem remoteDir, DirectoryInfo localDir,
             bool recursive, bool removeNotExisting, Func<IRemoteItem, FileInfo, bool> versionEqualsComparer,
             CancellationToken cancellationToken)
@@ -202,6 +220,8 @@ namespace KKManager.Updater.Sources
             var localContents = new List<FileSystemInfo>();
             if (localDir.Exists)
                 localContents.AddRange(localDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly));
+
+            var enabledName = localContents.OfType<FileInfo>().ToDictionary(x => x, GetEnabledName);
 
             foreach (var remoteItem in remoteDir.GetDirectoryContents(cancellationToken))
             {
@@ -225,7 +245,7 @@ namespace KKManager.Updater.Sources
                     var itemDate = remoteItem.ModifiedTime;
                     if (itemDate > _latestModifiedDate) _latestModifiedDate = itemDate;
 
-                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(x.Name, remoteItem.Name, StringComparison.OrdinalIgnoreCase));
+                    var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(enabledName[x], remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                     if (localFile == null)
                         localFile = new FileInfo(Path.Combine(localDir.FullName, remoteItem.Name));
                     else
