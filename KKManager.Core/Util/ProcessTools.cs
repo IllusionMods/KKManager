@@ -61,7 +61,7 @@ namespace KKManager.Util
                 return null;
 
             path = path.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar, ' '); 
-            return SafeStartProcess(new ProcessStartInfo("cmd", $"/C echo off & cls & title Fixing permissions... & takeown /f \"{ path }\" /r /SKIPSL /d y & icacls \"{ path }\" /grant everyone:F /t /c /l & pause"), true);
+            return SafeStartProcess(new ProcessStartInfo("cmd", $"/C echo off & cls & title Fixing permissions... & takeown /F \"{ path }\" /R /SKIPSL /D Y & icacls \"{ path }\" /grant everyone:F /T /C /L & pause"), true);
         }
 
         /// <summary>
