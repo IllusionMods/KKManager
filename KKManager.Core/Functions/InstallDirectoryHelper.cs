@@ -60,7 +60,7 @@ namespace KKManager.Functions
                 if (File.Exists(Path.Combine(path, "AI-Syoujyo.exe"))) return GameType.AiShoujo;
                 if (File.Exists(Path.Combine(path, "AI-Shoujo.exe"))) return GameType.AiShoujoSteam;
                 if (File.Exists(Path.Combine(path, "Koikatu.exe"))) return GameType.Koikatsu;
-                if (File.Exists(Path.Combine(path, "Koikatsu.exe"))) return GameType.KoikatsuSteam;
+                if (File.Exists(Path.Combine(path, "Koikatsu Party.exe"))) return GameType.KoikatsuSteam;
                 if (File.Exists(Path.Combine(path, "EmotionCreators.exe"))) return GameType.EmotionCreators;
                 if (File.Exists(Path.Combine(path, "PlayHome64bit.exe"))) return GameType.PlayHome;
             }
