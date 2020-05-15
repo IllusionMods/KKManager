@@ -12,6 +12,10 @@ namespace KKManager.Data.Zipmods
             string author, string description, string website, IReadOnlyList<Image> images, IReadOnlyList<string> contents)
             : base(location, guid, name, version)
         {
+            var extension = location.Extension;
+            if (!SideloaderModLoader.IsValidZipmodExtension(extension))
+                throw new InvalidOperationException("Zipmod has invalid extension: " + Location.Extension);
+
             Author = author;
             Description = description;
             Website = website;
@@ -48,32 +52,17 @@ namespace KKManager.Data.Zipmods
 
         public override void SetEnabled(bool value)
         {
-            if (Location.Extension.StartsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            if (Enabled != value)
             {
-                if (!value)
-                {
-                    var newExt = Location.Extension.ToCharArray();
-                    newExt[3] = '_';
+                Location.MoveTo(EnabledLocation(Location, value).FullName);
+            }
+        }
 
-                    var newName = Location.FullName.Substring(0, Location.FullName.Length - newExt.Length) + new string(newExt);
-                    Location.MoveTo(newName);
-                }
-            }
-            else if (Location.Extension.StartsWith(".zi_", StringComparison.OrdinalIgnoreCase))
-            {
-                if (value)
-                {
-                    var newExt = Location.Extension.ToCharArray();
-                    newExt[3] = 'p';
-
-                    var newName = Location.FullName.Substring(0, Location.FullName.Length - newExt.Length) + new string(newExt);
-                    Location.MoveTo(newName);
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("Zipmod has invalid extension: " + Location.Extension);
-            }
+        public static FileInfo EnabledLocation(FileInfo location, bool enable = true)
+        {
+            var ext = location.Extension.ToCharArray();
+            ext[3] = enable ? 'p' : '_';
+            return new FileInfo(location.FullName.Substring(0, location.FullName.Length - ext.Length) + new string(ext));
         }
     }
 }

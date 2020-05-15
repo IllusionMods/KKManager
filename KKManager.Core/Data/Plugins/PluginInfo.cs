@@ -31,26 +31,17 @@ namespace KKManager.Data.Plugins
 
         public override void SetEnabled(bool value)
         {
-            if (Location.Extension.Equals(".dll", StringComparison.OrdinalIgnoreCase))
+            if (Enabled != value)
             {
-                if (!value)
-                {
-                    var newName = Location.FullName.Substring(0, Location.FullName.Length - 1) + '_';
-                    Location.MoveTo(newName);
-                }
+                Location.MoveTo(EnabledLocation(Location, value).FullName);
             }
-            else if (Location.Extension.Equals(".dl_", StringComparison.OrdinalIgnoreCase))
-            {
-                if (value)
-                {
-                    var newName = Location.FullName.Substring(0, Location.FullName.Length - 1) + 'l';
-                    Location.MoveTo(newName);
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("Plugin has invalid extension: " + Location.Extension);
-            }
+        }
+
+        public static FileInfo EnabledLocation(FileInfo location, bool enable = true)
+        {
+            var ext = location.Extension.ToCharArray();
+            ext[3] = enable ? 'l' : '_';
+            return new FileInfo(location.FullName.Substring(0, location.FullName.Length - ext.Length) + new string(ext));
         }
     }
 }
