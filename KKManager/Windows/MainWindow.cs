@@ -101,6 +101,19 @@ namespace KKManager.Windows
                 }
 
                 Settings.Default.GamePath = path;
+
+                if (path.Length > 100)
+                {
+                    MessageBox.Show(
+                        "Your game path is very long and is likely to cause issues with running the game and/or KK Manager.\n\nPlease consider moving your game to a simpler directory like \"D:\\Games\\Koikatsu\" to avoid potential issues. ",
+                        "Game directory warning", MessageBoxButtons.OK);
+                }
+                else if (path.Any(x => x > 127))
+                {
+                    MessageBox.Show(
+                        "Your game path contains special characters that might cause issues with running the game.\n\nPlease consider moving your game to a simpler directory like \"D:\\Games\\Koikatsu\" to avoid potential issues. ",
+                        "Game directory warning", MessageBoxButtons.OK);
+                }
             }
 
             CheckInstallPathPermissions(path);
