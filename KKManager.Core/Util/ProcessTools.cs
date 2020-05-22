@@ -60,8 +60,27 @@ namespace KKManager.Util
             if (ProcessWaiter.ProcessWaiter.CheckForProcessesBlockingKoiDir().Result == false)
                 return null;
 
-            path = path.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar, ' '); 
-            return SafeStartProcess(new ProcessStartInfo("cmd", $"/C echo off & cls & title Fixing permissions... & takeown /F \"{ path }\" /R /SKIPSL & icacls \"{ path }\" /grant everyone:F /T /C /L & pause"), true);
+            var batContents = $@"
+title Fixing permissions... 
+rem Get the localized version of Y/N to pass to takeown to make this work in different locales
+for /f ""tokens=1,2 delims=[,]"" %%a in ('""choice <nul 2>nul""') do set ""yes=%%a"" & set ""no=%%b""
+echo Press %yes% for yes and %no% for no
+set target={ path.Trim(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar, ' ') }
+echo off
+cls
+echo Taking ownership of %target% ...
+rem First find is to filter out success messages, second findstr is to filter out empty lines
+takeown /F ""%target%"" /R /SKIPSL /D %yes% | find /V ""SUCCESS: The file (or folder):"" | findstr /r /v ""^$""
+echo.
+echo Fixing access rights ...
+icacls ""%target%"" /grant *S-1-1-0:F /T /C /L /Q
+echo.
+echo Finished! If the process failed, reboot your PC and try again.
+pause";
+            var batPath = Path.Combine(Path.GetTempPath(), "kkmanager_fixperms.bat");
+            File.WriteAllText(batPath, batContents);
+
+            return SafeStartProcess(new ProcessStartInfo("cmd", $"/C \"{batPath}\""), true);
         }
 
         /// <summary>
