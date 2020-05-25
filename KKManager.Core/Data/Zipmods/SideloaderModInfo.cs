@@ -54,7 +54,12 @@ namespace KKManager.Data.Zipmods
         {
             if (Enabled != value)
             {
-                Location.MoveTo(EnabledLocation(Location, value).FullName);
+                var newPath = EnabledLocation(Location, value).FullName;
+                if (!string.Equals(newPath, Location.FullName, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Delete(newPath);
+                    Location.MoveTo(newPath);
+                }
             }
         }
 
