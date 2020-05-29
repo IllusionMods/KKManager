@@ -55,14 +55,14 @@ namespace KKManager.Updater
                     {
                         foreach (var task in await source.GetUpdateItems(cancellationToken))
                         {
+                            anySuccessful = true;
+
                             if (cancellationToken.IsCancellationRequested || criticalException != null) break;
 
                             // todo move further inside or decouple getting update tasks and actually processing them
                             if (filterByGuids != null && filterByGuids.Length > 0 &&
                                 !filterByGuids.Contains(task.Info.GUID))
                                 continue;
-
-                            if (task.Items.Any()) anySuccessful = true;
 
                             task.Items.RemoveAll(x =>
                                 x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
@@ -97,7 +97,7 @@ namespace KKManager.Updater
 
             if (criticalException != null) throw criticalException;
 
-            if (!anySuccessful) throw new InvalidDataException("No valid update sources were found. Your UpdateSources file might be corrupted or in an old format.");
+            if (!anySuccessful) throw new InvalidDataException("No valid update sources were found. Either the online update source list could not be accessed, your UpdateSources file is corrupted or in an old format, or KK Manager is outdated. Make sure that you are connected to the internet and not behind a firewall (try using a VPN) and check for KK Manager updates.");
 
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
