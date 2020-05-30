@@ -541,14 +541,27 @@ namespace KKManager.Windows
                     "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.",
                     "Compress files", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                var directories = InstallDirectoryHelper.KoikatuDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                var rootDirectory = InstallDirectoryHelper.KoikatuDirectory;
+                var directories = rootDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
                     .Where(directory => directory.Name.EndsWith("_Data", StringComparison.OrdinalIgnoreCase) ||
                                         directory.Name.Equals("abdata", StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-                var files = directories.SelectMany(dir => dir.GetFiles("*", SearchOption.AllDirectories)).Where(SB3UGS_Utils.FileIsAssetBundle).ToList();
+
+                var files = directories.SelectMany(dir => dir.GetFiles("*", SearchOption.AllDirectories))
+                    .Where(SB3UGS_Utils.FileIsAssetBundle)
+                    .Where(file => !FileIsBlacklisted(file))
+                    .ToList();
 
                 CompressFiles(files, false);
+
+                bool FileIsBlacklisted(FileInfo x)
+                {
+                    // Files inside StreamingAssets are hash-checked so they can't be changed
+                    return x.FullName.Substring(rootDirectory.FullName.Length)
+                        .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                        .Contains("StreamingAssets", StringComparer.OrdinalIgnoreCase);
+                }
             }
         }
 
