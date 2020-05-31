@@ -47,10 +47,17 @@ namespace KKManager.SB3UGS
 
                 if (randomizeCab)
                 {
-                    var rnbuf = new byte[16];
-                    rng.GetBytes(rnbuf);
-                    var newCab = "CAB-" + string.Concat(rnbuf.Select((x) => ((int)x).ToString("X2")).ToArray()).ToLower();
-                    editor.RenameCabinet(0, newCab);
+                    if (parser.FileInfos != null && parser.FileInfos.Count > 1)
+                    {
+                        Console.WriteLine("Could not randomize CAB string because the bundle contains multiple cabinets. Path: " + unity3DFilePath);
+                    }
+                    else
+                    {
+                        var rnbuf = new byte[16];
+                        rng.GetBytes(rnbuf);
+                        var newCab = "CAB-" + string.Concat(rnbuf.Select((x) => ((int)x).ToString("X2")).ToArray()).ToLower();
+                        editor.RenameCabinet(0, newCab);
+                    }
                 }
 
                 editor.SaveUnity3d(false, ".unit-y3d", false, true, -1, 2, 262144);
