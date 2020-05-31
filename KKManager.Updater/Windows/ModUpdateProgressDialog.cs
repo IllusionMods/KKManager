@@ -32,6 +32,7 @@ namespace KKManager.Updater.Windows
                 case GameType.PlayHome:
                 case GameType.AiShoujoSteam:
                 case GameType.AiShoujo:
+                case GameType.HoneySelect2:
                     pictureBox1.Image = Resources.aichika;
                     break;
 

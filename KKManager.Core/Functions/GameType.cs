@@ -9,5 +9,6 @@
         EmotionCreators,
         AiShoujo,
         AiShoujoSteam,
+        HoneySelect2,
     }
 }
