@@ -52,7 +52,7 @@ namespace KKManager.Windows
 #else
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
-            Text = $"KK Manager {version} (AIS support edition) - [{InstallDirectoryHelper.GetGameType().GetFancyGameName()}] in {InstallDirectoryHelper.KoikatuDirectory.FullName}";
+            Text = $"KK Manager {version} (HS2 support edition) - [{InstallDirectoryHelper.GetGameType().GetFancyGameName()}] in {InstallDirectoryHelper.KoikatuDirectory.FullName}";
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
             Settings.Default.Binder.SendUpdates(this);
