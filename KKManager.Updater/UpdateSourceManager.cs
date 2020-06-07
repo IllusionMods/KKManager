@@ -128,7 +128,7 @@ namespace KKManager.Updater
             {
                 Console.WriteLine("Loading sources from UpdateSourcesDebug file at " + updateSourcesPathDebug);
 
-                updateSources = File.ReadAllLines(updateSourcesPath).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                updateSources = File.ReadAllLines(updateSourcesPathDebug).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
             else
             {
