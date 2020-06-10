@@ -234,7 +234,7 @@ $@"This item: {thisPercent:F1}% done ({downloadedSize} / {itemSize})
 Overall: {totalPercent:F1}% done ({totalDownloadedSize} / {_overallSize})
 Speed: {speed:F1}KB/s";
 
-                progressBar1.Value = (int)(totalPercent * 10);
+                progressBar1.Value = Math.Min((int)(totalPercent * 10), progressBar1.Maximum);
             });
 
             SetStatus($"Updating {firstItem.TargetPath.Name}");
