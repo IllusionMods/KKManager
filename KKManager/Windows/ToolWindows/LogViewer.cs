@@ -1,33 +1,36 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
 using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows
 {
-    // Removing and reading the log file doesn't work because the file is locked
     public partial class LogViewer : DockContent
     {
         public LogViewer()
         {
             InitializeComponent();
-            Program.Logger.OnLogWrite += Logger_OnLogWrite;
-        }
 
-        private void Logger_OnLogWrite(object sender, LogWriter.LogEventArgs e)
-        {
-            textBox1.SafeInvoke(() =>
+            // Read log written up to this point
+            var initialLog = Program.Logger.GetLog();
+            textBox1.AppendText(initialLog);
+
+            // Subscribe to future log events
+            var listener = new LogViewerWriter(textBox1);
+            Program.Logger.AddListener(listener);
+            Disposed += (sender, args) =>
             {
-                textBox1.AppendText(e.Message);
-                textBox1.AppendText("\r\n");
-                textBox1.Select(textBox1.TextLength, 0);
-                textBox1.ScrollToCaret();
-            });
+                Program.Logger.RemoveListener(listener);
+                listener.Dispose();
+            };
         }
 
         private void toolStripButtonClear_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "Log window cleared";
+            textBox1.Text = "Log window cleared\r\n";
         }
 
         private void toolStripButtonRead_Click(object sender, EventArgs e)
@@ -37,7 +40,27 @@ namespace KKManager.Windows.ToolWindows
                 Program.Logger.Flush();
                 Process.Start(Program.Logger.LogFilePath);
             }
-            catch (Exception ex) { Console.WriteLine(ex); }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        private class LogViewerWriter : TextWriter
+        {
+            private readonly TextBox _target;
+
+            public LogViewerWriter(TextBox target)
+            {
+                _target = target;
+            }
+
+            public override Encoding Encoding { get; } = Encoding.Unicode;
+
+            public override void Write(string value)
+            {
+                _target.SafeInvoke(() => _target.AppendText(value));
+            }
         }
     }
 }
