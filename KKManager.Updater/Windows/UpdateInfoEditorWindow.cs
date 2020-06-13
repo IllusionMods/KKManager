@@ -12,7 +12,6 @@ namespace KKManager.Updater.Windows
         public UpdateInfoEditorWindow()
         {
             InitializeComponent();
-
             OpenFile(string.Empty);
         }
 
@@ -72,7 +71,7 @@ namespace KKManager.Updater.Windows
         {
             try
             {
-                using (var file = File.OpenWrite(textBox1.Text))
+                using (var file = new FileStream(textBox1.Text, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     foreach (var info in CurrentUpdateInfos.UpdateInfos)
                         UpdateInfo.TestConstraints(info);
