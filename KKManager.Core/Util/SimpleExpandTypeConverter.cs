@@ -60,7 +60,8 @@ namespace KKManager.Util
 
         private static string GetDisplayName(IList list, int index)
         {
-            return "[" + index + "]  " + CSharpName(list[index].GetType());
+            var digitCount = Math.Ceiling(Math.Log10(list.Count));
+            return "[" + index.ToString("D" + digitCount) + "]  " + CSharpName(list[index].GetType());
         }
 
         private static string CSharpName(Type type)
