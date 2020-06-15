@@ -62,17 +62,18 @@ namespace KKManager.Util
         /// Start logging to a file reflecting the calling assembly name.
         /// Hooks console out and error. Dispose before exiting.
         /// </summary>
-        public static LogWriter StartLogging()
+        public static LogWriter StartLogging(Assembly entryAssembly = null)
         {
-            var location = CreateLogFilenameForAssembly(Assembly.GetCallingAssembly());
-            return StartLogging(location);
+            if (entryAssembly == null) entryAssembly = Assembly.GetCallingAssembly();
+            var location = CreateLogFilenameForAssembly(entryAssembly);
+            return StartLogging(location, entryAssembly.GetName());
         }
 
         /// <summary>
         /// Start logging to a file.
         /// Hooks console out and error. Dispose before exiting.
         /// </summary>
-        public static LogWriter StartLogging(string logPath)
+        public static LogWriter StartLogging(string logPath, AssemblyName appName)
         {
             try
             {
@@ -93,7 +94,7 @@ namespace KKManager.Util
                 Console.SetOut(logWriter);
                 Console.SetError(logWriter);
 
-                logWriter.WriteLine("Application startup");
+                logWriter.WriteLine($"Application startup - {appName.Name} v{appName.Version} {appName.ProcessorArchitecture}");
                 logWriter.Flush();
 
                 Debug.Listeners.Add(new TextWriterTraceListener(logWriter));
