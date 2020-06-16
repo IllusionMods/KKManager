@@ -146,7 +146,7 @@ namespace KKManager.Updater.Windows
                         _completedSize += task.First().Item2.GetDownloadSize();
                 }
 
-                var s = $"Successfully updated/removed {allItems.Count} files from {updateTasks.Count} tasks.";
+                var s = $"Successfully updated/removed {allItems.Count - _failedItems.Count} files from {updateTasks.Count} tasks.";
                 if (_failedItems.Any())
                     s += $"\nFailed to update {_failedItems.Count} files because some sources crashed. Check log for details.";
                 SetStatus(s, true, true);
