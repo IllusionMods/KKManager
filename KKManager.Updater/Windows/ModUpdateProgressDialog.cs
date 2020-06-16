@@ -270,7 +270,7 @@ Speed: {speed:F1}KB/s";
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e.ToStringDemystified()} {e.InnerException?.ToStringDemystified()}");
+                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e.ToStringDemystified()}");
 
                     ex = e;
                     _badUpdateSources.Add(source.Item1);
