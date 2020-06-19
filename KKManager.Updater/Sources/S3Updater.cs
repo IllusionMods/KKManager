@@ -109,6 +109,8 @@ namespace KKManager.Updater.Sources
                     await task;
                 }
 
+                progressCallback.Report(100d);
+
                 if (output.Position != sourceItem.Size) throw new InvalidDataException("The downloaded file was not the correct size");
             }
         }
