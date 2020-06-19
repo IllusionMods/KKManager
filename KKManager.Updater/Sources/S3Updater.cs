@@ -79,9 +79,11 @@ namespace KKManager.Updater.Sources
                     RequestPayer = RequestPayer.Requester,
                     ContinuationToken = continuationToken
                 });
-                _results.AddRange(result.S3Objects);
+                _results.AddRange(result.S3Objects.Where(x => !IsTempFile(x)));
                 continuationToken = result.NextContinuationToken;
             } while (result.IsTruncated);
+
+            bool IsTempFile(S3Object x) => Path.GetFileName(x.Key).StartsWith(".", StringComparison.Ordinal) && Path.GetExtension(x.Key)?.Length == 7;
         }
 
         private async Task UpdateItem(S3Object sourceItem, FileInfo targetPath, IProgress<double> progressCallback,
@@ -169,7 +171,7 @@ namespace KKManager.Updater.Sources
                 }
 
                 IsDirectory = IsDirectory(sourceItem);
-                if(IsDirectory) throw new ArgumentException("Directory object received in wrong overload");
+                if (IsDirectory) throw new ArgumentException("Directory object received in wrong overload");
                 IsFile = true;
 
                 ItemSize = _sourceItem.Size;
@@ -180,10 +182,10 @@ namespace KKManager.Updater.Sources
             public WasabiRemoteItem(string fullPath, S3Updater source, string rootFolder)
             {
                 _source = source ?? throw new ArgumentNullException(nameof(source));
-                
+
                 if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
                 _fullPath = fullPath.TrimEnd('/');
-            
+
                 if (rootFolder != null)
                 {
                     _rootFolder = rootFolder.TrimEnd('/');
@@ -191,9 +193,9 @@ namespace KKManager.Updater.Sources
                         throw new IOException($"Remote item full path {_fullPath} doesn't start with the specified root path {_rootFolder}");
                     ClientRelativeFileName = _fullPath.Substring(_rootFolder.Length).Trim('/');
                 }
-            
+
                 IsDirectory = true;
-            
+
                 Name = Path.GetFileName(_fullPath);
             }
 
