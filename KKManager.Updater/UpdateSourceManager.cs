@@ -24,6 +24,8 @@ namespace KKManager.Updater
                     return new ZipUpdater(new FileInfo(link.LocalPath), listingPriority);
                 case "ftp":
                     return new FtpUpdater(link, listingPriority);
+                case "csb":
+                    return new S3Updater(link, listingPriority, 5);
                 case "https":
                     if (link.Host.ToLower() == "mega.nz")
                         return new MegaUpdater(link, listingPriority);
