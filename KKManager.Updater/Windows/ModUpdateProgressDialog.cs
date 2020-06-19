@@ -324,8 +324,8 @@ Speed: {speed:F1}KB/s";
             }
             else
             {
-                _cancelToken.Cancel();
                 button1.Enabled = false;
+                _cancelToken.Cancel();
             }
         }
 
