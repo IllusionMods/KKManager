@@ -93,7 +93,7 @@ namespace KKManager.Updater.Sources
             using (var output = targetPath.OpenWrite())
             {
                 // buffer based on file size to have decent rate of progress reporting
-                const int preferredUpdateSteps = 20;
+                const int preferredUpdateSteps = 100;
                 const long minBufferSize = 128 * 1024; //kb
                 const long maxBufferSize = 5 * 1024 * 1024; //mb
                 var buffer = new byte[Math.Min(maxBufferSize, Math.Max(minBufferSize, sourceItem.Size / preferredUpdateSteps))];
@@ -106,11 +106,16 @@ namespace KKManager.Updater.Sources
 
                     await task;
                 }
+
+                if (output.Position != sourceItem.Size) throw new InvalidDataException("The downloaded file was not the correct size");
             }
         }
 
         private IEnumerable<WasabiRemoteItem> GetSubItems(string fullPath, string rootFolder)
         {
+            // Some folders show up as 0 length files that end witn / and some don't show up at all
+            // This is an issue since all folder objects are needed, so need to discard the existing folder objects and make our own
+
             var searchPath = fullPath.Trim().Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
 
             var folders = new HashSet<string>();
@@ -118,7 +123,7 @@ namespace KKManager.Updater.Sources
             foreach (var node in _results)
             {
                 // Remote keys always use / as separators, no leading or trailing /
-                var remotePath = node.Key.Split('/');
+                var remotePath = node.Key.TrimEnd('/').Split('/');
 
                 // Make sure the path leading up to the item is identical
                 if (remotePath.Length <= searchPath.Length) continue;
@@ -127,7 +132,7 @@ namespace KKManager.Updater.Sources
                         goto skip;
 
                 // Check if the item is directly inside this directory
-                if (remotePath.Length <= searchPath.Length + 1)
+                if (remotePath.Length == searchPath.Length + 1 && !IsDirectory(node))
                     yield return new WasabiRemoteItem(node, this, rootFolder);
                 // If not then take note of the subfolder
                 else
@@ -141,54 +146,60 @@ namespace KKManager.Updater.Sources
                 yield return new WasabiRemoteItem(folder, this, rootFolder);
         }
 
+        private static bool IsDirectory(S3Object node)
+        {
+            return node.Key.EndsWith("/") && node.Size == 0;
+        }
+
         private sealed class WasabiRemoteItem : IRemoteItem
         {
             public WasabiRemoteItem(S3Object sourceItem, S3Updater source, string rootFolder)
             {
-                if (sourceItem == null) throw new ArgumentNullException(nameof(sourceItem));
-                if (source == null) throw new ArgumentNullException(nameof(source));
+                _source = source ?? throw new ArgumentNullException(nameof(source));
+                _sourceItem = sourceItem ?? throw new ArgumentNullException(nameof(sourceItem));
+
+                _fullPath = _sourceItem.Key.TrimEnd('/');
 
                 if (rootFolder != null)
                 {
-                    _rootFolder = rootFolder;
-                    if (!sourceItem.Key.StartsWith(_rootFolder))
-                        throw new IOException($"Remote item full path {sourceItem.Key} doesn't start with the specified root path {_rootFolder}");
-                    ClientRelativeFileName = sourceItem.Key.Substring(_rootFolder.Length);
+                    _rootFolder = rootFolder.TrimEnd('/');
+                    if (!_fullPath.StartsWith(_rootFolder))
+                        throw new IOException($"Remote item full path {_fullPath} doesn't start with the specified root path {_rootFolder}");
+                    ClientRelativeFileName = _fullPath.Substring(_rootFolder.Length).Trim('/');
                 }
 
+                IsDirectory = IsDirectory(sourceItem);
+                if(IsDirectory) throw new ArgumentException("Directory object received in wrong overload");
                 IsFile = true;
 
-                _sourceItem = sourceItem;
-                _source = source;
                 ItemSize = _sourceItem.Size;
                 ModifiedTime = _sourceItem.LastModified;
-                Name = Path.GetFileName(_sourceItem.Key);
+                Name = Path.GetFileName(_fullPath);
             }
 
-            public WasabiRemoteItem(string folderPath, S3Updater source, string rootFolder)
+            public WasabiRemoteItem(string fullPath, S3Updater source, string rootFolder)
             {
-                if (folderPath == null) throw new ArgumentNullException(nameof(folderPath));
-                if (source == null) throw new ArgumentNullException(nameof(source));
-
+                _source = source ?? throw new ArgumentNullException(nameof(source));
+                
+                if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
+                _fullPath = fullPath.TrimEnd('/');
+            
                 if (rootFolder != null)
                 {
-                    _rootFolder = rootFolder;
-                    if (!folderPath.StartsWith(_rootFolder))
-                        throw new IOException($"Remote item full path {folderPath} doesn't start with the specified root path {_rootFolder}");
-                    ClientRelativeFileName = folderPath.Substring(_rootFolder.Length);
+                    _rootFolder = rootFolder.TrimEnd('/');
+                    if (!_fullPath.StartsWith(_rootFolder))
+                        throw new IOException($"Remote item full path {_fullPath} doesn't start with the specified root path {_rootFolder}");
+                    ClientRelativeFileName = _fullPath.Substring(_rootFolder.Length).Trim('/');
                 }
-
+            
                 IsDirectory = true;
-
-                _folderPath = folderPath;
-
-                _source = source;
-                Name = Path.GetFileName(folderPath);
+            
+                Name = Path.GetFileName(_fullPath);
             }
 
             private readonly S3Updater _source;
             private readonly S3Object _sourceItem;
-            private readonly string _folderPath;
+            private readonly string _fullPath;
             private readonly string _rootFolder;
 
             public string Name { get; }
@@ -202,7 +213,7 @@ namespace KKManager.Updater.Sources
             public IRemoteItem[] GetDirectoryContents(CancellationToken cancellationToken)
             {
                 if (IsFile) throw new InvalidOperationException("Can't get directory contents of a file");
-                return _source.GetSubItems(_folderPath, _rootFolder).Cast<IRemoteItem>().ToArray();
+                return _source.GetSubItems(_fullPath, _rootFolder).Cast<IRemoteItem>().ToArray();
             }
 
             public async Task Download(FileInfo downloadTarget, Progress<double> progressCallback,
