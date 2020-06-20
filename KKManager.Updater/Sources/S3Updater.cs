@@ -91,6 +91,8 @@ namespace KKManager.Updater.Sources
         private async Task UpdateItem(S3Object sourceItem, FileInfo targetPath, IProgress<double> progressCallback,
             CancellationToken cancellationToken)
         {
+            progressCallback.Report(0d);
+
             //_s3Client.DownloadToFilePathAsync() doesn't support progress callbacks, need to do all this instead
             var objectResponse = await _s3Client.GetObjectAsync(sourceItem.BucketName, sourceItem.Key, cancellationToken);
             using (var input = objectResponse.ResponseStream)
