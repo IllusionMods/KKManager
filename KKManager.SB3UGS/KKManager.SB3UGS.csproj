@@ -97,7 +97,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="SB3UGS_v20.4.1.7z">
+    <None Include="SB3UGS_v20.4.2.7z">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
