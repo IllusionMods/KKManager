@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -77,7 +78,8 @@ namespace KKManager.Updater.Sources
                 {
                     BucketName = _bucketName,
                     RequestPayer = RequestPayer.Requester,
-                    ContinuationToken = continuationToken
+                    ContinuationToken = continuationToken,
+                    Encoding = EncodingType.Url
                 });
                 _results.AddRange(result.S3Objects.Where(x => !IsTempFile(x)));
                 continuationToken = result.NextContinuationToken;
