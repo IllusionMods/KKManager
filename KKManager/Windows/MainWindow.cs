@@ -559,10 +559,18 @@ namespace KKManager.Windows
         private bool FileCanBeCompressed(FileInfo x, DirectoryInfo rootDirectory)
         {
             if (!SB3UGS_Utils.FileIsAssetBundle(x)) return false;
+
             // Files inside StreamingAssets are hash-checked so they can't be changed
-            return !x.FullName.Substring(rootDirectory.FullName.Length)
+            var isStreamingAsset = x.FullName.Substring(rootDirectory.FullName.Length)
                 .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 .Contains("StreamingAssets", StringComparer.OrdinalIgnoreCase);
+            if (isStreamingAsset)
+            {
+                Console.WriteLine($"Skipping file {x.FullName} - Files inside StreamingAssets folder are hash-checked and can't be modified.");
+                return false;
+            }
+
+            return true;
         }
 
         private void CompressFiles(IReadOnlyList<FileInfo> files, bool randomizeCab)
