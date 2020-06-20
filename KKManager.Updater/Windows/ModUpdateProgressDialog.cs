@@ -142,8 +142,7 @@ namespace KKManager.Updater.Windows
 
                     SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
 
-                    if (await UpdateSingleItem(task))
-                        _completedSize += task.First().Item2.GetDownloadSize();
+                    await UpdateSingleItem(task);
                 }
 
                 var s = $"Successfully updated/removed {allItems.Count - _failedItems.Count} files from {updateTasks.Count} tasks.";
@@ -219,10 +218,10 @@ namespace KKManager.Updater.Windows
                 //Overall: 50% done (111MB / 1221MB)
                 //Speed: 1234KB/s (average 1111KB/s)
 
-                var downloadedKBytes = (long)(itemSize.GetRawSize() * thisPercent / 100d);
+                var downloadedKBytes = (long)(itemSize.GetRawSize() * (thisPercent / 100d));
                 var downloadedSize = FileSize.FromKilobytes(downloadedKBytes);
                 var totalDownloadedSize = _completedSize + downloadedSize;
-                var totalPercent = (double)totalDownloadedSize.GetRawSize() / (double)_overallSize.GetRawSize() * 100d;
+                var totalPercent = ((double)totalDownloadedSize.GetRawSize() / (double)_overallSize.GetRawSize()) * 100d;
 
                 var speed = (downloadedKBytes - lastDownloadedKBytes) / secondsSinceLastUpdate;
                 if (double.IsNaN(speed)) speed = 0;
@@ -261,6 +260,7 @@ Speed: {speed:F1}KB/s";
                     await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3,
                         TimeSpan.FromSeconds(3), _cancelToken.Token);
 
+                    _completedSize += source.Item2.GetDownloadSize();
                     ex = null;
                     break;
                 }

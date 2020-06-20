@@ -108,12 +108,10 @@ namespace KKManager.Updater.Sources
                 {
                     var task = output.WriteAsync(buffer, 0, bytesRead, cancellationToken);
 
-                    progressCallback.Report(100d * output.Position / sourceItem.Size);
+                    progressCallback.Report(100d * Math.Min(1d, (double)output.Position / (double)sourceItem.Size));
 
                     await task;
                 }
-
-                progressCallback.Report(100d);
 
                 if (output.Position != sourceItem.Size) throw new InvalidDataException("The downloaded file was not the correct size");
             }
