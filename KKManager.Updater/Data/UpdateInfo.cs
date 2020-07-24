@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using KKManager.Functions;
 using KKManager.Updater.Sources;
@@ -178,9 +179,34 @@ namespace KKManager.Updater.Data
 
         public static Updates Deserialize(Stream stream)
         {
-            var updates = (Updates)_serializer.Deserialize(stream);
-            if(updates.Version > Updates.CurrentUpdateInfoVersion) throw new OutdatedVersionException("The update data is in a new format that is not supported by this version of KK Manager. Please update KK Manager and try again.");
-            return updates;
+            void CheckVersion(int ver)
+            {
+                if (ver > Updates.CurrentUpdateInfoVersion)
+                    throw new OutdatedVersionException("The update data is in a new format that is not supported by this version of KK Manager. Please update KK Manager and try again.");
+            }
+
+            try
+            {
+                var updates = (Updates)_serializer.Deserialize(stream);
+                CheckVersion(updates.Version);
+                return updates;
+            }
+            catch (OutdatedVersionException)
+            {
+                throw;
+            }
+            catch
+            {
+                // Check if the issue isn't because we are outdated
+                if (stream.CanSeek)
+                {
+                    stream.Position = 0;
+                    var doc = XDocument.Load(stream);
+                    var ver = int.Parse(doc.Root.Element("Version").Value);
+                    CheckVersion(ver);
+                }
+                throw;
+            }
         }
 
         public static UpdateInfo Deserialize(XmlReader reader)
