@@ -9,5 +9,6 @@
             ;
 
         public const string RepoLink = "https://github.com/IllusionMods/KKManager";
+        public const string LatestReleaseLink = "https://github.com/IllusionMods/KKManager/releases/latest";
     }
 }

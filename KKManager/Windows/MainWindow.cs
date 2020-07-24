@@ -507,8 +507,18 @@ namespace KKManager.Windows
                     updateSideloaderModpackToolStripMenuItem.ForeColor = Color.Gray;
                 }
             }
-            catch (OperationCanceledException) { }
-            catch (OutdatedVersionException) { MessageBox.Show("There's a newer version of KK Manager available. Visit github.com/IllusionMods/KKManager to get the latest update. Mod updates might not work until you update.", "KK Manager is outdated", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (OutdatedVersionException)
+            {
+                if (MessageBox.Show("There's a newer version of KK Manager available. Mod updates might not work until you update." +
+                                    "\n\nDo you want to open the download page of the latest version of KKManager?",
+                    "KK Manager is outdated", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                {
+                    ProcessTools.SafeStartProcess(Constants.LatestReleaseLink);
+                }
+            }
             catch (Exception ex) { Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}"); }
         }
 
