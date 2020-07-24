@@ -56,6 +56,8 @@ namespace KKManager.Windows.Content
             _typedListView = new TypedObjectListView<Card>(listView);
 
             listView.CacheVirtualItems += ListView_CacheVirtualItems;
+
+            ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
         }
 
         /// <summary>

@@ -48,6 +48,7 @@ namespace KKManager.Windows.Content
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenModsDir = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -94,37 +95,43 @@ namespace KKManager.Windows.Content
             this.olvColumnEnabled.AspectName = "Enabled";
             this.olvColumnEnabled.CheckBoxes = true;
             this.olvColumnEnabled.MaximumWidth = 23;
+            this.olvColumnEnabled.MinimumWidth = 23;
             this.olvColumnEnabled.Searchable = false;
             this.olvColumnEnabled.Text = "";
             this.olvColumnEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.olvColumnEnabled.Width = 22;
+            this.olvColumnEnabled.Width = 23;
             // 
             // olvColumnName
             // 
             this.olvColumnName.AspectName = "Name";
+            this.olvColumnName.MinimumWidth = 100;
             this.olvColumnName.Text = "Name";
             this.olvColumnName.Width = 171;
             // 
             // olvColumnVersion
             // 
             this.olvColumnVersion.AspectName = "Version";
+            this.olvColumnVersion.MinimumWidth = 50;
             this.olvColumnVersion.Text = "Version";
             // 
             // olvColumnAuthor
             // 
             this.olvColumnAuthor.AspectName = "Author";
+            this.olvColumnAuthor.MinimumWidth = 50;
             this.olvColumnAuthor.Text = "Author";
             this.olvColumnAuthor.Width = 88;
             // 
             // olvColumnGuid
             // 
             this.olvColumnGuid.AspectName = "Guid";
+            this.olvColumnGuid.MinimumWidth = 50;
             this.olvColumnGuid.Text = "Guid";
             this.olvColumnGuid.Width = 144;
             // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
+            this.olvColumnFilename.MinimumWidth = 50;
             this.olvColumnFilename.Text = "File name";
             this.olvColumnFilename.Width = 91;
             // 
@@ -132,6 +139,7 @@ namespace KKManager.Windows.Content
             // 
             this.olvColumnWebsite.AspectName = "Website";
             this.olvColumnWebsite.Hyperlink = true;
+            this.olvColumnWebsite.MinimumWidth = 100;
             this.olvColumnWebsite.Text = "Website";
             this.olvColumnWebsite.Width = 123;
             // 
@@ -145,7 +153,8 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator2,
             this.toolStripButtonDelete,
             this.toolStripSeparator3,
-            this.toolStripButtonOpenModsDir});
+            this.toolStripButtonOpenModsDir,
+            this.toolStripTextBoxSearch});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(891, 25);
@@ -216,6 +225,13 @@ namespace KKManager.Windows.Content
             this.toolStripButtonOpenModsDir.Text = "Open mods directory";
             this.toolStripButtonOpenModsDir.Click += new System.EventHandler(this.toolStripButtonOpenModsDir_Click);
             // 
+            // toolStripTextBoxSearch
+            // 
+            this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
+            this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
+            // 
             // SideloaderModsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,5 +269,6 @@ namespace KKManager.Windows.Content
         private BrightIdeasSoftware.OLVColumn olvColumnEnabled;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonOpenModsDir;
+        private ToolStripTextBox toolStripTextBoxSearch;
     }
 }

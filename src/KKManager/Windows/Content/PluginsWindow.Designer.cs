@@ -44,6 +44,7 @@
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -78,6 +79,7 @@
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseHyperlinks = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.VirtualMode = true;
             this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
             // 
             // olvColumnEnabled
@@ -123,7 +125,8 @@
             this.toolStripSeparator1,
             this.toolStripButtonDelete,
             this.toolStripSeparator3,
-            this.toolStripButtonOpenDir});
+            this.toolStripButtonOpenDir,
+            this.toolStripTextBoxSearch});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(891, 25);
@@ -195,6 +198,14 @@
             this.toolStripButtonOpenDir.Text = "Open plugin directory";
             this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
             // 
+            // toolStripTextBoxSearch
+            // 
+            this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
+            this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
+            // 
             // PluginsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -230,5 +241,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumnEnabled;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonOpenDir;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBoxSearch;
     }
 }

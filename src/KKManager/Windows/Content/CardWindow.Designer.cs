@@ -55,6 +55,7 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -83,7 +84,7 @@ namespace KKManager.Windows.Content
             this.listView.Name = "listView";
             this.listView.ShowGroups = false;
             this.listView.ShowItemToolTips = true;
-            this.listView.Size = new System.Drawing.Size(1024, 488);
+            this.listView.Size = new System.Drawing.Size(805, 488);
             this.listView.TabIndex = 3;
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
@@ -141,10 +142,11 @@ namespace KKManager.Windows.Content
             this.toolStripOpenDropdown,
             this.toolStripSeparator1,
             this.toolStripViewSelect,
-            this.toolStripDropDownButtonTools});
+            this.toolStripDropDownButtonTools,
+            this.toolStripTextBoxSearch});
             this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1024, 25);
+            this.toolStrip.Size = new System.Drawing.Size(805, 25);
             this.toolStrip.TabIndex = 4;
             this.toolStrip.Text = "toolStrip1";
             this.toolStrip.Resize += new System.EventHandler(this.OnResizeToolstip);
@@ -284,11 +286,19 @@ namespace KKManager.Windows.Content
             this.renameCardsToolStripMenuItem.Text = "Rename selected card files...";
             this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
             // 
+            // toolStripTextBoxSearch
+            // 
+            this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
+            this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
+            // 
             // CardWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1024, 513);
+            this.ClientSize = new System.Drawing.Size(805, 513);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.toolStrip);
             this.Name = "CardWindow";
@@ -329,6 +339,7 @@ namespace KKManager.Windows.Content
         private ToolStripDropDownButton toolStripDropDownButtonTools;
         private ToolStripMenuItem segregateBySexToolStripMenuItem;
         private ToolStripMenuItem renameCardsToolStripMenuItem;
+        private ToolStripTextBox toolStripTextBoxSearch;
     }
 }
 
