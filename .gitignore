@@ -329,5 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 *.DotSettings
-/UpdateSources
-/libs/SB3UGS
+*/UpdateSources
+*/libs/SB3UGS

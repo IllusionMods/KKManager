@@ -136,7 +136,7 @@ namespace KKManager.Updater
             {
                 try
                 {
-                    updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.Test)).Split().Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                    updateSources = new WebClient().DownloadString(PathTools.AdjustFormat(Resources.UpdateSourcesUrl)).Split().Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                     Console.WriteLine($"Found {updateSources.Length} sources");
                 }
                 catch (Exception ex)

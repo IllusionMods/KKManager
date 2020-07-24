@@ -81,11 +81,11 @@ namespace KKManager.Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://enj.tvguhohfrepbagrag.pbz/VyyhfvbaZbqf/XXZnantre/znfgre/XXZnantre.Hcqngre/fbheprf.config.
+        ///   Looks up a localized string similar to https://enj.tvguhohfrepbagrag.pbz/VyyhfvbaZbqf/XXZnantre/znfgre/fep/XXZnantre.Hcqngre/fbheprf.config.
         /// </summary>
-        internal static string Test {
+        internal static string UpdateSourcesUrl {
             get {
-                return ResourceManager.GetString("Test", resourceCulture);
+                return ResourceManager.GetString("UpdateSourcesUrl", resourceCulture);
             }
         }
     }
