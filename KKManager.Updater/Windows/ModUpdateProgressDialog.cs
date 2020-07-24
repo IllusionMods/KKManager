@@ -161,7 +161,7 @@ namespace KKManager.Updater.Windows
             catch (OutdatedVersionException ex)
             {
                 SetStatus("KK Manager needs to be updated to get updates.", true, true);
-                MessageBox.Show(ex.Message, "KK Manager is outdated", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ex.ShowKkmanOutdatedMessage();
             }
             catch (OperationCanceledException)
             {

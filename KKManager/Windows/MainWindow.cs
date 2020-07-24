@@ -510,14 +510,9 @@ namespace KKManager.Windows
             catch (OperationCanceledException)
             {
             }
-            catch (OutdatedVersionException)
+            catch (OutdatedVersionException ex)
             {
-                if (MessageBox.Show("There's a newer version of KK Manager available. Mod updates might not work until you update." +
-                                    "\n\nDo you want to open the download page of the latest version of KKManager?",
-                    "KK Manager is outdated", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
-                {
-                    ProcessTools.SafeStartProcess(Constants.LatestReleaseLink);
-                }
+                ex.ShowKkmanOutdatedMessage();
             }
             catch (Exception ex) { Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}"); }
         }
