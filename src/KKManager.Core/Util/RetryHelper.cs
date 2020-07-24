@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +10,25 @@ namespace KKManager.Util
     /// </summary>
     public static class RetryHelper
     {
+        /// <summary>
+        /// Exception that does not trigger retries
+        /// </summary>
+        public sealed class UnretryableException : Exception
+        {
+            internal UnretryableException(Exception ex) : base(string.Empty, ex)
+            {
+                if (ex == null) throw new ArgumentNullException(nameof(ex));
+            }
+        }
+
+        /// <summary>
+        /// Wrap the exception to make it not trigger any more retries
+        /// </summary>
+        public static UnretryableException DoNotAttemptToRetry(Exception originalException)
+        {
+            return new UnretryableException(originalException);
+        }
+
         public static async Task RetryOnExceptionAsync(Func<Task> operation, int times, TimeSpan delay, CancellationToken cancellationToken)
         {
             await RetryOnSpecificExceptionAsync<Exception>(operation, times, delay, cancellationToken);
@@ -34,6 +52,9 @@ namespace KKManager.Util
                 {
                     if (ex is OperationCanceledException || attempts >= times)
                         throw;
+
+                    if (ex is UnretryableException c)
+                        throw c.InnerException;
 
                     // Deal with exceptions caused by cancellation
                     cancellationToken.ThrowIfCancellationRequested();

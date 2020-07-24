@@ -51,7 +51,14 @@ namespace KKManager.Updater.Sources
                 Stream str = null;
                 try
                 {
-                    str = await DownloadFileAsync(fn, cancellationToken);
+                    var downloadFileAsync = DownloadFileAsync(fn, cancellationToken);
+                    if (!downloadFileAsync.Wait(TimeSpan.FromSeconds(20)))
+                        throw new TimeoutException("Timeout when trying to download " + fn);
+                    str = await downloadFileAsync;
+                }
+                catch (TimeoutException ex)
+                {
+                    throw RetryHelper.DoNotAttemptToRetry(ex);
                 }
                 catch (FileNotFoundException)
                 {
