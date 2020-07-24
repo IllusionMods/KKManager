@@ -67,7 +67,7 @@ namespace KKManager.Util.ProcessWaiter
 
         public static Task<bool?> CheckForProcessesBlockingKoiDir()
         {
-            return ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.KoikatuDirectory.FullName }, new[] { @"^Koikatsu HF Patch v[\d\.]+$", "^KKManager$", "^StandaloneUpdater$" });
+            return ProcessWaiter.CheckForRunningProcesses(new[] { InstallDirectoryHelper.GameDirectory.FullName }, new[] { @"^Koikatsu HF Patch v[\d\.]+$", "^KKManager$", "^StandaloneUpdater$" });
         }
     }
 }

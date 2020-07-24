@@ -6,11 +6,11 @@ namespace KKManager.Functions
 {
     public static class InstallDirectoryHelper
     {
-        public static DirectoryInfo KoikatuDirectory { get; set; }
+        public static DirectoryInfo GameDirectory { get; set; }
 
         public static string GetRelativePath(string fullPath)
         {
-            return fullPath.Substring(KoikatuDirectory.FullName.Length);
+            return fullPath.Substring(GameDirectory.FullName.Length);
         }
         public static string GetRelativePath(FileSystemInfo fullPath)
         {
@@ -19,12 +19,12 @@ namespace KKManager.Functions
 
         public static string GetPluginPath()
         {
-            return Path.Combine(KoikatuDirectory.FullName, "BepInEx");
+            return Path.Combine(GameDirectory.FullName, "BepInEx");
         }
 
         public static DirectoryInfo GetModsPath()
         {
-            var path = Path.Combine(KoikatuDirectory.FullName, "mods");
+            var path = Path.Combine(GameDirectory.FullName, "mods");
             return Directory.CreateDirectory(path);
         }
 
@@ -54,7 +54,7 @@ namespace KKManager.Functions
 
         public static GameType GetGameType()
         {
-            var path = KoikatuDirectory.FullName;
+            var path = GameDirectory.FullName;
             if (!string.IsNullOrWhiteSpace(path))
             {
                 if (File.Exists(Path.Combine(path, "AI-Syoujyo.exe"))) return GameType.AiShoujo;
@@ -86,13 +86,13 @@ namespace KKManager.Functions
 
         public static DirectoryInfo GetMaleCardDir()
         {
-            var path = Path.Combine(KoikatuDirectory.FullName, @"UserData\chara\male");
+            var path = Path.Combine(GameDirectory.FullName, @"UserData\chara\male");
             return Directory.CreateDirectory(path);
         }
 
         public static DirectoryInfo GetFemaleCardDir()
         {
-            var path = Path.Combine(KoikatuDirectory.FullName, @"UserData\chara\female");
+            var path = Path.Combine(GameDirectory.FullName, @"UserData\chara\female");
             return Directory.CreateDirectory(path);
         }
     }

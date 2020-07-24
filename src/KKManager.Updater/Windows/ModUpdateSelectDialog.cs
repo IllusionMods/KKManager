@@ -32,7 +32,7 @@ namespace KKManager.Updater.Windows
 
             objectListView2.EmptyListMsg = "Select a task to view its details.";
             objectListView2.FormatRow += ObjectListView2_FormatRow;
-            olvColumnFileName.AspectGetter = rowObject => ((UpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.KoikatuDirectory.FullName.Length);
+            olvColumnFileName.AspectGetter = rowObject => ((UpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.GameDirectory.FullName.Length);
             olvColumnFileDate.AspectGetter = rowObject =>
             {
                 var date = ((UpdateItem) rowObject).RemoteFile?.ModifiedTime;

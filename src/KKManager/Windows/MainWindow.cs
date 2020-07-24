@@ -41,7 +41,7 @@ namespace KKManager.Windows
 
             InitializeComponent();
 
-            InstallDirectoryHelper.KoikatuDirectory = GetGameDirectory();
+            InstallDirectoryHelper.GameDirectory = GetGameDirectory();
 
             SetupTabs();
 
@@ -53,7 +53,7 @@ namespace KKManager.Windows
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
             var gameName = InstallDirectoryHelper.GetGameType().GetFancyGameName();
-            var installDir = InstallDirectoryHelper.KoikatuDirectory.FullName;
+            var installDir = InstallDirectoryHelper.GameDirectory.FullName;
             Text = $"KK Manager {version} (HS2 support edition) - [{gameName}] in {installDir}";
             Console.WriteLine($"Game: {gameName}   Path: {installDir}");
 
@@ -176,7 +176,7 @@ namespace KKManager.Windows
         {
             var toAdd = new List<ToolStripItem>();
             var pluginPath = InstallDirectoryHelper.GetPluginPath();
-            var allExes = InstallDirectoryHelper.KoikatuDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
+            var allExes = InstallDirectoryHelper.GameDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
             var filteredExes = allExes.Where(x => !x.Name.Equals("bepinex.patcher.exe", StringComparison.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
 
             var first = true;
@@ -427,22 +427,22 @@ namespace KKManager.Windows
 
         private void installDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(InstallDirectoryHelper.KoikatuDirectory.FullName);
+            ProcessTools.SafeStartProcess(InstallDirectoryHelper.GameDirectory.FullName);
         }
 
         private void screenshotsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\cap"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\cap"));
         }
 
         private void charactersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\chara"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\chara"));
         }
 
         private void scenesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "UserData\\Studio\\scene"));
+            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\Studio\\scene"));
         }
 
         private void kKManagerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -522,7 +522,7 @@ namespace KKManager.Windows
 
         private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName)?.WaitForExit();
+            ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName)?.WaitForExit();
         }
 
         private void changeGameInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -549,7 +549,7 @@ namespace KKManager.Windows
                     "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.",
                     "Compress files", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                var rootDirectory = InstallDirectoryHelper.KoikatuDirectory;
+                var rootDirectory = InstallDirectoryHelper.GameDirectory;
                 var directories = rootDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
                     .Where(directory => directory.Name.EndsWith("_Data", StringComparison.OrdinalIgnoreCase) ||
                                         directory.Name.Equals("abdata", StringComparison.OrdinalIgnoreCase))

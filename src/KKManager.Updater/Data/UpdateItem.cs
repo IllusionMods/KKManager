@@ -21,7 +21,7 @@ namespace KKManager.Updater.Data
 
         public static async Task<FileInfo> GetTempDownloadFilename()
         {
-            var tempPath = Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, "temp\\KKManager_downloads");
+            var tempPath = Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "temp\\KKManager_downloads");
 
             retryCreate:
             try
@@ -47,7 +47,7 @@ namespace KKManager.Updater.Data
                 if (MessageBox.Show($"Failed to create file in directory {tempPath} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.",
                         "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
-                    var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName);
+                    var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);
                     if (fixPermissions == null) throw new IOException($"Failed to create file in directory {tempPath} because of a security issue - {ex.Message}", ex);
                     fixPermissions.WaitForExit();
                     goto retryCreate;
@@ -100,7 +100,7 @@ namespace KKManager.Updater.Data
                         "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
                     throw;
 
-                var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.KoikatuDirectory.FullName);
+                var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);
                 if (fixPermissions == null) throw new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex);
                 fixPermissions.WaitForExit();
                 goto retryDelete;

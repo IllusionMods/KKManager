@@ -46,8 +46,8 @@ namespace KKManager.Updater.Data
 
                 if (_clientPathInfo == null)
                 {
-                    var local = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, ClientPath));
-                    if (!local.FullName.StartsWith(InstallDirectoryHelper.KoikatuDirectory.FullName, StringComparison.OrdinalIgnoreCase))
+                    var local = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, ClientPath));
+                    if (!local.FullName.StartsWith(InstallDirectoryHelper.GameDirectory.FullName, StringComparison.OrdinalIgnoreCase))
                         throw new SecurityException("ClientPath points to a directory outside the game folder - " + ClientPath);
                     _clientPathInfo = local;
                 }
@@ -123,11 +123,11 @@ namespace KKManager.Updater.Data
                 switch (condition.Type)
                 {
                     case Condition.ConditionType.ClientFileExists:
-                        if (!File.Exists(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, condition.Operand)))
+                        if (!File.Exists(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, condition.Operand)))
                             return false;
                         break;
                     case Condition.ConditionType.ClientFileNotExists:
-                        if (File.Exists(Path.Combine(InstallDirectoryHelper.KoikatuDirectory.FullName, condition.Operand)))
+                        if (File.Exists(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, condition.Operand)))
                             return false;
                         break;
                     default:
