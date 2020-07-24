@@ -57,6 +57,9 @@ namespace KKManager.Windows.Content
 
             listView.CacheVirtualItems += ListView_CacheVirtualItems;
 
+            listView.EmptyListMsgFont = new Font(Font.FontFamily, 24);
+            listView.EmptyListMsg = "No cards were found";
+
             ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
         }
 
