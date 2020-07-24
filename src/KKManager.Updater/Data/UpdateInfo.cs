@@ -277,7 +277,7 @@ namespace KKManager.Updater.Data
         [TypeConverter(typeof(SimpleExpandTypeConverter<Updates>))]
         public class Updates
         {
-            public const int CurrentUpdateInfoVersion = 3;
+            public const int CurrentUpdateInfoVersion = 4;
 
             [XmlElement("UpdateInfo")]
             [TypeConverter(typeof(ListConverter))]
