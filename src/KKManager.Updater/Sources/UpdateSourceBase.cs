@@ -52,9 +52,9 @@ namespace KKManager.Updater.Sources
                 try
                 {
                     var downloadFileAsync = DownloadFileAsync(fn, cancellationToken);
-                    if (!downloadFileAsync.Wait(TimeSpan.FromSeconds(20)))
+                    if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
                         throw new TimeoutException("Timeout when trying to download " + fn);
-                    str = await downloadFileAsync;
+                    str = downloadFileAsync.Result;
                 }
                 catch (TimeoutException ex)
                 {

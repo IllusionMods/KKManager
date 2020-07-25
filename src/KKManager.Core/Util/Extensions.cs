@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
@@ -45,6 +47,16 @@ namespace KKManager.Util
                 if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
                 else extractor.WriteEntryTo(path);
             }
+        }
+
+        /// <summary>
+        /// Returns true if the task finished in time, false if the task timed out.
+        /// </summary>
+        public static async Task<bool> WithTimeout(this Task task, TimeSpan timeout, CancellationToken cancellationToken)
+        {
+            var result = await Task.WhenAny(task, Task.Delay(timeout, cancellationToken)) == task;
+            cancellationToken.ThrowIfCancellationRequested();
+            return result;
         }
     }
 }
