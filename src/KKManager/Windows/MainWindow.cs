@@ -286,7 +286,7 @@ namespace KKManager.Windows
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
-                foreach (var content in dockPanel.Contents) content.DockHandler.Close();
+                foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
                 dockPanel.ResumeLayout(true, true);
             }
 
