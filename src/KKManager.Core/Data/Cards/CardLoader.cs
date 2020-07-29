@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Cards.AI;
-using KKManager.Data.Cards.KK;
+using KKManager.Data.Cards.EC;
 
 namespace KKManager.Data.Cards
 {
@@ -91,7 +91,11 @@ namespace KKManager.Data.Cards
                         case CardType.Koikatu:
                         case CardType.KoikatsuParty:
                         case CardType.KoikatsuPartySpecialPatch:
-                            card = KoiCard.ParseKoiChara(file, reader, gameType);
+                            card = EmoCard.ParseKoiChara(file, reader, gameType);
+                            break;
+
+                        case CardType.EmotionCreators:
+                            card = EmoCard.ParseKoiChara(file, reader, gameType);
                             break;
 
                         case CardType.AiSyoujyo:
@@ -125,6 +129,8 @@ namespace KKManager.Data.Cards
                     return CardType.KoikatsuParty;
                 case "【KoiKatuCharaSP】":
                     return CardType.KoikatsuPartySpecialPatch;
+                case "【EroMakeChara】":
+                    return CardType.EmotionCreators;
                 case "【AIS_Chara】":
                     return CardType.AiSyoujyo;
                 // todo differnt format, saved at very end of data

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using KKManager.Data.Cards.KK;
 
 namespace KKManager.Data.Cards
 {

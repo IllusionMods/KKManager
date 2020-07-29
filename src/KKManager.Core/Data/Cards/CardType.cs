@@ -6,6 +6,7 @@
         Koikatu,
         KoikatsuParty,
         KoikatsuPartySpecialPatch,
+        EmotionCreators,
         AiSyoujyo
     }
 }
