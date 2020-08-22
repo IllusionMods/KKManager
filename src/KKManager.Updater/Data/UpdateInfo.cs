@@ -13,7 +13,7 @@ using KKManager.Util;
 
 namespace KKManager.Updater.Data
 {
-    [TypeConverter(typeof(SimpleExpandTypeConverter<UpdateInfo>))]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public sealed class UpdateInfo
     {
         public static readonly string UpdateFileName = "Updates.xml";
@@ -56,13 +56,13 @@ namespace KKManager.Updater.Data
             }
         }
 
-        [TypeConverter(typeof(ListConverter))]
+        [TypeConverter(typeof(ListTypeConverter))]
         public List<Condition> Conditions { get; set; } = new List<Condition>();
 
-        [TypeConverter(typeof(ListConverter))]
+        [TypeConverter(typeof(ListTypeConverter))]
         public List<ContentHash> ContentHashes { get; set; } = new List<ContentHash>();
 
-        [TypeConverter(typeof(ListConverter))]
+        [TypeConverter(typeof(ListTypeConverter))]
         public List<GameType> SupportedGames { get; set; } = new List<GameType>();
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace KKManager.Updater.Data
             return $"{(string.IsNullOrEmpty(GUID) ? "NO GUID" : GUID)} - {(string.IsNullOrEmpty(Name) ? "NO NAME" : Name)} ({Conditions?.Count} conditions, {ContentHashes?.Count} hashes. Supported games: {string.Join(",", SupportedGames?.Select(x => x.ToString()) ?? new[] { GameType.Unknown.ToString() })})";
         }
 
-        [TypeConverter(typeof(SimpleExpandTypeConverter<Condition>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public sealed class Condition
         {
             public enum ConditionType
@@ -240,7 +240,7 @@ namespace KKManager.Updater.Data
             }
         }
 
-        [TypeConverter(typeof(SimpleExpandTypeConverter<ContentHash>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public sealed class ContentHash
         {
             [XmlAttribute]
@@ -274,13 +274,13 @@ namespace KKManager.Updater.Data
         }
 
         [XmlRoot("Updates")]
-        [TypeConverter(typeof(SimpleExpandTypeConverter<Updates>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Updates
         {
             public const int CurrentUpdateInfoVersion = 4;
 
             [XmlElement("UpdateInfo")]
-            [TypeConverter(typeof(ListConverter))]
+            [TypeConverter(typeof(ListTypeConverter))]
             public List<UpdateInfo> UpdateInfos { get; set; } = new List<UpdateInfo>();
 
             [ReadOnly(true)]

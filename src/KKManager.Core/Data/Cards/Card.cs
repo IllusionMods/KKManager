@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using KKManager.Util;
 
 namespace KKManager.Data.Cards
 {
@@ -16,7 +17,9 @@ namespace KKManager.Data.Cards
         public abstract CharaSex Sex { get; }
         public abstract string PersonalityName { get; }
 
-        [Browsable(false)]
+        //[Browsable(false)]
+        [DisplayName("Extended Data (plugins)")]
+        [TypeConverter(typeof(DictionaryTypeConverter<string, PluginData>))]
         public Dictionary<string, PluginData> Extended { get; }
 
         public virtual Image GetCardImage()

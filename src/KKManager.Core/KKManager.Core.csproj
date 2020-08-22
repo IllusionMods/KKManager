@@ -117,6 +117,9 @@
     <Compile Include="Data\Cards\AI\KoiCard.cs" />
     <Compile Include="Data\Cards\EC\EmoCard.cs" />
     <Compile Include="Data\Cards\Utility.cs" />
+    <Compile Include="Data\ExtData\ExtDataParser.cs" />
+    <Compile Include="Data\ExtData\Deserializers\SideloaderExtDataDeserializer.cs" />
+    <Compile Include="Data\ExtData\IExtDataDeserializer.cs" />
     <Compile Include="Data\IFileInfoBase.cs" />
     <Compile Include="Data\ModInfoBase.cs" />
     <Compile Include="Data\Plugins\PluginInfo.cs" />
@@ -156,7 +159,8 @@
     </Compile>
     <Compile Include="Util\ResourceUtils.cs" />
     <Compile Include="Util\RetryHelper.cs" />
-    <Compile Include="Util\SimpleExpandTypeConverter.cs" />
+    <Compile Include="Util\TypeConverters\DictionaryTypeConverter.cs" />
+    <Compile Include="Util\TypeConverters\ListTypeConverter.cs" />
     <Compile Include="Util\UniversalDragAndDrop.cs" />
   </ItemGroup>
   <ItemGroup>

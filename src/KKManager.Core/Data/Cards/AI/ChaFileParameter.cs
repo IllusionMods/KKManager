@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.AI
 {
     [MessagePackObject(true)]
     [ReadOnly(true)]
-    [TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileParameter>))]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class ChaFileParameter
     {
         public Version version { get; set; } = new Version("0.0.0");
@@ -38,7 +37,7 @@ namespace KKManager.Data.Cards.AI
 
 	[MessagePackObject(true)]
 	[ReadOnly(true)]
-	[TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileParameter2>))]
+	[TypeConverter(typeof(ExpandableObjectConverter))]
 	public class ChaFileParameter2
 	{
 		public Version version { get; set; } = new Version("0.0.0");
@@ -61,7 +60,7 @@ namespace KKManager.Data.Cards.AI
 
 	[MessagePackObject(true)]
 	[ReadOnly(true)]
-	[TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileGameInfo>))]
+	[TypeConverter(typeof(ExpandableObjectConverter))]
 	public class ChaFileGameInfo
 	{
 		public Version version { get; set; } = new Version("0.0.0");
@@ -125,7 +124,7 @@ namespace KKManager.Data.Cards.AI
 
 		[MessagePackObject(true)]
 		[ReadOnly(true)]
-		//[TypeConverter(typeof(SimpleExpandTypeConverter<MinMaxInfo>))]
+		//[TypeConverter(typeof(ExpandableObjectConverter))]
 		public class MinMaxInfo
 		{
 			public float lower { get; set; } = 20f;
@@ -138,7 +137,7 @@ namespace KKManager.Data.Cards.AI
 
 	[MessagePackObject(true)]
 	[ReadOnly(true)]
-	[TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileGameInfo2>))]
+	[TypeConverter(typeof(ExpandableObjectConverter))]
 	public class ChaFileGameInfo2
 	{
 		public Version version { get; set; } = new Version("0.0.0");

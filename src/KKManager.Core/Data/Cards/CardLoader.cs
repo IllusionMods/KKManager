@@ -116,6 +116,8 @@ namespace KKManager.Data.Cards
                     return false;
                 }
 
+                if (card?.Extended != null) ExtData.ExtDataParser.Parse(card.Extended); // todo cache results or lazy run in background?
+
                 return card != null;
             }
         }

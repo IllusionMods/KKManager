@@ -7,7 +7,7 @@ namespace KKManager.Data.Cards.KK
 {
     [MessagePackObject(true)]
     [ReadOnly(true)]
-    [TypeConverter(typeof(SimpleExpandTypeConverter<ChaFileParameter>))]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class ChaFileParameter
     {
         [IgnoreMember] public static readonly string BlockName = "Parameter";
@@ -96,7 +96,7 @@ namespace KKManager.Data.Cards.KK
 
 
         [MessagePackObject(true)]
-        [TypeConverter(typeof(SimpleExpandTypeConverter<Awnser>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Awnser
         {
             public bool animal { get; set; }
@@ -119,7 +119,7 @@ namespace KKManager.Data.Cards.KK
         }
 
         [MessagePackObject(true)]
-        [TypeConverter(typeof(SimpleExpandTypeConverter<Denial>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Denial
         {
             public bool kiss { get; set; }
@@ -134,7 +134,7 @@ namespace KKManager.Data.Cards.KK
         }
 
         [MessagePackObject(true)]
-        [TypeConverter(typeof(SimpleExpandTypeConverter<Attribute>))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Attribute
         {
             public bool hinnyo { get; set; }
