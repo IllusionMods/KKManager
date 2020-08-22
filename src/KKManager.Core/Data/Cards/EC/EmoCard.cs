@@ -25,7 +25,7 @@ namespace KKManager.Data.Cards.EC
             Parameter = parameter;
         }
 
-        public static EmoCard ParseKoiChara(FileInfo file, BinaryReader reader, CardType gameType)
+        public static EmoCard ParseEmoChara(FileInfo file, BinaryReader reader, CardType gameType)
         {
             var loadVersion = new Version(reader.ReadString());
             if (0 > new Version("0.0.0").CompareTo(loadVersion))

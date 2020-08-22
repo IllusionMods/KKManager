@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
+using KKManager.Data.Cards.KK;
 
 namespace KKManager.Data.Cards
 {
@@ -91,11 +92,11 @@ namespace KKManager.Data.Cards
                         case CardType.Koikatu:
                         case CardType.KoikatsuParty:
                         case CardType.KoikatsuPartySpecialPatch:
-                            card = EmoCard.ParseKoiChara(file, reader, gameType);
+                            card = KoiCard.ParseKoiChara(file, reader, gameType);
                             break;
 
                         case CardType.EmotionCreators:
-                            card = EmoCard.ParseKoiChara(file, reader, gameType);
+                            card = EmoCard.ParseEmoChara(file, reader, gameType);
                             break;
 
                         case CardType.AiSyoujyo:
