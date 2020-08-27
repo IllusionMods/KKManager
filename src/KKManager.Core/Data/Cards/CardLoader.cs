@@ -39,30 +39,30 @@ namespace KKManager.Data.Cards
                             if (cancellationToken.IsCancellationRequested) break;
                             try
                             {
-                                if (TryParseCard(file, out Card card))
+                                if (ParseCard(file, out Card card))
                                     s.OnNext(card);
                             }
-                            catch (SystemException ex)
+                            catch (Exception ex)
                             {
-                                Console.WriteLine(ex);
+                                Console.WriteLine($"Failed to parse card [{file}] with an error: {ex.Message}");
                             }
                         }
                     }
-                    catch (SystemException ex)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine(ex);
+                        Console.WriteLine($"Failed to read cards from directory [{path.FullName}] with an error: {ex}");
                     }
 
                     s.OnCompleted();
                 }
 
-                Task.Run((Action)ReadCardsFromDir, cancellationToken);
+                Task.Run(ReadCardsFromDir, cancellationToken);
             }
 
             return s;
         }
 
-        private static bool TryParseCard(FileInfo file, out Card card)
+        private static bool ParseCard(FileInfo file, out Card card)
         {
             card = null;
 
@@ -108,15 +108,17 @@ namespace KKManager.Data.Cards
                             break;
 
                         default:
-                            throw new ArgumentOutOfRangeException(gameType + " is not supported");
+                            throw new ArgumentOutOfRangeException($"GameType={gameType} is not supported");
                     }
                 }
-                catch (EndOfStreamException)
+                catch (EndOfStreamException e)
                 {
-                    return false;
+                    throw new IOException("The card is corrupted or in an unknown format", e);
                 }
 
                 if (card?.Extended != null) ExtData.ExtDataParser.Parse(card.Extended); // todo cache results or lazy run in background?
+
+                // todo check for missing plugins or zipmods, maybe add api to parsers to give links to plugins and zipmods to set as deps, needs a way to specify if they exist or not
 
                 return card != null;
             }
