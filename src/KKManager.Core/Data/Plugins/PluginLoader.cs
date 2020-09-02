@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
@@ -111,13 +112,27 @@ namespace KKManager.Data.Plugins
                         .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToArray();
 
+                    var url = c.CustomAttributes
+                        .Where(x => x.AttributeType.FullName == "UnityEngine.HelpURLAttribute")
+                        .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
+                        .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
+
+                    var f = FileVersionInfo.GetVersionInfo(dllFile);
+                    var author = f.CompanyName;
+                    var description = f.Comments;
+                    if (string.IsNullOrEmpty(url))
+                        url = new[] { f.CompanyName, f.FileDescription, f.Comments, f.LegalCopyright, f.LegalTrademarks }.FirstOrDefault(x => x.StartsWith("http", StringComparison.OrdinalIgnoreCase));
+
                     yield return new PluginInfo(
                         bp.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
                         bp.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
                         bp.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
                         location,
                         deps,
-                        assRefs);
+                        assRefs,
+                        author,
+                        description,
+                        url);
                 }
             }
         }

@@ -10,15 +10,12 @@ namespace KKManager.Data.Zipmods
     {
         public SideloaderModInfo(FileInfo location, string guid, string name, string version,
             string author, string description, string website, IReadOnlyList<Image> images, IReadOnlyList<string> contents)
-            : base(location, guid, name, version)
+            : base(location, guid, name, version,author,description,website)
         {
             var extension = location.Extension;
             if (!SideloaderModLoader.IsValidZipmodExtension(extension))
                 throw new InvalidOperationException("Zipmod has invalid extension: " + Location.Extension);
 
-            Author = author;
-            Description = description;
-            Website = website;
             Images = images;
             Contents = contents;
         }
@@ -32,10 +29,6 @@ namespace KKManager.Data.Zipmods
                     image.Dispose();
             }
         }
-
-        public string Author { get; }
-        public string Description { get; }
-        public string Website { get; }
 
         [Browsable(false)]
         public IReadOnlyList<Image> Images { get; }

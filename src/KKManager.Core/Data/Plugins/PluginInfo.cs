@@ -8,12 +8,14 @@ namespace KKManager.Data.Plugins
 {
     public class PluginInfo : ModInfoBase
     {
-        public PluginInfo(string name, string version, string guid, FileInfo location, string[] dependancies, string[] assemblyReferences) : base(location, guid, name, version)
+        public PluginInfo(string name, string version, string guid, FileInfo location, string[] dependancies,
+            string[] assemblyReferences, string author, string description, string website) 
+            : base(location, guid, name, version, author, description, website)
         {
             var extension = location.Extension;
             if (!PluginLoader.IsValidPluginExtension(extension))
                 throw new InvalidOperationException("Invalid extension for a plugin: " + Location.Extension);
-            
+
             Dependancies = dependancies;
             AssemblyReferences = assemblyReferences;
         }
