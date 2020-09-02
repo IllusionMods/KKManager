@@ -9,7 +9,7 @@ namespace KKManager.Data.Plugins
     public class PluginInfo : ModInfoBase
     {
         public PluginInfo(string name, string version, string guid, FileInfo location, string[] dependancies,
-            string[] assemblyReferences, string author, string description, string website) 
+            string[] assemblyReferences, string author, string description, string website, FileInfo configFile) 
             : base(location, guid, name, version, author, description, website)
         {
             var extension = location.Extension;
@@ -18,11 +18,14 @@ namespace KKManager.Data.Plugins
 
             Dependancies = dependancies;
             AssemblyReferences = assemblyReferences;
+            ConfigFile = configFile;
         }
 
         [Browsable(false)]
         public string[] Dependancies { get; }
         public string[] AssemblyReferences { get; }
+
+        public FileInfo ConfigFile { get; }
 
         public IEnumerable<string> GetAssemblyReferencesNames()
         {

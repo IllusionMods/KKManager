@@ -40,6 +40,9 @@ namespace KKManager.Data.Plugins
                     if (Directory.Exists(bep5PluginsDir))
                         files = files.Concat(Directory.EnumerateFiles(bep5PluginsDir, "*.*", SearchOption.AllDirectories));
 
+                    var configDir = new DirectoryInfo(Path.Combine(pluginDirectory, "config"));
+                    var configFiles = configDir.Exists ? configDir.GetFiles("*.cfg", SearchOption.TopDirectoryOnly) : new FileInfo[0];
+
                     foreach (var file in files)
                     {
                         try
@@ -47,7 +50,7 @@ namespace KKManager.Data.Plugins
                             var ext = Path.GetExtension(file);
                             if (!IsValidPluginExtension(ext)) continue;
 
-                            foreach (var pluginInfo in LoadFromFile(file))
+                            foreach (var pluginInfo in LoadFromFile(file, configFiles))
                                 subject.OnNext(pluginInfo);
                         }
                         catch (SystemException ex)
@@ -91,48 +94,60 @@ namespace KKManager.Data.Plugins
 
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         /// <exception cref="UnauthorizedAccessException">Access to fileName is denied. </exception>
-        public static IEnumerable<PluginInfo> LoadFromFile(string dllFile)
+        public static IEnumerable<PluginInfo> LoadFromFile(string dllFile, FileInfo[] configFiles = null)
         {
             var location = new FileInfo(dllFile);
 
             using (var md = ModuleDefinition.ReadModule(dllFile, new ReaderParameters { AssemblyResolver = GetResolver(location) }))
             {
-                var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
                 var classes = md.Types.Where(x => x.HasCustomAttributes && x.IsClass).ToList();
 
-                foreach (var c in classes)
+                var pluginClasses = classes.Select(c => new
                 {
-                    var bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin");
-                    if (bp == null) continue;
+                    c,
+                    bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
+                }).Where(x => x.bp != null).ToList();
 
-                    var depAttributes = c.CustomAttributes
+                if (pluginClasses.Count == 0) yield break;
+
+                var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
+
+                var f = FileVersionInfo.GetVersionInfo(dllFile);
+                var author = f.CompanyName;
+                var description = f.Comments;
+                var fileUrl = new[] { f.CompanyName, f.FileDescription, f.Comments, f.LegalCopyright, f.LegalTrademarks }.FirstOrDefault(x => x.StartsWith("http", StringComparison.OrdinalIgnoreCase));
+
+                foreach (var pc in pluginClasses)
+                {
+                    var depAttributes = pc.c.CustomAttributes
                         .Where(x => x.AttributeType.FullName == "BepInEx.BepInDependency");
                     var deps = depAttributes
                         .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
                         .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToArray();
 
-                    var url = c.CustomAttributes
+                    var url = pc.c.CustomAttributes
                         .Where(x => x.AttributeType.FullName == "UnityEngine.HelpURLAttribute")
                         .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
                         .FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
-
-                    var f = FileVersionInfo.GetVersionInfo(dllFile);
-                    var author = f.CompanyName;
-                    var description = f.Comments;
                     if (string.IsNullOrEmpty(url))
-                        url = new[] { f.CompanyName, f.FileDescription, f.Comments, f.LegalCopyright, f.LegalTrademarks }.FirstOrDefault(x => x.StartsWith("http", StringComparison.OrdinalIgnoreCase));
+                        url = fileUrl;
+
+                    var guid = pc.bp.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading";
+
+                    var config = configFiles?.FirstOrDefault(x => string.Equals(x.Name.Substring(0, x.Name.Length - 4), guid, StringComparison.Ordinal));
 
                     yield return new PluginInfo(
-                        bp.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
-                        bp.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
-                        bp.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading",
+                        pc.bp.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
+                        pc.bp.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
+                        guid,
                         location,
                         deps,
                         assRefs,
                         author,
                         description,
-                        url);
+                        url,
+                        config);
                 }
             }
         }

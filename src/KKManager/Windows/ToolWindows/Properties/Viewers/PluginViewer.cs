@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using KKManager.Data.Plugins;
+using KKManager.Util;
 using KKManager.Windows.Content;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -27,6 +29,9 @@ namespace KKManager.Windows.ToolWindows.Properties.Viewers
                 _currentPlugin = value;
 
                 propertyGrid1.SelectedObject = _currentPlugin;
+
+                toolStripButtonConf.Enabled = _currentPlugin.ConfigFile != null;
+                toolStripButtonUrl.Enabled = !string.IsNullOrEmpty(_currentPlugin.Website);
 
                 BuildDepLists(value);
             }
@@ -78,6 +83,21 @@ namespace KKManager.Windows.ToolWindows.Properties.Viewers
             var pw = GetPluginsWindow();
             var toSelect = pw?.AllPlugins.FirstOrDefault(x => x.Name == i.Text);
             if (toSelect != null) pw.SelectPlugin(toSelect);
+        }
+
+        private void toolStripButtonLocation_Click(object sender, System.EventArgs e)
+        {
+            ProcessTools.SafeStartProcess(_currentPlugin.Location.DirectoryName);
+        }
+
+        private void toolStripButtonConf_Click(object sender, System.EventArgs e)
+        {
+            ProcessTools.SafeStartProcess(_currentPlugin.ConfigFile.FullName);
+        }
+
+        private void toolStripButtonUrl_Click(object sender, System.EventArgs e)
+        {
+            ProcessTools.SafeStartProcess(new ProcessStartInfo(_currentPlugin.Website));
         }
     }
 }
