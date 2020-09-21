@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using KKManager.Data.Cards;
+﻿using KKManager.Data.Cards;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows.Properties.Viewers
@@ -28,13 +26,6 @@ namespace KKManager.Windows.ToolWindows.Properties.Viewers
                 imgCardFace.Image?.Dispose();
                 imgCard.Image = _currentCard?.GetCardImage();
                 imgCardFace.Image = _currentCard?.GetCardFaceImage();
-
-                lsvCardExtData.Items.Clear();
-                if (_currentCard?.Extended != null)
-                {
-                    foreach (var key in _currentCard.Extended.Keys.OrderBy(x => x, StringComparer.OrdinalIgnoreCase))
-                        lsvCardExtData.Items.Add(key);
-                }
             }
         }
 
