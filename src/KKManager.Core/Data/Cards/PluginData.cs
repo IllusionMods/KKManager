@@ -22,7 +22,7 @@ namespace KKManager.Data.Cards
 
         public override string ToString()
         {
-            return $"Version {version}; {data.Count} elements";
+            return $"Version={version}; Entries={data.Count}";
         }
     }
 }
