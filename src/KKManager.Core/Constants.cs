@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public const string Version = "0.13.1"
+        public const string Version = "0.14.0"
 #if DEBUG
             + ".*"
 #endif
