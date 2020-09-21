@@ -115,7 +115,7 @@ namespace KKManager.Updater.Data
         public bool CheckConditions()
         {
             var supportsAny = SupportedGames == null || SupportedGames.Count == 0;
-            var isSupported = supportsAny || SupportedGames.Contains(InstallDirectoryHelper.GetGameType());
+            var isSupported = supportsAny || SupportedGames.Contains(InstallDirectoryHelper.GameType);
             if (!isSupported) return false;
 
             foreach (var condition in Conditions)

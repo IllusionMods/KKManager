@@ -6,26 +6,105 @@ namespace KKManager.Functions
 {
     public static class InstallDirectoryHelper
     {
-        public static DirectoryInfo GameDirectory { get; set; }
+        private static DirectoryInfo _gameDirectory;
+        private static DirectoryInfo _pluginPath;
+        private static DirectoryInfo _femaleCardDir;
+        private static DirectoryInfo _maleCardDir;
+        private static DirectoryInfo _modsPath;
+        public static DirectoryInfo GameDirectory
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _gameDirectory;
+            }
+            private set => _gameDirectory = value;
+        }
+        public static DirectoryInfo PluginPath
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _pluginPath;
+            }
+            private set => _pluginPath = value;
+        }
+        public static DirectoryInfo ModsPath
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _modsPath;
+            }
+            private set => _modsPath = value;
+        }
+        public static DirectoryInfo MaleCardDir
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _maleCardDir;
+            }
+            private set => _maleCardDir = value;
+        }
+        public static DirectoryInfo FemaleCardDir
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _femaleCardDir;
+            }
+            private set => _femaleCardDir = value;
+        }
 
+        public static GameType GameType { get; private set; } = GameType.Unknown;
+
+        public static void Initialize(DirectoryInfo gameDirectory)
+        {
+            GameDirectory = gameDirectory ?? throw new ArgumentNullException(nameof(gameDirectory));
+
+            var path = GameDirectory.FullName;
+            var gameCheck = new[]
+            {
+                new Tuple<string, GameType>("AI-Syoujyo.exe", GameType.AiShoujo),
+                new Tuple<string, GameType>("AI-Shoujo.exe", GameType.AiShoujoSteam),
+                new Tuple<string, GameType>("Koikatu.exe", GameType.Koikatsu),
+                new Tuple<string, GameType>("Koikatsu Party.exe", GameType.KoikatsuSteam),
+                new Tuple<string, GameType>("EmotionCreators.exe", GameType.EmotionCreators),
+                new Tuple<string, GameType>("PlayHome64bit.exe", GameType.PlayHome),
+                new Tuple<string, GameType>("HoneySelect2.exe", GameType.HoneySelect2)
+            };
+
+            GameType = gameCheck.FirstOrDefault(x => File.Exists(Path.Combine(path, x.Item1)))?.Item2 ?? GameType.Unknown;
+            MaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\male"));
+            FemaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\female"));
+            ModsPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "mods"));
+            PluginPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "BepInEx"));
+        }
+
+        /// <summary>
+        /// Get relative path based on game root directory
+        /// </summary>
         public static string GetRelativePath(string fullPath)
         {
-            return fullPath.Substring(GameDirectory.FullName.Length);
+            ThrowIfNotInitialized();
+            var gamePath = GameDirectory.FullName;
+            return fullPath.StartsWith(gamePath, StringComparison.OrdinalIgnoreCase)
+                ? fullPath.Substring(gamePath.Length)
+                : fullPath;
         }
+
+        private static void ThrowIfNotInitialized()
+        {
+            if (_gameDirectory == null) throw new InvalidOperationException("Game directory was not initialized yet");
+        }
+
+        /// <summary>
+        /// Get relative path based on game root directory
+        /// </summary>
         public static string GetRelativePath(FileSystemInfo fullPath)
         {
             return GetRelativePath(fullPath.FullName);
-        }
-
-        public static string GetPluginPath()
-        {
-            return Path.Combine(GameDirectory.FullName, "BepInEx");
-        }
-
-        public static DirectoryInfo GetModsPath()
-        {
-            var path = Path.Combine(GameDirectory.FullName, "mods");
-            return Directory.CreateDirectory(path);
         }
 
         public static bool IsValidGamePath(string path)
@@ -38,7 +117,8 @@ namespace KKManager.Functions
                 //               File.Exists(Path.Combine(path, "Koikatsu Party.exe")) ||
                 //               File.Exists(Path.Combine(path, "CharaStudio.exe"));
 
-                var anyDatas = Directory.GetDirectories(path).Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
+                var anyDatas = Directory.GetDirectories(path)
+                    .Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
                 var abdataExist = File.Exists(Path.Combine(path, "abdata/abdata"));
 
                 // todo use this to offer to install bepinex and other mods / run update wizzard
@@ -50,22 +130,6 @@ namespace KKManager.Functions
             {
                 return false;
             }
-        }
-
-        public static GameType GetGameType()
-        {
-            var path = GameDirectory.FullName;
-            if (!string.IsNullOrWhiteSpace(path))
-            {
-                if (File.Exists(Path.Combine(path, "AI-Syoujyo.exe"))) return GameType.AiShoujo;
-                if (File.Exists(Path.Combine(path, "AI-Shoujo.exe"))) return GameType.AiShoujoSteam;
-                if (File.Exists(Path.Combine(path, "Koikatu.exe"))) return GameType.Koikatsu;
-                if (File.Exists(Path.Combine(path, "Koikatsu Party.exe"))) return GameType.KoikatsuSteam;
-                if (File.Exists(Path.Combine(path, "EmotionCreators.exe"))) return GameType.EmotionCreators;
-                if (File.Exists(Path.Combine(path, "PlayHome64bit.exe"))) return GameType.PlayHome;
-                if (File.Exists(Path.Combine(path, "HoneySelect2.exe"))) return GameType.HoneySelect2;
-            }
-            return GameType.Unknown;
         }
 
         public static string GetFancyGameName(this GameType gameType)
@@ -82,18 +146,6 @@ namespace KKManager.Functions
                 case GameType.HoneySelect2: return "HoneySelect2";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
-        }
-
-        public static DirectoryInfo GetMaleCardDir()
-        {
-            var path = Path.Combine(GameDirectory.FullName, @"UserData\chara\male");
-            return Directory.CreateDirectory(path);
-        }
-
-        public static DirectoryInfo GetFemaleCardDir()
-        {
-            var path = Path.Combine(GameDirectory.FullName, @"UserData\chara\female");
-            return Directory.CreateDirectory(path);
         }
     }
 }

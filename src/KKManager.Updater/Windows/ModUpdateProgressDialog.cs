@@ -27,7 +27,7 @@ namespace KKManager.Updater.Windows
         {
             InitializeComponent();
 
-            switch (InstallDirectoryHelper.GetGameType())
+            switch (InstallDirectoryHelper.GameType)
             {
                 case GameType.PlayHome:
                 case GameType.AiShoujoSteam:

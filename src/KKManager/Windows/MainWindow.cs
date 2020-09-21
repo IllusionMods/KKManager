@@ -5,11 +5,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using KKManager.Properties;
 using KKManager.SB3UGS;
@@ -41,7 +44,7 @@ namespace KKManager.Windows
 
             InitializeComponent();
 
-            InstallDirectoryHelper.GameDirectory = GetGameDirectory();
+            InstallDirectoryHelper.Initialize(GetGameDirectory());
 
             SetupTabs();
 
@@ -52,7 +55,7 @@ namespace KKManager.Windows
 #else
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
-            var gameName = InstallDirectoryHelper.GetGameType().GetFancyGameName();
+            var gameName = InstallDirectoryHelper.GameType.GetFancyGameName();
             var installDir = InstallDirectoryHelper.GameDirectory.FullName;
             Text = $"KK Manager {version} (HS2 support edition) - [{gameName}] in {installDir}";
             Console.WriteLine($"Game: {gameName}   Path: {installDir}");
@@ -175,7 +178,7 @@ namespace KKManager.Windows
         private void PopulateStartMenu()
         {
             var toAdd = new List<ToolStripItem>();
-            var pluginPath = InstallDirectoryHelper.GetPluginPath();
+            var pluginPath = InstallDirectoryHelper.PluginPath.FullName;
             var allExes = InstallDirectoryHelper.GameDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
             var filteredExes = allExes.Where(x => !x.Name.Equals("bepinex.patcher.exe", StringComparison.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
 
@@ -290,8 +293,8 @@ namespace KKManager.Windows
                 dockPanel.ResumeLayout(true, true);
             }
 
-            OpenOrGetCardWindow(InstallDirectoryHelper.GetMaleCardDir());
-            OpenOrGetCardWindow(InstallDirectoryHelper.GetFemaleCardDir());
+            OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
+            OpenOrGetCardWindow(InstallDirectoryHelper.FemaleCardDir);
 
             GetOrCreateWindow<SideloaderModsWindow>();
             GetOrCreateWindow<PluginsWindow>();
@@ -329,12 +332,12 @@ namespace KKManager.Windows
 
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenOrGetCardWindow(InstallDirectoryHelper.GetFemaleCardDir());
+            OpenOrGetCardWindow(InstallDirectoryHelper.FemaleCardDir);
         }
 
         private void openMaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenOrGetCardWindow(InstallDirectoryHelper.GetMaleCardDir());
+            OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
         }
 
         private void openPluginBrowserToolStripMenuItem_Click(object sender, EventArgs e)
@@ -404,17 +407,20 @@ namespace KKManager.Windows
 
         private void RefreshContents(bool plugins, bool sideloader)
         {
+            if (plugins) PluginLoader.StartReload();
+            if (sideloader) SideloaderModLoader.StartReload();
+
             foreach (var window in GetWindows<DockContent>())
             {
                 if (window is PluginsWindow pw)
                 {
                     if (plugins)
-                        pw.ReloadList();
+                        pw.RefreshList(PluginLoader.Plugins);
                 }
                 else if (window is SideloaderModsWindow sm)
                 {
                     if (sideloader)
-                        sm.ReloadList();
+                        sm.RefreshList(SideloaderModLoader.Zipmods);
                 }
             }
         }
@@ -459,9 +465,8 @@ namespace KKManager.Windows
         {
             _checkForUpdatesCancel.Cancel();
 
-            var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
-            foreach (var window in sideWindows)
-                window.CancelListReload();
+            PluginLoader.Plugins.Wait();
+            SideloaderModLoader.Zipmods.Wait();
 
             try
             {
@@ -476,8 +481,9 @@ namespace KKManager.Windows
                 MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
             foreach (var window in sideWindows)
-                window.ReloadList();
+                window.RefreshList(SideloaderModLoader.Zipmods);
 
             updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
             updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;

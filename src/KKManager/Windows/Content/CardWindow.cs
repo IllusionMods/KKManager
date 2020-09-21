@@ -151,7 +151,7 @@ namespace KKManager.Windows.Content
 
         private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenCardDirectory(InstallDirectoryHelper.GetFemaleCardDir());
+            OpenCardDirectory(InstallDirectoryHelper.FemaleCardDir);
         }
 
         private void formMain_Load(object sender, EventArgs e)
@@ -197,7 +197,7 @@ namespace KKManager.Windows.Content
 
         private void maleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenCardDirectory(InstallDirectoryHelper.GetMaleCardDir());
+            OpenCardDirectory(InstallDirectoryHelper.MaleCardDir);
         }
 
         private void OnResizeToolstip(object sender, EventArgs e)

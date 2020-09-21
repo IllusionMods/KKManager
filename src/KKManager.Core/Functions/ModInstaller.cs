@@ -138,8 +138,7 @@ namespace KKManager.Functions
                 throw new InvalidDataException("The file is not a plugin or is broken - " + ex.Message, ex);
             }
 
-            var plugs = PluginLoader.TryLoadPlugins(InstallDirectoryHelper.GetPluginPath(), CancellationToken.None);
-            var oldPlugs = plugs.ToList().Wait();
+            var oldPlugs = PluginLoader.Plugins.ToList().Wait();
 
             var relations = newPlugs.Join(oldPlugs, p => p.Guid, p => p.Guid,
                 (newPlug, oldPlug) => new { newPlug, oldPlug })
@@ -161,7 +160,7 @@ namespace KKManager.Functions
                 foreach (var relation in relations)
                     relation.oldPlug.Location.Delete();
                 var file = new FileInfo(fileName);
-                file.CopyTo(Path.Combine(InstallDirectoryHelper.GetPluginPath(), file.Name));
+                file.CopyTo(Path.Combine(InstallDirectoryHelper.PluginPath.FullName, file.Name));
             }
             else if (relations.Any(x => new Version(x.newPlug.Version) == new Version(x.oldPlug.Version)))
             {
@@ -193,10 +192,9 @@ namespace KKManager.Functions
             {
                 try
                 {
-                    var modDirectory = InstallDirectoryHelper.GetModsPath().FullName;
+                    var modDirectory = InstallDirectoryHelper.ModsPath.FullName;
 
-                    var mods = SideloaderModLoader.TryReadSideloaderMods(modDirectory, CancellationToken.None);
-                    var oldMod = mods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
+                    var oldMod = SideloaderModLoader.Zipmods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
 
                     if (oldMod != null)
                     {

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Security;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
@@ -15,18 +14,40 @@ namespace KKManager.Data.Plugins
 {
     public static class PluginLoader
     {
+        public static IObservable<PluginInfo> Plugins
+        {
+            get => _plugins ?? StartReload();
+            private set => _plugins = value;
+        }
+
+        private static bool _isUpdating = false;
+        private static readonly object _lock = new object();
+        private static IObservable<PluginInfo> _plugins;
+
+        public static IObservable<PluginInfo> StartReload()
+        {
+            lock (_lock)
+            {
+                if (!_isUpdating) Plugins = TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName);
+                return Plugins;
+            }
+        }
+
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="pluginDirectory">Directory containing the plugins to gather info from. Usually BepInEx directory inside game root.</param>
-        /// <param name="cancellationToken">Token used to abort the search</param>
-        public static IObservable<PluginInfo> TryLoadPlugins(string pluginDirectory, CancellationToken cancellationToken)
+        private static IObservable<PluginInfo> TryLoadPlugins(string pluginDirectory)
         {
+            _isUpdating = true;
+
             var subject = new ReplaySubject<PluginInfo>();
 
-            if (!Directory.Exists(pluginDirectory) || cancellationToken.IsCancellationRequested)
+            if (!Directory.Exists(pluginDirectory))
             {
                 subject.OnCompleted();
+                _isUpdating = false;
+                Console.WriteLine("No plugin folder detected");
                 return subject;
             }
 
@@ -57,11 +78,10 @@ namespace KKManager.Data.Plugins
                         {
                             Console.WriteLine(ex);
                         }
-
-                        if (cancellationToken.IsCancellationRequested) break;
                     }
 
                     subject.OnCompleted();
+                    Console.WriteLine("Finished loading plugins");
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -84,9 +104,13 @@ namespace KKManager.Data.Plugins
                     Console.WriteLine(ex);
                     subject.OnError(ex);
                 }
+                finally
+                {
+                    _isUpdating = false;
+                }
             }
 
-            try { Task.Run((Action)ReadPluginsAsync, cancellationToken); }
+            try { Task.Run(ReadPluginsAsync); }
             catch (OperationCanceledException) { }
 
             return subject;
@@ -162,7 +186,7 @@ namespace KKManager.Data.Plugins
             var resolver = new DefaultAssemblyResolver();
             if (location.Directory != null)
             {
-                var coreDir = Path.Combine(InstallDirectoryHelper.GetPluginPath(), "core");
+                var coreDir = Path.Combine(InstallDirectoryHelper.PluginPath.FullName, "core");
                 if (Directory.Exists(coreDir))
                     resolver.AddSearchDirectory(coreDir);
             }

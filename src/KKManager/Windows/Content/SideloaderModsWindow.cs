@@ -50,19 +50,17 @@ namespace KKManager.Windows.Content
 
         private void SideloaderModsWindow_Shown(object sender, EventArgs e)
         {
-            ReloadList();
+            RefreshList(SideloaderModLoader.Zipmods);
         }
 
-        public void ReloadList()
+        public void RefreshList(IObservable<SideloaderModInfo> zipmodObservable)
         {
-            CancelListReload();
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
-            var observable = SideloaderModLoader.TryReadSideloaderMods(InstallDirectoryHelper.GetModsPath().FullName, token);
 
-            observable
+            zipmodObservable
                 .Buffer(TimeSpan.FromSeconds(3))
                 .ObserveOn(this)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
@@ -73,24 +71,14 @@ namespace KKManager.Windows.Content
                     }, token);
         }
 
-        public void CancelListReload()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
         private void SideloaderModsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            CancelListReload();
+            _cancellationTokenSource.Cancel();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            ReloadList();
+            RefreshList(SideloaderModLoader.StartReload());
         }
 
         private void toolStripButtonEnable_Click(object sender, EventArgs e)
@@ -147,7 +135,7 @@ namespace KKManager.Windows.Content
         {
             try
             {
-                Process.Start(InstallDirectoryHelper.GetModsPath().FullName);
+                Process.Start(InstallDirectoryHelper.ModsPath.FullName);
             }
             catch (SystemException ex)
             {

@@ -51,19 +51,17 @@ namespace KKManager.Windows.Content
 
         private void SideloaderModsWindow_Shown(object sender, EventArgs e)
         {
-            ReloadList();
+            RefreshList(PluginLoader.Plugins);
         }
 
-        public void ReloadList()
+        public void RefreshList(IObservable<PluginInfo> pluginObservable)
         {
-            CancelListReload();
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
-            var observable = PluginLoader.TryLoadPlugins(InstallDirectoryHelper.GetPluginPath(), token);
 
-            observable
+            pluginObservable
                 .Buffer(TimeSpan.FromSeconds(0.5))
                 .ObserveOn(this)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
@@ -74,19 +72,9 @@ namespace KKManager.Windows.Content
                     }, token);
         }
 
-        private void CancelListReload()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
         private void SideloaderModsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            CancelListReload();
+            _cancellationTokenSource.Cancel();
         }
 
         private void toolStripButtonDelete_Click(object sender, EventArgs e)
@@ -119,12 +107,12 @@ namespace KKManager.Windows.Content
             }
 
             // Need to do this since multiple mods can be in a single dll
-            ReloadList();
+            RefreshList(PluginLoader.StartReload());
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            ReloadList();
+            RefreshList(PluginLoader.StartReload());
         }
 
         private void toolStripButtonEnable_Click(object sender, EventArgs e)
@@ -188,7 +176,7 @@ namespace KKManager.Windows.Content
         {
             try
             {
-                Process.Start(InstallDirectoryHelper.GetPluginPath());
+                Process.Start(InstallDirectoryHelper.PluginPath.FullName);
             }
             catch (SystemException ex)
             {

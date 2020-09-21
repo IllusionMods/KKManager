@@ -4,28 +4,48 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using KKManager.Functions;
 using KKManager.Util;
 
 namespace KKManager.Data.Zipmods
 {
     public static class SideloaderModLoader
     {
+        public static IObservable<SideloaderModInfo> Zipmods
+        {
+            get => _zipmods ?? StartReload();
+            private set => _zipmods = value;
+        }
+
+        private static bool _isUpdating = false;
+        private static readonly object _lock = new object();
+        private static IObservable<SideloaderModInfo> _zipmods;
+
+        public static IObservable<SideloaderModInfo> StartReload()
+        {
+            lock (_lock)
+            {
+                if (!_isUpdating) Zipmods = TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName);
+                return Zipmods;
+            }
+        }
+
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
-        /// <param name="cancellationToken">Token used to abort the search</param>
         /// <param name="searchOption">Where to search</param>
-        public static IObservable<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
+        private static IObservable<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, SearchOption searchOption = SearchOption.AllDirectories)
         {
+            _isUpdating = true;
             var subject = new ReplaySubject<SideloaderModInfo>();
 
-            if (!Directory.Exists(modDirectory) || cancellationToken.IsCancellationRequested)
+            if (!Directory.Exists(modDirectory))
             {
                 subject.OnCompleted();
+                Console.WriteLine("No zipmod folder detected");
                 return subject;
             }
 
@@ -48,20 +68,23 @@ namespace KKManager.Data.Zipmods
                                         $"Failed to load mod from \"{file}\" with error: {ex.Message}",
                                         "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);*/
                         }
-
-                        if (cancellationToken.IsCancellationRequested) break;
                     }
 
                     subject.OnCompleted();
+                    Console.WriteLine("Finished loading zipmods");
                 }
                 catch (IOException ex)
                 {
                     Console.WriteLine(ex);
                     subject.OnError(ex);
                 }
+                finally
+                {
+                    _isUpdating = false;
+                }
             }
 
-            Task.Run((Action)ReadSideloaderModsAsync, cancellationToken);
+            Task.Run(ReadSideloaderModsAsync);
 
             return subject;
         }
@@ -78,12 +101,7 @@ namespace KKManager.Data.Zipmods
                 var manifestEntry = zf.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, "manifest.xml"));
 
                 if (manifestEntry == null)
-                {
-                    if (zf.Entries.Any(x => x.IsDirectory && PathTools.PathsEqual(x.Key, "abdata")))
-                        throw new NotSupportedException("The file is a hardmod and cannot be installed automatically. It's recommeded to look for a sideloader version.");
-
                     throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
-                }
 
                 using (var fileStream = manifestEntry.OpenEntryStream())
                 {
