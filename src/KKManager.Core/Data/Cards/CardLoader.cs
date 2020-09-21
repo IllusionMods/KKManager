@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
 using KKManager.Data.Cards.KK;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
 
 namespace KKManager.Data.Cards
 {
@@ -56,10 +62,36 @@ namespace KKManager.Data.Cards
                     s.OnCompleted();
                 }
 
-                Task.Run(ReadCardsFromDir, cancellationToken);
+                var readCardTask = Task.Run(ReadCardsFromDir, cancellationToken);
+
+                Task.WhenAll(readCardTask,
+                        SideloaderModLoader.Zipmods.ToTask(cancellationToken),
+                        PluginLoader.Plugins.ToTask(cancellationToken))
+                    .ContinueWith(t =>
+                    {
+                        var allPlugins = PluginLoader.Plugins.ToEnumerable().ToList();
+                        var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
+                        foreach (var card in s.ToEnumerable()) CheckIfRequiredModsExist(card, allPlugins, allZipmods);
+                    }, cancellationToken);
             }
 
             return s;
+        }
+
+        private static void CheckIfRequiredModsExist(Card card, List<PluginInfo> allPlugins, List<SideloaderModInfo> allZipmods)
+        {
+            if (card.Extended == null) return;
+
+            var cardExtDatas = card.Extended.Where(x => x.Value != null).ToList();
+            var pluginGuids = cardExtDatas.SelectMany(x => x.Value.RequiredPluginGUIDs);
+            var missingPlugs = pluginGuids.Where(x => allPlugins.All(p => x != p.Guid)).ToArray();
+            if (missingPlugs.Length > 0)
+                Console.WriteLine(card.Location.Name + " requires plugins that is missing: " + string.Join("; ", missingPlugs));
+
+            var zipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs);
+            var missingZipmods = zipmodGuids.Where(x => allZipmods.All(p => x != p.Guid)).ToArray();
+            if (missingZipmods.Length > 0)
+                Console.WriteLine(card.Location.Name + " requires zipmods that is missing: " + string.Join("; ", missingZipmods));
         }
 
         private static bool ParseCard(FileInfo file, out Card card)
@@ -116,9 +148,7 @@ namespace KKManager.Data.Cards
                     throw new IOException("The card is corrupted or in an unknown format", e);
                 }
 
-                if (card?.Extended != null) ExtData.ExtDataParser.Parse(card.Extended); // todo cache results or lazy run in background?
-
-                // todo check for missing plugins or zipmods, maybe add api to parsers to give links to plugins and zipmods to set as deps, needs a way to specify if they exist or not
+                if (card?.Extended != null) ExtData.ExtDataParser.DeserializeInPlace(card.Extended);
 
                 return card != null;
             }

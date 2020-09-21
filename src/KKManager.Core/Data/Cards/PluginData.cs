@@ -10,6 +10,13 @@ namespace KKManager.Data.Cards
     public class PluginData
     {
         [IgnoreMember]
+        [TypeConverter(typeof(ListTypeConverter))]
+        public List<string> RequiredPluginGUIDs { get; } = new List<string>();
+        [IgnoreMember]
+        [TypeConverter(typeof(ListTypeConverter))]
+        public List<string> RequiredZipmodGUIDs { get; } = new List<string>();
+
+        [IgnoreMember]
         public int Version => version;
         [IgnoreMember]
         [TypeConverter(typeof(DictionaryTypeConverter<string, object>))]

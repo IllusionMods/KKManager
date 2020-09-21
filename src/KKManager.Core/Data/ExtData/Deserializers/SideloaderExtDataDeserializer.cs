@@ -33,10 +33,14 @@ namespace KKManager.Data.ExtData.Deserializers
                 switch (item.Key)
                 {
                     case "info":
-                        data.data[item.Key] = ((IEnumerable)item.Value).Cast<byte[]>().Select(ResolveInfo.Deserialize).ToList();
+                        var resolveInfos = ((IEnumerable)item.Value).Cast<byte[]>().Select(ResolveInfo.Deserialize).ToList();
+                        data.data[item.Key] = resolveInfos;
+                        data.RequiredZipmodGUIDs.AddRange(resolveInfos.Select(x => x.GUID));
                         break;
                 }
             }
+
+            data.RequiredPluginGUIDs.Add(PluginGUID);
         }
 
         /// <summary>

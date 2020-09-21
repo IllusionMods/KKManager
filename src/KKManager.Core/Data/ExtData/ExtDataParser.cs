@@ -19,7 +19,7 @@ namespace KKManager.Data.ExtData
             Console.WriteLine($"Found {_deserializers.Count} extended data deserializers");
         }
 
-        public static void Parse(Dictionary<string, PluginData> extData)
+        public static void DeserializeInPlace(Dictionary<string, PluginData> extData)
         {
             foreach (var pluginData in extData)
             {
