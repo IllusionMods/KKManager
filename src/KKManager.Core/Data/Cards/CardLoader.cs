@@ -84,14 +84,14 @@ namespace KKManager.Data.Cards
 
             var cardExtDatas = card.Extended.Where(x => x.Value != null).ToList();
             var pluginGuids = cardExtDatas.SelectMany(x => x.Value.RequiredPluginGUIDs);
-            var missingPlugs = pluginGuids.Where(x => allPlugins.All(p => x != p.Guid)).ToArray();
+            var missingPlugs = pluginGuids.Where(x => allPlugins.All(p => x != p.Guid)).Distinct().ToArray();
             if (missingPlugs.Length > 0)
-                Console.WriteLine(card.Location.Name + " requires plugins that is missing: " + string.Join("; ", missingPlugs));
+                Console.WriteLine(card.Location.Name + " requires plugins that are missing: " + string.Join("; ", missingPlugs));
 
             var zipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs);
-            var missingZipmods = zipmodGuids.Where(x => allZipmods.All(p => x != p.Guid)).ToArray();
+            var missingZipmods = zipmodGuids.Where(x => allZipmods.All(p => x != p.Guid)).Distinct().ToArray();
             if (missingZipmods.Length > 0)
-                Console.WriteLine(card.Location.Name + " requires zipmods that is missing: " + string.Join("; ", missingZipmods));
+                Console.WriteLine(card.Location.Name + " requires zipmods that are missing: " + string.Join("; ", missingZipmods));
         }
 
         private static bool ParseCard(FileInfo file, out Card card)
