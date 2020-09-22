@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Security;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
@@ -138,6 +139,8 @@ namespace KKManager.Data.Plugins
 
                 var f = FileVersionInfo.GetVersionInfo(dllFile);
                 var author = f.CompanyName;
+                var m = Regex.Match(author, @"^https://*.github.com/([^/]+).*?$");
+                if (m.Success) author = m.Groups[1].Value;
                 var description = f.Comments;
                 var fileUrl = new[] { f.CompanyName, f.FileDescription, f.Comments, f.LegalCopyright, f.LegalTrademarks }.FirstOrDefault(x => x.StartsWith("http", StringComparison.OrdinalIgnoreCase));
 
