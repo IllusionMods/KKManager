@@ -126,7 +126,7 @@ namespace KKManager.Windows.Content
             this.olvColumnGuid.AspectName = "Guid";
             this.olvColumnGuid.MinimumWidth = 50;
             this.olvColumnGuid.Text = "Guid";
-            this.olvColumnGuid.Width = 144;
+            this.olvColumnGuid.Width = 146;
             // 
             // olvColumnFilename
             // 
@@ -228,6 +228,7 @@ namespace KKManager.Windows.Content
             // toolStripTextBoxSearch
             // 
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);

@@ -45,6 +45,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -54,16 +56,20 @@
             this.objectListView1.AllColumns.Add(this.olvColumnEnabled);
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnVersion);
+            this.objectListView1.AllColumns.Add(this.olvColumnAuthor);
             this.objectListView1.AllColumns.Add(this.olvColumnGuid);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
+            this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
             this.objectListView1.AllowColumnReorder = true;
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnEnabled,
             this.olvColumnName,
             this.olvColumnVersion,
+            this.olvColumnAuthor,
             this.olvColumnGuid,
-            this.olvColumnFilename});
+            this.olvColumnFilename,
+            this.olvColumnWebsite});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.FullRowSelect = true;
@@ -90,13 +96,13 @@
             this.olvColumnEnabled.Searchable = false;
             this.olvColumnEnabled.Text = "";
             this.olvColumnEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.olvColumnEnabled.Width = 22;
+            this.olvColumnEnabled.Width = 23;
             // 
             // olvColumnName
             // 
             this.olvColumnName.AspectName = "Name";
             this.olvColumnName.Text = "Name";
-            this.olvColumnName.Width = 183;
+            this.olvColumnName.Width = 171;
             // 
             // olvColumnVersion
             // 
@@ -107,13 +113,13 @@
             // 
             this.olvColumnGuid.AspectName = "Guid";
             this.olvColumnGuid.Text = "Guid";
-            this.olvColumnGuid.Width = 167;
+            this.olvColumnGuid.Width = 143;
             // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
             this.olvColumnFilename.Text = "File name";
-            this.olvColumnFilename.Width = 127;
+            this.olvColumnFilename.Width = 90;
             // 
             // toolStrip1
             // 
@@ -206,6 +212,20 @@
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
             // 
+            // olvColumnAuthor
+            // 
+            this.olvColumnAuthor.AspectName = "Author";
+            this.olvColumnAuthor.Text = "Author";
+            this.olvColumnAuthor.Width = 88;
+            // 
+            // olvColumnWebsite
+            // 
+            this.olvColumnWebsite.AspectName = "Website";
+            this.olvColumnWebsite.Hyperlink = true;
+            this.olvColumnWebsite.MinimumWidth = 100;
+            this.olvColumnWebsite.Text = "Website";
+            this.olvColumnWebsite.Width = 123;
+            // 
             // PluginsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -242,5 +262,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonOpenDir;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxSearch;
+        private BrightIdeasSoftware.OLVColumn olvColumnAuthor;
+        private BrightIdeasSoftware.OLVColumn olvColumnWebsite;
     }
 }
