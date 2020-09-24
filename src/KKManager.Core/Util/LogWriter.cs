@@ -132,7 +132,7 @@ namespace KKManager.Util
 
         public override void WriteLine(string value)
         {
-            var fullEntry = '[' + DateTime.UtcNow.ToString("T", CultureInfo.InvariantCulture) + ']' + value;
+            var fullEntry = "[" + DateTime.Now.ToString("T", CultureInfo.InvariantCulture) + "] " + value;
             base.WriteLine(fullEntry);
         }
 
