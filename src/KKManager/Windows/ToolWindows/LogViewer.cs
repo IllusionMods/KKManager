@@ -59,7 +59,7 @@ namespace KKManager.Windows.ToolWindows
 
             public override void Write(string value)
             {
-                _target.SafeInvoke(() => _target.AppendText(value));
+                _target.BeginInvoke(new Action(() => _target.AppendText(value)));
             }
         }
     }
