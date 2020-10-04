@@ -456,37 +456,50 @@ namespace KKManager.Windows
             ProcessTools.SafeStartProcess(Program.ProgramLocation);
         }
 
-        private void updateSideloaderModpackToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void updateSideloaderModpackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ShowModUpdateDialog();
+            await ShowModUpdateDialog();
         }
 
-        private void ShowModUpdateDialog()
+        private async Task ShowModUpdateDialog()
         {
-            _checkForUpdatesCancel.Cancel();
-
-            PluginLoader.Plugins.Wait();
-            SideloaderModLoader.Zipmods.Wait();
-
             try
             {
-                var updateSources = GetUpdateSources();
-                if (!updateSources.Any()) throw new IOException("No update sources are available");
-                ModUpdateProgressDialog.StartUpdateDialog(this, updateSources);
+                Enabled = false;
+
+                _checkForUpdatesCancel.Cancel();
+
+                await PluginLoader.Plugins.LastOrDefaultAsync();
+                await SideloaderModLoader.Zipmods.LastOrDefaultAsync();
+
+                try
+                {
+                    var updateSources = GetUpdateSources();
+                    if (!updateSources.Any()) throw new IOException("No update sources are available");
+                    ModUpdateProgressDialog.StartUpdateDialog(this, updateSources);
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = "Failed to start update - " + ex.ToStringDemystified();
+                    Console.WriteLine(errorMsg);
+                    MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                var zipmods = SideloaderModLoader.StartReload();
+                var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
+                foreach (var window in sideWindows) window.RefreshList(zipmods);
+
+                var plugins = PluginLoader.StartReload();
+                var plugWindows = GetWindows<DockContent>().OfType<PluginsWindow>().ToList();
+                foreach (var window in plugWindows) window.RefreshList(plugins);
+
+                updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
+                updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;
             }
-            catch (Exception ex)
+            finally
             {
-                var errorMsg = "Failed to start update - " + ex.ToStringDemystified();
-                Console.WriteLine(errorMsg);
-                MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Enabled = true;
             }
-
-            var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
-            foreach (var window in sideWindows)
-                window.RefreshList(SideloaderModLoader.Zipmods);
-
-            updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
-            updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;
         }
 
         private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
