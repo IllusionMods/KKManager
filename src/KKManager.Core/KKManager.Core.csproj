@@ -130,6 +130,7 @@
     <Compile Include="Functions\GameType.cs" />
     <Compile Include="Functions\InstallDirectoryHelper.cs" />
     <Compile Include="Functions\ModInstaller.cs" />
+    <Compile Include="Functions\SelfUpdater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\FileSize.cs" />

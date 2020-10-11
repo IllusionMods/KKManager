@@ -506,27 +506,34 @@ namespace KKManager.Windows
 
         private async void MainWindow_Shown(object sender, EventArgs e)
         {
-            if (!Settings.Default.AutoUpdateSearch) return;
-            // Check For Updates
-            // todo make more efficient?
+            if (Settings.Default.AutoUpdateSearch)
+                await CheckForUpdates();
+        }
+
+        private async Task CheckForUpdates()
+        {
             try
             {
+                var _ = SelfUpdater.CheckForUpdatesAndShowDialog();
+
                 var updateSources = GetUpdateSources();
-                if (!updateSources.Any()) return;
-                var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources);
-                var updates = results.Count(item => !item.UpToDate);
-
-                _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
-
-                if (updates > 0)
+                if (updateSources.Any())
                 {
-                    SetStatusText($"Found {updates} mod updates!");
-                    updateSideloaderModpackToolStripMenuItem.BackColor = Color.Lime;
-                }
-                else
-                {
-                    SetStatusText("No mod updates were found");
-                    updateSideloaderModpackToolStripMenuItem.ForeColor = Color.Gray;
+                    var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources);
+                    var updates = results.Count(item => !item.UpToDate);
+
+                    _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
+
+                    if (updates > 0)
+                    {
+                        SetStatusText($"Found {updates} mod updates!");
+                        updateSideloaderModpackToolStripMenuItem.BackColor = Color.Lime;
+                    }
+                    else
+                    {
+                        SetStatusText("No mod updates were found");
+                        updateSideloaderModpackToolStripMenuItem.ForeColor = Color.Gray;
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -536,7 +543,10 @@ namespace KKManager.Windows
             {
                 ex.ShowKkmanOutdatedMessage();
             }
-            catch (Exception ex) { Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}"); }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Crash during update check: {ex.Message}\nat {ex.Demystify().TargetSite}");
+            }
         }
 
         private void fixFileAndFolderPermissionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -671,6 +681,13 @@ namespace KKManager.Windows
         private void openLogViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetOrCreateWindow<LogViewer>().Show(dockPanel, DockState.DockBottom);
+        }
+
+        private async void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!await SelfUpdater.CheckForUpdatesAndShowDialog())
+                MessageBox.Show("No KKManager updates were found. Check log for more information.", "Check for updates",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

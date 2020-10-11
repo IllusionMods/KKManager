@@ -68,6 +68,7 @@
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -340,6 +341,7 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.readmeAndSourceCodeToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -381,6 +383,13 @@
             // 
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             this.toolStripStatusLabelStatus.Size = new System.Drawing.Size(0, 17);
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -447,5 +456,6 @@
         private System.Windows.Forms.ToolStripMenuItem openLogViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesOnStartupToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
     }
 }
