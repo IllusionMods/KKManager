@@ -685,7 +685,7 @@ namespace KKManager.Windows
 
         private async void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!await SelfUpdater.CheckForUpdatesAndShowDialog())
+            if (await SelfUpdater.CheckForUpdatesAndShowDialog() == null)
                 MessageBox.Show("No KKManager updates were found. Check log for more information.", "Check for updates",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

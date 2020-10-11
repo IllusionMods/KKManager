@@ -19,7 +19,10 @@ namespace KKManager.Functions
             return new Version(tag);
         }
 
-        public static async Task<bool> IsUpdateAvailable()
+        /// <summary>
+        /// Returns null if failed to look for updates, else returns if there is a newer version available
+        /// </summary>
+        public static async Task<bool?> IsUpdateAvailable()
         {
             try
             {
@@ -38,22 +41,23 @@ namespace KKManager.Functions
             catch (Exception e)
             {
                 Console.WriteLine("[SelfUpdater] Failed to check for new KKManager versions: " + e.Message);
-                return false;
+                return null;
             }
         }
 
-        public static async Task<bool> CheckForUpdatesAndShowDialog()
+        /// <summary>
+        /// Returns null if no updates were found, else returns if user clicked yes
+        /// </summary>
+        public static async Task<bool?> CheckForUpdatesAndShowDialog()
         {
-            if (await IsUpdateAvailable())
-            {
-                if (MessageBox.Show("A new version of KKManager is available. Do you want to go to the download page?", "New version is available",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-                {
-                    return ProcessTools.SafeStartProcess(_latestReleaseUrl) != null;
-                }
-            }
+            var isUpdateAvailable = await IsUpdateAvailable();
+            if (isUpdateAvailable != true) return null;
 
-            return false;
+            if (MessageBox.Show("A new version of KKManager is available. Do you want to go to the download page?", "New version is available",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                return ProcessTools.SafeStartProcess(_latestReleaseUrl) != null;
+            else
+                return false;
         }
 
         // https://stackoverflow.com/a/28424940
@@ -73,7 +77,7 @@ namespace KKManager.Functions
                     req = (HttpWebRequest)HttpWebRequest.Create(url);
                     req.Method = "HEAD";
                     req.AllowAutoRedirect = false;
-                    resp = (HttpWebResponse) await req.GetResponseAsync();
+                    resp = (HttpWebResponse)await req.GetResponseAsync();
                     switch (resp.StatusCode)
                     {
                         case HttpStatusCode.OK:

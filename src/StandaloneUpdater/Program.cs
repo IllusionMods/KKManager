@@ -58,7 +58,7 @@ namespace StandaloneUpdater
                     return;
                 }
 
-                if (SelfUpdater.CheckForUpdatesAndShowDialog().Result)
+                if (SelfUpdater.CheckForUpdatesAndShowDialog().Result == true)
                     return;
 
                 var updateSources = GetUpdateSources(args.Skip(1).ToArray());
