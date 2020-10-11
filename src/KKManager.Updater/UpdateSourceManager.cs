@@ -38,6 +38,11 @@ namespace KKManager.Updater
         public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids = null)
         {
             Console.WriteLine("Starting update search...");
+            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids), cancellationToken);
+        }
+
+        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids)
+        {
             var results = new ConcurrentBag<UpdateTask>();
 
             var ignoreListPath = "ignorelist.txt";
@@ -51,32 +56,32 @@ namespace KKManager.Updater
             var concurrentTasks = updateSources.Select(source => new
             {
                 task = RetryHelper.RetryOnExceptionAsync(
-                async () =>
-                {
-                    try
+                    async () =>
                     {
-                        foreach (var task in await source.GetUpdateItems(cancellationToken))
+                        try
                         {
-                            anySuccessful = true;
+                            foreach (var task in await source.GetUpdateItems(cancellationToken))
+                            {
+                                anySuccessful = true;
 
-                            if (cancellationToken.IsCancellationRequested || criticalException != null) break;
+                                if (cancellationToken.IsCancellationRequested || criticalException != null) break;
 
-                            // todo move further inside or decouple getting update tasks and actually processing them
-                            if (filterByGuids != null && filterByGuids.Length > 0 &&
-                                !filterByGuids.Contains(task.Info.GUID))
-                                continue;
+                                // todo move further inside or decouple getting update tasks and actually processing them
+                                if (filterByGuids != null && filterByGuids.Length > 0 &&
+                                    !filterByGuids.Contains(task.Info.GUID))
+                                    continue;
 
-                            task.Items.RemoveAll(x =>
-                                x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
-                            results.Add(task);
+                                task.Items.RemoveAll(x =>
+                                    x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
+                                results.Add(task);
+                            }
                         }
-                    }
-                    catch (OutdatedVersionException ex)
-                    {
-                        criticalException = ex;
-                    }
-                },
-                3, TimeSpan.FromSeconds(3), cancellationToken),
+                        catch (OutdatedVersionException ex)
+                        {
+                            criticalException = ex;
+                        }
+                    },
+                    3, TimeSpan.FromSeconds(3), cancellationToken),
                 source
             }).ToList();
 
