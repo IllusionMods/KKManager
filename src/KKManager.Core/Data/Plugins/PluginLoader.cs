@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Security;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
@@ -18,49 +19,62 @@ namespace KKManager.Data.Plugins
         public static IObservable<PluginInfo> Plugins
         {
             get => _plugins ?? StartReload();
-            private set => _plugins = value;
         }
 
         private static bool _isUpdating = false;
         private static readonly object _lock = new object();
-        private static IObservable<PluginInfo> _plugins;
+        private static ReplaySubject<PluginInfo> _plugins;
 
         public static IObservable<PluginInfo> StartReload()
         {
+            var needsUpdate = false;
             lock (_lock)
             {
-                if (!_isUpdating) Plugins = TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName);
-                return Plugins;
+                if (_plugins == null || !_isUpdating)
+                {
+                    _plugins = new ReplaySubject<PluginInfo>();
+                    _isUpdating = true;
+                    needsUpdate = true;
+                }
             }
+            if (needsUpdate) TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName, _plugins);
+            return _plugins;
+        }
+
+        private static CancellationTokenSource _cancelSource;
+        public static void CancelReload()
+        {
+            _cancelSource?.Cancel();
         }
 
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="pluginDirectory">Directory containing the plugins to gather info from. Usually BepInEx directory inside game root.</param>
-        private static IObservable<PluginInfo> TryLoadPlugins(string pluginDirectory)
+        private static void TryLoadPlugins(string pluginDirectory, ReplaySubject<PluginInfo> subject)
         {
-            _isUpdating = true;
-
-            var subject = new ReplaySubject<PluginInfo>();
-
-            if (!Directory.Exists(pluginDirectory))
-            {
-                subject.OnCompleted();
-                _isUpdating = false;
-                Console.WriteLine("No plugin folder detected");
-                return subject;
-            }
+            _cancelSource?.Dispose();
+            _cancelSource = new CancellationTokenSource();
+            var token = _cancelSource.Token;
 
             void ReadPluginsAsync()
             {
                 try
                 {
+                    if (!Directory.Exists(pluginDirectory))
+                    {
+                        subject.OnCompleted();
+                        Console.WriteLine("No plugin folder detected");
+                        return;
+                    }
+
                     var files = Directory.EnumerateFiles(pluginDirectory, "*.*", SearchOption.TopDirectoryOnly);
 
                     var bep5PluginsDir = Path.Combine(pluginDirectory, "plugins");
                     if (Directory.Exists(bep5PluginsDir))
                         files = files.Concat(Directory.EnumerateFiles(bep5PluginsDir, "*.*", SearchOption.AllDirectories));
+
+                    token.ThrowIfCancellationRequested();
 
                     var configDir = new DirectoryInfo(Path.Combine(pluginDirectory, "config"));
                     var configFiles = configDir.Exists ? configDir.GetFiles("*.cfg", SearchOption.TopDirectoryOnly) : new FileInfo[0];
@@ -69,11 +83,16 @@ namespace KKManager.Data.Plugins
                     {
                         try
                         {
+                            token.ThrowIfCancellationRequested();
                             var ext = Path.GetExtension(file);
                             if (!IsValidPluginExtension(ext)) continue;
 
                             foreach (var pluginInfo in LoadFromFile(file, configFiles))
                                 subject.OnNext(pluginInfo);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
                         }
                         catch (SystemException ex)
                         {
@@ -83,6 +102,10 @@ namespace KKManager.Data.Plugins
 
                     subject.OnCompleted();
                     Console.WriteLine("Finished loading plugins");
+                }
+                catch (OperationCanceledException ex)
+                {
+                    subject.OnCompleted();
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -111,10 +134,19 @@ namespace KKManager.Data.Plugins
                 }
             }
 
-            try { Task.Run(ReadPluginsAsync); }
-            catch (OperationCanceledException) { }
-
-            return subject;
+            try
+            {
+                Task.Run(ReadPluginsAsync, token);
+            }
+            catch (OperationCanceledException)
+            {
+                _isUpdating = false;
+            }
+            catch
+            {
+                _isUpdating = false;
+                throw;
+            }
         }
 
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>

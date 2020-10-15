@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -62,17 +63,30 @@ namespace KKManager.Data.Cards
                     s.OnCompleted();
                 }
 
-                var readCardTask = Task.Run(ReadCardsFromDir, cancellationToken);
+                try
+                {
+                    var readCardTask = Task.Run(ReadCardsFromDir, cancellationToken);
 
-                Task.WhenAll(readCardTask,
-                        SideloaderModLoader.Zipmods.ToTask(cancellationToken),
-                        PluginLoader.Plugins.ToTask(cancellationToken))
-                    .ContinueWith(t =>
-                    {
-                        var allPlugins = PluginLoader.Plugins.ToEnumerable().ToList();
-                        var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
-                        foreach (var card in s.ToEnumerable()) CheckIfRequiredModsExist(card, allPlugins, allZipmods);
-                    }, cancellationToken);
+                    Task.WhenAll(readCardTask,
+                            SideloaderModLoader.Zipmods.ToTask(cancellationToken),
+                            PluginLoader.Plugins.ToTask(cancellationToken))
+                        .ContinueWith(t =>
+                        {
+                            try
+                            {
+                                var allPlugins = PluginLoader.Plugins.ToEnumerable().ToList();
+                                var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
+                                foreach (var card in s.ToEnumerable())
+                                    CheckIfRequiredModsExist(card, allPlugins, allZipmods);
+                            }
+                            catch (TargetInvocationException ex)
+                            {
+                                if (ex.InnerException is OperationCanceledException) return;
+                                throw;
+                            }
+                        }, cancellationToken);
+                }
+                catch (OperationCanceledException) { }
             }
 
             return s;

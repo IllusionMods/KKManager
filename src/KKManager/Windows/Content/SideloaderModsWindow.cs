@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,7 +16,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.Content
 {
-    public sealed partial class SideloaderModsWindow : DockContent
+    public sealed partial class SideloaderModsWindow : DockContent, IContentWindow
     {
         private CancellationTokenSource _cancellationTokenSource;
         private readonly TypedObjectListView<SideloaderModInfo> _listView;
@@ -50,18 +51,18 @@ namespace KKManager.Windows.Content
 
         private void SideloaderModsWindow_Shown(object sender, EventArgs e)
         {
-            RefreshList(SideloaderModLoader.Zipmods);
+            RefreshList();
         }
 
-        public void RefreshList(IObservable<SideloaderModInfo> zipmodObservable)
+        public void RefreshList()
         {
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
 
-            zipmodObservable
-                .Buffer(TimeSpan.FromSeconds(3))
+            SideloaderModLoader.Zipmods
+                .Buffer(TimeSpan.FromSeconds(3), ThreadPoolScheduler.Instance)
                 .ObserveOn(this)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
                     () =>
@@ -73,12 +74,13 @@ namespace KKManager.Windows.Content
 
         private void SideloaderModsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _cancellationTokenSource.Cancel();
+            CancelRefreshing();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            RefreshList(SideloaderModLoader.StartReload());
+            SideloaderModLoader.StartReload();
+            RefreshList();
         }
 
         private void toolStripButtonEnable_Click(object sender, EventArgs e)
@@ -141,6 +143,11 @@ namespace KKManager.Windows.Content
             {
                 MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        public void CancelRefreshing()
+        {
+            _cancellationTokenSource?.Cancel();
         }
     }
 }

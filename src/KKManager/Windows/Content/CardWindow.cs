@@ -18,7 +18,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.Content
 {
-    public partial class CardWindow : DockContent
+    public partial class CardWindow : DockContent, IContentWindow
     {
         private readonly Bitmap _emptyImage;
 
@@ -39,7 +39,7 @@ namespace KKManager.Windows.Content
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
 
-            UniversalDragAndDrop.SetupDragAndDrop(listView, SimpleDropSink_Dropped, SimpleDropSink_CanDrop, (sender, args) => RefreshCurrentFolder());
+            UniversalDragAndDrop.SetupDragAndDrop(listView, SimpleDropSink_Dropped, SimpleDropSink_CanDrop, (sender, args) => RefreshList());
             SetupImageLists();
 
             olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.Name;
@@ -84,7 +84,7 @@ namespace KKManager.Windows.Content
             CurrentDirectory = directory;
 
             if (Visible)
-                RefreshCurrentFolder();
+                RefreshList();
         }
 
         public static string ShowCardFolderBrowseDialog(IWin32Window owner)
@@ -146,7 +146,7 @@ namespace KKManager.Windows.Content
 
         private void CardWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            CancelCurrentLoadProcess();
+            CancelRefreshing();
         }
 
         private void femaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -157,7 +157,7 @@ namespace KKManager.Windows.Content
         private void formMain_Load(object sender, EventArgs e)
         {
             listView.Sort(olvColumnModDate, SortOrder.Descending);
-            RefreshCurrentFolder();
+            RefreshList();
         }
 
         private void Details(object sender, EventArgs e)
@@ -215,9 +215,9 @@ namespace KKManager.Windows.Content
                 MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject, this);
         }
 
-        private void RefreshCurrentFolder()
+        public void RefreshList()
         {
-            CancelCurrentLoadProcess();
+            CancelRefreshing();
 
             listView.ClearObjects();
             listView.SmallImageList.Images.Clear();
@@ -241,7 +241,7 @@ namespace KKManager.Windows.Content
 
             var processedCount = 0;
             cardLoadObservable
-                .Buffer(TimeSpan.FromSeconds(3), TaskPoolScheduler.Default)
+                .Buffer(TimeSpan.FromSeconds(4), ThreadPoolScheduler.Instance)
                 .ObserveOn(this)
                 .Subscribe(
                     list =>
@@ -467,7 +467,7 @@ namespace KKManager.Windows.Content
                     }
 
                     if (filesChanged)
-                        RefreshCurrentFolder();
+                        RefreshList();
                 }
                 catch (Exception ex)
                 {
@@ -476,7 +476,7 @@ namespace KKManager.Windows.Content
             }
         }
 
-        private void CancelCurrentLoadProcess()
+        public void CancelRefreshing()
         {
             lock (this)
             {
@@ -514,7 +514,7 @@ namespace KKManager.Windows.Content
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshCurrentFolder();
+            RefreshList();
         }
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)

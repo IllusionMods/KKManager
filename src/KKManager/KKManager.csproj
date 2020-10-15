@@ -121,6 +121,7 @@
     <Compile Include="Windows\Content\CardWindow.Designer.cs">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Content\IContentWindow.cs" />
     <Compile Include="Windows\Dialogs\PathSelectPopup.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,7 +16,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.Content
 {
-    public sealed partial class PluginsWindow : DockContent
+    public sealed partial class PluginsWindow : DockContent, IContentWindow
     {
         private CancellationTokenSource _cancellationTokenSource;
         private readonly TypedObjectListView<PluginInfo> _listView;
@@ -51,18 +52,18 @@ namespace KKManager.Windows.Content
 
         private void SideloaderModsWindow_Shown(object sender, EventArgs e)
         {
-            RefreshList(PluginLoader.Plugins);
+            RefreshList();
         }
 
-        public void RefreshList(IObservable<PluginInfo> pluginObservable)
+        public void RefreshList()
         {
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
             var token = _cancellationTokenSource.Token;
 
-            pluginObservable
-                .Buffer(TimeSpan.FromSeconds(0.5))
+            PluginLoader.Plugins
+                .Buffer(TimeSpan.FromSeconds(3), ThreadPoolScheduler.Instance)
                 .ObserveOn(this)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
                     () =>
@@ -72,9 +73,14 @@ namespace KKManager.Windows.Content
                     }, token);
         }
 
+        public void CancelRefreshing()
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+
         private void SideloaderModsWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _cancellationTokenSource.Cancel();
+            CancelRefreshing();
         }
 
         private void toolStripButtonDelete_Click(object sender, EventArgs e)
@@ -106,13 +112,15 @@ namespace KKManager.Windows.Content
                 }
             }
 
-            // Need to do this since multiple mods can be in a single dll
-            RefreshList(PluginLoader.StartReload());
+            // Need to do full reload since multiple plugins can be in a single dll
+            PluginLoader.StartReload();
+            RefreshList();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            RefreshList(PluginLoader.StartReload());
+            PluginLoader.StartReload();
+            RefreshList();
         }
 
         private void toolStripButtonEnable_Click(object sender, EventArgs e)

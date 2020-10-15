@@ -415,12 +415,12 @@ namespace KKManager.Windows
                 if (window is PluginsWindow pw)
                 {
                     if (plugins)
-                        pw.RefreshList(PluginLoader.Plugins);
+                        pw.RefreshList();
                 }
                 else if (window is SideloaderModsWindow sm)
                 {
                     if (sideloader)
-                        sm.RefreshList(SideloaderModLoader.Zipmods);
+                        sm.RefreshList();
                 }
             }
         }
@@ -465,15 +465,18 @@ namespace KKManager.Windows
         {
             try
             {
-                Enabled = false;
-
-                _checkForUpdatesCancel.Cancel();
-
-                await PluginLoader.Plugins.LastOrDefaultAsync();
-                await SideloaderModLoader.Zipmods.LastOrDefaultAsync();
-
                 try
                 {
+                    Enabled = false;
+
+                    _checkForUpdatesCancel?.Cancel();
+
+                    PluginLoader.CancelReload();
+                    SideloaderModLoader.CancelReload();
+
+                    await PluginLoader.Plugins.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
+                    await SideloaderModLoader.Zipmods.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
+
                     var updateSources = GetUpdateSources();
                     if (!updateSources.Any()) throw new IOException("No update sources are available");
                     ModUpdateProgressDialog.StartUpdateDialog(this, updateSources);
@@ -485,13 +488,11 @@ namespace KKManager.Windows
                     MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                var zipmods = SideloaderModLoader.StartReload();
-                var sideWindows = GetWindows<DockContent>().OfType<SideloaderModsWindow>().ToList();
-                foreach (var window in sideWindows) window.RefreshList(zipmods);
+                SideloaderModLoader.StartReload();
+                PluginLoader.StartReload();
 
-                var plugins = PluginLoader.StartReload();
-                var plugWindows = GetWindows<DockContent>().OfType<PluginsWindow>().ToList();
-                foreach (var window in plugWindows) window.RefreshList(plugins);
+                var contentWindows = GetWindows<DockContent>().OfType<IContentWindow>().ToList();
+                foreach (var window in contentWindows) window.RefreshList();
 
                 updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
                 updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using KKManager.Functions;
@@ -16,50 +17,71 @@ namespace KKManager.Data.Zipmods
         public static IObservable<SideloaderModInfo> Zipmods
         {
             get => _zipmods ?? StartReload();
-            private set => _zipmods = value;
         }
-
+        
         private static bool _isUpdating = false;
         private static readonly object _lock = new object();
-        private static IObservable<SideloaderModInfo> _zipmods;
+        private static ReplaySubject<SideloaderModInfo> _zipmods;
 
         public static IObservable<SideloaderModInfo> StartReload()
         {
+            var needsUpdate = false;
             lock (_lock)
             {
-                if (!_isUpdating) Zipmods = TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName);
-                return Zipmods;
+                if (_zipmods == null || !_isUpdating)
+                {
+                    _zipmods = new ReplaySubject<SideloaderModInfo>();
+                    _isUpdating = true;
+                    needsUpdate = true;
+                }
             }
+            if (needsUpdate) TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName, _zipmods);
+            return _zipmods;
+        }
+
+        private static CancellationTokenSource _cancelSource;
+        public static void CancelReload()
+        {
+            _cancelSource?.Cancel();
         }
 
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
         /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
+        /// <param name="subject"></param>
         /// <param name="searchOption">Where to search</param>
-        private static IObservable<SideloaderModInfo> TryReadSideloaderMods(string modDirectory, SearchOption searchOption = SearchOption.AllDirectories)
+        private static void TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, SearchOption searchOption = SearchOption.AllDirectories)
         {
-            _isUpdating = true;
-            var subject = new ReplaySubject<SideloaderModInfo>();
-
-            if (!Directory.Exists(modDirectory))
-            {
-                subject.OnCompleted();
-                Console.WriteLine("No zipmod folder detected");
-                return subject;
-            }
+            _cancelSource?.Dispose();
+            _cancelSource = new CancellationTokenSource();
+            var token = _cancelSource.Token;
 
             void ReadSideloaderModsAsync()
             {
                 try
                 {
+                    if (!Directory.Exists(modDirectory))
+                    {
+                        subject.OnCompleted();
+                        _isUpdating = false;
+                        Console.WriteLine("No zipmod folder detected");
+                        return;
+                    }
+
                     foreach (var file in Directory.EnumerateFiles(modDirectory, "*.*", searchOption))
                     {
                         try
                         {
+                            token.ThrowIfCancellationRequested();
+
                             if (!IsValidZipmodExtension(Path.GetExtension(file))) continue;
 
                             subject.OnNext(LoadFromFile(file));
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
                         }
                         catch (SystemException ex)
                         {
@@ -73,6 +95,10 @@ namespace KKManager.Data.Zipmods
                     subject.OnCompleted();
                     Console.WriteLine("Finished loading zipmods");
                 }
+                catch (OperationCanceledException ex)
+                {
+                    subject.OnCompleted();
+                }
                 catch (IOException ex)
                 {
                     Console.WriteLine(ex);
@@ -84,9 +110,19 @@ namespace KKManager.Data.Zipmods
                 }
             }
 
-            Task.Run(ReadSideloaderModsAsync);
-
-            return subject;
+            try
+            {
+                Task.Run(ReadSideloaderModsAsync, token);
+            }
+            catch (OperationCanceledException)
+            {
+                _isUpdating = false;
+            }
+            catch
+            {
+                _isUpdating = false;
+                throw;
+            }
         }
 
         public static SideloaderModInfo LoadFromFile(string filename)
