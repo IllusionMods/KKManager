@@ -77,6 +77,8 @@ namespace KKManager.Updater.Windows
 
                 labelPercent.Text = "";
 
+                checkBoxSleep.Enabled = false;
+
                 var random = new Random();
                 if (random.Next(0, 10) >= 9)
                 {
@@ -105,7 +107,8 @@ namespace KKManager.Updater.Windows
                     return;
                 }
 
-                if (_autoInstallGuids == null || _autoInstallGuids.Length == 0)
+                var isAutoInstall = _autoInstallGuids != null && _autoInstallGuids.Length > 0;
+                if (!isAutoInstall)
                 {
                     SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
                     updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
@@ -134,6 +137,8 @@ namespace KKManager.Updater.Windows
 
                 progressBar1.Maximum = 1000;
 
+                checkBoxSleep.Enabled = true;
+
                 for (var index = 0; index < allItems.Count; index++)
                 {
                     _cancelToken.Token.ThrowIfCancellationRequested();
@@ -155,6 +160,9 @@ namespace KKManager.Updater.Windows
                     Console.WriteLine(failDetails);
                     s += " " + failDetails;
                 }
+
+                SleepIfNecessary();
+
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 PerformAutoScale();
             }
@@ -171,6 +179,9 @@ namespace KKManager.Updater.Windows
             {
                 var exceptions = ex is AggregateException aex ? aex.Flatten().InnerExceptions : (ICollection<Exception>)new[] { ex };
 
+                if (!exceptions.Any(x => x is OperationCanceledException))
+                    SleepIfNecessary();
+
                 SetStatus("Crash while updating mods, aborting.", true, true);
                 SetStatus(string.Join("\n---\n", exceptions), false, true);
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
@@ -179,6 +190,8 @@ namespace KKManager.Updater.Windows
             }
             finally
             {
+                checkBoxSleep.Enabled = false;
+
                 var wasCancelled = _cancelToken.IsCancellationRequested;
                 _cancelToken.Cancel();
 
@@ -193,6 +206,19 @@ namespace KKManager.Updater.Windows
 
                 if (_autoInstallGuids != null && _autoInstallGuids.Length > 0) Close();
             }
+        }
+
+        private void SleepIfNecessary()
+        {
+            if (checkBoxSleep.Checked)
+            {
+                if (!Application.SetSuspendState(PowerState.Suspend, true, true))
+                    if (!Application.SetSuspendState(PowerState.Hibernate, true, true))
+                        MessageBox.Show("Sleep when done", "Could not put the PC to sleep for some reason :(",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            checkBoxSleep.Enabled = false;
         }
 
         private readonly List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();

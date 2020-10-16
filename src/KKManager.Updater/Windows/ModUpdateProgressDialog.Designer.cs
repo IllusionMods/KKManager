@@ -37,6 +37,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.checkBoxSleep = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -54,6 +55,7 @@
             // panel1
             // 
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.checkBoxSleep);
             this.panel1.Controls.Add(this.labelPercent);
             this.panel1.Controls.Add(this.labelStatus);
             this.panel1.Controls.Add(this.label1);
@@ -146,6 +148,17 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // checkBoxSleep
+            // 
+            this.checkBoxSleep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxSleep.AutoSize = true;
+            this.checkBoxSleep.Location = new System.Drawing.Point(362, 97);
+            this.checkBoxSleep.Name = "checkBoxSleep";
+            this.checkBoxSleep.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxSleep.TabIndex = 3;
+            this.checkBoxSleep.Text = "Sleep when done";
+            this.checkBoxSleep.UseVisualStyleBackColor = true;
+            // 
             // ModUpdateProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,5 +199,6 @@
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.Label labelPercent;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox checkBoxSleep;
     }
 }
