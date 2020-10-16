@@ -226,6 +226,7 @@ namespace KKManager.Updater.Data
             {
                 ClientFileExists,
                 ClientFileNotExists,
+                //todo FileContains - true if file exists and contains string - operand is path | str trimmed
             }
 
             [XmlAttribute]
