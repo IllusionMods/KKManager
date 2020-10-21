@@ -4,8 +4,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using KKManager.Functions;
 using KKManager.Util;
@@ -53,6 +55,8 @@ namespace KKManager.Data.Zipmods
         /// <param name="searchOption">Where to search</param>
         private static void TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, SearchOption searchOption = SearchOption.AllDirectories)
         {
+            Console.WriteLine("Start loading zipmods");
+
             _cancelSource?.Dispose();
             _cancelSource = new CancellationTokenSource();
             var token = _cancelSource.Token;
@@ -88,25 +92,27 @@ namespace KKManager.Data.Zipmods
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to load mod from \"{file}\" with error: {ex}");
+                            Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex}");
                         }
                     }
-
-                    subject.OnCompleted();
-                    Console.WriteLine("Finished loading zipmods");
                 }
                 catch (OperationCanceledException)
                 {
-                    subject.OnCompleted();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    if (ex is SecurityException || ex is UnauthorizedAccessException)
+                        MessageBox.Show("Could not load information about zipmods because access to the plugins folder was denied. Check the permissions of your mods folder and try again.\n\n" + ex.Message,
+                            "Load zipmods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    Console.WriteLine("Crash when loading zipmods: " + ex);
                     subject.OnError(ex);
                 }
                 finally
                 {
                     _isUpdating = false;
+                    Console.WriteLine("Finished loading zipmods");
+                    subject.OnCompleted();
                 }
             }
 

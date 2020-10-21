@@ -53,6 +53,8 @@ namespace KKManager.Data.Plugins
         /// <param name="pluginDirectory">Directory containing the plugins to gather info from. Usually BepInEx directory inside game root.</param>
         private static void TryLoadPlugins(string pluginDirectory, ReplaySubject<PluginInfo> subject)
         {
+            Console.WriteLine("Start loading plugins");
+
             _cancelSource?.Dispose();
             _cancelSource = new CancellationTokenSource();
             var token = _cancelSource.Token;
@@ -99,38 +101,24 @@ namespace KKManager.Data.Plugins
                             Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex}");
                         }
                     }
-
-                    subject.OnCompleted();
-                    Console.WriteLine("Finished loading plugins");
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
-                    subject.OnCompleted();
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
-                        "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    Console.WriteLine(ex);
-                    subject.OnError(ex);
-                }
-                catch (SecurityException ex)
-                {
-                    MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
-                        "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    Console.WriteLine(ex);
-                    subject.OnError(ex);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    if (ex is SecurityException || ex is UnauthorizedAccessException)
+                        MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
+                            "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    Console.WriteLine("Crash when loading plugins: " + ex);
                     subject.OnError(ex);
                 }
                 finally
                 {
                     _isUpdating = false;
+                    Console.WriteLine("Finished loading plugins");
+                    subject.OnCompleted();
                 }
             }
 
