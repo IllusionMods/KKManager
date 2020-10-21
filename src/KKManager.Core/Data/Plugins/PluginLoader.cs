@@ -94,9 +94,9 @@ namespace KKManager.Data.Plugins
                         {
                             throw;
                         }
-                        catch (SystemException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(ex);
+                            Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex}");
                         }
                     }
 
@@ -123,7 +123,7 @@ namespace KKManager.Data.Plugins
                     Console.WriteLine(ex);
                     subject.OnError(ex);
                 }
-                catch (IOException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     subject.OnError(ex);

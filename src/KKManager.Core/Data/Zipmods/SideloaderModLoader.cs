@@ -18,7 +18,7 @@ namespace KKManager.Data.Zipmods
         {
             get => _zipmods ?? StartReload();
         }
-        
+
         private static bool _isUpdating = false;
         private static readonly object _lock = new object();
         private static ReplaySubject<SideloaderModInfo> _zipmods;
@@ -77,29 +77,29 @@ namespace KKManager.Data.Zipmods
 
                             if (!IsValidZipmodExtension(Path.GetExtension(file))) continue;
 
+                            //var modInfo = Task.Run(() => LoadFromFile(file), token);
+                            //if (!modInfo.Wait(TimeSpan.FromSeconds(8))) throw new TimeoutException();
+                            //subject.OnNext(modInfo.Result);
                             subject.OnNext(LoadFromFile(file));
                         }
                         catch (OperationCanceledException)
                         {
                             throw;
                         }
-                        catch (SystemException ex)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine(ex);
-                            /*MessageBox.Show(
-                                        $"Failed to load mod from \"{file}\" with error: {ex.Message}",
-                                        "Load sideloader mods", MessageBoxButtons.OK, MessageBoxIcon.Warning);*/
+                            Console.WriteLine($"Failed to load mod from \"{file}\" with error: {ex}");
                         }
                     }
 
                     subject.OnCompleted();
                     Console.WriteLine("Finished loading zipmods");
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
                     subject.OnCompleted();
                 }
-                catch (IOException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     subject.OnError(ex);
