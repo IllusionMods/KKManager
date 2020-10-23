@@ -6,14 +6,16 @@ namespace KKManager.Util
 {
     public static class SleepControls
     {
-        public static void PreventSleep()
+        public static bool PreventSleepOrShutdown(IntPtr windowHandle, string blockReason)
         {
             SetThreadExecutionState(ExecutionState.EsContinuous | ExecutionState.EsSystemRequired);
+            return ShutdownBlockReasonCreate(windowHandle, blockReason);
         }
 
-        public static void AllowSleep()
+        public static bool AllowSleepOrShutdown(IntPtr windowHandle)
         {
             SetThreadExecutionState(ExecutionState.EsContinuous);
+            return ShutdownBlockReasonDestroy(windowHandle);
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -27,6 +29,12 @@ namespace KKManager.Util
             EsDisplayRequired = 0x00000002,
             EsSystemRequired = 0x00000001
         }
+
+        [DllImport("user32.dll")]
+        private static extern bool ShutdownBlockReasonCreate(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string pwszReason);
+
+        [DllImport("user32.dll")]
+        private static extern bool ShutdownBlockReasonDestroy(IntPtr hWnd);
 
         public static bool PutToSleep()
         {

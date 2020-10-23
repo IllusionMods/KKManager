@@ -79,8 +79,6 @@ namespace KKManager.Updater.Windows
 
                 checkBoxSleep.Enabled = false;
 
-                SleepControls.PreventSleep();
-
                 var random = new Random();
                 if (random.Next(0, 10) >= 9)
                 {
@@ -123,6 +121,8 @@ namespace KKManager.Updater.Windows
 
                 if (updateTasks == null)
                     throw new OperationCanceledException();
+                
+                SleepControls.PreventSleepOrShutdown(Handle, "Update is in progress");
 
                 _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.TotalUpdateSize));
                 _completedSize = FileSize.Empty;
@@ -208,13 +208,13 @@ namespace KKManager.Updater.Windows
 
                 if (_autoInstallGuids != null && _autoInstallGuids.Length > 0) Close();
 
-                SleepControls.AllowSleep();
+                SleepControls.AllowSleepOrShutdown(Handle);
             }
         }
 
         private void SleepIfNecessary()
         {
-            SleepControls.AllowSleep();
+            SleepControls.AllowSleepOrShutdown(Handle);
 
             if (checkBoxSleep.Checked)
             {
