@@ -79,6 +79,8 @@ namespace KKManager.Updater.Windows
 
                 checkBoxSleep.Enabled = false;
 
+                SleepControls.PreventSleep();
+
                 var random = new Random();
                 if (random.Next(0, 10) >= 9)
                 {
@@ -205,17 +207,20 @@ namespace KKManager.Updater.Windows
                 button1.Text = "OK";
 
                 if (_autoInstallGuids != null && _autoInstallGuids.Length > 0) Close();
+
+                SleepControls.AllowSleep();
             }
         }
 
         private void SleepIfNecessary()
         {
+            SleepControls.AllowSleep();
+
             if (checkBoxSleep.Checked)
             {
-                if (!Application.SetSuspendState(PowerState.Suspend, true, true))
-                    if (!Application.SetSuspendState(PowerState.Hibernate, true, true))
-                        MessageBox.Show("Sleep when done", "Could not put the PC to sleep for some reason :(",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (!SleepControls.PutToSleep())
+                    MessageBox.Show("Sleep when done", "Could not put the PC to sleep for some reason :(",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             checkBoxSleep.Enabled = false;

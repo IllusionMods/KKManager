@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="Util\ResourceUtils.cs" />
     <Compile Include="Util\RetryHelper.cs" />
+    <Compile Include="Util\SleepControls.cs" />
     <Compile Include="Util\TypeConverters\DictionaryTypeConverter.cs" />
     <Compile Include="Util\TypeConverters\ListTypeConverter.cs" />
     <Compile Include="Util\UniversalDragAndDrop.cs" />
