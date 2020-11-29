@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using BrightIdeasSoftware;
 using KKManager.Functions;
-using KKManager.Updater.Data;
+using KKManager.Updater.Downloader;
 using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
 using KKManager.Util;
@@ -69,8 +67,12 @@ namespace KKManager.Updater.Windows
 
         private async void ModUpdateProgress_Shown(object sender, EventArgs e)
         {
+            var averageDownloadSpeed = new MovingAverage(20);
+            var downloadStartTime = DateTime.MinValue;
             try
             {
+                #region Initialize UI
+
                 progressBar1.Style = ProgressBarStyle.Marquee;
                 progressBar1.Value = 0;
                 progressBar1.Maximum = 1;
@@ -80,19 +82,49 @@ namespace KKManager.Updater.Windows
                 checkBoxSleep.Enabled = false;
 
                 var random = new Random();
-                if (random.Next(0, 10) >= 9)
+                if (random.Next(0, 10) >= 8)
                 {
-                    var offset = random.Next(0, 136);
+                    var offset = random.Next(20, 80);
                     var offsetStr = new string(Enumerable.Repeat(' ', offset).ToArray());
                     labelPercent.Text = offsetStr + " ( )  ( )\n";
                     labelPercent.Text += offsetStr + "( o . o)";
                 }
 
+                olvColumnProgress.Renderer = new BarRenderer(0, 100);
+                olvColumnProgress.AspectGetter = rowObject => (int)Math.Round(((UpdateDownloadItem)rowObject).FinishPercent);
+                olvColumnSize.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).TotalSize;
+                //olvColumnDownloaded.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).GetDownloadedSize();
+                olvColumnStatus.AspectGetter = rowObject =>
+                {
+                    var item = (UpdateDownloadItem)rowObject;
+                    return item.Exceptions.Count == 0
+                        ? item.Status.ToString()
+                        : item.Status + " - " + string.Join("; ", item.Exceptions.Select(x => x.Message));
+                };
+                olvColumnName.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).DownloadPath.Name;
+                olvColumnNo.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).Order;
+
+                fastObjectListView1.PrimarySortColumn = olvColumnStatus;
+                fastObjectListView1.SecondarySortColumn = olvColumnNo;
+                fastObjectListView1.Sorting = SortOrder.Ascending;
+                fastObjectListView1.PrimarySortOrder = SortOrder.Ascending;
+                fastObjectListView1.SecondarySortOrder = SortOrder.Ascending;
+                fastObjectListView1.ShowSortIndicators = true;
+                fastObjectListView1.Sort();
+                fastObjectListView1.ShowSortIndicator();
+
+                _overallSize = _completedSize = FileSize.Empty;
+
+                #endregion
+
                 SetStatus("Preparing...");
                 if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() == false)
                     throw new OperationCanceledException();
 
+                #region Find and select updates
+
                 SetStatus("Searching for mod updates...");
+                labelPercent.Text = "Please wait, this might take a couple of minutes.";
                 var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
@@ -121,52 +153,107 @@ namespace KKManager.Updater.Windows
 
                 if (updateTasks == null)
                     throw new OperationCanceledException();
-                
+
+                #endregion
+
                 SleepControls.PreventSleepOrShutdown(Handle, "Update is in progress");
 
-                _overallSize = FileSize.SumFileSizes(updateTasks.Select(x => x.TotalUpdateSize));
-                _completedSize = FileSize.Empty;
+                #region Set up update downloader and start downloading
 
-                var allItems = updateTasks.SelectMany(x => x.GetUpdateItems())
-                    // Remove unnecessary to avoid potential conflicts if the update is aborted midway and a newer version is added
-                    .OrderByDescending(sources => sources.Any(x => x.Item2 is DeleteFileUpdateItem))
-                    // Try items with a single source first since they are the most risky
-                    .ThenBy(sources => sources.Count())
-                    .ThenBy(sources => sources.FirstOrDefault()?.Item2.TargetPath.FullName)
-                    .ToList();
+                downloadStartTime = DateTime.Now;
 
-                SetStatus($"{allItems.Count(items => items.Count() > 1)} out of {allItems.Count} items have more than 1 source", false, true);
+                var downloader = UpdateDownloadCoordinator.Create(updateTasks);
+                var downloadItems = downloader.UpdateItems;
+
+                SetStatus($"{downloadItems.Count(items => items.DownloadSources.Count > 1)} out of {downloadItems.Count} items have more than 1 source", false, true);
+
+                fastObjectListView1.Objects = downloadItems;
 
                 progressBar1.Maximum = 1000;
-
+                progressBar1.Value = 0;
                 checkBoxSleep.Enabled = true;
 
-                for (var index = 0; index < allItems.Count; index++)
+                _overallSize = FileSize.SumFileSizes(downloadItems.Select(x => x.TotalSize));
+
+                var lastCompletedSize = FileSize.Empty;
+                updateTimer.Tick += (o, args) =>
                 {
-                    _cancelToken.Token.ThrowIfCancellationRequested();
+                    var itemCount = fastObjectListView1.GetItemCount();
+                    if (itemCount > 0)
+                    {
+                        fastObjectListView1.BeginUpdate();
+                        fastObjectListView1.RedrawItems(0, itemCount - 1, true);
+                        // Needed if user changes sorting column
+                        //fastObjectListView1.SecondarySortColumn = olvColumnNo;
+                        fastObjectListView1.Sort();
+                        fastObjectListView1.EndUpdate();
+                    }
 
-                    var task = allItems[index];
+                    _completedSize = FileSize.SumFileSizes(downloadItems.Select(x => x.GetDownloadedSize()));
 
-                    SetStatus("Downloading " + task.First().Item2.TargetPath.Name);
+                    var totalPercent = (double)_completedSize.GetKbSize() / (double)_overallSize.GetKbSize() * 100d;
+                    if (double.IsNaN(totalPercent)) totalPercent = 0;
 
-                    await UpdateSingleItem(task);
-                }
+                    // Download speed calc
+                    var secondsPassed = updateTimer.Interval / 1000d;
+                    var downloadedSinceLast = FileSize.FromKilobytes((long)((_completedSize - lastCompletedSize).GetKbSize() / secondsPassed));
+                    lastCompletedSize = _completedSize;
+                    averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
+                    var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
+                    var eta = TimeSpan.FromSeconds(etaSeconds);
 
-                var s = $"Successfully updated/removed {allItems.Count - _failedItems.Count} files from {updateTasks.Count} tasks.";
-                if (_failedItems.Any())
-                    s += $"\nFailed to update {_failedItems.Count} files because some sources crashed. Check log for details.";
+                    labelPercent.Text =
+                        $"Overall: {totalPercent:F1}% done  ({_completedSize} out of {_overallSize})\r\n" +
+                        $"Speed: {downloadedSinceLast}/s  (ETA: {eta.GetReadableTimespan()})";
+                    //$"Speed: {downloadedSinceLast:F1}KB/s";
+
+                    progressBar1.Value = Math.Min((int)Math.Round(totalPercent * 10), progressBar1.Maximum);
+                };
+                updateTimer.Start();
+
+                SetStatus("Downloading updates...", true, true);
+
+                await downloader.RunUpdate(_cancelToken.Token);
+
+                _cancelToken.Token.ThrowIfCancellationRequested();
+
+                #endregion
+
+                #region Show finish messages
+
+                var failedItems = downloadItems.Where(x => x.Status == UpdateDownloadStatus.Failed).ToList();
+                var unfinishedCount = downloadItems.Count(x => x.Status != UpdateDownloadStatus.Finished);
+
+                var s = $"Successfully updated/removed {downloadItems.Count - unfinishedCount} files from {updateTasks.Count} tasks.";
+                if (failedItems.Any())
+                    s += $"\nFailed to update {failedItems.Count} files because some sources crashed. Check log for details.";
+
                 SetStatus(s, true, true);
-                if (_failedExceptions.Any())
+
+                updateTimer.Stop();
+                progressBar1.Value = progressBar1.Maximum;
+                labelPercent.Text = "";
+
+                if (failedItems.Any(x => x.Exceptions.Count > 0))
                 {
-                    var failDetails = "Reason(s) for failing:\n" + string.Join("\n", _failedExceptions.Select(x => x.Message).Distinct());
+                    var exceptionMessages = failedItems
+                        .SelectMany(x => x.Exceptions)
+                        .Where(y => !(y is DownloadSourceCrashedException))
+                        // Deal with wrapped exceptions
+                        .Select(y => y.Message.Contains("InnerException") && y.InnerException != null ? y.InnerException.Message : y.Message)
+                        .Distinct();
+
+                    var failDetails = "Reason(s) for failing:\n" + string.Join("\n", exceptionMessages);
                     Console.WriteLine(failDetails);
                     s += " " + failDetails;
                 }
 
+                // Sleep before showing a messagebox since the box will block until user clicks ok
                 SleepIfNecessary();
 
                 MessageBox.Show(s, "Finished updating", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                PerformAutoScale();
+
+                #endregion
             }
             catch (OutdatedVersionException ex)
             {
@@ -175,7 +262,7 @@ namespace KKManager.Updater.Windows
             }
             catch (OperationCanceledException)
             {
-                SetStatus("Operation was cancelled by the user.", true, true);
+                SetStatus("Update was cancelled by the user.", true, true);
             }
             catch (Exception ex)
             {
@@ -184,7 +271,7 @@ namespace KKManager.Updater.Windows
                 if (!exceptions.Any(x => x is OperationCanceledException))
                     SleepIfNecessary();
 
-                SetStatus("Crash while updating mods, aborting.", true, true);
+                SetStatus("Unexpected crash while updating mods, aborting.", true, true);
                 SetStatus(string.Join("\n---\n", exceptions), false, true);
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
                                 "and that you did not hit your download limits, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
@@ -192,15 +279,25 @@ namespace KKManager.Updater.Windows
             }
             finally
             {
+                updateTimer.Stop();
                 checkBoxSleep.Enabled = false;
 
-                var wasCancelled = _cancelToken.IsCancellationRequested;
                 _cancelToken.Cancel();
 
-                labelPercent.Text = wasCancelled ? "Update was cancelled" : "Update finished";
-
+                labelPercent.Text = "";
                 if (_completedSize != FileSize.Empty)
-                    labelPercent.Text += $"\nSuccessfully downloaded {_completedSize} out of {_overallSize}.";
+                {
+                    labelPercent.Text += $"Downloaded {_completedSize} out of {_overallSize}";
+                    if (downloadStartTime != DateTime.MinValue)
+                    {
+                        var timeSpent = DateTime.Now - downloadStartTime;
+                        labelPercent.Text += $" in {timeSpent.GetReadableTimespan()}";
+                    }
+                    labelPercent.Text += "\n";
+                }
+                var averageDlSpeed = averageDownloadSpeed.GetAverage();
+                if (averageDlSpeed > 0)
+                    labelPercent.Text += $"Average download speed: {new FileSize(averageDlSpeed)}/s";
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
@@ -224,119 +321,6 @@ namespace KKManager.Updater.Windows
             }
 
             checkBoxSleep.Enabled = false;
-        }
-
-        private readonly List<UpdateInfo> _badUpdateSources = new List<UpdateInfo>();
-        private readonly List<IGrouping<string, Tuple<UpdateInfo, UpdateItem>>> _failedItems = new List<IGrouping<string, Tuple<UpdateInfo, UpdateItem>>>();
-        private readonly List<Exception> _failedExceptions = new List<Exception>();
-
-        private async Task<bool> UpdateSingleItem(IGrouping<string, Tuple<UpdateInfo, UpdateItem>> task)
-        {
-            var firstItem = task.First().Item2;
-            var itemSize = firstItem.GetDownloadSize();
-
-            var lastTimestamp = DateTime.UtcNow;
-            var lastDownloadedKBytes = 0l;
-
-            var progress = new Progress<double>(thisPercent =>
-            {
-                var timeNow = DateTime.UtcNow;
-                var secondsSinceLastUpdate = (timeNow - lastTimestamp).TotalSeconds;
-
-                if (secondsSinceLastUpdate < 1 && thisPercent < 100) return;
-
-                //This item: 70% done (1MB / 20MB)
-                //Overall: 50% done (111MB / 1221MB)
-                //Speed: 1234KB/s (average 1111KB/s)
-
-                var downloadedKBytes = (long)(itemSize.GetRawSize() * (thisPercent / 100d));
-                var downloadedSize = FileSize.FromKilobytes(downloadedKBytes);
-                var totalDownloadedSize = _completedSize + downloadedSize;
-                var totalPercent = ((double)totalDownloadedSize.GetRawSize() / (double)_overallSize.GetRawSize()) * 100d;
-
-                var speed = (downloadedKBytes - lastDownloadedKBytes) / secondsSinceLastUpdate;
-                if (double.IsNaN(speed)) speed = 0;
-                lastDownloadedKBytes = downloadedKBytes;
-                lastTimestamp = timeNow;
-
-                labelPercent.Text =
-$@"This item: {thisPercent:F1}% done ({downloadedSize} / {itemSize})
-Overall: {totalPercent:F1}% done ({totalDownloadedSize} / {_overallSize})
-Speed: {speed:F1}KB/s";
-
-                progressBar1.Value = Math.Min((int)(totalPercent * 10), progressBar1.Maximum);
-            });
-
-            SetStatus($"Updating {firstItem.TargetPath.Name}");
-            SetStatus($"Updating {InstallDirectoryHelper.GetRelativePath(firstItem.TargetPath)}", false, true);
-
-            var sourcesToAttempt = task.Where(x => !_badUpdateSources.Contains(x.Item1)).OrderBy(x => GetPing(x.Item1)).ToList();
-            if (sourcesToAttempt.Count == 0)
-            {
-                Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
-
-                _failedItems.Add(task);
-                return false;
-            }
-
-            Exception ex = null;
-            foreach (var source in sourcesToAttempt)
-            {
-                try
-                {
-                    // Needed because ZipUpdater doesn't support progress
-                    if (source.Item2.RemoteFile is ZipUpdater.ArchiveItem)
-                        labelPercent.Text = $"Extracting... Overall progress: {_completedSize} / {_overallSize}.";
-
-                    await RetryHelper.RetryOnExceptionAsync(() => source.Item2.Update(progress, _cancelToken.Token), 3,
-                        TimeSpan.FromSeconds(3), _cancelToken.Token);
-
-                    _completedSize += source.Item2.GetDownloadSize();
-                    ex = null;
-                    break;
-                }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Marking source {source.Item1.Source.Origin} as broken because of exception: {e.ToStringDemystified()}");
-
-                    ex = e;
-                    _badUpdateSources.Add(source.Item1);
-                }
-            }
-            // Check if all sources failed
-            if (ex != null)
-            {
-                Console.WriteLine("There are no working sources to download from. Check the log for reasons why the sources failed.");
-
-                _failedItems.Add(task);
-                _failedExceptions.Add(ex);
-                return false;
-            }
-
-            return true;
-        }
-
-        private static long GetPing(UpdateInfo info)
-        {
-            if (info.Source is ZipUpdater) return -1;
-            try
-            {
-                var p = new Ping();
-                var reply = p.Send(info.Source.Origin, 4);
-                if (reply != null)
-                {
-                    var result = reply.RoundtripTime;
-                    Console.WriteLine($"Ping {info.Source.Origin} in {reply.RoundtripTime}");
-                    if (reply.Status == IPStatus.Success) return result;
-                }
-            }
-            catch (Exception exc) { Console.WriteLine(exc); }
-            return long.MaxValue;
-            //return x.Item1.Source.DownloadPriority;
         }
 
         private void SetStatus(string status, bool writeToUi = true, bool writeToLog = false)

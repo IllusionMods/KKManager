@@ -111,6 +111,9 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Downloader\DownloadSourceCrashedException.cs" />
+    <Compile Include="Downloader\UpdateDownloadItem.cs" />
+    <Compile Include="Downloader\UpdateDownloadStatus.cs" />
     <Compile Include="Sources\S3Updater.cs" />
     <Compile Include="Utils\CRC32.cs" />
     <Compile Include="Data\FileContentsCalculator.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="Windows\ModUpdateSelectDialog.Designer.cs">
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Downloader\UpdateDownloadCoordinator.cs" />
     <Compile Include="Windows\UpdateInfoEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,5 +214,6 @@
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.S3.3.5.0-beta\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

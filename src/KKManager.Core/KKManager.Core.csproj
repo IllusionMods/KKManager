@@ -132,6 +132,7 @@
     <Compile Include="Functions\ModInstaller.cs" />
     <Compile Include="Functions\SelfUpdater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\TimeSpanUtils.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\FileSize.cs" />
     <Compile Include="Util\ListTools.cs" />
@@ -143,6 +144,7 @@
     </Compile>
     <Compile Include="Util\LoadingDialog\LoadingDialogInterface.cs" />
     <Compile Include="Util\LogWriter.cs" />
+    <Compile Include="Util\MovingAverage.cs" />
     <Compile Include="Util\OutdatedVersionException.cs" />
     <Compile Include="Util\PathTools.cs" />
     <Compile Include="Util\ProcessTools.cs" />
