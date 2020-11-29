@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace KKManager.Util
 {
-    public struct FileSize
+    public struct FileSize : IComparable<FileSize>, IEquatable<FileSize>, IComparable
     {
         public enum SizeRange
         {
@@ -17,7 +17,7 @@ namespace KKManager.Util
 
         public static FileSize SumFileSizes(IEnumerable<FileSize> sizes)
         {
-            return FromKilobytes(sizes.Sum(x => x.GetRawSize(false)));
+            return FromKilobytes(sizes.Sum(x => x.GetKbSize(false)));
         }
 
         public static readonly FileSize Empty = new FileSize(0);
@@ -63,17 +63,7 @@ namespace KKManager.Util
             return new FileSize(kiloBytes);
         }
 
-        public override bool Equals(object obj)
-        {
-            return (obj is FileSize) && _sizeInKb.Equals(((FileSize)obj)._sizeInKb);
-        }
-
-        public override int GetHashCode()
-        {
-            return _sizeInKb.GetHashCode();
-        }
-
-        public long GetRawSize()
+        public long GetKbSize()
         {
             return _sizeInKb;
         }
@@ -81,7 +71,7 @@ namespace KKManager.Util
         /// <summary>
         /// Empty items return long.MaxValue. For use in sorting
         /// </summary>
-        public long GetRawSize(bool treatEmptyAsLargest)
+        public long GetKbSize(bool treatEmptyAsLargest)
         {
             if (treatEmptyAsLargest && _sizeInKb <= 0)
                 return long.MaxValue;
@@ -122,7 +112,7 @@ namespace KKManager.Util
         public override string ToString()
         {
             var value = GetCompactSize(out var range);
-            
+
             return $"{Math.Round(value, 2)} {GetRangeString(range)}";
         }
 
@@ -152,6 +142,31 @@ namespace KKManager.Util
             }
 
             return rangeName;
+        }
+
+        public int CompareTo(FileSize other)
+        {
+            return _sizeInKb.CompareTo(other._sizeInKb);
+        }
+
+        public int CompareTo(object obj)
+        {
+            return obj is FileSize other ? CompareTo(other) : 0;
+        }
+
+        public bool Equals(FileSize other)
+        {
+            return _sizeInKb == other._sizeInKb;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is FileSize other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return _sizeInKb.GetHashCode();
         }
     }
 }
