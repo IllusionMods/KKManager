@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Data.Plugins;
@@ -270,6 +271,30 @@ namespace KKManager.Updater.Sources
                 results.AddRange(UpdateSourceManager.FileInfosToDeleteItems(localContents));
 
             return results;
+        }
+
+        public virtual TimeSpan GetPing()
+        {
+            try
+            {
+                var p = new Ping();
+                var reply = p.Send(Origin, 3000);
+                if (reply != null)
+                {
+                    var result = reply.RoundtripTime;
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        Console.WriteLine($"Ping {Origin} in {reply.RoundtripTime}");
+                        return TimeSpan.FromMilliseconds(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Ping {Origin} failed: {reply.Status}");
+                    }
+                }
+            }
+            catch (Exception exc) { Console.WriteLine($"Ping {Origin} failed: {exc}"); }
+            return TimeSpan.MaxValue;
         }
     }
 }
