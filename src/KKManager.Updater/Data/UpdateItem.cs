@@ -65,7 +65,7 @@ namespace KKManager.Updater.Data
 
             if (RemoteFile != null)
             {
-                Console.WriteLine($"Attempting download from source {RemoteFile.Source.Origin}");
+                Console.WriteLine($"Attempting download of {TargetPath.Name} from source {RemoteFile.Source.Origin}");
                 await RetryHelper.RetryOnExceptionAsync(async () => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken), 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
@@ -79,29 +79,51 @@ namespace KKManager.Updater.Data
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName));
-                if (TargetPath.Exists)
+                try
                 {
-                    Console.WriteLine($"Deleting old file {TargetPath.FullName}");
-                    TargetPath.Delete();
+                    if (TargetPath.Exists)
+                    {
+                        Console.WriteLine($"Deleting old file {TargetPath.FullName}");
+                        // Prevent issues removing readonly files
+                        TargetPath.Attributes = FileAttributes.Normal;
+                        TargetPath.Delete();
+                        // Make sure the file gets deleted before continuing
+                        await Task.Delay(200, cancellationToken);
+                    }
+
+                    if (RemoteFile != null)
+                        downloadTarget.MoveTo(TargetPath.FullName);
                 }
-                if (RemoteFile != null)
-                    downloadTarget.MoveTo(TargetPath.FullName);
+                catch (IOException)
+                {
+                    if (RemoteFile != null)
+                    {
+                        await Task.Delay(1000, cancellationToken);
+                        downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
+                        await Task.Delay(1000, cancellationToken);
+                        File.Delete(TargetPath.FullName + ".old");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
             catch (IOException ex)
             {
                 if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
-                    throw new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex);
+                    throw RetryHelper.DoNotAttemptToRetry(new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex));
 
                 goto retryDelete;
             }
             catch (SecurityException ex)
             {
-                if (MessageBox.Show($"Failed to apply update {TargetPath.FullName} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.",
-                        "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
+                if (MessageBox.Show($"Failed to apply update {TargetPath.FullName} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.", "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
                     throw;
 
                 var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);
-                if (fixPermissions == null) throw new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex);
+                if (fixPermissions == null)
+                    throw RetryHelper.DoNotAttemptToRetry(new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex));
                 fixPermissions.WaitForExit();
                 goto retryDelete;
             }
