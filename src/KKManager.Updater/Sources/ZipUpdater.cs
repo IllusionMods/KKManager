@@ -55,6 +55,11 @@ namespace KKManager.Updater.Sources
             return subItems;
         }
 
+        public override TimeSpan GetPing()
+        {
+            return TimeSpan.Zero;
+        }
+
         public sealed class ArchiveItem : IRemoteItem
         {
             private readonly IArchiveEntry _sourceItem;
