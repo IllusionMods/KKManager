@@ -282,6 +282,8 @@ namespace KKManager.Updater.Windows
                 updateTimer.Stop();
                 checkBoxSleep.Enabled = false;
 
+                fastObjectListView1.EmptyListMsg = "Nothing was downloaded";
+
                 _cancelToken.Cancel();
 
                 labelPercent.Text = "";
