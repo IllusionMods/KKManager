@@ -51,21 +51,36 @@ namespace KKManager.Updater.Downloader
 
         public async Task RunUpdate(CancellationToken cancellationToken)
         {
-            // One thread per server
-            var allSources = _updateItems
-                .SelectMany(x => x.DownloadSources.Keys)
-                .Distinct();
-
-            var runningTasks = new List<Tuple<Task, DownloadSourceInfo>>();
-            foreach (var updateSource in allSources)
+            try
             {
-                var updateSourceInfo = new DownloadSourceInfo(updateSource);
-                var task = Task.Run(async () => await UpdateThread(updateSourceInfo, cancellationToken),
-                    cancellationToken);
-                runningTasks.Add(new Tuple<Task, DownloadSourceInfo>(task, updateSourceInfo));
-            }
+                // One thread per server
+                var allSources = _updateItems
+                    .SelectMany(x => x.DownloadSources.Keys)
+                    .Distinct();
 
-            await Task.WhenAll(runningTasks.Select(x => x.Item1));
+                var runningTasks = new List<Tuple<Task, DownloadSourceInfo>>();
+                foreach (var updateSource in allSources)
+                {
+                    var updateSourceInfo = new DownloadSourceInfo(updateSource);
+                    var task = Task.Run(async () => await UpdateThread(updateSourceInfo, cancellationToken),
+                        cancellationToken);
+                    runningTasks.Add(new Tuple<Task, DownloadSourceInfo>(task, updateSourceInfo));
+                }
+
+                await Task.WhenAll(runningTasks.Select(x => x.Item1));
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            catch (OperationCanceledException)
+            {
+                foreach (var updateItem in _updateItems)
+                {
+                    if(updateItem.Status == UpdateDownloadStatus.Downloading || updateItem.Status == UpdateDownloadStatus.Waiting)
+                        updateItem.MarkAsCancelled();
+                }
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -121,6 +136,8 @@ namespace KKManager.Updater.Downloader
                     {
                         if (e is OperationCanceledException)
                         {
+                            currentDownloadItem.MarkAsCancelled(e);
+
                             if (cancellationToken.IsCancellationRequested)
                                 return;
                             else

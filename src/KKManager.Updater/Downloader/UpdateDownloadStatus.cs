@@ -5,6 +5,7 @@
         Downloading,
         Waiting,
         Finished,
-        Failed
+        Failed,
+        Cancelled
     }
 }

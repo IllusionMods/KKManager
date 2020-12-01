@@ -63,5 +63,11 @@ namespace KKManager.Updater.Downloader
                 }
             }
         }
+
+        public void MarkAsCancelled(Exception cancelException = null)
+        {
+            Status = UpdateDownloadStatus.Cancelled;
+            if (cancelException != null) Exceptions.Add(cancelException);
+        }
     }
 }
