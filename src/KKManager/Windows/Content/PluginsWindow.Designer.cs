@@ -33,8 +33,10 @@
             this.olvColumnEnabled = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnGuid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -45,14 +47,13 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectListView1
             // 
+            resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnEnabled);
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnVersion);
@@ -71,17 +72,14 @@
             this.olvColumnFilename,
             this.olvColumnWebsite});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.Location = new System.Drawing.Point(0, 25);
             this.objectListView1.Name = "objectListView1";
+            this.objectListView1.OverlayText.Text = resources.GetString("resource.Text");
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
-            this.objectListView1.Size = new System.Drawing.Size(891, 547);
             this.objectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseHyperlinks = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
@@ -92,37 +90,46 @@
             // 
             this.olvColumnEnabled.AspectName = "Enabled";
             this.olvColumnEnabled.CheckBoxes = true;
+            resources.ApplyResources(this.olvColumnEnabled, "olvColumnEnabled");
             this.olvColumnEnabled.MaximumWidth = 23;
             this.olvColumnEnabled.Searchable = false;
-            this.olvColumnEnabled.Text = "";
-            this.olvColumnEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.olvColumnEnabled.Width = 23;
             // 
             // olvColumnName
             // 
             this.olvColumnName.AspectName = "Name";
-            this.olvColumnName.Text = "Name";
-            this.olvColumnName.Width = 171;
+            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             // 
             // olvColumnVersion
             // 
             this.olvColumnVersion.AspectName = "Version";
-            this.olvColumnVersion.Text = "Version";
+            resources.ApplyResources(this.olvColumnVersion, "olvColumnVersion");
+            // 
+            // olvColumnAuthor
+            // 
+            this.olvColumnAuthor.AspectName = "Author";
+            resources.ApplyResources(this.olvColumnAuthor, "olvColumnAuthor");
             // 
             // olvColumnGuid
             // 
             this.olvColumnGuid.AspectName = "Guid";
-            this.olvColumnGuid.Text = "Guid";
-            this.olvColumnGuid.Width = 143;
+            resources.ApplyResources(this.olvColumnGuid, "olvColumnGuid");
             // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
-            this.olvColumnFilename.Text = "File name";
-            this.olvColumnFilename.Width = 90;
+            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
+            // 
+            // olvColumnWebsite
+            // 
+            this.olvColumnWebsite.AspectName = "Website";
+            resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
+            this.olvColumnWebsite.Hyperlink = true;
+            this.olvColumnWebsite.MinimumWidth = 100;
             // 
             // toolStrip1
             // 
+            resources.ApplyResources(this.toolStrip1, "toolStrip1");
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
             this.toolStripSeparator2,
@@ -133,108 +140,72 @@
             this.toolStripSeparator3,
             this.toolStripButtonOpenDir,
             this.toolStripTextBoxSearch});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(891, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripButton1
             // 
+            resources.ApplyResources(this.toolStripButton1, "toolStripButton1");
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(50, 22);
-            this.toolStripButton1.Text = "Refresh";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripSeparator2
             // 
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonEnable
             // 
+            resources.ApplyResources(this.toolStripButtonEnable, "toolStripButtonEnable");
             this.toolStripButtonEnable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonEnable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEnable.Image")));
-            this.toolStripButtonEnable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonEnable.Name = "toolStripButtonEnable";
-            this.toolStripButtonEnable.Size = new System.Drawing.Size(46, 22);
-            this.toolStripButtonEnable.Text = "Enable";
             this.toolStripButtonEnable.Click += new System.EventHandler(this.toolStripButtonEnable_Click);
             // 
             // toolStripButtonDisable
             // 
+            resources.ApplyResources(this.toolStripButtonDisable, "toolStripButtonDisable");
             this.toolStripButtonDisable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonDisable.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDisable.Image")));
-            this.toolStripButtonDisable.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonDisable.Name = "toolStripButtonDisable";
-            this.toolStripButtonDisable.Size = new System.Drawing.Size(49, 22);
-            this.toolStripButtonDisable.Text = "Disable";
             this.toolStripButtonDisable.Click += new System.EventHandler(this.toolStripButtonDisable_Click);
             // 
             // toolStripSeparator1
             // 
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonDelete
             // 
+            resources.ApplyResources(this.toolStripButtonDelete, "toolStripButtonDelete");
             this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonDelete.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDelete.Image")));
-            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonDelete.Name = "toolStripButtonDelete";
-            this.toolStripButtonDelete.Size = new System.Drawing.Size(44, 22);
-            this.toolStripButtonDelete.Text = "Delete";
             this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
             // toolStripSeparator3
             // 
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonOpenDir
             // 
+            resources.ApplyResources(this.toolStripButtonOpenDir, "toolStripButtonOpenDir");
             this.toolStripButtonOpenDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonOpenDir.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOpenDir.Image")));
-            this.toolStripButtonOpenDir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOpenDir.Name = "toolStripButtonOpenDir";
-            this.toolStripButtonOpenDir.Size = new System.Drawing.Size(127, 22);
-            this.toolStripButtonOpenDir.Text = "Open plugin directory";
             this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
             // 
             // toolStripTextBoxSearch
             // 
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
-            // 
-            // olvColumnAuthor
-            // 
-            this.olvColumnAuthor.AspectName = "Author";
-            this.olvColumnAuthor.Text = "Author";
-            this.olvColumnAuthor.Width = 88;
-            // 
-            // olvColumnWebsite
-            // 
-            this.olvColumnWebsite.AspectName = "Website";
-            this.olvColumnWebsite.Hyperlink = true;
-            this.olvColumnWebsite.MinimumWidth = 100;
-            this.olvColumnWebsite.Text = "Website";
-            this.olvColumnWebsite.Width = 123;
             // 
             // PluginsWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(891, 572);
             this.Controls.Add(this.objectListView1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "PluginsWindow";
-            this.Text = "Plugins";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SideloaderModsWindow_FormClosed);
             this.Shown += new System.EventHandler(this.SideloaderModsWindow_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();

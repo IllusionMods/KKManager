@@ -23,6 +23,7 @@ namespace KKManager.Windows.Content
 
         public PluginsWindow()
         {
+            Utils.WindowLanguageHelper.SetCurrentCulture();
             InitializeComponent();
 
             _listView = new TypedObjectListView<PluginInfo>(objectListView1);

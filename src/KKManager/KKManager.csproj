@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Utils\WindowLanguageHelper.cs" />
     <Compile Include="Windows\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,11 +200,38 @@
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hans.resx">
+      <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hant.resx">
+      <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hans.resx">
+      <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hant.resx">
+      <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.zh-Hans.resx">
+      <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.zh-Hant.resx">
+      <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\PathSelectPopup.resx">
       <DependentUpon>PathSelectPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\RenameCards.resx">
       <DependentUpon>RenameCards.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.de.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.fr.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.ja.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
@@ -224,6 +252,15 @@
     </Compile>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.ru.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.zh-Hans.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MainWindow.zh-Hant.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\LogViewer.resx">
       <DependentUpon>LogViewer.cs</DependentUpon>

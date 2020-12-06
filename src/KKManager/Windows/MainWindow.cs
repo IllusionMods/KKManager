@@ -144,7 +144,7 @@ namespace KKManager.Windows
                 Title = "Select the install directory of your game"
             })
             {
-                retryFolderSelect:
+            retryFolderSelect:
                 if (fb.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     var path = fb.FileName;
@@ -509,6 +509,8 @@ namespace KKManager.Windows
         {
             if (Settings.Default.AutoUpdateSearch)
                 await CheckForUpdates();
+
+            SetLanguage(Settings.Default.Language);
         }
 
         private async Task CheckForUpdates()
@@ -690,5 +692,62 @@ namespace KKManager.Windows
                 MessageBox.Show("No KKManager updates were found. Check log for more information.", "Check for updates",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        #region Languages
+
+        private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var languageName = sender.ToString().Trim();
+            SetLanguage(languageName);
+        }
+
+        private void SetLanguage(string languageName)
+        {
+            if (SetLanguage(languageName, this))
+            {
+                RefreshLanguagesMenuItem(languageName);
+            }
+        }
+
+        private bool SetLanguage(string languageName, Form form)
+        {
+            if (string.IsNullOrWhiteSpace(languageName)) return false;
+            var language = languageName.Trim();
+            var languageCode = Utils.WindowLanguageHelper.GetLanguageCode(language);
+            if (languageCode != null)
+            {
+                SetLanguageCode(languageCode, form);
+                Settings.Default.Language = language;
+                return true;
+            }
+            return false;
+        }
+
+        private void SetLanguageCode(string languageCode, Form form)
+        {
+            Utils.WindowLanguageHelper.SetLang(languageCode, form);
+        }
+
+        private void RefreshLanguagesMenuItem(string languageName)
+        {
+            var languages = new Dictionary<ToolStripMenuItem, string>()
+            {
+                { LanguageEnglishToolStripMenuItem,     "en" },
+                { LanguageJapaneseToolStripMenuItem,    "ja" },
+                { LanguageSChineseToolStripMenuItem,    "zh-Hans" },
+                { LanguageTChineseToolStripMenuItem,    "zh-Hant" },
+                { LanguageRussianToolStripMenuItem,     "ru" },
+                { LanguageGermanToolStripMenuItem,      "de" },
+                { LanguageFrenchToolStripMenuItem,      "fr" },
+            };
+
+            foreach (var item in languages.Keys)
+            {
+                item.Checked = (item.Text.Trim() == languageName);
+            }
+        }
+
+        #endregion
+
     }
 }
