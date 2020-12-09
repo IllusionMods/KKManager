@@ -62,6 +62,7 @@ namespace KKManager.Windows.Content
             // 
             // listView
             // 
+            resources.ApplyResources(this.listView, "listView");
             this.listView.AllColumns.Add(this.olvColumnName);
             this.listView.AllColumns.Add(this.olvColumnSex);
             this.listView.AllColumns.Add(this.olvColumnPersonality);
@@ -76,16 +77,13 @@ namespace KKManager.Windows.Content
             this.olvColumnExtended,
             this.olvColumnModDate,
             this.olvColumnFilename});
-            this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
             this.listView.HideSelection = false;
-            this.listView.Location = new System.Drawing.Point(0, 25);
             this.listView.Name = "listView";
+            this.listView.OverlayText.Text = resources.GetString("resource.Text");
             this.listView.ShowGroups = false;
             this.listView.ShowItemToolTips = true;
-            this.listView.Size = new System.Drawing.Size(805, 488);
-            this.listView.TabIndex = 3;
             this.listView.TileSize = new System.Drawing.Size(200, 200);
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.UseFilterIndicator = true;
@@ -96,44 +94,42 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnName
             // 
+            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.MinimumWidth = 150;
-            this.olvColumnName.Text = "Name";
             this.olvColumnName.UseFiltering = false;
-            this.olvColumnName.Width = 200;
             // 
             // olvColumnSex
             // 
+            resources.ApplyResources(this.olvColumnSex, "olvColumnSex");
             this.olvColumnSex.MinimumWidth = 35;
-            this.olvColumnSex.Text = "Sex";
-            this.olvColumnSex.Width = 35;
             // 
             // olvColumnPersonality
             // 
+            resources.ApplyResources(this.olvColumnPersonality, "olvColumnPersonality");
             this.olvColumnPersonality.MinimumWidth = 70;
-            this.olvColumnPersonality.Text = "Personality";
-            this.olvColumnPersonality.Width = 70;
             // 
             // olvColumnExtended
             // 
+            resources.ApplyResources(this.olvColumnExtended, "olvColumnExtended");
             this.olvColumnExtended.MinimumWidth = 40;
             this.olvColumnExtended.Searchable = false;
-            this.olvColumnExtended.Text = "Extended data count";
-            this.olvColumnExtended.Width = 40;
             // 
             // olvColumnModDate
             // 
+            resources.ApplyResources(this.olvColumnModDate, "olvColumnModDate");
             this.olvColumnModDate.MinimumWidth = 60;
-            this.olvColumnModDate.Text = "Modified";
             this.olvColumnModDate.UseFiltering = false;
             // 
             // olvColumnFilename
             // 
+            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.MinimumWidth = 60;
-            this.olvColumnFilename.Text = "Filename";
             this.olvColumnFilename.UseFiltering = false;
             // 
             // toolStrip
             // 
+            resources.ApplyResources(this.toolStrip, "toolStrip");
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addressBar,
             this.toolStripButtonGo,
@@ -144,166 +140,133 @@ namespace KKManager.Windows.Content
             this.toolStripViewSelect,
             this.toolStripDropDownButtonTools,
             this.toolStripTextBoxSearch});
-            this.toolStrip.Location = new System.Drawing.Point(0, 0);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(805, 25);
-            this.toolStrip.TabIndex = 4;
-            this.toolStrip.Text = "toolStrip1";
             this.toolStrip.Resize += new System.EventHandler(this.OnResizeToolstip);
             // 
             // addressBar
             // 
+            resources.ApplyResources(this.addressBar, "addressBar");
             this.addressBar.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.addressBar.AutoSize = false;
             this.addressBar.Name = "addressBar";
-            this.addressBar.Size = new System.Drawing.Size(200, 23);
             this.addressBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addressBar_KeyDown);
             // 
             // toolStripButtonGo
             // 
+            resources.ApplyResources(this.toolStripButtonGo, "toolStripButtonGo");
             this.toolStripButtonGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonGo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGo.Image")));
-            this.toolStripButtonGo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonGo.Name = "toolStripButtonGo";
-            this.toolStripButtonGo.Size = new System.Drawing.Size(26, 22);
-            this.toolStripButtonGo.Text = "Go";
             this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // toolStripButtonRefresh
             // 
+            resources.ApplyResources(this.toolStripButtonRefresh, "toolStripButtonRefresh");
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonRefresh.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRefresh.Image")));
-            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(50, 22);
-            this.toolStripButtonRefresh.Text = "Refresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
             // toolStripSeparator3
             // 
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripOpenDropdown
             // 
+            resources.ApplyResources(this.toolStripOpenDropdown, "toolStripOpenDropdown");
             this.toolStripOpenDropdown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripOpenDropdown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.femaleCardFolderToolStripMenuItem,
             this.maleCardFolderToolStripMenuItem,
             this.toolStripSeparator2});
-            this.toolStripOpenDropdown.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOpenDropdown.Image")));
-            this.toolStripOpenDropdown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripOpenDropdown.Name = "toolStripOpenDropdown";
-            this.toolStripOpenDropdown.Size = new System.Drawing.Size(61, 22);
-            this.toolStripOpenDropdown.Text = "Open...";
             this.toolStripOpenDropdown.ButtonClick += new System.EventHandler(this.ShowOpenFolderDialog);
             // 
             // femaleCardFolderToolStripMenuItem
             // 
+            resources.ApplyResources(this.femaleCardFolderToolStripMenuItem, "femaleCardFolderToolStripMenuItem");
             this.femaleCardFolderToolStripMenuItem.Name = "femaleCardFolderToolStripMenuItem";
-            this.femaleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.femaleCardFolderToolStripMenuItem.Text = "Female card folder";
             this.femaleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.femaleCardFolderToolStripMenuItem_Click);
             // 
             // maleCardFolderToolStripMenuItem
             // 
+            resources.ApplyResources(this.maleCardFolderToolStripMenuItem, "maleCardFolderToolStripMenuItem");
             this.maleCardFolderToolStripMenuItem.Name = "maleCardFolderToolStripMenuItem";
-            this.maleCardFolderToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.maleCardFolderToolStripMenuItem.Text = "Male card folder";
             this.maleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.maleCardFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(169, 6);
             // 
             // toolStripSeparator1
             // 
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripViewSelect
             // 
+            resources.ApplyResources(this.toolStripViewSelect, "toolStripViewSelect");
             this.toolStripViewSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripViewSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.detailsToolStripMenuItem,
             this.smallIconsToolStripMenuItem,
             this.largeIconsToolStripMenuItem});
-            this.toolStripViewSelect.Image = ((System.Drawing.Image)(resources.GetObject("toolStripViewSelect.Image")));
-            this.toolStripViewSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripViewSelect.Name = "toolStripViewSelect";
-            this.toolStripViewSelect.Size = new System.Drawing.Size(45, 22);
-            this.toolStripViewSelect.Text = "View";
             // 
             // detailsToolStripMenuItem
             // 
+            resources.ApplyResources(this.detailsToolStripMenuItem, "detailsToolStripMenuItem");
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
-            this.detailsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.detailsToolStripMenuItem.Text = "Details";
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
             // smallIconsToolStripMenuItem
             // 
-            this.smallIconsToolStripMenuItem.Enabled = false;
+            resources.ApplyResources(this.smallIconsToolStripMenuItem, "smallIconsToolStripMenuItem");
             this.smallIconsToolStripMenuItem.Name = "smallIconsToolStripMenuItem";
-            this.smallIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.smallIconsToolStripMenuItem.Text = "Small icons";
             this.smallIconsToolStripMenuItem.Click += new System.EventHandler(this.SmallIcons);
             // 
             // largeIconsToolStripMenuItem
             // 
+            resources.ApplyResources(this.largeIconsToolStripMenuItem, "largeIconsToolStripMenuItem");
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
-            this.largeIconsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.largeIconsToolStripMenuItem.Text = "Large icons";
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
             // toolStripDropDownButtonTools
             // 
+            resources.ApplyResources(this.toolStripDropDownButtonTools, "toolStripDropDownButtonTools");
             this.toolStripDropDownButtonTools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.segregateBySexToolStripMenuItem,
             this.renameCardsToolStripMenuItem});
-            this.toolStripDropDownButtonTools.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonTools.Image")));
-            this.toolStripDropDownButtonTools.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonTools.Name = "toolStripDropDownButtonTools";
-            this.toolStripDropDownButtonTools.Size = new System.Drawing.Size(47, 22);
-            this.toolStripDropDownButtonTools.Text = "Tools";
-            this.toolStripDropDownButtonTools.ToolTipText = "Tools";
             // 
             // segregateBySexToolStripMenuItem
             // 
+            resources.ApplyResources(this.segregateBySexToolStripMenuItem, "segregateBySexToolStripMenuItem");
             this.segregateBySexToolStripMenuItem.Name = "segregateBySexToolStripMenuItem";
-            this.segregateBySexToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.segregateBySexToolStripMenuItem.Text = "Segregate selected by sex";
             this.segregateBySexToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
             // 
             // renameCardsToolStripMenuItem
             // 
-            this.renameCardsToolStripMenuItem.Enabled = false;
+            resources.ApplyResources(this.renameCardsToolStripMenuItem, "renameCardsToolStripMenuItem");
             this.renameCardsToolStripMenuItem.Name = "renameCardsToolStripMenuItem";
-            this.renameCardsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.renameCardsToolStripMenuItem.Text = "Rename selected card files...";
             this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
             // 
             // toolStripTextBoxSearch
             // 
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripTextBoxSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripTextBoxSearch.Size = new System.Drawing.Size(100, 25);
             // 
             // CardWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(805, 513);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.toolStrip);
             this.Name = "CardWindow";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
-            this.Text = "Cards";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CardWindow_FormClosed);
             this.Load += new System.EventHandler(this.formMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.listView)).EndInit();
