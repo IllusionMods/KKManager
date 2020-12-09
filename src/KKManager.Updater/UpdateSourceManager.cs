@@ -170,6 +170,9 @@ namespace KKManager.Updater
         /// </summary>
         public static UpdateSourceBase[] GetUpdateSources(string[] updateSourceUrls)
         {
+            updateSourceUrls = updateSourceUrls.Where(x => x != null).Select(x => x.Trim()).ToArray();
+
+            var existing = new HashSet<string>();
             var results = new List<UpdateSourceBase>(updateSourceUrls.Length);
             // Higher on the list means higher priority
             for (var index = 0; index < updateSourceUrls.Length; index++)
@@ -178,6 +181,8 @@ namespace KKManager.Updater
                 if (string.IsNullOrWhiteSpace(updateSource)) continue;
                 try
                 {
+                    if (!existing.Add(updateSource.ToLowerInvariant())) throw new Exception("Duplicate source");
+
                     results.Add(GetUpdater(new Uri(updateSource), -index));
 #if DEBUG
                     Console.WriteLine($"Added {updateSource}");
