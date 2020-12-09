@@ -200,11 +200,13 @@ namespace KKManager.Updater.Windows
                     lastCompletedSize = _completedSize;
                     averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
                     var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
-                    var eta = TimeSpan.FromSeconds(etaSeconds);
+                    var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds 
+                        ? "Unknown" 
+                        : TimeSpan.FromSeconds(etaSeconds).GetReadableTimespan();
 
                     labelPercent.Text =
                         $"Overall: {totalPercent:F1}% done  ({_completedSize} out of {_overallSize})\r\n" +
-                        $"Speed: {downloadedSinceLast}/s  (ETA: {eta.GetReadableTimespan()})";
+                        $"Speed: {downloadedSinceLast}/s  (ETA: {eta})";
                     //$"Speed: {downloadedSinceLast:F1}KB/s";
 
                     progressBar1.Value = Math.Min((int)Math.Round(totalPercent * 10), progressBar1.Maximum);
