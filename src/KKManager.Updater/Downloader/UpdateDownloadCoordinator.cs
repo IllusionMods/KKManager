@@ -27,10 +27,15 @@ namespace KKManager.Updater.Downloader
 
             // Split the tasks into individual files to download with lists of servers to they can be downloaded from
             // so later the download threads can pick them easily
-            var updateItemInfos = updateTasks.SelectMany(uta =>
+            var updateItemInfos = updateTasks.SelectMany(updateTask =>
             {
-                var updateItems = uta.GetUpdateItems();
-                return updateItems.Select(uit => new UpdateDownloadItem(uta, new FileInfo(uit.Key), uit.ToDictionary(x => x.Item1.Source, x => x.Item2)));
+                var updateItemGroups = updateTask.GetUpdateItems();
+                return updateItemGroups.Select(updateItemGroup => new UpdateDownloadItem(
+                    updateTask,
+                    new FileInfo(updateItemGroup.Key),
+                    updateItemGroup
+                        .DistinctBy(x => x.Item1.Source) // Extra safeguard in case of duplicate entries, shouldn't ever be needed but apparently is
+                        .ToDictionary(x => x.Item1.Source, x => x.Item2)));
             });
 
             var sortedUpdateItemInfos = updateItemInfos
@@ -75,7 +80,7 @@ namespace KKManager.Updater.Downloader
             {
                 foreach (var updateItem in _updateItems)
                 {
-                    if(updateItem.Status == UpdateDownloadStatus.Downloading || updateItem.Status == UpdateDownloadStatus.Waiting)
+                    if (updateItem.Status == UpdateDownloadStatus.Downloading || updateItem.Status == UpdateDownloadStatus.Waiting)
                         updateItem.MarkAsCancelled();
                 }
 
