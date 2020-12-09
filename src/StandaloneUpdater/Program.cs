@@ -22,13 +22,18 @@ namespace StandaloneUpdater
         [STAThread]
         private static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += (sender, arg) => Console.WriteLine("UNHANDLED EXCEPTION: " + arg.ExceptionObject);
-            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += (sender, arg) =>
+            {
+                Console.WriteLine("UNHANDLED EXCEPTION: " + arg.ExceptionObject);
+                NBug.Handler.UnhandledException(sender, arg);
+            };
 
             using (LogWriter.StartLogging())
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+
+                Console.WriteLine("Arguments: " + string.Join("   ", args));
 
                 const string guidValueName = "-guid:";
                 var silentInstallGuids = args.Where(x => x.StartsWith(guidValueName)).Select(x => x.Substring(guidValueName.Length).Trim(' ', '"')).ToArray();
@@ -37,10 +42,10 @@ namespace StandaloneUpdater
 
                 if (args.Length == 0)
                 {
-                    MessageBox.Show("Not enough arguments - the following arguments are supported:\n" +
-                                    "Path to game root directory. This is mandatory and has to be the 1st argument.\n" +
-                                    "One or more links to update sources. If no update source links are provided then UpdateSources file is used.\n\n" +
-                                    "You can also add -guid:UPDATE_GUID arguments to not show the mod selection screen, and instead automatically install mods with the specified GUIDs.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowArgError("Not enough arguments - the following arguments are supported:\n" +
+                                 "Path to game root directory. This is mandatory and has to be the 1st argument.\n" +
+                                 "One or more links to update sources. If no update source links are provided then UpdateSources file is used.\n\n" +
+                                 "You can also add -guid:UPDATE_GUID arguments to not show the mod selection screen, and instead automatically install mods with the specified GUIDs.");
                     return;
                 }
 
@@ -53,8 +58,7 @@ namespace StandaloneUpdater
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Error opening game directory: {args[0]}\n\n{e}", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Console.WriteLine(e);
+                    ShowArgError($"Error opening game directory: {args[0]}\n\n{e}");
                     return;
                 }
 
@@ -79,8 +83,15 @@ namespace StandaloneUpdater
 
             var updateSources = UpdateSourceManager.FindUpdateSources(_exeDirectory);
             if (updateSources == null || updateSources.Length == 0)
-                MessageBox.Show("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\nAdd one or more links to update sources as arguments or edit the UpdateSources file.", "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowArgError("No links to update sources have been provided in arguments and the UpdateSources file is missing or has no valid sources.\n\n" +
+                             "Add one or more links to update sources as arguments or edit the UpdateSources file.");
             return updateSources;
+        }
+
+        private static void ShowArgError(string msg)
+        {
+            Console.WriteLine(msg.Replace("\n\n", "\n"));
+            MessageBox.Show(msg, "Invalid arguments", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
