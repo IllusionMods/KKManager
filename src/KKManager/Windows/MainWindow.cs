@@ -710,8 +710,8 @@ namespace KKManager.Windows
                             null,
                             (obj, args) =>
                             {
-                                WindowLanguageHelper.CurrentCulture = (CultureInfo)((ToolStripMenuItem)obj).Tag;
-                                WindowLanguageHelper.ApplyCurrentCulture(this);
+                                LanguageManager.CurrentCulture = (CultureInfo)((ToolStripMenuItem)obj).Tag;
+                                LanguageManager.ApplyCurrentCulture(this);
                                 MessageBox.Show(
                                     "You might need to restart KKManager to fully change the laguage.",
                                     "Language change", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -719,11 +719,11 @@ namespace KKManager.Windows
                     { Tag = x };
                 }
 
-                languagesToolStripMenuItem.DropDownItems.AddRange(WindowLanguageHelper.SupportedLanguages.Select(CreateLanguageToggle).ToArray());
+                languagesToolStripMenuItem.DropDownItems.AddRange(LanguageManager.SupportedLanguages.Select(CreateLanguageToggle).ToArray());
             }
 
             // Select current language in the language dropdown
-            var currentLang = WindowLanguageHelper.CurrentCulture;
+            var currentLang = LanguageManager.CurrentCulture;
             foreach (ToolStripMenuItem langItem in languagesToolStripMenuItem.DropDownItems)
             {
                 var lang = (CultureInfo)langItem.Tag;

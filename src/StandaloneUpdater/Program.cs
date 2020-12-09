@@ -32,7 +32,7 @@ namespace StandaloneUpdater
 
             using (LogWriter.StartLogging())
             {
-                var currentCulture = WindowLanguageHelper.CurrentCulture;
+                var currentCulture = LanguageManager.CurrentCulture;
                 CultureInfo.CurrentCulture = currentCulture;
                 CultureInfo.CurrentUICulture = currentCulture;
                 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;

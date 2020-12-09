@@ -175,7 +175,7 @@
     <Compile Include="Util\TypeConverters\DictionaryTypeConverter.cs" />
     <Compile Include="Util\TypeConverters\ListTypeConverter.cs" />
     <Compile Include="Util\UniversalDragAndDrop.cs" />
-    <Compile Include="WindowLanguageHelper.cs" />
+    <Compile Include="LanguageManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

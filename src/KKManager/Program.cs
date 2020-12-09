@@ -31,7 +31,7 @@ namespace KKManager
             Logger = LogWriter.StartLogging();
             using (Logger)
             {
-                var currentCulture = WindowLanguageHelper.CurrentCulture;
+                var currentCulture = LanguageManager.CurrentCulture;
                 CultureInfo.CurrentCulture = currentCulture;
                 CultureInfo.CurrentUICulture = currentCulture;
                 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;

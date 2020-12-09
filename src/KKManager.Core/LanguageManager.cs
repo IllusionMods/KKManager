@@ -9,15 +9,24 @@ using KKManager.Util;
 
 namespace KKManager
 {
-    public static class WindowLanguageHelper
+    public static class LanguageManager
     {
+        // Add newly supported languages to this list. Languages need to be in the "xx-yy" format, even if resources are only named "xx".
+        private static readonly string[] _supportedLanguageNames =
+        {
+            "en-US",
+            "en-GB",
+            "zh-Hans",
+            "zh-Hant",
+        };
+
         private static IEnumerable<CultureInfo> _supportedLanguages;
         public static IEnumerable<CultureInfo> SupportedLanguages => _supportedLanguages ?? (_supportedLanguages = GetSupportedLanguages());
 
         private static IEnumerable<CultureInfo> GetSupportedLanguages()
         {
             // Check what translations are available in program dir
-            var location = typeof(WindowLanguageHelper).Assembly.Location;
+            var location = typeof(LanguageManager).Assembly.Location;
             if (location.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) location = Path.GetDirectoryName(location);
             var translationDirectories = new DirectoryInfo(location).GetDirectories()
                 .Where(x =>
@@ -36,17 +45,13 @@ namespace KKManager
                 })
                 .Select(x => x.Name.Substring(0, 2).ToLower())
                 .ToList();
+            var supportedCultures = _supportedLanguageNames.Attempt(CultureInfo.GetCultureInfo).ToList();
 
-            var supportedCultures = new[]
-            {
-                "en-US",
-                "en-GB",
-                "zh-Hans",
-                "zh-Hant",
-            }.Attempt(CultureInfo.GetCultureInfo).ToList();
-
-            //Debug.Assert(translationDirectories.All(x => supportedCultures.Select(c => c.Name.Substring(0, 2)).Any(z => z.Equals(x, StringComparison.OrdinalIgnoreCase))),
-            //    "Translation is not added to supported cultures - " + translationDirectories.FirstOrDefault(x => !supportedCultures.Select(c => c.Name.Substring(0, 2)).Contains(x, StringComparison.OrdinalIgnoreCase)));
+            var missingLanguageCodes = translationDirectories
+                .Where(x => supportedCultures.Select(c => c.Name.Substring(0, 2)).All(z => !z.Equals(x, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+            if (missingLanguageCodes.Any())
+                Console.WriteLine($"Following language files are present but they are not specified as supported in {nameof(LanguageManager)}: " + string.Join(", ", missingLanguageCodes));
 
             return supportedCultures.Where(x =>
             {
