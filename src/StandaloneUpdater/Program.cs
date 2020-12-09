@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using KKManager;
 using KKManager.Functions;
 using KKManager.Updater;
 using KKManager.Updater.Sources;
@@ -30,6 +32,12 @@ namespace StandaloneUpdater
 
             using (LogWriter.StartLogging())
             {
+                var currentCulture = WindowLanguageHelper.CurrentCulture;
+                CultureInfo.CurrentCulture = currentCulture;
+                CultureInfo.CurrentUICulture = currentCulture;
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 

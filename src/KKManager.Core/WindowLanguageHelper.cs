@@ -6,9 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using KKManager.Properties;
 using KKManager.Util;
-using WeifenLuo.WinFormsUI.Docking;
 
-namespace KKManager.Utils
+namespace KKManager
 {
     public static class WindowLanguageHelper
     {
@@ -18,7 +17,9 @@ namespace KKManager.Utils
         private static IEnumerable<CultureInfo> GetSupportedLanguages()
         {
             // Check what translations are available in program dir
-            var translationDirectories = new DirectoryInfo(Program.ProgramLocation).GetDirectories()
+            var location = typeof(WindowLanguageHelper).Assembly.Location;
+            if (location.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) location = Path.GetDirectoryName(location);
+            var translationDirectories = new DirectoryInfo(location).GetDirectories()
                 .Where(x =>
                 {
                     if (x.Name.Length < 2)
@@ -89,14 +90,6 @@ namespace KKManager.Utils
                     {
                         ApplyCurrentCulture(c, resources);
                     }
-                }
-            }
-
-            if (control is DockPanel dockPanel)
-            {
-                foreach (var dpContent in dockPanel.Contents.OfType<Form>().Concat(dockPanel.FloatWindows))
-                {
-                    ApplyCurrentCulture(dpContent);
                 }
             }
 

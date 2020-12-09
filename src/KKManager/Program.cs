@@ -31,10 +31,11 @@ namespace KKManager
             Logger = LogWriter.StartLogging();
             using (Logger)
             {
-                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-                CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+                var currentCulture = WindowLanguageHelper.CurrentCulture;
+                CultureInfo.CurrentCulture = currentCulture;
+                CultureInfo.CurrentUICulture = currentCulture;
                 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+                CultureInfo.DefaultThreadCurrentUICulture = currentCulture;
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

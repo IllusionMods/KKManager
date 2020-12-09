@@ -21,7 +21,6 @@ using KKManager.Updater;
 using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
 using KKManager.Util;
-using KKManager.Utils;
 using KKManager.Windows.Content;
 using KKManager.Windows.ToolWindows;
 using KKManager.Windows.ToolWindows.Properties;
@@ -39,10 +38,6 @@ namespace KKManager.Windows
         public MainWindow()
         {
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
-
-            var currentCulture = WindowLanguageHelper.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = currentCulture;
-            Thread.CurrentThread.CurrentUICulture = currentCulture;
 
             Program.MainSynchronizationContext = SynchronizationContext.Current;
 
