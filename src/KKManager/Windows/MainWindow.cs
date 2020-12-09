@@ -374,7 +374,11 @@ namespace KKManager.Windows
 
         private void readmeAndSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/bbepis/KKManager");
+            var readmePath = Path.Combine(Program.ProgramLocation, "README.md");
+            if (File.Exists(readmePath))
+                Process.Start("notepad.exe", readmePath);
+            else
+                Process.Start("https://github.com/bbepis/KKManager");
         }
 
         private void installANewModToolStripMenuItem_Click(object sender, EventArgs e)
@@ -725,6 +729,20 @@ namespace KKManager.Windows
                 var lang = (CultureInfo)langItem.Tag;
                 langItem.Checked = lang.Equals(currentLang);
             }
+        }
+
+        private void licenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var licensePath = Path.Combine(Program.ProgramLocation, "LICENSE");
+            if (File.Exists(licensePath))
+                Process.Start("notepad.exe", licensePath);
+            else
+                Process.Start("https://github.com/bbepis/KKManager");
+        }
+
+        private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/bbepis/KKManager");
         }
     }
 }

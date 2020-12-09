@@ -203,9 +203,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Licence.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj">
       <Project>{495a9ea6-b13c-48f9-a2e2-6667cecebfde}</Project>
       <Name>PortableSettingsProvider</Name>
