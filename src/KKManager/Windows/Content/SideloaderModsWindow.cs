@@ -23,8 +23,6 @@ namespace KKManager.Windows.Content
 
         public SideloaderModsWindow()
         {
-            Utils.WindowLanguageHelper.SetCurrentCulture();
-
             InitializeComponent();
             _listView = new TypedObjectListView<SideloaderModInfo>(objectListView1);
 

@@ -1,113 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Properties;
+using KKManager.Util;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Utils
 {
     public static class WindowLanguageHelper
     {
+        private static IEnumerable<CultureInfo> _supportedLanguages;
+        public static IEnumerable<CultureInfo> SupportedLanguages => _supportedLanguages ?? (_supportedLanguages = GetSupportedLanguages());
 
-        private static Dictionary<string, string> Languages = new Dictionary<string, string>()
+        private static IEnumerable<CultureInfo> GetSupportedLanguages()
         {
-            { "English",                "en" },
-            { "Japanese",               "ja" },
-            { "SChinese(简体中文)",     "zh-Hans" },
-            { "TChinese(繁体中文)",     "zh-Hant" },
-            { "Russian",                "ru" },
-            { "German",                 "de" },
-            { "French",                 "fr" },
-        };
+            // Check what translations are available in program dir
+            var translationDirectories = new DirectoryInfo(Program.ProgramLocation).GetDirectories()
+                .Where(x =>
+                {
+                    if (x.Name.Length < 2)
+                        return false;
+                    try
+                    {
+                        return x.GetFiles("KKManager.resources.dll", SearchOption.TopDirectoryOnly).Any();
+                    }
+                    catch (SystemException e)
+                    {
+                        Console.WriteLine(e);
+                        return false;
+                    }
+                })
+                .Select(x => x.Name.Substring(0, 2).ToLower())
+                .ToList();
 
-        public static string GetLanguageCode(string languageName)
-        {
-            if (Languages.ContainsKey(languageName.Trim()))
+            var supportedCultures = new[]
             {
-                return Languages[languageName.Trim()];
+                "en-US",
+                "en-GB",
+                "zh-Hans",
+                "zh-Hant",
+            }.Attempt(CultureInfo.GetCultureInfo).ToList();
+
+            //Debug.Assert(translationDirectories.All(x => supportedCultures.Select(c => c.Name.Substring(0, 2)).Any(z => z.Equals(x, StringComparison.OrdinalIgnoreCase))),
+            //    "Translation is not added to supported cultures - " + translationDirectories.FirstOrDefault(x => !supportedCultures.Select(c => c.Name.Substring(0, 2)).Contains(x, StringComparison.OrdinalIgnoreCase)));
+
+            return supportedCultures.Where(x =>
+            {
+                var code = x.Name.Substring(0, 2).ToLower();
+                return code.Equals("en", StringComparison.Ordinal) || translationDirectories.Contains(code);
+            }).OrderBy(x => x.DisplayName).ToList().AsEnumerable();
+        }
+
+        public static CultureInfo CurrentCulture
+        {
+            get
+            {
+                return SupportedLanguages.FirstOrDefault(x => x.Name == Settings.Default.Language) ?? CultureInfo.GetCultureInfo("en-US");
             }
-            return null;
-        }
-
-        public static void SetCurrentCulture()
-        {
-            SetCurrentCulture(Settings.Default.Language);
-        }
-
-        public static void SetCurrentCulture(string languageName)
-        {
-            var lang = GetLanguageCode(languageName);
-            if (lang != null)
+            set
             {
-                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(lang);
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(lang);
-            }
-        }
-
-            /// <summary>
-            /// Set Window Language
-            /// </summary>
-            /// <param name="lang">language:zh-CN, en-US</param>
-            /// <param name="form"></param>
-        public static void SetLang(string lang, Form form)
-        {
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(lang);
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(lang);
-            if (form != null)
-            {
-                System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(form.GetType());
-                resources.ApplyResources(form, "$this");
-                AppLang(form, resources);
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                Settings.Default.Language = value.Name;
             }
         }
 
         /// <summary>
-        /// Set All Controls
+        /// Set Window Language
         /// </summary>
-        /// <param name="control"></param>
-        /// <param name="resources"></param>
-        private static void AppLang(Control control, System.ComponentModel.ComponentResourceManager resources)
+        public static void ApplyCurrentCulture(Form form)
         {
-            if (control is MenuStrip)
+            if (form == null) throw new ArgumentNullException(nameof(form));
+            var resources = new System.ComponentModel.ComponentResourceManager(form.GetType());
+            resources.ApplyResources(form, "$this");
+            ApplyCurrentCulture(form, resources);
+        }
+
+        private static void ApplyCurrentCulture(Control control, System.ComponentModel.ComponentResourceManager resources)
+        {
+            if (control is MenuStrip ms)
             {
-                resources.ApplyResources(control, control.Name);
-                MenuStrip ms = (MenuStrip)control;
+                resources.ApplyResources(control, ms.Name);
                 if (ms.Items.Count > 0)
                 {
                     foreach (ToolStripMenuItem c in ms.Items)
                     {
-                        AppLang(c, resources);
+                        ApplyCurrentCulture(c, resources);
                     }
+                }
+            }
+
+            if (control is DockPanel dockPanel)
+            {
+                foreach (var dpContent in dockPanel.Contents.OfType<Form>().Concat(dockPanel.FloatWindows))
+                {
+                    ApplyCurrentCulture(dpContent);
                 }
             }
 
             foreach (Control c in control.Controls)
             {
                 resources.ApplyResources(c, c.Name);
-                AppLang(c, resources);
+                ApplyCurrentCulture(c, resources);
             }
         }
-        /// <summary>
-        /// Set All Menus
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="resources"></param>
-        private static void AppLang(ToolStripMenuItem item, System.ComponentModel.ComponentResourceManager resources)
+
+        private static void ApplyCurrentCulture(ToolStripMenuItem item, System.ComponentModel.ComponentResourceManager resources)
         {
-            if (item is ToolStripMenuItem)
+            resources.ApplyResources(item, item.Name);
+            if (item.DropDownItems.Count > 0)
             {
-                resources.ApplyResources(item, item.Name);
-                ToolStripMenuItem tsmi = (ToolStripMenuItem)item;
-                if (tsmi.DropDownItems.Count > 0)
+                foreach (var c in item.DropDownItems)
                 {
-                    foreach (var c in tsmi.DropDownItems)
+                    if (c is ToolStripMenuItem menuItem)
                     {
-                        if (tsmi is ToolStripMenuItem)
-                        {
-                            AppLang(c as ToolStripMenuItem, resources);
-                        }
+                        ApplyCurrentCulture(menuItem, resources);
                     }
                 }
             }

@@ -36,7 +36,6 @@ namespace KKManager.Windows.Content
             using (var gr = Graphics.FromImage(_emptyImage))
                 gr.Clear(Color.FromKnownColor(KnownColor.Transparent));
 
-            Utils.WindowLanguageHelper.SetCurrentCulture();
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
 

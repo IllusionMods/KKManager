@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -20,6 +21,7 @@ using KKManager.Updater;
 using KKManager.Updater.Sources;
 using KKManager.Updater.Windows;
 using KKManager.Util;
+using KKManager.Utils;
 using KKManager.Windows.Content;
 using KKManager.Windows.ToolWindows;
 using KKManager.Windows.ToolWindows.Properties;
@@ -37,6 +39,10 @@ namespace KKManager.Windows
         public MainWindow()
         {
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+
+            var currentCulture = WindowLanguageHelper.CurrentCulture;
+            Thread.CurrentThread.CurrentCulture = currentCulture;
+            Thread.CurrentThread.CurrentUICulture = currentCulture;
 
             Program.MainSynchronizationContext = SynchronizationContext.Current;
 
@@ -144,7 +150,7 @@ namespace KKManager.Windows
                 Title = "Select the install directory of your game"
             })
             {
-            retryFolderSelect:
+                retryFolderSelect:
                 if (fb.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     var path = fb.FileName;
@@ -509,8 +515,6 @@ namespace KKManager.Windows
         {
             if (Settings.Default.AutoUpdateSearch)
                 await CheckForUpdates();
-
-            SetLanguage(Settings.Default.Language);
         }
 
         private async Task CheckForUpdates()
@@ -693,61 +697,39 @@ namespace KKManager.Windows
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        #region Languages
-
-        private void LanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void settingsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            var languageName = sender.ToString().Trim();
-            SetLanguage(languageName);
-        }
-
-        private void SetLanguage(string languageName)
-        {
-            if (SetLanguage(languageName, this))
+            // Populate language dropdown during first run
+            if (languagesToolStripMenuItem.DropDownItems.Count == 0)
             {
-                RefreshLanguagesMenuItem(languageName);
+                var spaceWidth = TextRenderer.MeasureText(" ", Font, Size).Width;
+                ToolStripMenuItem CreateLanguageToggle(CultureInfo x)
+                {
+                    var textWidth = TextRenderer.MeasureText(x.NativeName, Font, Size).Width;
+                    return new ToolStripMenuItem(
+                            $"{x.NativeName.PadRight(50 - textWidth / spaceWidth)} {x.EnglishName}",
+                            null,
+                            (obj, args) =>
+                            {
+                                WindowLanguageHelper.CurrentCulture = (CultureInfo)((ToolStripMenuItem)obj).Tag;
+                                WindowLanguageHelper.ApplyCurrentCulture(this);
+                                MessageBox.Show(
+                                    "You might need to restart KKManager to fully change the laguage.",
+                                    "Language change", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            })
+                    { Tag = x };
+                }
+
+                languagesToolStripMenuItem.DropDownItems.AddRange(WindowLanguageHelper.SupportedLanguages.Select(CreateLanguageToggle).ToArray());
+            }
+
+            // Select current language in the language dropdown
+            var currentLang = WindowLanguageHelper.CurrentCulture;
+            foreach (ToolStripMenuItem langItem in languagesToolStripMenuItem.DropDownItems)
+            {
+                var lang = (CultureInfo)langItem.Tag;
+                langItem.Checked = lang.Equals(currentLang);
             }
         }
-
-        private bool SetLanguage(string languageName, Form form)
-        {
-            if (string.IsNullOrWhiteSpace(languageName)) return false;
-            var language = languageName.Trim();
-            var languageCode = Utils.WindowLanguageHelper.GetLanguageCode(language);
-            if (languageCode != null)
-            {
-                SetLanguageCode(languageCode, form);
-                Settings.Default.Language = language;
-                return true;
-            }
-            return false;
-        }
-
-        private void SetLanguageCode(string languageCode, Form form)
-        {
-            Utils.WindowLanguageHelper.SetLang(languageCode, form);
-        }
-
-        private void RefreshLanguagesMenuItem(string languageName)
-        {
-            var languages = new Dictionary<ToolStripMenuItem, string>()
-            {
-                { LanguageEnglishToolStripMenuItem,     "en" },
-                { LanguageJapaneseToolStripMenuItem,    "ja" },
-                { LanguageSChineseToolStripMenuItem,    "zh-Hans" },
-                { LanguageTChineseToolStripMenuItem,    "zh-Hant" },
-                { LanguageRussianToolStripMenuItem,     "ru" },
-                { LanguageGermanToolStripMenuItem,      "de" },
-                { LanguageFrenchToolStripMenuItem,      "fr" },
-            };
-
-            foreach (var item in languages.Keys)
-            {
-                item.Checked = (item.Text.Trim() == languageName);
-            }
-        }
-
-        #endregion
-
     }
 }
