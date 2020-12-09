@@ -27,7 +27,7 @@ namespace KKManager.Functions
             try
             {
                 var latestVersion = await CheckLatestVersion();
-                if (latestVersion > new Version(Constants.Version))
+                if (latestVersion > new Version(Constants.Version.TrimEnd('*', '.')))
                 {
                     Console.WriteLine("[SelfUpdater] A new KKManager version is available: " + latestVersion);
                     return true;
