@@ -63,6 +63,14 @@ namespace KKManager.Windows
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
             Settings.Default.Binder.SendUpdates(this);
+
+            if (Settings.Default.WindowLocation != new Point(-1, -1))
+            {
+                StartPosition = FormStartPosition.Manual;
+                Location = Settings.Default.WindowLocation;
+            }
+            if (!Settings.Default.WindowSize.IsEmpty) Size = Settings.Default.WindowSize;
+            if (Settings.Default.WindowMaximized) WindowState = FormWindowState.Maximized;
         }
 
         private static DirectoryInfo GetGameDirectory()
@@ -145,7 +153,7 @@ namespace KKManager.Windows
                 Title = "Select the install directory of your game"
             })
             {
-                retryFolderSelect:
+            retryFolderSelect:
                 if (fb.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     var path = fb.FileName;
@@ -329,6 +337,11 @@ namespace KKManager.Windows
                 dockPanel.SaveAsXml(s, Encoding.Unicode);
                 Settings.Default.DockState = Encoding.Unicode.GetString(s.ToArray());
             }
+
+            Settings.Default.WindowLocation = Location;
+            var maximized = WindowState == FormWindowState.Maximized;
+            Settings.Default.WindowMaximized = maximized;
+            if (!maximized) Settings.Default.WindowSize = Size;
         }
 
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)

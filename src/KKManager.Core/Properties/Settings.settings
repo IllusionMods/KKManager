@@ -14,5 +14,14 @@
     <Setting Name="Language" Provider="PortableSettingsProvider.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WindowSize" Provider="PortableSettingsProvider.PortableSettingsProvider" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="WindowLocation" Provider="PortableSettingsProvider.PortableSettingsProvider" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">-1, -1</Value>
+    </Setting>
+    <Setting Name="WindowMaximized" Provider="PortableSettingsProvider.PortableSettingsProvider" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
