@@ -149,5 +149,27 @@ namespace KKManager.Windows.Content
         {
             _cancellationTokenSource?.Cancel();
         }
+
+        private void toolStripButtonSameGuid_Click(object sender, EventArgs e)
+        {
+            const string SearchText = "Search...";
+            const string SameGuidText = "same:guid";
+
+            var searchString = toolStripTextBoxSearch.Text;
+            searchString = searchString.Replace(SearchText, "").Trim();
+
+            if (searchString.ToLower().Contains(SameGuidText))
+            {
+                searchString = searchString.ToLower().Replace(SameGuidText, "");
+                toolStripButtonSameGuid.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                searchString = searchString.ToLower().Replace(SameGuidText, "");
+                searchString = SameGuidText + " " + searchString;
+                toolStripButtonSameGuid.BackColor = Color.Green;
+            }
+            toolStripTextBoxSearch.Text = searchString;
+        }
     }
 }
