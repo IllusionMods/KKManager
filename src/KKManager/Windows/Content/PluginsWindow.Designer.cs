@@ -47,13 +47,14 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonSameGuid = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectListView1
             // 
-            resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnEnabled);
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnVersion);
@@ -72,11 +73,11 @@
             this.olvColumnFilename,
             this.olvColumnWebsite});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Name = "objectListView1";
-            this.objectListView1.OverlayText.Text = resources.GetString("resource.Text");
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
             this.objectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -90,9 +91,9 @@
             // 
             this.olvColumnEnabled.AspectName = "Enabled";
             this.olvColumnEnabled.CheckBoxes = true;
-            resources.ApplyResources(this.olvColumnEnabled, "olvColumnEnabled");
             this.olvColumnEnabled.MaximumWidth = 23;
             this.olvColumnEnabled.Searchable = false;
+            resources.ApplyResources(this.olvColumnEnabled, "olvColumnEnabled");
             // 
             // olvColumnName
             // 
@@ -122,13 +123,12 @@
             // olvColumnWebsite
             // 
             this.olvColumnWebsite.AspectName = "Website";
-            resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
             this.olvColumnWebsite.Hyperlink = true;
             this.olvColumnWebsite.MinimumWidth = 100;
+            resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
             // 
             // toolStrip1
             // 
-            resources.ApplyResources(this.toolStrip1, "toolStrip1");
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
@@ -139,65 +139,80 @@
             this.toolStripButtonDelete,
             this.toolStripSeparator3,
             this.toolStripButtonOpenDir,
+            this.toolStripSeparator4,
+            this.toolStripButtonSameGuid,
             this.toolStripTextBoxSearch});
+            resources.ApplyResources(this.toolStrip1, "toolStrip1");
             this.toolStrip1.Name = "toolStrip1";
             // 
             // toolStripButton1
             // 
-            resources.ApplyResources(this.toolStripButton1, "toolStripButton1");
             this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButton1, "toolStripButton1");
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripSeparator2
             // 
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
             // toolStripButtonEnable
             // 
-            resources.ApplyResources(this.toolStripButtonEnable, "toolStripButtonEnable");
             this.toolStripButtonEnable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonEnable, "toolStripButtonEnable");
             this.toolStripButtonEnable.Name = "toolStripButtonEnable";
             this.toolStripButtonEnable.Click += new System.EventHandler(this.toolStripButtonEnable_Click);
             // 
             // toolStripButtonDisable
             // 
-            resources.ApplyResources(this.toolStripButtonDisable, "toolStripButtonDisable");
             this.toolStripButtonDisable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonDisable, "toolStripButtonDisable");
             this.toolStripButtonDisable.Name = "toolStripButtonDisable";
             this.toolStripButtonDisable.Click += new System.EventHandler(this.toolStripButtonDisable_Click);
             // 
             // toolStripSeparator1
             // 
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             // 
             // toolStripButtonDelete
             // 
-            resources.ApplyResources(this.toolStripButtonDelete, "toolStripButtonDelete");
             this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonDelete, "toolStripButtonDelete");
             this.toolStripButtonDelete.Name = "toolStripButtonDelete";
             this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
             // toolStripSeparator3
             // 
-            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             // 
             // toolStripButtonOpenDir
             // 
-            resources.ApplyResources(this.toolStripButtonOpenDir, "toolStripButtonOpenDir");
             this.toolStripButtonOpenDir.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonOpenDir, "toolStripButtonOpenDir");
             this.toolStripButtonOpenDir.Name = "toolStripButtonOpenDir";
             this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
             // 
             // toolStripTextBoxSearch
             // 
-            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
+            // 
+            // toolStripButtonSameGuid
+            // 
+            this.toolStripButtonSameGuid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonSameGuid, "toolStripButtonSameGuid");
+            this.toolStripButtonSameGuid.Name = "toolStripButtonSameGuid";
+            this.toolStripButtonSameGuid.Click += new System.EventHandler(this.toolStripButtonSameGuid_Click);
             // 
             // PluginsWindow
             // 
@@ -235,5 +250,7 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxSearch;
         private BrightIdeasSoftware.OLVColumn olvColumnAuthor;
         private BrightIdeasSoftware.OLVColumn olvColumnWebsite;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSameGuid;
     }
 }

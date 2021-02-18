@@ -70,16 +70,16 @@ namespace KKManager.Util
                     PutSearchText();
             };
 
-            var textMatchFilter = new TextMatchFilter(listView);
-            textMatchFilter.StringComparison = StringComparison.OrdinalIgnoreCase;
-            listView.AdditionalFilter = textMatchFilter;
+            var matchFilter = new ModMatchFilter(listView);
+            matchFilter.StringComparison = StringComparison.OrdinalIgnoreCase;
+            listView.AdditionalFilter = matchFilter;
             listView.UseFiltering = true;
             searchBox.TextChanged += (sender, args) =>
             {
                 if (SearchStringIsEmpty())
-                    textMatchFilter.ContainsStrings = null;
+                    matchFilter.ContainsStrings = null;
                 else
-                    textMatchFilter.ContainsStrings = new[] { searchBox.Text.Trim() };
+                    matchFilter.ContainsStrings = new[] { searchBox.Text.Trim() };
                 listView.UpdateColumnFiltering();
             };
         }

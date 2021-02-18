@@ -191,5 +191,27 @@ namespace KKManager.Windows.Content
                 MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void toolStripButtonSameGuid_Click(object sender, EventArgs e)
+        {
+            const string SearchText = "Search...";
+            const string SameGuidText = "same:guid";
+
+            var searchString = toolStripTextBoxSearch.Text;
+            searchString = searchString.Replace(SearchText, "").Trim();
+
+            if (searchString.ToLower().Contains(SameGuidText))
+            {
+                searchString = searchString.ToLower().Replace(SameGuidText, "");
+                toolStripButtonSameGuid.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                searchString = searchString.ToLower().Replace(SameGuidText, "");
+                searchString = SameGuidText + " " + searchString;
+                toolStripButtonSameGuid.BackColor = Color.Green;
+            }
+            toolStripTextBoxSearch.Text = searchString;
+        }
     }
 }
