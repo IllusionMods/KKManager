@@ -126,11 +126,14 @@ namespace KKManager.Updater.Sources
 
         private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
+            // Delete old file if any exists so the download doesn't try to append to it. Append mode is needed for retrying downloads to resume instead of restarting
+            targetPath.Delete();
+
             await Connect(cancellationToken);
 
             await _client.DownloadFileAsync(
                 targetPath.FullName, sourceItem.FullName,
-                FtpLocalExists.Overwrite, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
+                FtpLocalExists.Append, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
                 cancellationToken);
         }
