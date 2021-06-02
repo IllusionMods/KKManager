@@ -542,5 +542,27 @@ namespace KKManager.Windows.Content
         {
             RenameCards.ShowDialog(this, _typedListView.SelectedObjects.ToArray());
         }
+
+        private void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            var selectedObjects = _typedListView.SelectedObjects;
+            if (!selectedObjects.Any()) return;
+
+            if (MessageBox.Show($"Are you sure you want to delete {selectedObjects.Count} card(s)? This cannot be undone.", "Delete cards", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
+            foreach (var selectedObject in selectedObjects)
+            {
+                try
+                {
+                    selectedObject.Location.Delete();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine($"Failed to delete card {selectedObject.Location?.Name} - " + exception);
+                }
+            }
+
+            RefreshList();
+        }
     }
 }

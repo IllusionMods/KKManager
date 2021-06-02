@@ -48,6 +48,8 @@ namespace KKManager.Windows.Content
             this.maleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
             this.detailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,7 +64,6 @@ namespace KKManager.Windows.Content
             // 
             // listView
             // 
-            resources.ApplyResources(this.listView, "listView");
             this.listView.AllColumns.Add(this.olvColumnName);
             this.listView.AllColumns.Add(this.olvColumnSex);
             this.listView.AllColumns.Add(this.olvColumnPersonality);
@@ -77,11 +78,11 @@ namespace KKManager.Windows.Content
             this.olvColumnExtended,
             this.olvColumnModDate,
             this.olvColumnFilename});
+            resources.ApplyResources(this.listView, "listView");
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
             this.listView.HideSelection = false;
             this.listView.Name = "listView";
-            this.listView.OverlayText.Text = resources.GetString("resource.Text");
             this.listView.ShowGroups = false;
             this.listView.ShowItemToolTips = true;
             this.listView.TileSize = new System.Drawing.Size(200, 200);
@@ -94,41 +95,40 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnName
             // 
-            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.MinimumWidth = 150;
+            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.UseFiltering = false;
             // 
             // olvColumnSex
             // 
-            resources.ApplyResources(this.olvColumnSex, "olvColumnSex");
             this.olvColumnSex.MinimumWidth = 35;
+            resources.ApplyResources(this.olvColumnSex, "olvColumnSex");
             // 
             // olvColumnPersonality
             // 
-            resources.ApplyResources(this.olvColumnPersonality, "olvColumnPersonality");
             this.olvColumnPersonality.MinimumWidth = 70;
+            resources.ApplyResources(this.olvColumnPersonality, "olvColumnPersonality");
             // 
             // olvColumnExtended
             // 
-            resources.ApplyResources(this.olvColumnExtended, "olvColumnExtended");
             this.olvColumnExtended.MinimumWidth = 40;
             this.olvColumnExtended.Searchable = false;
+            resources.ApplyResources(this.olvColumnExtended, "olvColumnExtended");
             // 
             // olvColumnModDate
             // 
-            resources.ApplyResources(this.olvColumnModDate, "olvColumnModDate");
             this.olvColumnModDate.MinimumWidth = 60;
+            resources.ApplyResources(this.olvColumnModDate, "olvColumnModDate");
             this.olvColumnModDate.UseFiltering = false;
             // 
             // olvColumnFilename
             // 
-            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.MinimumWidth = 60;
+            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.UseFiltering = false;
             // 
             // toolStrip
             // 
-            resources.ApplyResources(this.toolStrip, "toolStrip");
             this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addressBar,
@@ -137,86 +137,101 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator3,
             this.toolStripOpenDropdown,
             this.toolStripSeparator1,
+            this.toolStripButtonDelete,
+            this.toolStripSeparator4,
             this.toolStripViewSelect,
             this.toolStripDropDownButtonTools,
             this.toolStripTextBoxSearch});
+            resources.ApplyResources(this.toolStrip, "toolStrip");
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Resize += new System.EventHandler(this.OnResizeToolstip);
             // 
             // addressBar
             // 
-            resources.ApplyResources(this.addressBar, "addressBar");
             this.addressBar.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.addressBar.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            resources.ApplyResources(this.addressBar, "addressBar");
             this.addressBar.Name = "addressBar";
             this.addressBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.addressBar_KeyDown);
             // 
             // toolStripButtonGo
             // 
-            resources.ApplyResources(this.toolStripButtonGo, "toolStripButtonGo");
             this.toolStripButtonGo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonGo, "toolStripButtonGo");
             this.toolStripButtonGo.Name = "toolStripButtonGo";
             this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // toolStripButtonRefresh
             // 
-            resources.ApplyResources(this.toolStripButtonRefresh, "toolStripButtonRefresh");
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonRefresh, "toolStripButtonRefresh");
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
             // toolStripSeparator3
             // 
-            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             this.toolStripSeparator3.Name = "toolStripSeparator3";
+            resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
             // 
             // toolStripOpenDropdown
             // 
-            resources.ApplyResources(this.toolStripOpenDropdown, "toolStripOpenDropdown");
             this.toolStripOpenDropdown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripOpenDropdown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.femaleCardFolderToolStripMenuItem,
             this.maleCardFolderToolStripMenuItem,
             this.toolStripSeparator2});
+            resources.ApplyResources(this.toolStripOpenDropdown, "toolStripOpenDropdown");
             this.toolStripOpenDropdown.Name = "toolStripOpenDropdown";
             this.toolStripOpenDropdown.ButtonClick += new System.EventHandler(this.ShowOpenFolderDialog);
             // 
             // femaleCardFolderToolStripMenuItem
             // 
-            resources.ApplyResources(this.femaleCardFolderToolStripMenuItem, "femaleCardFolderToolStripMenuItem");
             this.femaleCardFolderToolStripMenuItem.Name = "femaleCardFolderToolStripMenuItem";
+            resources.ApplyResources(this.femaleCardFolderToolStripMenuItem, "femaleCardFolderToolStripMenuItem");
             this.femaleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.femaleCardFolderToolStripMenuItem_Click);
             // 
             // maleCardFolderToolStripMenuItem
             // 
-            resources.ApplyResources(this.maleCardFolderToolStripMenuItem, "maleCardFolderToolStripMenuItem");
             this.maleCardFolderToolStripMenuItem.Name = "maleCardFolderToolStripMenuItem";
+            resources.ApplyResources(this.maleCardFolderToolStripMenuItem, "maleCardFolderToolStripMenuItem");
             this.maleCardFolderToolStripMenuItem.Click += new System.EventHandler(this.maleCardFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
             // toolStripSeparator1
             // 
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             this.toolStripSeparator1.Name = "toolStripSeparator1";
+            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
+            // 
+            // toolStripButtonDelete
+            // 
+            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.toolStripButtonDelete, "toolStripButtonDelete");
+            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
             // 
             // toolStripViewSelect
             // 
-            resources.ApplyResources(this.toolStripViewSelect, "toolStripViewSelect");
             this.toolStripViewSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripViewSelect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.detailsToolStripMenuItem,
             this.smallIconsToolStripMenuItem,
             this.largeIconsToolStripMenuItem});
+            resources.ApplyResources(this.toolStripViewSelect, "toolStripViewSelect");
             this.toolStripViewSelect.Name = "toolStripViewSelect";
             // 
             // detailsToolStripMenuItem
             // 
-            resources.ApplyResources(this.detailsToolStripMenuItem, "detailsToolStripMenuItem");
             this.detailsToolStripMenuItem.Name = "detailsToolStripMenuItem";
+            resources.ApplyResources(this.detailsToolStripMenuItem, "detailsToolStripMenuItem");
             this.detailsToolStripMenuItem.Click += new System.EventHandler(this.Details);
             // 
             // smallIconsToolStripMenuItem
@@ -227,23 +242,23 @@ namespace KKManager.Windows.Content
             // 
             // largeIconsToolStripMenuItem
             // 
-            resources.ApplyResources(this.largeIconsToolStripMenuItem, "largeIconsToolStripMenuItem");
             this.largeIconsToolStripMenuItem.Name = "largeIconsToolStripMenuItem";
+            resources.ApplyResources(this.largeIconsToolStripMenuItem, "largeIconsToolStripMenuItem");
             this.largeIconsToolStripMenuItem.Click += new System.EventHandler(this.LargeIcons);
             // 
             // toolStripDropDownButtonTools
             // 
-            resources.ApplyResources(this.toolStripDropDownButtonTools, "toolStripDropDownButtonTools");
             this.toolStripDropDownButtonTools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.segregateBySexToolStripMenuItem,
             this.renameCardsToolStripMenuItem});
+            resources.ApplyResources(this.toolStripDropDownButtonTools, "toolStripDropDownButtonTools");
             this.toolStripDropDownButtonTools.Name = "toolStripDropDownButtonTools";
             // 
             // segregateBySexToolStripMenuItem
             // 
-            resources.ApplyResources(this.segregateBySexToolStripMenuItem, "segregateBySexToolStripMenuItem");
             this.segregateBySexToolStripMenuItem.Name = "segregateBySexToolStripMenuItem";
+            resources.ApplyResources(this.segregateBySexToolStripMenuItem, "segregateBySexToolStripMenuItem");
             this.segregateBySexToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonSegregate_Click);
             // 
             // renameCardsToolStripMenuItem
@@ -254,8 +269,8 @@ namespace KKManager.Windows.Content
             // 
             // toolStripTextBoxSearch
             // 
-            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
@@ -303,6 +318,8 @@ namespace KKManager.Windows.Content
         private ToolStripMenuItem segregateBySexToolStripMenuItem;
         private ToolStripMenuItem renameCardsToolStripMenuItem;
         private ToolStripTextBox toolStripTextBoxSearch;
+        private ToolStripButton toolStripButtonDelete;
+        private ToolStripSeparator toolStripSeparator4;
     }
 }
 
