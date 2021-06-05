@@ -155,6 +155,15 @@
   <data name="olvColumnFilename.Width" type="System.Int32, mscorlib">
     <value>91</value>
   </data>
+  <data name="olvColumnPath.DisplayIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="olvColumnPath.Text" xml:space="preserve">
+    <value>File path</value>
+  </data>
+  <data name="olvColumnPath.Width" type="System.Int32, mscorlib">
+    <value>200</value>
+  </data>
   <data name="olvColumnWebsite.Text" xml:space="preserve">
     <value>Website</value>
   </data>
@@ -166,13 +175,10 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="objectListView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 27</value>
-  </data>
-  <data name="objectListView1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 3, 4, 3</value>
+    <value>0, 25</value>
   </data>
   <data name="objectListView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1188, 633</value>
+    <value>891, 547</value>
   </data>
   <data name="objectListView1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -195,7 +201,7 @@
   <data name="toolStripButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
         YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
         0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
         bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
@@ -211,18 +217,18 @@
     <value>Magenta</value>
   </data>
   <data name="toolStripButton1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>68, 24</value>
+    <value>50, 22</value>
   </data>
   <data name="toolStripButton1.Text" xml:space="preserve">
     <value>Refresh</value>
   </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 27</value>
+    <value>6, 25</value>
   </data>
   <data name="toolStripButtonEnable.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
         YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
         0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
         bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
@@ -238,7 +244,7 @@
     <value>Magenta</value>
   </data>
   <data name="toolStripButtonEnable.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 24</value>
+    <value>46, 22</value>
   </data>
   <data name="toolStripButtonEnable.Text" xml:space="preserve">
     <value>Enable</value>
@@ -246,7 +252,7 @@
   <data name="toolStripButtonDisable.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
         YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
         0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
         bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
@@ -262,18 +268,18 @@
     <value>Magenta</value>
   </data>
   <data name="toolStripButtonDisable.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 24</value>
+    <value>49, 22</value>
   </data>
   <data name="toolStripButtonDisable.Text" xml:space="preserve">
     <value>Disable</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 27</value>
+    <value>6, 25</value>
   </data>
   <data name="toolStripButtonDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
         YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
         0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
         bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
@@ -289,31 +295,31 @@
     <value>Magenta</value>
   </data>
   <data name="toolStripButtonDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 24</value>
+    <value>44, 22</value>
   </data>
   <data name="toolStripButtonDelete.Text" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 27</value>
+    <value>6, 25</value>
   </data>
   <data name="toolStripButtonOpenModsDir.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
   </data>
   <data name="toolStripButtonOpenModsDir.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 24</value>
+    <value>123, 22</value>
   </data>
   <data name="toolStripButtonOpenModsDir.Text" xml:space="preserve">
     <value>Open mods directory</value>
   </data>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 27</value>
+    <value>6, 25</value>
   </data>
   <data name="toolStripButtonSameGuid.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
   </data>
   <data name="toolStripButtonSameGuid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 24</value>
+    <value>100, 22</value>
   </data>
   <data name="toolStripButtonSameGuid.Text" xml:space="preserve">
     <value>Show Same Guid</value>
@@ -322,13 +328,13 @@
     <value>Segoe UI, 9pt</value>
   </data>
   <data name="toolStripTextBoxSearch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 27</value>
+    <value>100, 25</value>
   </data>
   <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="toolStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1188, 27</value>
+    <value>891, 25</value>
   </data>
   <data name="toolStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -352,13 +358,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 15</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1188, 660</value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 3, 4, 3</value>
+    <value>891, 572</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Sideloader Mods</value>
@@ -397,6 +400,12 @@
     <value>olvColumnFilename</value>
   </data>
   <data name="&gt;&gt;olvColumnFilename.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnPath.Name" xml:space="preserve">
+    <value>olvColumnPath</value>
+  </data>
+  <data name="&gt;&gt;olvColumnPath.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;olvColumnWebsite.Name" xml:space="preserve">

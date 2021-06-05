@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using KKManager.Functions;
 
 namespace KKManager.Data
 {
@@ -28,6 +29,9 @@ namespace KKManager.Data
 
         [Browsable(false)]
         public string FileName => Location.Name;
+
+        [Browsable(false)]
+        public string RelativePath => Location.FullName.Substring(InstallDirectoryHelper.GameDirectory.FullName.Length);
 
         [Browsable(false)]
         public string FileNameWithoutExtension => Path.GetFileNameWithoutExtension(FileName);

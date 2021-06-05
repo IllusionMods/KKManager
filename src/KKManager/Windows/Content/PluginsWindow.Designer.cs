@@ -46,9 +46,10 @@
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenDir = new System.Windows.Forms.ToolStripButton();
-            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSameGuid = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +62,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumnAuthor);
             this.objectListView1.AllColumns.Add(this.olvColumnGuid);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
+            this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
             this.objectListView1.AllowColumnReorder = true;
             this.objectListView1.CellEditUseWholeCell = false;
@@ -195,13 +197,6 @@
             this.toolStripButtonOpenDir.Name = "toolStripButtonOpenDir";
             this.toolStripButtonOpenDir.Click += new System.EventHandler(this.toolStripButtonOpenDir_Click);
             // 
-            // toolStripTextBoxSearch
-            // 
-            this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
-            this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
-            this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -213,6 +208,19 @@
             resources.ApplyResources(this.toolStripButtonSameGuid, "toolStripButtonSameGuid");
             this.toolStripButtonSameGuid.Name = "toolStripButtonSameGuid";
             this.toolStripButtonSameGuid.Click += new System.EventHandler(this.toolStripButtonSameGuid_Click);
+            // 
+            // toolStripTextBoxSearch
+            // 
+            this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
+            this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
+            // 
+            // olvColumnPath
+            // 
+            this.olvColumnPath.AspectName = "RelativePath";
+            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
+            this.olvColumnPath.IsVisible = false;
             // 
             // PluginsWindow
             // 
@@ -252,5 +260,6 @@
         private BrightIdeasSoftware.OLVColumn olvColumnWebsite;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton toolStripButtonSameGuid;
+        private BrightIdeasSoftware.OLVColumn olvColumnPath;
     }
 }

@@ -38,6 +38,7 @@ namespace KKManager.Windows.Content
             this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnGuid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -63,6 +64,7 @@ namespace KKManager.Windows.Content
             this.objectListView1.AllColumns.Add(this.olvColumnAuthor);
             this.objectListView1.AllColumns.Add(this.olvColumnGuid);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
+            this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
             this.objectListView1.AllowColumnReorder = true;
             this.objectListView1.CellEditUseWholeCell = false;
@@ -127,6 +129,13 @@ namespace KKManager.Windows.Content
             this.olvColumnFilename.AspectName = "FileName";
             this.olvColumnFilename.MinimumWidth = 50;
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
+            // 
+            // olvColumnPath
+            // 
+            this.olvColumnPath.AspectName = "RelativePath";
+            this.olvColumnFilename.MinimumWidth = 50;
+            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
+            this.olvColumnPath.IsVisible = false;
             // 
             // olvColumnWebsite
             // 
@@ -260,5 +269,6 @@ namespace KKManager.Windows.Content
         private ToolStripTextBox toolStripTextBoxSearch;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton toolStripButtonSameGuid;
+        private BrightIdeasSoftware.OLVColumn olvColumnPath;
     }
 }
