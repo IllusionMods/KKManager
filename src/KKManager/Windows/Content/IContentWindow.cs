@@ -4,5 +4,6 @@
     {
         void RefreshList();
         void CancelRefreshing();
+        void DeserializeContent(string contentString);
     }
 }

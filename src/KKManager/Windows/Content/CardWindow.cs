@@ -97,28 +97,6 @@ namespace KKManager.Windows.Content
             }
         }
 
-        public static CardWindow TryLoadFromPersistString(string ps)
-        {
-            var parts = ps.Split(new[] { "|||" }, 3, StringSplitOptions.None);
-            if (parts.Length >= 2 && parts[1].Length > 0)
-            {
-                if (parts[0] == typeof(CardWindow).ToString())
-                {
-                    var cardWindow = new CardWindow();
-                    cardWindow.OpenCardDirectory(new DirectoryInfo(parts[1]));
-
-                    if (parts.Length >= 3)
-                    {
-                        try { cardWindow.listView.RestoreState(Convert.FromBase64String(parts[2])); }
-                        catch { }
-                    }
-
-                    return cardWindow;
-                }
-            }
-            return null;
-        }
-
         public bool TryOpenCardDirectory(string path)
         {
             try
@@ -130,6 +108,21 @@ namespace KKManager.Windows.Content
             {
                 ShowFailedToLoadDirError(ex);
                 return false;
+            }
+        }
+
+        public void DeserializeContent(string contentString)
+        {
+            var parts = contentString.Split(new[] { "|||" }, 2, StringSplitOptions.None);
+            if (parts.Length >= 1)
+            {
+                OpenCardDirectory(new DirectoryInfo(parts[0]));
+
+                if (parts.Length >= 2)
+                {
+                    try { listView.RestoreState(Convert.FromBase64String(parts[1])); }
+                    catch { }
+                }
             }
         }
 

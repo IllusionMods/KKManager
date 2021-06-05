@@ -318,14 +318,19 @@ namespace KKManager.Windows
 
         private static IDockContent DeserializeTab(string persistString)
         {
-            var cw = CardWindow.TryLoadFromPersistString(persistString);
-            if (cw != null) return cw;
+            var parts = persistString.Split(new[] { "|||" }, 2, StringSplitOptions.None);
 
-            var t = Type.GetType(persistString, false, true);
+            var t = Type.GetType(parts[0], false, true);
+
             if (t == null || !typeof(IDockContent).IsAssignableFrom(t))
                 throw new InvalidDataException(persistString + " points to an invalid type");
 
-            return (IDockContent)Activator.CreateInstance(t);
+            var content = (IDockContent)Activator.CreateInstance(t);
+
+            if (content is IContentWindow contentWindow)
+                contentWindow.DeserializeContent(parts.Length == 2 ? parts[1] : "");
+
+            return content;
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)

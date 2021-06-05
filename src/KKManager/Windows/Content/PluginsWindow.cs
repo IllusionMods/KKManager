@@ -37,6 +37,20 @@ namespace KKManager.Windows.Content
             ListTools.SetUpSearchBox(objectListView1, toolStripTextBoxSearch);
         }
 
+        public void DeserializeContent(string contentString)
+        {
+            if (!string.IsNullOrEmpty(contentString))
+            {
+                try { objectListView1.RestoreState(Convert.FromBase64String(contentString)); }
+                catch { }
+            }
+        }
+
+        protected override string GetPersistString()
+        {
+            return base.GetPersistString() + "|||" + Convert.ToBase64String(objectListView1.SaveState());
+        }
+
         public IEnumerable<PluginInfo> AllPlugins => _listView.Objects;
 
         private void ObjectListView1_FormatRow(object sender, FormatRowEventArgs e)
