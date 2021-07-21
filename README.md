@@ -1,10 +1,12 @@
 # KKManager
-Mod, plugin and card manager for Koikatu! and Koikatsu Party. It can:
-- Browse cards and scenes (supports drag and drop so you can drag cards into the game to load them).
+Mod, plugin and card manager for games by Illusion that use BepInEx. It can:
 - Browse installed zipmods and plugins, and view information about them.
 - Automatically find and install mod updates from the internet.
-- Fix some common issues with the game.
+- Browse cards and scenes (supports drag and drop so you can drag cards into the game to load them).
 - Install plugins and mods for you.
+- Fix some common issues with the game.
+
+You can see a list of supported games [here](https://github.com/IllusionMods/KKManager/blob/master/src/KKManager.Core/Functions/GameType.cs).
 
 While the app is already useful, it's still in beta. Expect some bugs and lacking features. You can report issues on [GitHub Issues page](https://github.com/bbepis/KKManager/issues), or on the [Koikatu! discord server](https://discord.gg/urDt8CK).
 
