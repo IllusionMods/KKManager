@@ -189,7 +189,8 @@ namespace KKManager.Windows
             var toAdd = new List<ToolStripItem>();
             var pluginPath = InstallDirectoryHelper.PluginPath.FullName;
             var allExes = InstallDirectoryHelper.GameDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
-            var filteredExes = allExes.Where(x => !x.Name.Equals("bepinex.patcher.exe", StringComparison.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
+            var exeBlacklist = new[] { "UnityCrashHandler64.exe", "bepinex.patcher.exe", "Unity3DCompressor.exe", "KKManager.exe", "StandaloneUpdater.exe" };
+            var filteredExes = allExes.Where(x => !exeBlacklist.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
 
             var first = true;
             foreach (var folder in filteredExes.GroupBy(x => x.DirectoryName, StringComparer.OrdinalIgnoreCase).OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
