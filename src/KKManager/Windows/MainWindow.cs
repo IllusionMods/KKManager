@@ -762,5 +762,28 @@ namespace KKManager.Windows
         {
             Process.Start("https://github.com/bbepis/KKManager");
         }
+
+        private void cleanUpDuplicateZipmodsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ZipmodTools.RemoveDuplicateZipmodsInDir(InstallDirectoryHelper.ModsPath, false);
+        }
+
+        private void cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var d = new CommonOpenFileDialog("Remove duplicate and broken zipmods")
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true,
+                EnsureFileExists = true
+            })
+            {
+                if (d.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    var rootDirectory = new DirectoryInfo(d.FileName);
+                    var simulate = MessageBox.Show("Do you want to actually remove files? Click No to only log which files would be removed but not actually remove anything.", "Cleanup zipmods", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No;
+                    ZipmodTools.RemoveDuplicateZipmodsInDir(rootDirectory, simulate);
+                }
+            }
+        }
     }
 }

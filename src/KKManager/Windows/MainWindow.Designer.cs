@@ -57,6 +57,7 @@ namespace KKManager.Windows
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,16 +68,17 @@ namespace KKManager.Windows
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.readmeAndSourceCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LanguagesToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -255,7 +257,8 @@ namespace KKManager.Windows
             // fixesToolStripMenuItem
             // 
             this.fixesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fixFileAndFolderPermissionsToolStripMenuItem});
+            this.fixFileAndFolderPermissionsToolStripMenuItem,
+            this.cleanUpDuplicateZipmodsToolStripMenuItem});
             this.fixesToolStripMenuItem.Name = "fixesToolStripMenuItem";
             resources.ApplyResources(this.fixesToolStripMenuItem, "fixesToolStripMenuItem");
             // 
@@ -264,6 +267,12 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem.Name = "fixFileAndFolderPermissionsToolStripMenuItem";
             resources.ApplyResources(this.fixFileAndFolderPermissionsToolStripMenuItem, "fixFileAndFolderPermissionsToolStripMenuItem");
             this.fixFileAndFolderPermissionsToolStripMenuItem.Click += new System.EventHandler(this.fixFileAndFolderPermissionsToolStripMenuItem_Click);
+            // 
+            // cleanUpDuplicateZipmodsToolStripMenuItem
+            // 
+            this.cleanUpDuplicateZipmodsToolStripMenuItem.Name = "cleanUpDuplicateZipmodsToolStripMenuItem";
+            resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
+            this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
             // compressGameFilesToolStripMenuItem
             // 
@@ -280,7 +289,8 @@ namespace KKManager.Windows
             // 
             this.developersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.generateContentsOfUpdatexmlToolStripMenuItem,
-            this.compressBundlesAndRandomizeCABsToolStripMenuItem});
+            this.compressBundlesAndRandomizeCABsToolStripMenuItem,
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem});
             this.developersToolStripMenuItem.Name = "developersToolStripMenuItem";
             resources.ApplyResources(this.developersToolStripMenuItem, "developersToolStripMenuItem");
             // 
@@ -334,17 +344,34 @@ namespace KKManager.Windows
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             resources.ApplyResources(this.helpToolStripMenuItem, "helpToolStripMenuItem");
             // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            resources.ApplyResources(this.checkForUpdatesToolStripMenuItem, "checkForUpdatesToolStripMenuItem");
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
+            // 
             // readmeAndSourceCodeToolStripMenuItem
             // 
             this.readmeAndSourceCodeToolStripMenuItem.Name = "readmeAndSourceCodeToolStripMenuItem";
             resources.ApplyResources(this.readmeAndSourceCodeToolStripMenuItem, "readmeAndSourceCodeToolStripMenuItem");
             this.readmeAndSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.readmeAndSourceCodeToolStripMenuItem_Click);
             // 
-            // checkForUpdatesToolStripMenuItem
+            // licenseToolStripMenuItem
             // 
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            resources.ApplyResources(this.checkForUpdatesToolStripMenuItem, "checkForUpdatesToolStripMenuItem");
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
+            resources.ApplyResources(this.licenseToolStripMenuItem, "licenseToolStripMenuItem");
+            this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click);
+            // 
+            // websiteToolStripMenuItem
+            // 
+            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
+            resources.ApplyResources(this.websiteToolStripMenuItem, "websiteToolStripMenuItem");
+            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -375,22 +402,11 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
             // 
-            // licenseToolStripMenuItem
+            // cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem
             // 
-            this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
-            resources.ApplyResources(this.licenseToolStripMenuItem, "licenseToolStripMenuItem");
-            this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
-            // 
-            // websiteToolStripMenuItem
-            // 
-            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            resources.ApplyResources(this.websiteToolStripMenuItem, "websiteToolStripMenuItem");
-            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Name = "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem";
+            resources.ApplyResources(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem, "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem");
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -461,5 +477,7 @@ namespace KKManager.Windows
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem licenseToolStripMenuItem;
         private ToolStripMenuItem websiteToolStripMenuItem;
+        private ToolStripMenuItem cleanUpDuplicateZipmodsToolStripMenuItem;
+        private ToolStripMenuItem cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem;
     }
 }
