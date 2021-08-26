@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using KKManager.Util;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows
