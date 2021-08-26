@@ -105,6 +105,10 @@
     <Compile Include="Data\Cards\AI\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\KKS\BlockHeader.cs" />
+    <Compile Include="Data\Cards\KKS\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\KKS\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\KKS\KoiSunCard.cs" />
     <Compile Include="Data\Cards\KK\BlockHeader.cs" />
     <Compile Include="Data\Cards\KK\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
@@ -210,5 +214,6 @@
       <Name>PortableSettingsProvider</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,6 +37,7 @@ namespace KKManager.Updater.Windows
                 case GameType.Koikatsu:
                 case GameType.KoikatsuSteam:
                 case GameType.EmotionCreators:
+                case GameType.KoikatsuSunshine:
                     pictureBox1.Image = Resources.chikajump;
                     break;
 
@@ -200,8 +201,8 @@ namespace KKManager.Updater.Windows
                     lastCompletedSize = _completedSize;
                     averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
                     var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
-                    var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds 
-                        ? "Unknown" 
+                    var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds
+                        ? "Unknown"
                         : TimeSpan.FromSeconds(etaSeconds).GetReadableTimespan();
 
                     labelPercent.Text =

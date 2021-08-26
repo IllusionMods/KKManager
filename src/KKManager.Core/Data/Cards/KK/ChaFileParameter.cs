@@ -12,7 +12,7 @@ namespace KKManager.Data.Cards.KK
     {
         [IgnoreMember] public static readonly string BlockName = "Parameter";
         [IgnoreMember] public static readonly Version CurrentVersion = new Version("0.0.5");
-
+        
         public ChaFileParameter()
         {
             version = (Version)CurrentVersion.Clone();
@@ -71,29 +71,10 @@ namespace KKManager.Data.Cards.KK
 
         public int kindness { get; set; }
 
-
         public void ComplementWithVersion()
         {
-            callType = -1;
-            if (version.CompareTo(new Version("0.0.1")) == -1)
-            {
-                awnser = new Awnser();
-            }
-            if (version.CompareTo(new Version("0.0.2")) == -1)
-            {
-                denial = new Denial();
-            }
-            if (version.CompareTo(new Version("0.0.3")) == -1)
-            {
-                attribute = new Attribute();
-            }
-            if (version.CompareTo(new Version("0.0.4")) == -1)
-            {
-                voiceRate = 0.5f;
-            }
             version = (Version)CurrentVersion.Clone();
         }
-
 
         [MessagePackObject(true)]
         [TypeConverter(typeof(ExpandableObjectConverter))]

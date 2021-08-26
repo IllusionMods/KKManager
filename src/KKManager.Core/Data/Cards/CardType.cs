@@ -7,6 +7,7 @@
         KoikatsuParty,
         KoikatsuPartySpecialPatch,
         EmotionCreators,
-        AiSyoujyo
+        AiSyoujyo,
+        KoikatsuSunshine
     }
 }

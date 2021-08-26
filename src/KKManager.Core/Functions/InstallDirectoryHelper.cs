@@ -72,7 +72,8 @@ namespace KKManager.Functions
                 new Tuple<string, GameType>("Koikatsu Party.exe", GameType.KoikatsuSteam),
                 new Tuple<string, GameType>("EmotionCreators.exe", GameType.EmotionCreators),
                 new Tuple<string, GameType>("PlayHome64bit.exe", GameType.PlayHome),
-                new Tuple<string, GameType>("HoneySelect2.exe", GameType.HoneySelect2)
+                new Tuple<string, GameType>("HoneySelect2.exe", GameType.HoneySelect2),
+                new Tuple<string, GameType>("KoikatsuSunshine.exe", GameType.KoikatsuSunshine)
             };
 
             GameType = gameCheck.FirstOrDefault(x => File.Exists(Path.Combine(path, x.Item1)))?.Item2 ?? GameType.Unknown;
@@ -144,6 +145,7 @@ namespace KKManager.Functions
                 case GameType.PlayHome: return "PlayHome";
                 case GameType.EmotionCreators: return "EmotionCreators";
                 case GameType.HoneySelect2: return "HoneySelect2";
+                case GameType.KoikatsuSunshine: return "KoikatsuSunshine";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
         }

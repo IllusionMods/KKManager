@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
 using KKManager.Data.Cards.KK;
+using KKManager.Data.Cards.KKS;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 
@@ -149,6 +150,10 @@ namespace KKManager.Data.Cards
                             card = AiCard.ParseAiChara(file, reader, gameType);
                             break;
 
+                        case CardType.KoikatsuSunshine:
+                            card = KoiSunCard.ParseKoiChara(file, reader, gameType);
+                            break;
+
                         case CardType.Unknown:
                             card = null;
                             break;
@@ -182,6 +187,8 @@ namespace KKManager.Data.Cards
                     return CardType.EmotionCreators;
                 case "【AIS_Chara】":
                     return CardType.AiSyoujyo;
+                case "【KoiKatuCharaSun】":
+                    return CardType.KoikatsuSunshine;
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;
