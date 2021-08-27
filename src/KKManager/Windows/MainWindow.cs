@@ -600,7 +600,7 @@ namespace KKManager.Windows
         private void compressGameFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(
-                    "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.",
+                    "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.\n\nWARNING: Backup your abdata folder before using this feature, especially in KoikatsuSunshine! Compressing some files might break them! If you encounter a file that breaks because of compression, please report this on KKManager github or on the Koikatsu discord server in the #mod-programming channel.",
                     "Compress files", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
                 var rootDirectory = InstallDirectoryHelper.GameDirectory;
