@@ -253,26 +253,26 @@
   <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
     <value>Fix file and folder permissions</value>
   </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 22</value>
-  </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Clean up duplicate zipmods</value>
-  </data>
   <data name="fixesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 22</value>
+    <value>221, 22</value>
   </data>
   <data name="fixesToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Fixes</value>
   </data>
   <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 22</value>
+    <value>221, 22</value>
   </data>
   <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Compress game files...</value>
+    <value>Compress game files</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clean up duplicate zipmods</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>190, 6</value>
+    <value>218, 6</value>
   </data>
   <data name="generateContentsOfUpdatexmlToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>291, 22</value>
@@ -293,7 +293,7 @@
     <value>Clean up duplicate and invalid zipmods...</value>
   </data>
   <data name="developersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 22</value>
+    <value>221, 22</value>
   </data>
   <data name="developersToolStripMenuItem.Text" xml:space="preserve">
     <value>Developers</value>
@@ -2269,12 +2269,6 @@
   <data name="&gt;&gt;fixFileAndFolderPermissionsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Name" xml:space="preserve">
-    <value>cleanUpDuplicateZipmodsToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;compressGameFilesToolStripMenuItem.Name" xml:space="preserve">
     <value>compressGameFilesToolStripMenuItem</value>
   </data>
@@ -2303,6 +2297,12 @@
     <value>compressBundlesAndRandomizeCABsToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;compressBundlesAndRandomizeCABsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Name" xml:space="preserve">
+    <value>cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;settingsToolStripMenuItem.Name" xml:space="preserve">
@@ -2383,10 +2383,10 @@
   <data name="&gt;&gt;toolStripStatusLabelStatus.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Name" xml:space="preserve">
-    <value>cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem</value>
+  <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Name" xml:space="preserve">
+    <value>cleanUpDuplicateZipmodsToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

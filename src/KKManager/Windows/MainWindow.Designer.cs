@@ -57,12 +57,12 @@ namespace KKManager.Windows
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateContentsOfUpdatexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressBundlesAndRandomizeCABsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,7 +78,7 @@ namespace KKManager.Windows
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -249,6 +249,7 @@ namespace KKManager.Windows
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fixesToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
+            this.cleanUpDuplicateZipmodsToolStripMenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -257,8 +258,7 @@ namespace KKManager.Windows
             // fixesToolStripMenuItem
             // 
             this.fixesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fixFileAndFolderPermissionsToolStripMenuItem,
-            this.cleanUpDuplicateZipmodsToolStripMenuItem});
+            this.fixFileAndFolderPermissionsToolStripMenuItem});
             this.fixesToolStripMenuItem.Name = "fixesToolStripMenuItem";
             resources.ApplyResources(this.fixesToolStripMenuItem, "fixesToolStripMenuItem");
             // 
@@ -267,12 +267,6 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem.Name = "fixFileAndFolderPermissionsToolStripMenuItem";
             resources.ApplyResources(this.fixFileAndFolderPermissionsToolStripMenuItem, "fixFileAndFolderPermissionsToolStripMenuItem");
             this.fixFileAndFolderPermissionsToolStripMenuItem.Click += new System.EventHandler(this.fixFileAndFolderPermissionsToolStripMenuItem_Click);
-            // 
-            // cleanUpDuplicateZipmodsToolStripMenuItem
-            // 
-            this.cleanUpDuplicateZipmodsToolStripMenuItem.Name = "cleanUpDuplicateZipmodsToolStripMenuItem";
-            resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
-            this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
             // compressGameFilesToolStripMenuItem
             // 
@@ -305,6 +299,12 @@ namespace KKManager.Windows
             this.compressBundlesAndRandomizeCABsToolStripMenuItem.Name = "compressBundlesAndRandomizeCABsToolStripMenuItem";
             resources.ApplyResources(this.compressBundlesAndRandomizeCABsToolStripMenuItem, "compressBundlesAndRandomizeCABsToolStripMenuItem");
             this.compressBundlesAndRandomizeCABsToolStripMenuItem.Click += new System.EventHandler(this.compressBundlesAndRandomizeCABsToolStripMenuItem_Click);
+            // 
+            // cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem
+            // 
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Name = "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem";
+            resources.ApplyResources(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem, "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem");
+            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -402,11 +402,11 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
             // 
-            // cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem
+            // cleanUpDuplicateZipmodsToolStripMenuItem
             // 
-            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Name = "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem";
-            resources.ApplyResources(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem, "cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem");
-            this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem_Click);
+            this.cleanUpDuplicateZipmodsToolStripMenuItem.Name = "cleanUpDuplicateZipmodsToolStripMenuItem";
+            resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
+            this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -477,7 +477,7 @@ namespace KKManager.Windows
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem licenseToolStripMenuItem;
         private ToolStripMenuItem websiteToolStripMenuItem;
-        private ToolStripMenuItem cleanUpDuplicateZipmodsToolStripMenuItem;
         private ToolStripMenuItem cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem;
+        private ToolStripMenuItem cleanUpDuplicateZipmodsToolStripMenuItem;
     }
 }
