@@ -112,11 +112,11 @@ namespace KKManager.Updater.Data
         /// </summary>
         public VersioningMode Versioning { get; set; }
 
+        public bool IsGameSupported(GameType gameType) => SupportedGames == null || SupportedGames.Count == 0 || SupportedGames.Contains(gameType);
+
         public bool CheckConditions()
         {
-            var supportsAny = SupportedGames == null || SupportedGames.Count == 0;
-            var isSupported = supportsAny || SupportedGames.Contains(InstallDirectoryHelper.GameType);
-            if (!isSupported) return false;
+            if (!IsGameSupported(InstallDirectoryHelper.GameType)) return false;
 
             foreach (var condition in Conditions)
             {
@@ -278,7 +278,7 @@ namespace KKManager.Updater.Data
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Updates
         {
-            public const int CurrentUpdateInfoVersion = 4;
+            public const int CurrentUpdateInfoVersion = 5;
 
             [XmlElement("UpdateInfo")]
             [TypeConverter(typeof(ListTypeConverter))]
