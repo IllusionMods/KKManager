@@ -130,6 +130,15 @@ namespace KKManager.Updater.Data
                         if (File.Exists(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, condition.Operand)))
                             return false;
                         break;
+                    case Condition.ConditionType.ClientFileContains:
+                        var split = condition.Operand.Split(new[] { '|' }, 2);
+                        if (split.Length != 2) break;
+                        var path = split[0].Trim();
+                        var value = split[1].Trim();
+                        var fullPath = Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, path);
+                        if (!File.Exists(fullPath) || !File.ReadAllText(fullPath).Contains(value))
+                            return false;
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -226,6 +235,7 @@ namespace KKManager.Updater.Data
             {
                 ClientFileExists,
                 ClientFileNotExists,
+                ClientFileContains
                 //todo FileContains - true if file exists and contains string - operand is path | str trimmed
             }
 
