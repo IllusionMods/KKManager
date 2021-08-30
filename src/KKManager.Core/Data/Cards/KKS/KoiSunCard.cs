@@ -111,7 +111,8 @@ namespace KKManager.Data.Cards.KKS
                 "Slangy",
                 "Sadistic",
                 "Emotionless",
-                "Perfectionist"
+                "Perfectionist",
+                "Island Girl"
             };
 
             if (personality < 0 || personality > 90) return "Invalid";
