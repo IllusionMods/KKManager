@@ -1,0 +1,646 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SB3UtilityPlugins</name>
+    </assembly>
+    <members>
+        <member name="F:SB3Utility.FormImageFiles.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormImageFiles.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormImageFiles.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormWorkspace.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormWorkspace.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormWorkspace.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.Plugins.ExportMqo(SB3Utility.xxParser,System.Object[],System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Exports the specified meshes to Metasequoia format.
+            </summary>
+            <param name="parser"><b>[DefaultVar]</b> The xxParser.</param>
+            <param name="meshNames"><b>(string[])</b> The names of the meshes to export.</param>
+            <param name="dirPath">The destination directory.</param>
+            <param name="singleMqo"><b>True</b> will export all meshes in a single file. <b>False</b> will export a file per mesh.</param>
+            <param name="worldCoords"><b>True</b> will transform vertices into world coordinates by multiplying them by their parent frames. <b>False</b> will keep their local coordinates.</param>
+            <param name="sortMeshes">exports meshes sorted in alphabetic order</param>
+        </member>
+        <member name="M:SB3Utility.Plugins.OpenPP(System.String)">
+            <summary>
+            Parses a .pp archive file from the specified path.
+            </summary>
+            <param name="path"><b>[DefaultVar]</b> Path of the file.</param>
+            <returns>A ppParser that represents the .pp archive.</returns>
+        </member>
+        <member name="M:SB3Utility.Plugins.OpenPP(System.String,System.Double)">
+            <summary>
+            Parses a .pp archive file from the specified path.
+            </summary>
+            <param name="path"><b>[DefaultVar]</b> Path of the file.</param>
+            <param name="format"><b>(int)</b> Index of the ppFormat array</param>
+            <returns>A ppParser that represents the .pp archive.</returns>
+        </member>
+        <member name="M:SB3Utility.Plugins.ExportSubfile(SB3Utility.ppParser,System.String,System.String)">
+            <summary>
+            Extracts a subfile with the specified name and writes it to the specified path.
+            </summary>
+            <param name="parser"><b>[DefaultVar]</b> The ppParser with the subfile.</param>
+            <param name="name">The name of the subfile.</param>
+            <param name="path">The destination path to write the subfile.</param>
+        </member>
+        <member name="F:SB3Utility.FormPPMultiRename.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPPMultiRename.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPPMultiRename.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormLST.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormLST.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormLST.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormPPSubfileChange.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPPSubfileChange.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPPSubfileChange.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormPPRegisterTool.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPPRegisterTool.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPPRegisterTool.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormToolOutput.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormToolOutput.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormToolOutput.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXADragDrop.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXADragDrop.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXADragDrop.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXXDragDrop.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXXDragDrop.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXXDragDrop.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormPP.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPP.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPP.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormPPSave.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPPSave.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPPSave.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXA.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXA.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXA.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXX.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXX.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXX.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXXConvert.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXXConvert.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXXConvert.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXXNormals.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXXNormals.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXXNormals.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXXSnapBorders.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXXSnapBorders.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXXSnapBorders.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormPPRename.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormPPRename.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormPPRename.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="F:SB3Utility.FormXXEditHex.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SB3Utility.FormXXEditHex.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:SB3Utility.FormXXEditHex.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:SB3Utility.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:SB3Utility.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:SB3Utility.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="M:COLLADA.Conditioner.ConvexTriangulator(COLLADA.Document)">
+            <summary>This method will convert convex polygons to triangles
+            <para>A more advanced condionner would be required to handle convex, complex polygons</para>
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Asset">
+            <summary>
+            Represents the COLLADA &lt;asset&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Element">
+            <summary>
+            This is a base class shared by a lot of elements.
+            It contains the id, name and asset information that is contained by many COLLADA elements
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Extra">
+            <summary>
+            Represents the COLLADA "&lt;extra&gt;" element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Array`1">
+            <summary>
+            Represents the COLLADA &lt;xxx_array&gt; elements, including float_array, int_array, Name_array....
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Param">
+            <summary>
+            Represents the COLLADA &lt;param&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Annotate">
+            <summary>
+            Represents the COLLADA &lt;anotate&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Sampler2D">
+            <summary>
+            Represents the COLLADA &lt;samppler2D&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Sampler1D">
+            <summary>
+            Represents the COLLADA &lt;samppler1D&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Sampler3D">
+            <summary>
+            Represents the COLLADA &lt;samppler3D&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Surface">
+            <summary>
+            Represents the COLLADA &lt;surface&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.NewParam">
+            <summary>
+            Represents the COLLADA &lt;new_param&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Accessor">
+            <summary>
+            Represents the COLLADA &lt;accessor&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Source">
+            <summary>
+            Represents the COLLADA &lt;source&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Input">
+            <summary>
+            Represents the COLLADA &lt;input&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Vertices">
+            <summary>
+            Represents the COLLADA &lt;vertices&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Locator">
+            <summary>
+            Locator is used to store all the URI values one can find in a COLLADA document
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Color">
+            <summary>
+            Represents the COLLADA &lt;color&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Constant">
+            <summary>
+            Represents a COMMON profile constant shader.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Lambert">
+            <summary>
+            Represents a COMMON profile Lambert shader.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Phong">
+            <summary>
+            Represents a COMMON profile Phong shader.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Blinn">
+            <summary>
+            Represents a COMMON profile Blinn shader.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.ProfileCOMMON">
+            <summary>
+            Represents the COLLADA &lt;profile_COMMON&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Effect">
+            <summary>
+            Represents the COLLADA &lt;effect&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Material">
+            <summary>
+            Represents the COLLADA &lt;material&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Primitive">
+            <summary>
+            base class used to represent all the COLLADA primitives (triangles, lines, polygons...
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Triangle">
+            <summary>
+            Represents the COLLADA &lt;triangle&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Line">
+            <summary>
+            Represents the COLLADA &lt;line&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Polylist">
+            <summary>
+            Represents the COLLADA &lt;polylist&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Mesh">
+            <summary>
+            Represents the COLLADA &lt;mesh&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.TransformNode">
+            <summary>
+            Base class to represent all the possible transforms in COLLADA.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Lookat">
+            <summary>
+            Represents the COLLADA &lt;lookat&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Matrix">
+            <summary>
+            Represents the COLLADA &lt;lmatrix&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Rotate">
+            <summary>
+            Represents the COLLADA &lt;rotate&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Scale">
+            <summary>
+            Represents the COLLADA &lt;scale&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Translate">
+            <summary>
+            Represents the COLLADA &lt;translate&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Skew">
+            <summary>
+            Represents the COLLADA &lt;skew&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Instance">
+            <summary>
+            Base class to represent COLLADA instances.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceCamera">
+            <summary>
+            Represents the COLLADA &lt;instance_camera&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceController">
+            <summary>
+            Represents the COLLADA &lt;instance_controler&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceMaterial">
+            <summary>
+            Represents the COLLADA &lt;instance_material&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.BindMaterial">
+            <summary>
+            Represents the COLLADA &lt;bind_material&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceGeometry">
+            <summary>
+            Represents the COLLADA &lt;instance_geometry&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceLight">
+            <summary>
+            Represents the COLLADA &lt;instance_light&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceNode">
+            <summary>
+            Represents the COLLADA &lt;instance_node&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Node">
+            <summary>
+            Represents the COLLADA &lt;node&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.VisualScene">
+            <summary>
+            Represents the COLLADA &lt;visual_scene&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Morph">
+            <summary>
+            Represents the COLLADA &lt;morph&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Controller">
+            <summary>
+            Represents the COLLADA &lt;controller&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Geometry">
+            <summary>
+            Represents the COLLADA &lt;geometry&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Image">
+            <summary>
+            Represents the COLLADA &lt;image&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.InstanceScene">
+            <summary>
+            Represents the COLLADA &lt;instance_scene&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Animation">
+            <summary>
+            Represents the COLLADA &lt;animation&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Sampler">
+            <summary>
+            Represents the COLLADA &lt;sampler&gt; element.
+            </summary>
+        </member>
+        <member name="T:COLLADA.Document.Channel">
+            <summary>
+            Represents the COLLADA &lt;channel&gt; element.
+            </summary>
+        </member>
+        <member name="M:COLLADA.Document.#ctor(System.String)">
+            <summary>
+            Loads a COLLADA document from a file. Returns a Document object.
+            </summary>
+            <param name="name"> is the name of the file to be loaded </param>
+        </member>
+    </members>
+</doc>
