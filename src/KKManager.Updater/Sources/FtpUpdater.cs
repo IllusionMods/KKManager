@@ -133,7 +133,7 @@ namespace KKManager.Updater.Sources
 
             await _client.DownloadFileAsync(
                 targetPath.FullName, sourceItem.FullName,
-                FtpLocalExists.Append, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
+                FtpLocalExists.Resume, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
                 cancellationToken);
         }
