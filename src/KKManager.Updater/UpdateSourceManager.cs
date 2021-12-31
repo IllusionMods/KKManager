@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Data.Zipmods;
 using KKManager.Updater.Data;
 using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
@@ -46,7 +48,9 @@ namespace KKManager.Updater
             var results = new ConcurrentBag<UpdateTask>();
 
             var ignoreListPath = "ignorelist.txt";
-            var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath) : new string[0];
+            var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath).ToList() : new List<string>();
+            // Skip updating disabled mods
+            ignoreList.AddRange(SideloaderModLoader.Zipmods.ToEnumerable().Where(x => !x.Enabled).Select(x => x.Location.GetNameWithoutExtension()));
 
             var anySuccessful = false;
 
@@ -71,8 +75,9 @@ namespace KKManager.Updater
                                     !filterByGuids.Contains(task.Info.GUID))
                                     continue;
 
-                                task.Items.RemoveAll(x =>
-                                    x.UpToDate || (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)));
+                                task.Items.RemoveAll(x => x.UpToDate || 
+                                                          // Todo disable updating by default instead whenever that's done
+                                                          (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)) || (x.TargetPath != null && ignoreList.Any(x.TargetPath.GetNameWithoutExtension().Contains)));
                                 results.Add(task);
                             }
                         }

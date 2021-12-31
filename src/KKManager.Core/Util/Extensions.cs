@@ -95,5 +95,11 @@ namespace KKManager.Util
                 }
             }
         }
+
+        public static string GetNameWithoutExtension(this FileSystemInfo fsi)
+        {
+            if (fsi == null) throw new ArgumentNullException(nameof(fsi));
+            return Path.GetFileNameWithoutExtension(fsi.Name);
+        }
     }
 }

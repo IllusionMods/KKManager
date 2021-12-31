@@ -9,7 +9,7 @@ namespace KKManager.Data.Cards
 {
     public abstract class Card : IFileInfoBase
     {
-        public virtual string Name => Path.GetFileNameWithoutExtension(Location.Name);
+        public virtual string Name => Location.GetNameWithoutExtension();
         [DisplayName("Filename")]
         public FileInfo Location { get; }
         public CardType Type { get; }
