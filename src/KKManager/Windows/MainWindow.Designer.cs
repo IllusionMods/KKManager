@@ -79,6 +79,8 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -310,6 +312,8 @@ namespace KKManager.Windows
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkForUpdatesOnStartupToolStripMenuItem,
+            this.useSystemProxyServerToolStripMenuItem,
+            this.toolStripSeparator5,
             this.changeGameInstallDirectoryToolStripMenuItem,
             this.languagesToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
@@ -408,6 +412,16 @@ namespace KKManager.Windows
             resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
             this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
+            // useSystemProxyServerToolStripMenuItem
+            // 
+            this.useSystemProxyServerToolStripMenuItem.Name = "useSystemProxyServerToolStripMenuItem";
+            resources.ApplyResources(this.useSystemProxyServerToolStripMenuItem, "useSystemProxyServerToolStripMenuItem");
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -479,5 +493,7 @@ namespace KKManager.Windows
         private ToolStripMenuItem websiteToolStripMenuItem;
         private ToolStripMenuItem cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem;
         private ToolStripMenuItem cleanUpDuplicateZipmodsToolStripMenuItem;
+        private ToolStripMenuItem useSystemProxyServerToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }

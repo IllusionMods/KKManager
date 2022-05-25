@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
 using FluentFTP.Proxy;
+using KKManager.Properties;
 using KKManager.Updater.Data;
 using KKManager.Util;
 
@@ -29,7 +30,7 @@ namespace KKManager.Updater.Sources
                     credentials = new NetworkCredential(info[0], info[1]);
             }
 
-            if (!System.Net.WebRequest.DefaultWebProxy.IsBypassed(serverUri))
+            if (Settings.Default.UseProxy && !System.Net.WebRequest.DefaultWebProxy.IsBypassed(serverUri))
             {
                 var proxy = System.Net.WebRequest.DefaultWebProxy.GetProxy(serverUri);
                 _client = new FtpClientHttp11Proxy(new ProxyInfo { Host = proxy.Host, Port = proxy.Port });

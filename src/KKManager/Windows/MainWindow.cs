@@ -62,6 +62,7 @@ namespace KKManager.Windows
             Console.WriteLine($"Game: {gameName}   Path: {installDir}");
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
+            Settings.Default.Binder.BindControl(useSystemProxyServerToolStripMenuItem, settings => settings.UseProxy, this);
             Settings.Default.Binder.SendUpdates(this);
 
             if (Settings.Default.WindowLocation != new Point(-1, -1))
