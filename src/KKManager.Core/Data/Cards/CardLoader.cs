@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,11 +38,15 @@ namespace KKManager.Data.Cards
             }
             else
             {
-                void ReadCardsFromDir()
+                void ReadCardsFromDir(DirectoryInfo currPath)
                 {
                     try
                     {
-                        foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
+                        foreach (var folder in currPath.EnumerateDirectories())
+                        {
+                            ReadCardsFromDir(folder);
+                        }
+                        foreach (var file in currPath.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
                         {
                             if (cancellationToken.IsCancellationRequested) break;
                             try
@@ -58,15 +62,15 @@ namespace KKManager.Data.Cards
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to read cards from directory [{path.FullName}] with an error: {ex}");
+                        Console.WriteLine($"Failed to read cards from directory [{currPath.FullName}] with an error: {ex}");
                     }
-
-                    s.OnCompleted();
+                    if (currPath == path)
+                        s.OnCompleted();
                 }
 
                 try
                 {
-                    var readCardTask = Task.Run(ReadCardsFromDir, cancellationToken);
+                    var readCardTask = Task.Run(() => ReadCardsFromDir(path), cancellationToken);
 
                     Task.WhenAll(readCardTask,
                             SideloaderModLoader.Zipmods.ToTask(cancellationToken),
