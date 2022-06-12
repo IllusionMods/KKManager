@@ -65,7 +65,9 @@ namespace KKManager.Windows
             Settings.Default.Binder.BindControl(useSystemProxyServerToolStripMenuItem, settings => settings.UseProxy, this);
             Settings.Default.Binder.SendUpdates(this);
 
-            if (Settings.Default.WindowLocation != new Point(-1, -1))
+            // Before using the window location, check if isn't the default value and that it's actually visible on the screen
+            if (Settings.Default.WindowLocation != new Point(-1, -1) && 
+                Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(Settings.Default.WindowLocation, Settings.Default.WindowSize))))
             {
                 StartPosition = FormStartPosition.Manual;
                 Location = Settings.Default.WindowLocation;
