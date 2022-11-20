@@ -7,7 +7,7 @@ namespace KKManager.Data.Cards.RG
 {
     public class RoomGirlCard : Card
     {
-        public override string Name => Parameter == null ? base.Name : $"{Parameter.fullname}";
+        public override string Name => Parameter?.fullname ?? base.Name;
         public override CharaSex Sex => Parameter == null ? CharaSex.Unknown : Parameter.sex == 0 ? CharaSex.Male : CharaSex.Female;
         public override string PersonalityName => GetProfession(Parameter?.personality ?? -1);
         public string Birthday => $"{GetBirthMonth(Parameter.birthMonth)} {Parameter.birthDay}";
