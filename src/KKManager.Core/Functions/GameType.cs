@@ -10,6 +10,7 @@
         AiShoujo,
         AiShoujoSteam,
         HoneySelect2,
-        KoikatsuSunshine
+        KoikatsuSunshine,
+        RoomGirl
     }
 }

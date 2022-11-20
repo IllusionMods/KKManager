@@ -127,6 +127,9 @@
     <Compile Include="Data\Cards\AI\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\RG\BlockHeader.cs" />
+    <Compile Include="Data\Cards\RG\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\RG\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\KKS\BlockHeader.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileParameter.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Data\Cards\EC\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\AI\KoiCard.cs" />
     <Compile Include="Data\Cards\EC\EmoCard.cs" />
+    <Compile Include="Data\Cards\RG\RoomGirlCard.cs" />
     <Compile Include="Data\Cards\Utility.cs" />
     <Compile Include="Data\ExtData\ExtDataParser.cs" />
     <Compile Include="Data\ExtData\Deserializers\SideloaderExtDataDeserializer.cs" />
