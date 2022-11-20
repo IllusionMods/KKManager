@@ -13,6 +13,7 @@ using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
 using KKManager.Data.Cards.KK;
 using KKManager.Data.Cards.KKS;
+using KKManager.Data.Cards.RG;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 
@@ -154,6 +155,10 @@ namespace KKManager.Data.Cards
                             card = KoiSunCard.ParseKoiChara(file, reader, gameType);
                             break;
 
+                        case CardType.RoomGirl:
+                            card = RoomGirlCard.ParseRGChara(file, reader, gameType);
+                            break;
+
                         case CardType.Unknown:
                             card = null;
                             break;
@@ -189,6 +194,8 @@ namespace KKManager.Data.Cards
                     return CardType.AiSyoujyo;
                 case "【KoiKatuCharaSun】":
                     return CardType.KoikatsuSunshine;
+                case "【RG_Chara】":
+                    return CardType.RoomGirl;
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;

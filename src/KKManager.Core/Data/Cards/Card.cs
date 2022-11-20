@@ -13,7 +13,7 @@ namespace KKManager.Data.Cards
         [DisplayName("Filename")]
         public FileInfo Location { get; }
         public CardType Type { get; }
-
+        public string FileSize { get; }
         public abstract CharaSex Sex { get; }
         public abstract string PersonalityName { get; }
 
@@ -54,6 +54,9 @@ namespace KKManager.Data.Cards
             Location = cardFile ?? throw new ArgumentNullException(nameof(cardFile));
             Type = type;
             Extended = extended ?? new Dictionary<string, PluginData>();
+            
+     
+            FileSize = Util.FileSize.FromBytes(cardFile.Length).ToString();
         }
     }
 }

@@ -8,6 +8,7 @@
         KoikatsuPartySpecialPatch,
         EmotionCreators,
         AiSyoujyo,
-        KoikatsuSunshine
+        KoikatsuSunshine,
+        RoomGirl
     }
 }
