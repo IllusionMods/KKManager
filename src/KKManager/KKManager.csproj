@@ -99,6 +99,7 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
@@ -126,8 +127,11 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.3.0.6\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2015.3.1.0\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -150,6 +154,12 @@
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\Content\IContentWindow.cs" />
+    <Compile Include="Windows\Content\ModpackTool.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Content\ModpackTool.Designer.cs">
+      <DependentUpon>ModpackTool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Dialogs\PathSelectPopup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hant.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\ModpackTool.resx">
+      <DependentUpon>ModpackTool.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hans.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>

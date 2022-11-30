@@ -44,6 +44,7 @@ namespace KKManager.Windows
             Instance = this;
 
             InitializeComponent();
+            dockPanel.Theme = new VS2015LightTheme();
 
             InstallDirectoryHelper.Initialize(GetGameDirectory());
 
