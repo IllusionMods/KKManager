@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using BrightIdeasSoftware;
 
 namespace KKManager.ModpackTool
 {
@@ -16,24 +9,54 @@ namespace KKManager.ModpackTool
         {
             InitializeComponent();
 
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.IngestFolder), folderIngesttextBox, folderIngestOk);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.OutputFolder), folderOutputtextBox, folderOutputOk);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.TestGameFolder), folderTestGametextBox, folderTestGameOk);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.FailFolder), folderFailtextBox, folderFailOk);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.BackupFolder), folderBackuptextBox, folderBackupOk);
+            var configuration = ModpackToolConfiguration.Instance;
+            modpackToolConfigurationBindingSource.DataSource = configuration;
+            configuration.ContentsHandlingPoliciesChanged += (sender, args) => objectListView1.Objects = configuration.ContentsHandlingPolicies;
 
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game1Short), textBoxG1ID, labelG1ID);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game1Longs), textBoxG1Tag, labelG1Tag, DataSourceUpdateMode.OnValidation);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game2Short), textBoxG2ID, labelG2ID);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game2Longs), textBoxG2Tag, labelG2Tag, DataSourceUpdateMode.OnValidation);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game3Short), textBoxG3ID, labelG3ID);
-            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(CurrentConfiguration.Game3Longs), textBoxG3Tag, labelG3Tag, DataSourceUpdateMode.OnValidation);
-        }
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.IngestFolder), folderIngesttextBox, folderIngestOk);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.OutputFolder), folderOutputtextBox, folderOutputOk);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.TestGameFolder), folderTestGametextBox, folderTestGameOk);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.FailFolder), folderFailtextBox, folderFailOk);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.BackupFolder), folderBackuptextBox, folderBackupOk);
 
-        public ModpackToolConfiguration CurrentConfiguration
-        {
-            get => (ModpackToolConfiguration)modpackToolConfigurationBindingSource.DataSource;
-            set => modpackToolConfigurationBindingSource.DataSource = value;
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game1Short), textBoxG1ID, labelG1ID);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game1Longs), textBoxG1Tag, labelG1Tag, DataSourceUpdateMode.OnValidation);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game2Short), textBoxG2ID, labelG2ID);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game2Longs), textBoxG2Tag, labelG2Tag, DataSourceUpdateMode.OnValidation);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game3Short), textBoxG3ID, labelG3ID);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game3Longs), textBoxG3Tag, labelG3Tag, DataSourceUpdateMode.OnValidation);
+
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.GameOutputSubfolder), textBoxGameOutputSubfolder, labelGameOutputSubfolder);
+
+            #region Drag and drop item reordering
+
+            var simpleDropSink = new SimpleDropSink
+            {
+                CanDropBetween = true,
+                CanDropOnBackground = false,
+                CanDropOnItem = false,
+                CanDropOnSubItem = false,
+                AcceptExternal = false,
+            };
+            simpleDropSink.ModelCanDrop += (sender, args) => args.Effect = DragDropEffects.Move;
+            simpleDropSink.ModelDropped += (sender, args) =>
+            {
+                var droppedItem = (ModpackToolConfiguration.ModContentsHandlingPolicy)args.SourceModels[0];
+                var targetItem = (ModpackToolConfiguration.ModContentsHandlingPolicy)args.TargetModel;
+
+                configuration.ContentsHandlingPolicies.Remove(droppedItem);
+
+                var targetIndex = configuration.ContentsHandlingPolicies.IndexOf(targetItem);
+                if (args.DropTargetLocation == DropTargetLocation.BelowItem)
+                    targetIndex++;
+
+                configuration.ContentsHandlingPolicies.Insert(targetIndex, droppedItem);
+
+                objectListView1.Objects = configuration.ContentsHandlingPolicies;
+            };
+            objectListView1.DropSink = simpleDropSink;
+
+            #endregion
         }
     }
 }

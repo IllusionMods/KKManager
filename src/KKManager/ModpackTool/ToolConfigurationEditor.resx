@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Drag and drop to reorder. A zipmod with multiple mod kinds inside of it will use the first subfolder on this list, 
+but it will not be compressed if any of its content types are set to not compress. Unknown is only used if no other kinds were found.</value>
+  </data>
   <metadata name="modpackToolConfigurationBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

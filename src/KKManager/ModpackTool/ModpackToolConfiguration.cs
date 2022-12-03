@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using KKManager.Data.Zipmods;
+using static KKManager.ModpackTool.ModpackToolConfiguration;
 
 namespace KKManager.ModpackTool;
 
@@ -98,7 +100,7 @@ public class ValidatedStringWrapper : INotifyPropertyChanged
         get => _get();
         set
         {
-            if (Value != value)
+            //if (Value != value)
             {
                 var prevValid = VerifyValue(value);
                 _set(value);
@@ -116,6 +118,8 @@ public class ValidatedStringWrapper : INotifyPropertyChanged
 
 public class ModpackToolConfiguration : IXmlSerializable
 {
+    public static ModpackToolConfiguration Instance { get; } = new();
+
     public ValidatedString IngestFolder { get; } = new(Directory.Exists);
     public ValidatedString OutputFolder { get; } = new(Directory.Exists);
     public ValidatedString TestGameFolder { get; } = new(s => Directory.Exists(s) && Directory.Exists(Path.Combine(s, "mods")));
@@ -123,18 +127,97 @@ public class ModpackToolConfiguration : IXmlSerializable
     public ValidatedString BackupFolder { get; } = new(Directory.Exists);
 
     public ValidatedString Game1Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
-    public ValidatedStringWrapper Game1Longs { get; } = new(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifier);
+    public ValidatedStringWrapper Game1Longs { get; } = new(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game1LongsList { get; private set; } = Array.Empty<string>();
 
     public ValidatedString Game2Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
-    public ValidatedStringWrapper Game2Longs { get; } = new(s => Game2LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game2LongsList), ZipmodEntry.GameNamesVerifier);
+    public ValidatedStringWrapper Game2Longs { get; } = new(s => Game2LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game2LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game2LongsList { get; private set; } = Array.Empty<string>();
 
     public ValidatedString Game3Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
-    public ValidatedStringWrapper Game3Longs { get; } = new(s => Game3LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game3LongsList), ZipmodEntry.GameNamesVerifier);
+    public ValidatedStringWrapper Game3Longs { get; } = new(s => Game3LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game3LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game3LongsList { get; private set; } = Array.Empty<string>();
 
+    public IEnumerable<string> AllAcceptableGameLongNames => Game1LongsList.Concat(Game2LongsList).Concat(Game3LongsList);
+    public IEnumerable<string> AllAcceptableGameShortNames => new[] { Game1Short.Value, Game2Short.Value, Game3Short.Value }.Where(x => !string.IsNullOrEmpty(x));
+    public string GameLongNameToShortName(string longGameName)
+    {
+        if (Game1LongsList.Contains(longGameName, StringComparer.OrdinalIgnoreCase)) return Game1Short.Value;
+        if (Game2LongsList.Contains(longGameName, StringComparer.OrdinalIgnoreCase)) return Game2Short.Value;
+        if (Game3LongsList.Contains(longGameName, StringComparer.OrdinalIgnoreCase)) return Game3Short.Value;
+        return null;
+    }
+    public string GameShortNameToLongName(string shortGameName)
+    {
+        if (shortGameName == Game1Short.Value) return Game1LongsList.FirstOrDefault();
+        if (shortGameName == Game2Short.Value) return Game2LongsList.FirstOrDefault();
+        if (shortGameName == Game3Short.Value) return Game3LongsList.FirstOrDefault();
+        return null;
+    }
+
+    public ValidatedString GameOutputSubfolder { get; } = new("Sideloader Modpack - Exclusive", VerifySubfolderName);
+    private static bool VerifySubfolderName(string s)
+    {
+        var invalidFileNameChars = Path.GetInvalidFileNameChars();
+        return !string.IsNullOrWhiteSpace(s) && !s.StartsWith(" ") && !s.EndsWith(" ") && s.All(c => !invalidFileNameChars.Contains(c));
+    }
+
+
+    public sealed class ModContentsHandlingPolicy : INotifyPropertyChanged
+    {
+        private bool _neverPutInsideGameSpecific;
+        private bool _canCompress;
+        public ModContentsHandlingPolicy(SideloaderModInfo.ZipmodContentsKind contentsKind, string outputSubfolder) : this(contentsKind, outputSubfolder, true, false) { }
+        public ModContentsHandlingPolicy(SideloaderModInfo.ZipmodContentsKind contentsKind, string outputSubfolder, bool canCompress, bool neverPutInsideGameSpecific)
+        {
+            ContentsKind = contentsKind;
+            CanCompress = canCompress;
+            NeverPutInsideGameSpecific = neverPutInsideGameSpecific;
+            OutputSubfolder.Value = outputSubfolder;
+        }
+        public SideloaderModInfo.ZipmodContentsKind ContentsKind { get; }
+        public ValidatedString OutputSubfolder { get; } = new(VerifySubfolderName);
+
+        public bool CanCompress
+        {
+            get => _canCompress;
+            set
+            {
+                if (value == _canCompress) return;
+                _canCompress = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool NeverPutInsideGameSpecific
+        {
+            get => _neverPutInsideGameSpecific;
+            set
+            {
+                if (value == _neverPutInsideGameSpecific) return;
+                _neverPutInsideGameSpecific = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public List<ModContentsHandlingPolicy> ContentsHandlingPolicies { get; } =
+        Enum.GetValues(typeof(SideloaderModInfo.ZipmodContentsKind)).Cast<SideloaderModInfo.ZipmodContentsKind>().Select(x => new ModContentsHandlingPolicy(x, "")).ToList();
+
+    public event EventHandler ContentsHandlingPoliciesChanged;
+    private void OnContentsHandlingPoliciesChanged()
+    {
+        ContentsHandlingPoliciesChanged?.Invoke(this, EventArgs.Empty);
+    }
     public bool AllValid() => this.AllValidatedStringsAreValid();
+
+    #region Serialization
 
     public void Serialize(string path)
     {
@@ -155,11 +238,12 @@ public class ModpackToolConfiguration : IXmlSerializable
 
     public void CopyValuesFrom(ModpackToolConfiguration other)
     {
-        IngestFolder.Value = other.IngestFolder.Value;
-        OutputFolder.Value = other.OutputFolder.Value;
-        TestGameFolder.Value = other.TestGameFolder.Value;
-        FailFolder.Value = other.FailFolder.Value;
-        BackupFolder.Value = other.BackupFolder.Value;
+        foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)))
+        {
+            var our = (ValidatedStringWrapper)field.GetValue(this);
+            var their = (ValidatedStringWrapper)field.GetValue(other);
+            our.Value = their.Value;
+        }
     }
 
     public XmlSchema GetSchema()
@@ -169,23 +253,80 @@ public class ModpackToolConfiguration : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-
         var allFields = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)).ToList();
-        while (!reader.EOF)
+
+        reader.ReadStartElement("ModpackToolConfiguration");
+
+        while (reader.NodeType == XmlNodeType.Element)
         {
             var f = allFields.FirstOrDefault(x => x.Name == reader.Name);
             if (f != null)
             {
                 ((ValidatedStringWrapper)f.GetValue(this)).Value = reader.ReadElementContentAsString();
+                //reader.ReadEndElement();
             }
             else
-                reader.Read();
+            {
+                if (reader.Name == "ContentPolicies")
+                {
+                    int index = 0;
+                    reader.ReadStartElement();
+                    if (reader.Name == "ContentPolicy")
+                    {
+                        do
+                        {
+                            var kind = reader.GetAttribute("Kind");
+                            var subf = reader.GetAttribute("OutputSubfolder");
+                            var canCompr = reader.GetAttribute("CanCompress");
+                            var neverSpecific = reader.GetAttribute("NeverPutInsideGameSpecific");
+
+                            var policy = ContentsHandlingPolicies.Find(policy => policy.ContentsKind.ToString() == kind);
+                            policy.OutputSubfolder.Value = subf;
+                            policy.CanCompress = string.Equals(canCompr, "True", StringComparison.OrdinalIgnoreCase);
+                            policy.NeverPutInsideGameSpecific = string.Equals(neverSpecific, "True", StringComparison.OrdinalIgnoreCase);
+                            ContentsHandlingPolicies.Remove(policy);
+                            ContentsHandlingPolicies.Insert(index, policy);
+                            index++;
+                        } while (reader.ReadToNextSibling("ContentPolicy"));
+                    }
+
+                    reader.ReadEndElement();
+                }
+            }
         }
+        reader.ReadEndElement();
+
+        OnContentsHandlingPoliciesChanged();
+
+        //while (!reader.EOF && reader.LocalName != "ContentPolicies")
+        //{
+        //    var f = allFields.FirstOrDefault(x => x.Name == reader.Name);
+        //    if (f != null)
+        //    {
+        //        ((ValidatedStringWrapper)f.GetValue(this)).Value = reader.ReadElementContentAsString();
+        //    }
+        //    else
+        //        reader.Read();
+        //}
     }
 
     public void WriteXml(XmlWriter writer)
     {
         foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)))
             writer.WriteElementString(field.Name, ((ValidatedStringWrapper)field.GetValue(this)).Value);
+
+        writer.WriteStartElement("ContentPolicies");
+        foreach (var modContentsHandlingPolicy in ContentsHandlingPolicies)
+        {
+            writer.WriteStartElement("ContentPolicy");
+            writer.WriteAttributeString("Kind", modContentsHandlingPolicy.ContentsKind.ToString());
+            writer.WriteAttributeString("OutputSubfolder", modContentsHandlingPolicy.OutputSubfolder.Value);
+            writer.WriteAttributeString("CanCompress", modContentsHandlingPolicy.CanCompress.ToString());
+            writer.WriteAttributeString("NeverPutInsideGameSpecific", modContentsHandlingPolicy.NeverPutInsideGameSpecific.ToString());
+            writer.WriteEndElement();
+        }
+        writer.WriteEndElement();
     }
+
+    #endregion
 }

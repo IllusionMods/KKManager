@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolConfigurationEditor));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,7 +47,6 @@
             this.folderTestGameOk = new System.Windows.Forms.Label();
             this.folderFailOk = new System.Windows.Forms.Label();
             this.folderBackupOk = new System.Windows.Forms.Label();
-            this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
@@ -67,11 +67,25 @@
             this.label16 = new System.Windows.Forms.Label();
             this.textBoxG3Tag = new System.Windows.Forms.TextBox();
             this.labelG3Tag = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.label4 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBoxGameOutputSubfolder = new System.Windows.Forms.TextBox();
+            this.labelGameOutputSubfolder = new System.Windows.Forms.Label();
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -296,10 +310,6 @@
             this.folderBackupOk.Text = "OK";
             this.folderBackupOk.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // modpackToolConfigurationBindingSource
-            // 
-            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.ModpackToolConfiguration);
-            // 
             // groupBox2
             // 
             this.groupBox2.AutoSize = true;
@@ -308,10 +318,11 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox2.Location = new System.Drawing.Point(0, 149);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(637, 175);
+            this.groupBox2.Size = new System.Drawing.Size(637, 222);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Game tags";
+            this.groupBox2.Text = "Game tags (used in manifests, if a zipmod has game tags it can be put in game-spe" +
+    "cific output folder (e.g. \"Exclusive KK KKS\"))";
             // 
             // tableLayoutPanel2
             // 
@@ -338,17 +349,21 @@
             this.tableLayoutPanel2.Controls.Add(this.label16, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.textBoxG3Tag, 1, 5);
             this.tableLayoutPanel2.Controls.Add(this.labelG3Tag, 2, 5);
+            this.tableLayoutPanel2.Controls.Add(this.label9, 0, 6);
+            this.tableLayoutPanel2.Controls.Add(this.labelGameOutputSubfolder, 2, 6);
+            this.tableLayoutPanel2.Controls.Add(this.textBoxGameOutputSubfolder, 1, 6);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowCount = 7;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(631, 156);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(631, 203);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // label2
@@ -561,23 +576,158 @@
             this.labelG3Tag.Text = "OK";
             this.labelG3Tag.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.AutoSize = true;
+            this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox3.Controls.Add(this.objectListView1);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox3.Location = new System.Drawing.Point(0, 371);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(637, 233);
+            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "How to handle mod kinds";
+            // 
+            // objectListView1
+            // 
+            this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn3);
+            this.objectListView1.AllColumns.Add(this.olvColumn2);
+            this.objectListView1.AllColumns.Add(this.olvColumn4);
+            this.objectListView1.AllColumns.Add(this.olvColumn5);
+            this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.objectListView1.CellEditTabChangesRows = true;
+            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn3,
+            this.olvColumn2,
+            this.olvColumn4,
+            this.olvColumn5});
+            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.objectListView1.HideSelection = false;
+            this.objectListView1.IsSimpleDragSource = true;
+            this.objectListView1.IsSimpleDropSink = true;
+            this.objectListView1.Location = new System.Drawing.Point(3, 46);
+            this.objectListView1.MultiSelect = false;
+            this.objectListView1.Name = "objectListView1";
+            this.objectListView1.ShowGroups = false;
+            this.objectListView1.Size = new System.Drawing.Size(631, 184);
+            this.objectListView1.TabIndex = 0;
+            this.objectListView1.UseCompatibleStateImageBehavior = false;
+            this.objectListView1.UseNotifyPropertyChanged = true;
+            this.objectListView1.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "ContentsKind";
+            this.olvColumn1.Text = "Content kind";
+            this.olvColumn1.Width = 97;
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "CanCompress";
+            this.olvColumn2.CheckBoxes = true;
+            this.olvColumn2.DisplayIndex = 3;
+            this.olvColumn2.Text = "Can compress";
+            this.olvColumn2.Width = 91;
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "OutputSubfolder.Value";
+            this.olvColumn3.CellEditUseWholeCell = true;
+            this.olvColumn3.Text = "Output subfolder";
+            this.olvColumn3.Width = 194;
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.AspectName = "NeverPutInsideGameSpecific";
+            this.olvColumn4.CheckBoxes = true;
+            this.olvColumn4.DisplayIndex = 4;
+            this.olvColumn4.Text = "Never put in game-specific";
+            this.olvColumn4.Width = 160;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label4.Location = new System.Drawing.Point(3, 16);
+            this.label4.Name = "label4";
+            this.label4.Padding = new System.Windows.Forms.Padding(2);
+            this.label4.Size = new System.Drawing.Size(624, 30);
+            this.label4.TabIndex = 1;
+            this.label4.Text = resources.GetString("label4.Text");
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label9.Location = new System.Drawing.Point(3, 156);
+            this.label9.Name = "label9";
+            this.label9.Padding = new System.Windows.Forms.Padding(4);
+            this.label9.Size = new System.Drawing.Size(270, 47);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "Game-specific Output Subfolder\r\n(e.g. \"Sideloader Modpack - Exclusive\")\r\nGame IDs" +
+    " will be added to the end automatically";
+            // 
+            // textBoxGameOutputSubfolder
+            // 
+            this.textBoxGameOutputSubfolder.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBoxGameOutputSubfolder.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.textBoxGameOutputSubfolder.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBoxGameOutputSubfolder.Location = new System.Drawing.Point(279, 159);
+            this.textBoxGameOutputSubfolder.Name = "textBoxGameOutputSubfolder";
+            this.textBoxGameOutputSubfolder.Size = new System.Drawing.Size(249, 20);
+            this.textBoxGameOutputSubfolder.TabIndex = 4;
+            // 
+            // labelGameOutputSubfolder
+            // 
+            this.labelGameOutputSubfolder.AutoSize = true;
+            this.labelGameOutputSubfolder.BackColor = System.Drawing.Color.Green;
+            this.labelGameOutputSubfolder.Dock = System.Windows.Forms.DockStyle.Top;
+            this.labelGameOutputSubfolder.ForeColor = System.Drawing.Color.White;
+            this.labelGameOutputSubfolder.Location = new System.Drawing.Point(534, 156);
+            this.labelGameOutputSubfolder.Name = "labelGameOutputSubfolder";
+            this.labelGameOutputSubfolder.Padding = new System.Windows.Forms.Padding(4);
+            this.labelGameOutputSubfolder.Size = new System.Drawing.Size(94, 21);
+            this.labelGameOutputSubfolder.TabIndex = 5;
+            this.labelGameOutputSubfolder.Text = "OK";
+            this.labelGameOutputSubfolder.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "OutputSubfolder.IsValid";
+            this.olvColumn5.DisplayIndex = 2;
+            this.olvColumn5.Text = "Valid";
+            // 
+            // modpackToolConfigurationBindingSource
+            // 
+            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.ModpackToolConfiguration);
+            // 
             // ToolConfigurationEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "ToolConfigurationEditor";
-            this.Size = new System.Drawing.Size(637, 464);
+            this.Size = new System.Drawing.Size(637, 718);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -623,5 +773,16 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox textBoxG3Tag;
         private System.Windows.Forms.Label labelG3Tag;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private BrightIdeasSoftware.OLVColumn olvColumn4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelGameOutputSubfolder;
+        private System.Windows.Forms.TextBox textBoxGameOutputSubfolder;
+        private BrightIdeasSoftware.OLVColumn olvColumn5;
     }
 }

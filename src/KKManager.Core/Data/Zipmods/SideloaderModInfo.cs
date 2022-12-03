@@ -107,7 +107,7 @@ namespace KKManager.Data.Zipmods
 
         [Flags]
         public enum ZipmodContentsKind
-        {
+        { //todo draggable grid list, order matters, save as separate xml elems, each has output subfolder name, compressbydefault, place in author subfolders
             Unknown = 0,
             MapFreeH = 1 << 0,
             MapStudio = 1 << 1,

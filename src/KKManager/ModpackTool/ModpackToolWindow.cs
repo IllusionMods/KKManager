@@ -28,9 +28,7 @@ namespace KKManager.ModpackTool
             olvColumnStatus.AspectGetter = rowObject => ((ZipmodEntry)rowObject).Status;
             _listView.ListView.UseCellFormatEvents = true;
             _listView.ListView.FormatCell += ListView_FormatCell;
-
-            CurrentConfiguration = new ModpackToolConfiguration();
-            toolConfigurationEditor1.CurrentConfiguration = CurrentConfiguration;
+            
             //todo load last loaded config
         }
 
@@ -79,7 +77,6 @@ namespace KKManager.ModpackTool
 
         private static string ConfigDirectoryPath = Path.GetFullPath(Path.Combine(ModpackToolRootDir, "Config"));
         private string GetFullPathToConfigFile() => Path.GetFullPath(Path.Combine(ConfigDirectoryPath, configInputBox.Text));
-        public ModpackToolConfiguration CurrentConfiguration { get; }
 
         private void RefreshConfigSuggestions()
         {
@@ -105,7 +102,7 @@ namespace KKManager.ModpackTool
             {
                 Directory.CreateDirectory(ConfigDirectoryPath);
                 var fullName = GetFullPathToConfigFile();
-                CurrentConfiguration.Serialize(fullName);
+                ModpackToolConfiguration.Instance.Serialize(fullName);
                 Console.WriteLine("Serialized config to " + fullName);
                 RefreshConfigSuggestions();
             }
@@ -117,7 +114,7 @@ namespace KKManager.ModpackTool
             try
             {
                 var fullName = GetFullPathToConfigFile();
-                CurrentConfiguration.Deserialize(fullName);
+                ModpackToolConfiguration.Instance.Deserialize(fullName);
                 Console.WriteLine("Deserialized config from " + fullName);
 
                 RefreshConfigSuggestions();
@@ -140,20 +137,20 @@ namespace KKManager.ModpackTool
         {
             try
             {
-                if (!CurrentConfiguration.AllValid())
+                if (!ModpackToolConfiguration.Instance.AllValid())
                     throw new Exception("Configuration looks to be invalid, check if all folder paths are correct and the folders exist.");
 
                 try { Directory.Delete(ModpackToolTempDir, true); } catch (IOException) { }
                 Directory.CreateDirectory(ModpackToolTempDir);
 
                 var rb = new ReplaySubject<SideloaderModInfo>();
-                SideloaderModLoader.TryReadSideloaderMods(CurrentConfiguration.IngestFolder, rb, CancellationToken.None).Wait();
+                SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.IngestFolder, rb, CancellationToken.None).Wait();
 
                 var all = rb.ToEnumerable().ToList();
 
 
-                //var ingestZipmods = Directory.GetFiles(CurrentConfiguration.IngestFolder, "*.zipmod", SearchOption.AllDirectories);
-                //var existingZipmods = Directory.GetFiles(CurrentConfiguration.OutputFolder, "*.zipmod", SearchOption.AllDirectories);
+                //var ingestZipmods = Directory.GetFiles(ModpackToolConfiguration.Instance.IngestFolder, "*.zipmod", SearchOption.AllDirectories);
+                //var existingZipmods = Directory.GetFiles(ModpackToolConfiguration.Instance.OutputFolder, "*.zipmod", SearchOption.AllDirectories);
 
                 _listView.Objects = all.Select(ZipmodEntry.FromEntry).ToList();
 

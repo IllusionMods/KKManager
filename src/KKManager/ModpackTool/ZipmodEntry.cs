@@ -45,7 +45,7 @@ public class ZipmodEntry
 
         Author = new ValidatedStringWrapper(s => Info.Manifest.Author = s, () => Info.Manifest.Author, s => !string.IsNullOrWhiteSpace(s) && s != "IllusionMods");
         Description = new ValidatedStringWrapper(s => Info.Manifest.Description = s, () => Info.Manifest.Description, s => string.IsNullOrEmpty(s) || s.Any(char.IsLetter));
-        Games = new ValidatedStringWrapper(s => Info.Manifest.Games = GameNamesStrToList(s), () => GameNamesListToStr(Info.Manifest.Games), GameNamesVerifier);
+        Games = new ValidatedStringWrapper(s => Info.Manifest.Games = CleanUpManifestGameTags(GameNamesStrToList(s)).ToList(), () => GameNamesListToStr(CleanUpManifestGameTags(Info.Manifest.Games)), GameNamesVerifier);
         Guid = new ValidatedStringWrapper(s => Info.Manifest.GUID = s, () => Info.Manifest.GUID, s => !string.IsNullOrWhiteSpace(s) && !s.EndsWith("Example"));
         Name = new ValidatedStringWrapper(s => Info.Manifest.Name = s, () => Info.Manifest.Name, s => !string.IsNullOrWhiteSpace(s) && s.IndexOf("Name of your mod pack", StringComparison.OrdinalIgnoreCase) < 0 && !s.EndsWith(" Example"));
         Version = new ValidatedStringWrapper(s => Info.Manifest.Version = s, () => Info.Manifest.Version, s => !string.IsNullOrWhiteSpace(s) && System.Version.TryParse(s, out var _));
@@ -113,8 +113,15 @@ public class ZipmodEntry
     }
 
     internal static string GameNamesListToStr(IEnumerable<string> e) => string.Join(", ", e);
+
+    private static IEnumerable<string> CleanUpManifestGameTags(IEnumerable<string> e)
+    {
+        return e.Select(x => ModpackToolConfiguration.Instance.GameLongNameToShortName(x) ?? x).Distinct().OrderBy(x => ModpackToolConfiguration.Instance.AllAcceptableGameShortNames.IndexOf(x)).Select(x => ModpackToolConfiguration.Instance.GameShortNameToLongName(x) ?? x);
+    }
+
     internal static List<string> GameNamesStrToList(string s) => s.Split(',').Select(x => x.Trim()).ToList();
-    internal static bool GameNamesVerifier(string s) => s.Split(',').All(x => x.All(c => char.IsLetter(c) || c == ' ')); //todo check valid game tags?
+    internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetter(c) || c == ' '));
+    private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetter(c) || c == ' ') && ModpackToolConfiguration.Instance.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
 
     private static bool CanRecompress(SideloaderModInfo sideloaderModInfo)
     {
