@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 using KKManager.Functions;
+using KKManager.ModpackTool;
 using KKManager.Properties;
 using KKManager.SB3UGS;
 using KKManager.Updater;
@@ -438,17 +439,19 @@ namespace KKManager.Windows
             if (plugins) PluginLoader.StartReload();
             if (sideloader) SideloaderModLoader.StartReload();
 
-            foreach (var window in GetWindows<DockContent>())
+            foreach (var window in GetWindows<DockContent>().OfType<IContentWindow>())
             {
-                if (window is PluginsWindow pw)
+                switch (window)
                 {
-                    if (plugins)
-                        pw.RefreshList();
-                }
-                else if (window is SideloaderModsWindow sm)
-                {
-                    if (sideloader)
-                        sm.RefreshList();
+                    case PluginsWindow pw:
+                        if (plugins) pw.RefreshList();
+                        break;
+                    case SideloaderModsWindow sm:
+                        if (sideloader) sm.RefreshList();
+                        break;
+                    default:
+                        window.RefreshList();
+                        break;
                 }
             }
         }
@@ -789,6 +792,11 @@ namespace KKManager.Windows
                     ZipmodTools.RemoveDuplicateZipmodsInDir(rootDirectory, simulate);
                 }
             }
+        }
+
+        private void openModpackToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetOrCreateWindow<ModpackToolWindow>().Show(dockPanel, DockState.Document);
         }
     }
 }

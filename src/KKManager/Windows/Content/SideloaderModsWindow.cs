@@ -32,6 +32,9 @@ namespace KKManager.Windows.Content
             objectListView1.FormatRow += ObjectListView1_FormatRow;
 
             objectListView1.PrimarySortColumn = olvColumnName;
+            objectListView1.SecondarySortColumn = olvColumnPath;
+            objectListView1.PrimarySortOrder = SortOrder.Ascending;
+            objectListView1.SecondarySortOrder = SortOrder.Ascending;
 
             ListTools.SetUpSearchBox(objectListView1, toolStripTextBoxSearch);
         }

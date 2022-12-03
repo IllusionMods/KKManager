@@ -121,270 +121,15 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>116, 26</value>
-  </data>
-  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
-    <value>Exit</value>
-  </data>
-  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>46, 24</value>
-  </data>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="openFemaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 26</value>
-  </data>
-  <data name="openFemaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open female card folder</value>
-  </data>
-  <data name="openMaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 26</value>
-  </data>
-  <data name="openMaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open male card folder</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>252, 6</value>
-  </data>
-  <data name="otherToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 26</value>
-  </data>
-  <data name="otherToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open other folder...</value>
-  </data>
-  <data name="openCardBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 26</value>
-  </data>
-  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open card browser</value>
-  </data>
-  <data name="sideloaderModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 26</value>
-  </data>
-  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open sideloader mod browser</value>
-  </data>
-  <data name="openPluginBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 26</value>
-  </data>
-  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open plugin browser</value>
-  </data>
-  <data name="openPropertiesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 26</value>
-  </data>
-  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open properties</value>
-  </data>
-  <data name="openLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 26</value>
-  </data>
-  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open log viewer</value>
-  </data>
-  <data name="viewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 24</value>
-  </data>
-  <data name="viewToolStripMenuItem.Text" xml:space="preserve">
-    <value>View</value>
-  </data>
-  <data name="startTheGameToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 24</value>
-  </data>
-  <data name="startTheGameToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Start</value>
-  </data>
-  <data name="installDirectoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 26</value>
-  </data>
-  <data name="installDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>Install directory</value>
-  </data>
-  <data name="screenshotsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 26</value>
-  </data>
-  <data name="screenshotsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Screenshots</value>
-  </data>
-  <data name="charactersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 26</value>
-  </data>
-  <data name="charactersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Characters</value>
-  </data>
-  <data name="scenesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 26</value>
-  </data>
-  <data name="scenesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Scenes</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 6</value>
-  </data>
-  <data name="kKManagerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>194, 26</value>
-  </data>
-  <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
-    <value>KK Manager</value>
-  </data>
-  <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 24</value>
-  </data>
-  <data name="openToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Open directory</value>
-  </data>
-  <data name="installANewModToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 24</value>
-  </data>
-  <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
-    <value>Install a new mod...</value>
-  </data>
-  <data name="updateSideloaderModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 24</value>
-  </data>
-  <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
-    <value>Look for updates...</value>
-  </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 26</value>
-  </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Fix file and folder permissions</value>
-  </data>
-  <data name="fixesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>277, 26</value>
-  </data>
-  <data name="fixesToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Fixes</value>
-  </data>
-  <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>277, 26</value>
-  </data>
-  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Compress game files</value>
-  </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>277, 26</value>
-  </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Clean up duplicate zipmods</value>
-  </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 6</value>
-  </data>
-  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>363, 26</value>
-  </data>
-  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Text" xml:space="preserve">
-    <value>Generate contents of Update.xml...</value>
-  </data>
-  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>363, 26</value>
-  </data>
-  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Compress bundles in a folder...</value>
-  </data>
-  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>363, 26</value>
-  </data>
-  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Clean up duplicate and invalid zipmods...</value>
-  </data>
-  <data name="developersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>277, 26</value>
-  </data>
-  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Developers</value>
-  </data>
-  <data name="toolsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 24</value>
-  </data>
-  <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Tools</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>398, 26</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
-    <value>Check for updates on startup</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>398, 26</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Use system proxy server for FTP (needs restart)</value>
-  </data>
-  <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>395, 6</value>
-  </data>
-  <data name="changeGameInstallDirectoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>398, 26</value>
-  </data>
-  <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>Change game install directory...</value>
-  </data>
-  <data name="languagesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>398, 26</value>
-  </data>
-  <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 24</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="checkForUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 26</value>
-  </data>
-  <data name="checkForUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Check for updates</value>
-  </data>
-  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>238, 6</value>
-  </data>
-  <data name="readmeAndSourceCodeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 26</value>
-  </data>
-  <data name="readmeAndSourceCodeToolStripMenuItem.Text" xml:space="preserve">
-    <value>Readme</value>
-  </data>
-  <data name="licenseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 26</value>
-  </data>
-  <data name="licenseToolStripMenuItem.Text" xml:space="preserve">
-    <value>License</value>
-  </data>
-  <data name="websiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 26</value>
-  </data>
-  <data name="websiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>Website / Source code</value>
-  </data>
-  <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 26</value>
-  </data>
-  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 24</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>Help</value>
-  </data>
   <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 2, 0, 2</value>
+    <value>4, 2, 0, 2</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1349, 28</value>
+    <value>1012, 24</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -405,6 +150,261 @@
   <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>93, 22</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="viewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="viewToolStripMenuItem.Text" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="openCardBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open card browser</value>
+  </data>
+  <data name="openFemaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>202, 22</value>
+  </data>
+  <data name="openFemaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open female card folder</value>
+  </data>
+  <data name="openMaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>202, 22</value>
+  </data>
+  <data name="openMaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open male card folder</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>199, 6</value>
+  </data>
+  <data name="otherToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>202, 22</value>
+  </data>
+  <data name="otherToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open other folder...</value>
+  </data>
+  <data name="sideloaderModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open sideloader mod browser</value>
+  </data>
+  <data name="openPluginBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open plugin browser</value>
+  </data>
+  <data name="openPropertiesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open properties</value>
+  </data>
+  <data name="openLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open log viewer</value>
+  </data>
+  <data name="startTheGameToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 20</value>
+  </data>
+  <data name="startTheGameToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Start</value>
+  </data>
+  <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 20</value>
+  </data>
+  <data name="openToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Open directory</value>
+  </data>
+  <data name="installDirectoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="installDirectoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Install directory</value>
+  </data>
+  <data name="screenshotsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="screenshotsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Screenshots</value>
+  </data>
+  <data name="charactersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="charactersToolStripMenuItem.Text" xml:space="preserve">
+    <value>Characters</value>
+  </data>
+  <data name="scenesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="scenesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Scenes</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 6</value>
+  </data>
+  <data name="kKManagerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>155, 22</value>
+  </data>
+  <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
+    <value>KK Manager</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 20</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
+    <value>Install a new mod...</value>
+  </data>
+  <data name="updateSideloaderModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>117, 20</value>
+  </data>
+  <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
+    <value>Look for updates...</value>
+  </data>
+  <data name="toolsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>46, 20</value>
+  </data>
+  <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Tools</value>
+  </data>
+  <data name="fixesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="fixesToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Fixes</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Fix file and folder permissions</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Compress game files</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clean up duplicate zipmods</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>218, 6</value>
+  </data>
+  <data name="developersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>221, 22</value>
+  </data>
+  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
+    <value>Developers</value>
+  </data>
+  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>291, 22</value>
+  </data>
+  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Text" xml:space="preserve">
+    <value>Generate contents of Update.xml...</value>
+  </data>
+  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>291, 22</value>
+  </data>
+  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Compress bundles in a folder...</value>
+  </data>
+  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>291, 22</value>
+  </data>
+  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clean up duplicate and invalid zipmods...</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 20</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check for updates on startup</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Use system proxy server for FTP (needs restart)</value>
+  </data>
+  <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 6</value>
+  </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>Change game install directory...</value>
+  </data>
+  <data name="languagesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="helpToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="checkForUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 22</value>
+  </data>
+  <data name="checkForUpdatesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>189, 6</value>
+  </data>
+  <data name="readmeAndSourceCodeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 22</value>
+  </data>
+  <data name="readmeAndSourceCodeToolStripMenuItem.Text" xml:space="preserve">
+    <value>Readme</value>
+  </data>
+  <data name="licenseToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 22</value>
+  </data>
+  <data name="licenseToolStripMenuItem.Text" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="websiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 22</value>
+  </data>
+  <data name="websiteToolStripMenuItem.Text" xml:space="preserve">
+    <value>Website / Source code</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 22</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="LanguagesToolStripComboBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 28</value>
   </data>
@@ -412,13 +412,10 @@
     <value>Fill</value>
   </data>
   <data name="dockPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 28</value>
-  </data>
-  <data name="dockPanel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>0, 24</value>
   </data>
   <data name="dockPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1349, 786</value>
+    <value>1012, 633</value>
   </data>
   <data name="dockPanel.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -438,17 +435,11 @@
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>132, 17</value>
   </metadata>
-  <data name="toolStripStatusLabelStatus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 16</value>
-  </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 814</value>
-  </data>
-  <data name="statusStrip1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 0, 19, 0</value>
+    <value>0, 657</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1349, 22</value>
+    <value>1012, 22</value>
   </data>
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -468,14 +459,23 @@
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="toolStripStatusLabelStatus.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 17</value>
+  </data>
+  <data name="openModpackToolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>291, 22</value>
+  </data>
+  <data name="openModpackToolToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open ModpackTool</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1349, 836</value>
+    <value>1012, 679</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -2131,9 +2131,6 @@
         AElFTkSuQmCC
 </value>
   </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="$this.Text" xml:space="preserve">
     <value>KK Manager</value>
   </data>
@@ -2341,6 +2338,18 @@
   <data name="&gt;&gt;checkForUpdatesOnStartupToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;useSystemProxyServerToolStripMenuItem.Name" xml:space="preserve">
+    <value>useSystemProxyServerToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;useSystemProxyServerToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator5.Name" xml:space="preserve">
+    <value>toolStripSeparator5</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;changeGameInstallDirectoryToolStripMenuItem.Name" xml:space="preserve">
     <value>changeGameInstallDirectoryToolStripMenuItem</value>
   </data>
@@ -2351,12 +2360,6 @@
     <value>languagesToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;languagesToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;useSystemProxyServerToolStripMenuItem.Name" xml:space="preserve">
-    <value>useSystemProxyServerToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;useSystemProxyServerToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;helpToolStripMenuItem.Name" xml:space="preserve">
@@ -2413,11 +2416,11 @@
   <data name="&gt;&gt;toolStripStatusLabelStatus.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator5.Name" xml:space="preserve">
-    <value>toolStripSeparator5</value>
+  <data name="&gt;&gt;openModpackToolToolStripMenuItem.Name" xml:space="preserve">
+    <value>openModpackToolToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;openModpackToolToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>
