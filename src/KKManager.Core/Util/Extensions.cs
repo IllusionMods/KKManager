@@ -47,7 +47,11 @@ namespace KKManager.Util
             {
                 var path = Path.Combine(targetDirectory, extractor.Entry.Key);
                 if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
-                else extractor.WriteEntryTo(path);
+                else
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path) ?? throw new InvalidOperationException("wtf " + path));
+                    extractor.WriteEntryTo(path);
+                }
             }
         }
 
@@ -102,7 +106,7 @@ namespace KKManager.Util
             if (fsi == null) throw new ArgumentNullException(nameof(fsi));
             return Path.GetFileNameWithoutExtension(fsi.Name);
         }
-        
+
         public static bool IsNullOrWhiteSpace(this string self)
         {
             return string.IsNullOrWhiteSpace(self);

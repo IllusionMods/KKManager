@@ -67,17 +67,20 @@
             this.label16 = new System.Windows.Forms.Label();
             this.textBoxG3Tag = new System.Windows.Forms.TextBox();
             this.labelG3Tag = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.labelGameOutputSubfolder = new System.Windows.Forms.Label();
+            this.textBoxGameOutputSubfolder = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnKind = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnOut = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnValid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnCompress = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnNever = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.label4 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.textBoxGameOutputSubfolder = new System.Windows.Forms.TextBox();
-            this.labelGameOutputSubfolder = new System.Windows.Forms.Label();
-            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.checkBoxRandomizeCab = new System.Windows.Forms.CheckBox();
+            this.checkBoxPngCompress = new System.Windows.Forms.CheckBox();
             this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -85,6 +88,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
+            this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -94,10 +98,10 @@
             this.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox1.Controls.Add(this.tableLayoutPanel1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Location = new System.Drawing.Point(0, 53);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(637, 149);
-            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Folders";
             // 
@@ -189,7 +193,7 @@
             this.folderIngesttextBox.Location = new System.Drawing.Point(275, 3);
             this.folderIngesttextBox.Name = "folderIngesttextBox";
             this.folderIngesttextBox.Size = new System.Drawing.Size(253, 20);
-            this.folderIngesttextBox.TabIndex = 1;
+            this.folderIngesttextBox.TabIndex = 0;
             // 
             // folderIngestOk
             // 
@@ -246,7 +250,7 @@
             this.folderTestGametextBox.Location = new System.Drawing.Point(275, 55);
             this.folderTestGametextBox.Name = "folderTestGametextBox";
             this.folderTestGametextBox.Size = new System.Drawing.Size(253, 20);
-            this.folderTestGametextBox.TabIndex = 1;
+            this.folderTestGametextBox.TabIndex = 2;
             // 
             // folderFailtextBox
             // 
@@ -256,7 +260,7 @@
             this.folderFailtextBox.Location = new System.Drawing.Point(275, 81);
             this.folderFailtextBox.Name = "folderFailtextBox";
             this.folderFailtextBox.Size = new System.Drawing.Size(253, 20);
-            this.folderFailtextBox.TabIndex = 1;
+            this.folderFailtextBox.TabIndex = 3;
             // 
             // folderBackuptextBox
             // 
@@ -266,7 +270,7 @@
             this.folderBackuptextBox.Location = new System.Drawing.Point(275, 107);
             this.folderBackuptextBox.Name = "folderBackuptextBox";
             this.folderBackuptextBox.Size = new System.Drawing.Size(253, 20);
-            this.folderBackuptextBox.TabIndex = 1;
+            this.folderBackuptextBox.TabIndex = 4;
             // 
             // folderTestGameOk
             // 
@@ -316,10 +320,10 @@
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.tableLayoutPanel2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 149);
+            this.groupBox2.Location = new System.Drawing.Point(0, 202);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(637, 222);
-            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Game tags (used in manifests, if a zipmod has game tags it can be put in game-spe" +
     "cific output folder (e.g. \"Exclusive KK KKS\"))";
@@ -420,7 +424,7 @@
             this.textBoxG1ID.Location = new System.Drawing.Point(279, 3);
             this.textBoxG1ID.Name = "textBoxG1ID";
             this.textBoxG1ID.Size = new System.Drawing.Size(249, 20);
-            this.textBoxG1ID.TabIndex = 1;
+            this.textBoxG1ID.TabIndex = 0;
             // 
             // labelG1ID
             // 
@@ -477,7 +481,7 @@
             this.textBoxG2ID.Location = new System.Drawing.Point(279, 55);
             this.textBoxG2ID.Name = "textBoxG2ID";
             this.textBoxG2ID.Size = new System.Drawing.Size(249, 20);
-            this.textBoxG2ID.TabIndex = 1;
+            this.textBoxG2ID.TabIndex = 2;
             // 
             // textBoxG2Tag
             // 
@@ -487,7 +491,7 @@
             this.textBoxG2Tag.Location = new System.Drawing.Point(279, 81);
             this.textBoxG2Tag.Name = "textBoxG2Tag";
             this.textBoxG2Tag.Size = new System.Drawing.Size(249, 20);
-            this.textBoxG2Tag.TabIndex = 1;
+            this.textBoxG2Tag.TabIndex = 3;
             // 
             // textBoxG3ID
             // 
@@ -497,7 +501,7 @@
             this.textBoxG3ID.Location = new System.Drawing.Point(279, 107);
             this.textBoxG3ID.Name = "textBoxG3ID";
             this.textBoxG3ID.Size = new System.Drawing.Size(249, 20);
-            this.textBoxG3ID.TabIndex = 1;
+            this.textBoxG3ID.TabIndex = 4;
             // 
             // labelG2ID
             // 
@@ -560,7 +564,7 @@
             this.textBoxG3Tag.Location = new System.Drawing.Point(279, 133);
             this.textBoxG3Tag.Name = "textBoxG3Tag";
             this.textBoxG3Tag.Size = new System.Drawing.Size(249, 20);
-            this.textBoxG3Tag.TabIndex = 1;
+            this.textBoxG3Tag.TabIndex = 5;
             // 
             // labelG3Tag
             // 
@@ -576,91 +580,6 @@
             this.labelG3Tag.Text = "OK";
             this.labelG3Tag.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // groupBox3
-            // 
-            this.groupBox3.AutoSize = true;
-            this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox3.Controls.Add(this.objectListView1);
-            this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox3.Location = new System.Drawing.Point(0, 371);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(637, 233);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "How to handle mod kinds";
-            // 
-            // objectListView1
-            // 
-            this.objectListView1.AllColumns.Add(this.olvColumn1);
-            this.objectListView1.AllColumns.Add(this.olvColumn3);
-            this.objectListView1.AllColumns.Add(this.olvColumn2);
-            this.objectListView1.AllColumns.Add(this.olvColumn4);
-            this.objectListView1.AllColumns.Add(this.olvColumn5);
-            this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
-            this.objectListView1.CellEditTabChangesRows = true;
-            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumn1,
-            this.olvColumn3,
-            this.olvColumn2,
-            this.olvColumn4,
-            this.olvColumn5});
-            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.objectListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.objectListView1.HideSelection = false;
-            this.objectListView1.IsSimpleDragSource = true;
-            this.objectListView1.IsSimpleDropSink = true;
-            this.objectListView1.Location = new System.Drawing.Point(3, 46);
-            this.objectListView1.MultiSelect = false;
-            this.objectListView1.Name = "objectListView1";
-            this.objectListView1.ShowGroups = false;
-            this.objectListView1.Size = new System.Drawing.Size(631, 184);
-            this.objectListView1.TabIndex = 0;
-            this.objectListView1.UseCompatibleStateImageBehavior = false;
-            this.objectListView1.UseNotifyPropertyChanged = true;
-            this.objectListView1.View = System.Windows.Forms.View.Details;
-            // 
-            // olvColumn1
-            // 
-            this.olvColumn1.AspectName = "ContentsKind";
-            this.olvColumn1.Text = "Content kind";
-            this.olvColumn1.Width = 97;
-            // 
-            // olvColumn2
-            // 
-            this.olvColumn2.AspectName = "CanCompress";
-            this.olvColumn2.CheckBoxes = true;
-            this.olvColumn2.DisplayIndex = 3;
-            this.olvColumn2.Text = "Can compress";
-            this.olvColumn2.Width = 91;
-            // 
-            // olvColumn3
-            // 
-            this.olvColumn3.AspectName = "OutputSubfolder.Value";
-            this.olvColumn3.CellEditUseWholeCell = true;
-            this.olvColumn3.Text = "Output subfolder";
-            this.olvColumn3.Width = 194;
-            // 
-            // olvColumn4
-            // 
-            this.olvColumn4.AspectName = "NeverPutInsideGameSpecific";
-            this.olvColumn4.CheckBoxes = true;
-            this.olvColumn4.DisplayIndex = 4;
-            this.olvColumn4.Text = "Never put in game-specific";
-            this.olvColumn4.Width = 160;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label4.Location = new System.Drawing.Point(3, 16);
-            this.label4.Name = "label4";
-            this.label4.Padding = new System.Windows.Forms.Padding(2);
-            this.label4.Size = new System.Drawing.Size(624, 30);
-            this.label4.TabIndex = 1;
-            this.label4.Text = resources.GetString("label4.Text");
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -672,16 +591,6 @@
             this.label9.TabIndex = 3;
             this.label9.Text = "Game-specific Output Subfolder\r\n(e.g. \"Sideloader Modpack - Exclusive\")\r\nGame IDs" +
     " will be added to the end automatically";
-            // 
-            // textBoxGameOutputSubfolder
-            // 
-            this.textBoxGameOutputSubfolder.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.textBoxGameOutputSubfolder.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.textBoxGameOutputSubfolder.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBoxGameOutputSubfolder.Location = new System.Drawing.Point(279, 159);
-            this.textBoxGameOutputSubfolder.Name = "textBoxGameOutputSubfolder";
-            this.textBoxGameOutputSubfolder.Size = new System.Drawing.Size(249, 20);
-            this.textBoxGameOutputSubfolder.TabIndex = 4;
             // 
             // labelGameOutputSubfolder
             // 
@@ -697,11 +606,146 @@
             this.labelGameOutputSubfolder.Text = "OK";
             this.labelGameOutputSubfolder.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // olvColumn5
+            // textBoxGameOutputSubfolder
             // 
-            this.olvColumn5.AspectName = "OutputSubfolder.IsValid";
-            this.olvColumn5.DisplayIndex = 2;
-            this.olvColumn5.Text = "Valid";
+            this.textBoxGameOutputSubfolder.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBoxGameOutputSubfolder.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.textBoxGameOutputSubfolder.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBoxGameOutputSubfolder.Location = new System.Drawing.Point(279, 159);
+            this.textBoxGameOutputSubfolder.Name = "textBoxGameOutputSubfolder";
+            this.textBoxGameOutputSubfolder.Size = new System.Drawing.Size(249, 20);
+            this.textBoxGameOutputSubfolder.TabIndex = 6;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.AutoSize = true;
+            this.groupBox3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox3.Controls.Add(this.objectListView1);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox3.Location = new System.Drawing.Point(0, 424);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(637, 264);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "How to handle mod kinds";
+            // 
+            // objectListView1
+            // 
+            this.objectListView1.AllColumns.Add(this.olvColumnKind);
+            this.objectListView1.AllColumns.Add(this.olvColumnOut);
+            this.objectListView1.AllColumns.Add(this.olvColumnValid);
+            this.objectListView1.AllColumns.Add(this.olvColumnCompress);
+            this.objectListView1.AllColumns.Add(this.olvColumnNever);
+            this.objectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.SingleClick;
+            this.objectListView1.CellEditTabChangesRows = true;
+            this.objectListView1.CellEditUseWholeCell = false;
+            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumnKind,
+            this.olvColumnOut,
+            this.olvColumnValid,
+            this.olvColumnCompress,
+            this.olvColumnNever});
+            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.objectListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.objectListView1.HideSelection = false;
+            this.objectListView1.IsSimpleDragSource = true;
+            this.objectListView1.IsSimpleDropSink = true;
+            this.objectListView1.Location = new System.Drawing.Point(3, 46);
+            this.objectListView1.MultiSelect = false;
+            this.objectListView1.Name = "objectListView1";
+            this.objectListView1.ShowGroups = false;
+            this.objectListView1.Size = new System.Drawing.Size(631, 215);
+            this.objectListView1.TabIndex = 0;
+            this.objectListView1.UseCompatibleStateImageBehavior = false;
+            this.objectListView1.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumnKind
+            // 
+            this.olvColumnKind.AspectName = "ContentsKind";
+            this.olvColumnKind.IsEditable = false;
+            this.olvColumnKind.Text = "Content kind";
+            this.olvColumnKind.Width = 97;
+            // 
+            // olvColumnOut
+            // 
+            this.olvColumnOut.AspectName = "OutputSubfolder.Value";
+            this.olvColumnOut.CellEditUseWholeCell = true;
+            this.olvColumnOut.Text = "Output subfolder";
+            this.olvColumnOut.Width = 194;
+            // 
+            // olvColumnValid
+            // 
+            this.olvColumnValid.AspectName = "OutputSubfolder.IsValid";
+            this.olvColumnValid.IsEditable = false;
+            this.olvColumnValid.Text = "Valid";
+            this.olvColumnValid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // olvColumnCompress
+            // 
+            this.olvColumnCompress.AspectName = "CanCompress";
+            this.olvColumnCompress.CheckBoxes = true;
+            this.olvColumnCompress.Text = "Can compress";
+            this.olvColumnCompress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.olvColumnCompress.Width = 91;
+            // 
+            // olvColumnNever
+            // 
+            this.olvColumnNever.AspectName = "NeverPutInsideGameSpecific";
+            this.olvColumnNever.CheckBoxes = true;
+            this.olvColumnNever.Text = "Never put in game-specific";
+            this.olvColumnNever.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.olvColumnNever.Width = 142;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label4.Location = new System.Drawing.Point(3, 16);
+            this.label4.Name = "label4";
+            this.label4.Padding = new System.Windows.Forms.Padding(2);
+            this.label4.Size = new System.Drawing.Size(624, 30);
+            this.label4.TabIndex = 1;
+            this.label4.Text = resources.GetString("label4.Text");
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.AutoSize = true;
+            this.groupBox4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupBox4.Controls.Add(this.checkBoxRandomizeCab);
+            this.groupBox4.Controls.Add(this.checkBoxPngCompress);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(637, 53);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "General";
+            // 
+            // checkBoxRandomizeCab
+            // 
+            this.checkBoxRandomizeCab.AutoSize = true;
+            this.checkBoxRandomizeCab.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.modpackToolConfigurationBindingSource, "RandomizeCABs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxRandomizeCab.Dock = System.Windows.Forms.DockStyle.Top;
+            this.checkBoxRandomizeCab.Location = new System.Drawing.Point(3, 33);
+            this.checkBoxRandomizeCab.Name = "checkBoxRandomizeCab";
+            this.checkBoxRandomizeCab.Size = new System.Drawing.Size(631, 17);
+            this.checkBoxRandomizeCab.TabIndex = 0;
+            this.checkBoxRandomizeCab.Text = "Randomize CABs (only works of AssetBundle is also compressed, see options below)";
+            this.checkBoxRandomizeCab.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPngCompress
+            // 
+            this.checkBoxPngCompress.AutoSize = true;
+            this.checkBoxPngCompress.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.modpackToolConfigurationBindingSource, "CompressPNGs", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBoxPngCompress.Dock = System.Windows.Forms.DockStyle.Top;
+            this.checkBoxPngCompress.Location = new System.Drawing.Point(3, 16);
+            this.checkBoxPngCompress.Name = "checkBoxPngCompress";
+            this.checkBoxPngCompress.Size = new System.Drawing.Size(631, 17);
+            this.checkBoxPngCompress.TabIndex = 0;
+            this.checkBoxPngCompress.Text = "Compress PNGs (pngcrush)";
+            this.checkBoxPngCompress.UseVisualStyleBackColor = true;
             // 
             // modpackToolConfigurationBindingSource
             // 
@@ -714,8 +758,9 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox4);
             this.Name = "ToolConfigurationEditor";
-            this.Size = new System.Drawing.Size(637, 718);
+            this.Size = new System.Drawing.Size(637, 724);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -727,6 +772,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.modpackToolConfigurationBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -775,14 +822,17 @@
         private System.Windows.Forms.Label labelG3Tag;
         private System.Windows.Forms.GroupBox groupBox3;
         private BrightIdeasSoftware.ObjectListView objectListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumn1;
-        private BrightIdeasSoftware.OLVColumn olvColumn3;
-        private BrightIdeasSoftware.OLVColumn olvColumn2;
-        private BrightIdeasSoftware.OLVColumn olvColumn4;
+        private BrightIdeasSoftware.OLVColumn olvColumnKind;
+        private BrightIdeasSoftware.OLVColumn olvColumnOut;
+        private BrightIdeasSoftware.OLVColumn olvColumnCompress;
+        private BrightIdeasSoftware.OLVColumn olvColumnNever;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label labelGameOutputSubfolder;
         private System.Windows.Forms.TextBox textBoxGameOutputSubfolder;
-        private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private BrightIdeasSoftware.OLVColumn olvColumnValid;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox checkBoxRandomizeCab;
+        private System.Windows.Forms.CheckBox checkBoxPngCompress;
     }
 }

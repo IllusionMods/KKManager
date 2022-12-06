@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using KKManager.Data.Zipmods;
+using KKManager.Util;
+using KKManager.Windows;
 
 namespace KKManager.ModpackTool;
 
-public class ZipmodEntry
+public class ZipmodEntry : INotifyPropertyChanged
 {
-
     public static ZipmodEntry FromEntry(SideloaderModInfo info, int index)
     {
         var result = new ZipmodEntry(info);
@@ -18,13 +21,26 @@ public class ZipmodEntry
         return result;
     }
 
-    public SideloaderModInfo Info { get; private set; }
+    public SideloaderModInfo Info { get; }
 
     public FileInfo FullPath => Info.Location;
     public int Index { get; private set; }
     public string OriginalFilename => FullPath.Name;
-    public ZipmodEntryStatus Status { get; set; }
+
+    private ZipmodEntryStatus _status = ZipmodEntryStatus.Ingested;
+    public ZipmodEntryStatus Status
+    {
+        get => _status;
+        set
+        {
+            if (value == _status) return;
+            _status = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string GetTempDir() => Path.Combine(ModpackToolWindow.ModpackToolTempDir, Path.GetFileNameWithoutExtension(OriginalFilename));
+    public string GetTempOutputFilePath() => Path.Combine(ModpackToolWindow.ModpackToolTempDir, "__out__", Newfilename);
 
     public ValidatedStringWrapper Author { get; }
     public ValidatedStringWrapper Description { get; }
@@ -32,7 +48,7 @@ public class ZipmodEntry
     public ValidatedStringWrapper Guid { get; }
     public ValidatedStringWrapper Name { get; }
     public ValidatedStringWrapper Newfilename { get; }
-    public ValidatedStringWrapper Output { get; }
+    public ValidatedStringWrapper OutputSubdirectory { get; }
     public ValidatedStringWrapper Version { get; }
     public ValidatedStringWrapper Website { get; }
     public bool Recompress { get; set; }
@@ -65,9 +81,6 @@ public class ZipmodEntry
             Console.WriteLine($"Failed to clean up manifest of {Info.FileNameWithoutExtension} because of error: {e}");
         }
 
-        //todo
-        Output = new ValidatedString(s => !string.IsNullOrWhiteSpace(s) && s.IndexOfAny(Path.GetInvalidPathChars()) == -1);
-
         // Auto generate new filename but allow it to be overriden
         Newfilename = new ValidatedString(s => !string.IsNullOrWhiteSpace(s) && s.IndexOfAny(Path.GetInvalidFileNameChars()) == -1);
         void UpdateNewfilename(object sender, PropertyChangedEventArgs e) => Newfilename.Value = $"[{Author}] {Name} v{Version}.zipmod";
@@ -79,6 +92,32 @@ public class ZipmodEntry
         Name.PropertyChanged += UpdateNewfilename;
         Version.PropertyChanged += UpdateNewfilename;
         //Website.PropertyChanged += UpdateOutput;
+
+        OutputSubdirectory = new ValidatedString(s => !string.IsNullOrWhiteSpace(s) && s.IndexOfAny(Path.GetInvalidPathChars()) == -1);
+        void UpdateOutput(object sender, PropertyChangedEventArgs e) => OutputSubdirectory.Value = GetOutputSubfolder();
+        UpdateOutput(null, null);
+        Newfilename.PropertyChanged += UpdateOutput;
+
+        void CheckManifestIssueStatus(object sender, PropertyChangedEventArgs args)
+        {
+            if (!IsValid())
+                Status = ZipmodEntryStatus.ManifestIssue;
+            else if (Status < ZipmodEntryStatus.NeedsProcessing)
+                Status = ZipmodEntryStatus.NeedsProcessing;
+        }
+        CheckManifestIssueStatus(null, null);
+        this.SubscribeToAllINotifyPropertyChangedMembers(CheckManifestIssueStatus);
+
+        OutputSubdirectory.PropertyChanged += (sender, args) => PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(nameof(OutputSubdirectory)));
+        Newfilename.PropertyChanged += (sender, args) => PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(nameof(Newfilename)));
+    }
+
+    public string RelativeOutputPath => Path.Combine(OutputSubdirectory.Value, Newfilename.Value);
+    public string Notes { get; set; } = string.Empty;
+
+    public bool IsValid()
+    {
+        return this.AllValidatedStringsAreValid();
     }
 
     private static string CleanUpManifestEntry(string original, string fileName, string filenameRegex)
@@ -125,21 +164,50 @@ public class ZipmodEntry
 
     private static bool CanRecompress(SideloaderModInfo sideloaderModInfo)
     {
-        //todo check based on config
-        //sideloaderModInfo.
-        return false;
+        if (sideloaderModInfo.ContentsKind == SideloaderModInfo.ZipmodContentsKind.Unknown)
+            return ModpackToolConfiguration.Instance.ContentsHandlingPolicies.Single(x => x.ContentsKind == SideloaderModInfo.ZipmodContentsKind.Unknown).CanCompress;
+
+        var canCompress = true;
+        foreach (var policy in ModpackToolConfiguration.Instance.ContentsHandlingPolicies)
+        {
+            if ((policy.ContentsKind & sideloaderModInfo.ContentsKind) != 0)
+                canCompress = canCompress && policy.CanCompress;
+        }
+        return canCompress;
+    }
+
+    private string GetOutputSubfolder()
+    {
+        foreach (var policy in ModpackToolConfiguration.Instance.ContentsHandlingPolicies)
+        {
+            if ((policy.ContentsKind & Info.ContentsKind) != 0)
+            {
+                if (!policy.NeverPutInsideGameSpecific && Info.Manifest.Games.Any())
+                    return $"{ModpackToolConfiguration.Instance.GameOutputSubfolder.Value} {string.Join(" ", Info.Manifest.Games.Select(ModpackToolConfiguration.Instance.GameLongNameToShortName))}";
+                return policy.OutputSubfolder.Value;
+            }
+        }
+
+        return ModpackToolConfiguration.Instance.ContentsHandlingPolicies.Single(x => x.ContentsKind == SideloaderModInfo.ZipmodContentsKind.Unknown).OutputSubfolder.Value;
     }
 
     public enum ZipmodEntryStatus
     {
-        Ingested,
+        Ingested = 0,
         ManifestIssue,
         NeedsProcessing,
-        Processing,
+        Processing, //todo either lock in manifest changes or make it necessary to redo some steps?
         NeedsVerify,
         Verifying,
         PASS,
         FAIL,
         Outputted
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        // Prevent issues if values are changed outside main thread
+        MainWindow.Instance.SafeInvoke(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
     }
 }

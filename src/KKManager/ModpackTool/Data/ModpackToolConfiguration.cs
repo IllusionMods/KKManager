@@ -1,124 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using KKManager.Data.Zipmods;
-using static KKManager.ModpackTool.ModpackToolConfiguration;
 
 namespace KKManager.ModpackTool;
 
-public class ValidatedString : ValidatedStringWrapper
+public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
 {
-    public ValidatedString(Func<string, bool> verifyValue) : this(string.Empty, verifyValue)
-    { }
-
-    public ValidatedString(string initialValue, Func<string, bool> verifyValue) : base(verifyValue)
+    public ModpackToolConfiguration()
     {
-        _value = initialValue ?? throw new ArgumentNullException(nameof(initialValue));
-        _isValid = verifyValue(initialValue);
     }
+    private static ModpackToolConfiguration _Instance;
+    private bool _compressPNGs = true;
+    private bool _randomizeCABs = true;
 
-    private string _value;
-    private bool _isValid;
-
-    public override event PropertyChangedEventHandler PropertyChanged;
-
-    public override string Value
-    {
-        get => _value;
-        set
-        {
-            if (_value != value)
-            {
-                _value = value;
-
-                var newValid = VerifyValue(value);
-                if (_isValid != newValid)
-                {
-                    _isValid = newValid;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-            }
-        }
-    }
-
-    public override bool IsValid
-    {
-        get => _isValid;
-    }
-
-    public static void Bind(BindingSource bindTarget, string stringPropName, TextBox inputTextbox, Label passfailLabel, DataSourceUpdateMode updateMode = DataSourceUpdateMode.OnPropertyChanged)
-    {
-        if (bindTarget == null) throw new ArgumentNullException(nameof(bindTarget));
-        if (stringPropName == null) throw new ArgumentNullException(nameof(stringPropName));
-        if (inputTextbox == null) throw new ArgumentNullException(nameof(inputTextbox));
-        if (passfailLabel == null) throw new ArgumentNullException(nameof(passfailLabel));
-
-        inputTextbox.DataBindings.Add(nameof(TextBox.Text), bindTarget, stringPropName + ".Value", false, updateMode);
-
-        var binding = new Binding(nameof(Label.Text), bindTarget, stringPropName + ".IsValid", true, DataSourceUpdateMode.Never);
-        binding.Format += (sender, args) => args.Value = (bool)args.Value ? "PASS" : "FAIL";
-        passfailLabel.DataBindings.Add(binding);
-        var binding1 = new Binding(nameof(Label.BackColor), bindTarget, stringPropName + ".IsValid", true, DataSourceUpdateMode.Never);
-        binding1.Format += (sender, args) => args.Value = (bool)args.Value ? Color.DarkGreen : Color.DarkRed;
-        passfailLabel.DataBindings.Add(binding1);
-        passfailLabel.ForeColor = Color.White;
-    }
-}
-
-public class ValidatedStringWrapper : INotifyPropertyChanged
-{
-    public static implicit operator string(ValidatedStringWrapper w) => w.Value;
-
-    protected ValidatedStringWrapper(Func<string, bool> verifyValue)
-    {
-        VerifyValue = verifyValue ?? throw new ArgumentNullException(nameof(verifyValue));
-    }
-    public ValidatedStringWrapper(Action<string> set, Func<string> get, Func<string, bool> verifyValue) : this(verifyValue)
-    {
-        _set = set ?? throw new ArgumentNullException(nameof(set));
-        _get = get ?? throw new ArgumentNullException(nameof(get));
-    }
-
-    private readonly Action<string> _set;
-    private readonly Func<string> _get;
-    protected readonly Func<string, bool> VerifyValue;
-
-    public virtual event PropertyChangedEventHandler PropertyChanged;
-
-    public virtual string Value
-    {
-        get => _get();
-        set
-        {
-            //if (Value != value)
-            {
-                var prevValid = VerifyValue(value);
-                _set(value);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
-                if (prevValid != IsValid)
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
-            }
-        }
-    }
-
-    public virtual bool IsValid => VerifyValue(_get());//todo handle needs check values
-
-    public override string ToString() => Value ?? "";
-}
-
-public class ModpackToolConfiguration : IXmlSerializable
-{
-    public static ModpackToolConfiguration Instance { get; } = new();
+    public static ModpackToolConfiguration Instance => _Instance ??= new ModpackToolConfiguration();
 
     public ValidatedString IngestFolder { get; } = new(Directory.Exists);
     public ValidatedString OutputFolder { get; } = new(Directory.Exists);
@@ -162,6 +66,27 @@ public class ModpackToolConfiguration : IXmlSerializable
         return !string.IsNullOrWhiteSpace(s) && !s.StartsWith(" ") && !s.EndsWith(" ") && s.All(c => !invalidFileNameChars.Contains(c));
     }
 
+    public bool CompressPNGs
+    {
+        get => _compressPNGs;
+        set
+        {
+            if (value == _compressPNGs) return;
+            _compressPNGs = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool RandomizeCABs
+    {
+        get => _randomizeCABs;
+        set
+        {
+            if (value == _randomizeCABs) return;
+            _randomizeCABs = value;
+            OnPropertyChanged();
+        }
+    }
 
     public sealed class ModContentsHandlingPolicy : INotifyPropertyChanged
     {
@@ -210,10 +135,10 @@ public class ModpackToolConfiguration : IXmlSerializable
     public List<ModContentsHandlingPolicy> ContentsHandlingPolicies { get; } =
         Enum.GetValues(typeof(SideloaderModInfo.ZipmodContentsKind)).Cast<SideloaderModInfo.ZipmodContentsKind>().Select(x => new ModContentsHandlingPolicy(x, "")).ToList();
 
-    public event EventHandler ContentsHandlingPoliciesChanged;
-    private void OnContentsHandlingPoliciesChanged()
+    public event EventHandler ContentsChanged;
+    private void OnContentsChanged()
     {
-        ContentsHandlingPoliciesChanged?.Invoke(this, EventArgs.Empty);
+        ContentsChanged?.Invoke(this, EventArgs.Empty);
     }
     public bool AllValid() => this.AllValidatedStringsAreValid();
 
@@ -234,16 +159,28 @@ public class ModpackToolConfiguration : IXmlSerializable
     {
         var result = FromFile(path);
         CopyValuesFrom(result);
+
+        OnContentsChanged();
     }
 
     public void CopyValuesFrom(ModpackToolConfiguration other)
     {
-        foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)))
+        foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            var our = (ValidatedStringWrapper)field.GetValue(this);
-            var their = (ValidatedStringWrapper)field.GetValue(other);
-            our.Value = their.Value;
+            if (typeof(ValidatedStringWrapper).IsAssignableFrom(field.PropertyType))
+            {
+                var our = (ValidatedStringWrapper)field.GetValue(this);
+                var their = (ValidatedStringWrapper)field.GetValue(other);
+                our.Value = their.Value;
+            }
+            else if (typeof(bool).IsAssignableFrom(field.PropertyType))
+            {
+                field.SetValue(this, field.GetValue(other));
+            }
         }
+
+        ContentsHandlingPolicies.Clear();
+        ContentsHandlingPolicies.AddRange(other.ContentsHandlingPolicies);
     }
 
     public XmlSchema GetSchema()
@@ -253,7 +190,7 @@ public class ModpackToolConfiguration : IXmlSerializable
 
     public void ReadXml(XmlReader reader)
     {
-        var allFields = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)).ToList();
+        var allFields = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
 
         reader.ReadStartElement("ModpackToolConfiguration");
 
@@ -262,7 +199,10 @@ public class ModpackToolConfiguration : IXmlSerializable
             var f = allFields.FirstOrDefault(x => x.Name == reader.Name);
             if (f != null)
             {
-                ((ValidatedStringWrapper)f.GetValue(this)).Value = reader.ReadElementContentAsString();
+                if (typeof(ValidatedStringWrapper).IsAssignableFrom(f.PropertyType))
+                    ((ValidatedStringWrapper)f.GetValue(this)).Value = reader.ReadElementContentAsString();
+                else if (typeof(bool).IsAssignableFrom(f.PropertyType))
+                    f.SetValue(this, string.Equals(reader.ReadElementContentAsString(), "True", StringComparison.OrdinalIgnoreCase));
                 //reader.ReadEndElement();
             }
             else
@@ -296,8 +236,6 @@ public class ModpackToolConfiguration : IXmlSerializable
         }
         reader.ReadEndElement();
 
-        OnContentsHandlingPoliciesChanged();
-
         //while (!reader.EOF && reader.LocalName != "ContentPolicies")
         //{
         //    var f = allFields.FirstOrDefault(x => x.Name == reader.Name);
@@ -312,8 +250,17 @@ public class ModpackToolConfiguration : IXmlSerializable
 
     public void WriteXml(XmlWriter writer)
     {
-        foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.PropertyType)))
-            writer.WriteElementString(field.Name, ((ValidatedStringWrapper)field.GetValue(this)).Value);
+        foreach (var field in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (typeof(ValidatedStringWrapper).IsAssignableFrom(field.PropertyType))
+            {
+                writer.WriteElementString(field.Name, ((ValidatedStringWrapper)field.GetValue(this)).Value);
+            }
+            else if (typeof(bool).IsAssignableFrom(field.PropertyType))
+            {
+                writer.WriteElementString(field.Name, ((bool)field.GetValue(this)).ToString(CultureInfo.InvariantCulture));
+            }
+        }
 
         writer.WriteStartElement("ContentPolicies");
         foreach (var modContentsHandlingPolicy in ContentsHandlingPolicies)
@@ -329,4 +276,11 @@ public class ModpackToolConfiguration : IXmlSerializable
     }
 
     #endregion
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }

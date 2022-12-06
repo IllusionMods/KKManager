@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 using BrightIdeasSoftware;
 
 namespace KKManager.ModpackTool
@@ -11,7 +13,6 @@ namespace KKManager.ModpackTool
 
             var configuration = ModpackToolConfiguration.Instance;
             modpackToolConfigurationBindingSource.DataSource = configuration;
-            configuration.ContentsHandlingPoliciesChanged += (sender, args) => objectListView1.Objects = configuration.ContentsHandlingPolicies;
 
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.IngestFolder), folderIngesttextBox, folderIngestOk);
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.OutputFolder), folderOutputtextBox, folderOutputOk);
@@ -27,6 +28,22 @@ namespace KKManager.ModpackTool
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game3Longs), textBoxG3Tag, labelG3Tag, DataSourceUpdateMode.OnValidation);
 
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.GameOutputSubfolder), textBoxGameOutputSubfolder, labelGameOutputSubfolder);
+
+            //checkBoxPngCompress.DataBindings.Add(nameof(CheckBox.Checked), modpackToolConfigurationBindingSource, nameof(configuration.CompressPNGs));
+            //checkBoxRandomizeCab.DataBindings.Add(nameof(CheckBox.Checked), modpackToolConfigurationBindingSource, nameof(configuration.RandomizeCABs));
+
+            objectListView1.UseCellFormatEvents = true;
+            objectListView1.FormatCell += (sender, args) =>
+            {
+                if (args.ColumnIndex == olvColumnValid.Index)
+                {
+                    args.SubItem.BackColor = bool.TryParse(args.CellValue?.ToString(), out var b) && b ? Color.DarkGreen : Color.DarkRed;
+                    args.SubItem.ForeColor = Color.White;
+                }
+            };
+
+            configuration.ContentsChanged += (sender, args) => objectListView1.Objects = ModpackToolConfiguration.Instance.ContentsHandlingPolicies;
+            objectListView1.Objects = configuration.ContentsHandlingPolicies;
 
             #region Drag and drop item reordering
 

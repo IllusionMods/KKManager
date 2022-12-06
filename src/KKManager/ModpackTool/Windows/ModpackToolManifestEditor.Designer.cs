@@ -55,16 +55,19 @@
             this.labelGames = new System.Windows.Forms.Label();
             this.labelNewfilename = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.buttonFail = new System.Windows.Forms.Button();
-            this.buttonPassNext = new System.Windows.Forms.Button();
             this.comboBoxOutput = new System.Windows.Forms.ComboBox();
             this.textBoxWebsite = new System.Windows.Forms.TextBox();
             this.textBoxGames = new System.Windows.Forms.TextBox();
             this.labelOutput = new System.Windows.Forms.Label();
-            this.buttonPass = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.checkBoxCompress = new System.Windows.Forms.CheckBox();
             this.labelContents = new System.Windows.Forms.Label();
+            this.buttonNext = new System.Windows.Forms.Button();
+            this.buttonNextIssue = new System.Windows.Forms.Button();
+            this.buttonPrev = new System.Windows.Forms.Button();
+            this.textBoxNotes = new System.Windows.Forms.TextBox();
+            this.buttonFail = new System.Windows.Forms.Button();
+            this.buttonReprocess = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.treeListViewManifest = new BrightIdeasSoftware.TreeListView();
@@ -109,20 +112,24 @@
             this.tableLayoutPanel1.Controls.Add(this.labelGames, 2, 6);
             this.tableLayoutPanel1.Controls.Add(this.labelNewfilename, 2, 8);
             this.tableLayoutPanel1.Controls.Add(this.label18, 0, 10);
-            this.tableLayoutPanel1.Controls.Add(this.buttonFail, 0, 13);
-            this.tableLayoutPanel1.Controls.Add(this.buttonPassNext, 1, 13);
             this.tableLayoutPanel1.Controls.Add(this.comboBoxOutput, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this.textBoxWebsite, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.textBoxGames, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.labelOutput, 2, 10);
-            this.tableLayoutPanel1.Controls.Add(this.buttonPass, 2, 13);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 11);
             this.tableLayoutPanel1.Controls.Add(this.checkBoxCompress, 1, 12);
             this.tableLayoutPanel1.Controls.Add(this.labelContents, 1, 11);
+            this.tableLayoutPanel1.Controls.Add(this.buttonNext, 2, 13);
+            this.tableLayoutPanel1.Controls.Add(this.buttonNextIssue, 1, 13);
+            this.tableLayoutPanel1.Controls.Add(this.buttonPrev, 0, 13);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxNotes, 1, 14);
+            this.tableLayoutPanel1.Controls.Add(this.buttonFail, 2, 14);
+            this.tableLayoutPanel1.Controls.Add(this.buttonReprocess, 0, 14);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 14;
+            this.tableLayoutPanel1.RowCount = 15;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -137,7 +144,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(339, 342);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(339, 371);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -157,7 +164,7 @@
             this.textBoxGuid.Location = new System.Drawing.Point(96, 3);
             this.textBoxGuid.Name = "textBoxGuid";
             this.textBoxGuid.Size = new System.Drawing.Size(158, 20);
-            this.textBoxGuid.TabIndex = 1;
+            this.textBoxGuid.TabIndex = 0;
             // 
             // labelGuid
             // 
@@ -215,7 +222,7 @@
             this.textBoxVersion.Location = new System.Drawing.Point(96, 55);
             this.textBoxVersion.Name = "textBoxVersion";
             this.textBoxVersion.Size = new System.Drawing.Size(158, 20);
-            this.textBoxVersion.TabIndex = 1;
+            this.textBoxVersion.TabIndex = 2;
             // 
             // textBoxAuthor
             // 
@@ -223,7 +230,7 @@
             this.textBoxAuthor.Location = new System.Drawing.Point(96, 81);
             this.textBoxAuthor.Name = "textBoxAuthor";
             this.textBoxAuthor.Size = new System.Drawing.Size(158, 20);
-            this.textBoxAuthor.TabIndex = 1;
+            this.textBoxAuthor.TabIndex = 3;
             // 
             // textBoxDescr
             // 
@@ -231,7 +238,7 @@
             this.textBoxDescr.Location = new System.Drawing.Point(96, 107);
             this.textBoxDescr.Name = "textBoxDescr";
             this.textBoxDescr.Size = new System.Drawing.Size(158, 20);
-            this.textBoxDescr.TabIndex = 1;
+            this.textBoxDescr.TabIndex = 4;
             // 
             // label5
             // 
@@ -370,7 +377,8 @@
             this.textBoxOldfilename.Name = "textBoxOldfilename";
             this.textBoxOldfilename.ReadOnly = true;
             this.textBoxOldfilename.Size = new System.Drawing.Size(158, 20);
-            this.textBoxOldfilename.TabIndex = 1;
+            this.textBoxOldfilename.TabIndex = 7;
+            this.textBoxOldfilename.TabStop = false;
             // 
             // textBoxNewfilename
             // 
@@ -378,7 +386,7 @@
             this.textBoxNewfilename.Location = new System.Drawing.Point(96, 211);
             this.textBoxNewfilename.Name = "textBoxNewfilename";
             this.textBoxNewfilename.Size = new System.Drawing.Size(158, 20);
-            this.textBoxNewfilename.TabIndex = 1;
+            this.textBoxNewfilename.TabIndex = 8;
             // 
             // labelGames
             // 
@@ -419,30 +427,6 @@
             this.label18.TabIndex = 0;
             this.label18.Text = "Output dir";
             // 
-            // buttonFail
-            // 
-            this.buttonFail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonFail.BackColor = System.Drawing.Color.LightSalmon;
-            this.buttonFail.Location = new System.Drawing.Point(3, 316);
-            this.buttonFail.Name = "buttonFail";
-            this.buttonFail.Size = new System.Drawing.Size(87, 23);
-            this.buttonFail.TabIndex = 4;
-            this.buttonFail.Text = "FAIL";
-            this.buttonFail.UseVisualStyleBackColor = false;
-            // 
-            // buttonPassNext
-            // 
-            this.buttonPassNext.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPassNext.BackColor = System.Drawing.Color.PaleGreen;
-            this.buttonPassNext.Location = new System.Drawing.Point(96, 316);
-            this.buttonPassNext.Name = "buttonPassNext";
-            this.buttonPassNext.Size = new System.Drawing.Size(158, 23);
-            this.buttonPassNext.TabIndex = 4;
-            this.buttonPassNext.Text = "PASS, go next";
-            this.buttonPassNext.UseVisualStyleBackColor = false;
-            // 
             // comboBoxOutput
             // 
             this.comboBoxOutput.Dock = System.Windows.Forms.DockStyle.Top;
@@ -450,7 +434,7 @@
             this.comboBoxOutput.Location = new System.Drawing.Point(96, 237);
             this.comboBoxOutput.Name = "comboBoxOutput";
             this.comboBoxOutput.Size = new System.Drawing.Size(158, 21);
-            this.comboBoxOutput.TabIndex = 5;
+            this.comboBoxOutput.TabIndex = 9;
             // 
             // textBoxWebsite
             // 
@@ -458,7 +442,7 @@
             this.textBoxWebsite.Location = new System.Drawing.Point(96, 133);
             this.textBoxWebsite.Name = "textBoxWebsite";
             this.textBoxWebsite.Size = new System.Drawing.Size(158, 20);
-            this.textBoxWebsite.TabIndex = 1;
+            this.textBoxWebsite.TabIndex = 5;
             // 
             // textBoxGames
             // 
@@ -466,7 +450,7 @@
             this.textBoxGames.Location = new System.Drawing.Point(96, 159);
             this.textBoxGames.Name = "textBoxGames";
             this.textBoxGames.Size = new System.Drawing.Size(158, 20);
-            this.textBoxGames.TabIndex = 1;
+            this.textBoxGames.TabIndex = 6;
             // 
             // labelOutput
             // 
@@ -481,18 +465,6 @@
             this.labelOutput.TabIndex = 3;
             this.labelOutput.Text = "OK";
             this.labelOutput.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // buttonPass
-            // 
-            this.buttonPass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPass.BackColor = System.Drawing.Color.PaleGreen;
-            this.buttonPass.Location = new System.Drawing.Point(260, 316);
-            this.buttonPass.Name = "buttonPass";
-            this.buttonPass.Size = new System.Drawing.Size(76, 23);
-            this.buttonPass.TabIndex = 4;
-            this.buttonPass.Text = "PASS";
-            this.buttonPass.UseVisualStyleBackColor = false;
             // 
             // label2
             // 
@@ -515,7 +487,7 @@
             this.checkBoxCompress.Name = "checkBoxCompress";
             this.checkBoxCompress.Padding = new System.Windows.Forms.Padding(3);
             this.checkBoxCompress.Size = new System.Drawing.Size(158, 23);
-            this.checkBoxCompress.TabIndex = 6;
+            this.checkBoxCompress.TabIndex = 11;
             this.checkBoxCompress.Text = "Recompress AssetBundles";
             this.checkBoxCompress.UseVisualStyleBackColor = true;
             // 
@@ -528,17 +500,96 @@
             this.labelContents.Name = "labelContents";
             this.labelContents.Padding = new System.Windows.Forms.Padding(4);
             this.labelContents.Size = new System.Drawing.Size(158, 23);
-            this.labelContents.TabIndex = 0;
+            this.labelContents.TabIndex = 10;
+            // 
+            // buttonNext
+            // 
+            this.buttonNext.AutoSize = true;
+            this.buttonNext.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonNext.BackColor = System.Drawing.Color.Honeydew;
+            this.buttonNext.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonNext.Location = new System.Drawing.Point(260, 316);
+            this.buttonNext.Name = "buttonNext";
+            this.buttonNext.Size = new System.Drawing.Size(76, 23);
+            this.buttonNext.TabIndex = 16;
+            this.buttonNext.Text = "Next";
+            this.buttonNext.UseVisualStyleBackColor = false;
+            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
+            // 
+            // buttonNextIssue
+            // 
+            this.buttonNextIssue.AutoSize = true;
+            this.buttonNextIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonNextIssue.BackColor = System.Drawing.Color.LawnGreen;
+            this.buttonNextIssue.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonNextIssue.Location = new System.Drawing.Point(96, 316);
+            this.buttonNextIssue.Name = "buttonNextIssue";
+            this.buttonNextIssue.Size = new System.Drawing.Size(158, 23);
+            this.buttonNextIssue.TabIndex = 12;
+            this.buttonNextIssue.Text = "Go to next with issue";
+            this.buttonNextIssue.UseVisualStyleBackColor = false;
+            this.buttonNextIssue.Click += new System.EventHandler(this.buttonNextIssue_Click);
+            // 
+            // buttonPrev
+            // 
+            this.buttonPrev.AutoSize = true;
+            this.buttonPrev.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonPrev.BackColor = System.Drawing.Color.Honeydew;
+            this.buttonPrev.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonPrev.Location = new System.Drawing.Point(3, 316);
+            this.buttonPrev.Name = "buttonPrev";
+            this.buttonPrev.Size = new System.Drawing.Size(87, 23);
+            this.buttonPrev.TabIndex = 15;
+            this.buttonPrev.Text = "Previous";
+            this.buttonPrev.UseVisualStyleBackColor = false;
+            this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
+            // 
+            // textBoxNotes
+            // 
+            this.textBoxNotes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBoxNotes.Location = new System.Drawing.Point(96, 345);
+            this.textBoxNotes.Name = "textBoxNotes";
+            this.textBoxNotes.Size = new System.Drawing.Size(158, 20);
+            this.textBoxNotes.TabIndex = 13;
+            this.textBoxNotes.Text = "Notes";
+            // 
+            // buttonFail
+            // 
+            this.buttonFail.AutoSize = true;
+            this.buttonFail.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonFail.BackColor = System.Drawing.Color.Coral;
+            this.buttonFail.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonFail.Location = new System.Drawing.Point(260, 345);
+            this.buttonFail.Name = "buttonFail";
+            this.buttonFail.Size = new System.Drawing.Size(76, 23);
+            this.buttonFail.TabIndex = 14;
+            this.buttonFail.Text = "FAIL";
+            this.buttonFail.UseVisualStyleBackColor = false;
+            this.buttonFail.Click += new System.EventHandler(this.buttonFail_Click);
+            // 
+            // buttonReprocess
+            // 
+            this.buttonReprocess.AutoSize = true;
+            this.buttonReprocess.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonReprocess.BackColor = System.Drawing.Color.Gold;
+            this.buttonReprocess.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonReprocess.Location = new System.Drawing.Point(3, 345);
+            this.buttonReprocess.Name = "buttonReprocess";
+            this.buttonReprocess.Size = new System.Drawing.Size(87, 23);
+            this.buttonReprocess.TabIndex = 15;
+            this.buttonReprocess.Text = "Reprocess";
+            this.buttonReprocess.UseVisualStyleBackColor = false;
+            this.buttonReprocess.Click += new System.EventHandler(this.buttonReprocess_Click);
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 342);
+            this.tabControl1.Location = new System.Drawing.Point(0, 371);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(339, 174);
+            this.tabControl1.Size = new System.Drawing.Size(339, 145);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -547,7 +598,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(331, 148);
+            this.tabPage1.Size = new System.Drawing.Size(331, 119);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Manifest contents";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -556,11 +607,13 @@
             // 
             this.treeListViewManifest.CellEditUseWholeCell = false;
             this.treeListViewManifest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeListViewManifest.EmptyListMsg = "Early access, will totally be finished in full version";
+            this.treeListViewManifest.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.treeListViewManifest.HideSelection = false;
             this.treeListViewManifest.Location = new System.Drawing.Point(3, 3);
             this.treeListViewManifest.Name = "treeListViewManifest";
             this.treeListViewManifest.ShowGroups = false;
-            this.treeListViewManifest.Size = new System.Drawing.Size(325, 142);
+            this.treeListViewManifest.Size = new System.Drawing.Size(325, 113);
             this.treeListViewManifest.TabIndex = 0;
             this.treeListViewManifest.UseCompatibleStateImageBehavior = false;
             this.treeListViewManifest.View = System.Windows.Forms.View.Details;
@@ -571,7 +624,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(331, 148);
+            this.tabPage2.Size = new System.Drawing.Size(331, 119);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Files";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -627,14 +680,14 @@
         private System.Windows.Forms.Label labelGames;
         private System.Windows.Forms.Label labelNewfilename;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Button buttonFail;
+        private System.Windows.Forms.Button buttonPrev;
         private System.Windows.Forms.CheckBox checkBoxCompress;
-        private System.Windows.Forms.Button buttonPassNext;
+        private System.Windows.Forms.Button buttonNextIssue;
         private System.Windows.Forms.ComboBox comboBoxOutput;
         private System.Windows.Forms.TextBox textBoxWebsite;
         private System.Windows.Forms.TextBox textBoxGames;
         private System.Windows.Forms.Label labelOutput;
-        private System.Windows.Forms.Button buttonPass;
+        private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private BrightIdeasSoftware.TreeListView treeListViewManifest;
@@ -642,5 +695,8 @@
         private System.Windows.Forms.BindingSource zipmodEntryBindingSource;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelContents;
+        private System.Windows.Forms.TextBox textBoxNotes;
+        private System.Windows.Forms.Button buttonFail;
+        private System.Windows.Forms.Button buttonReprocess;
     }
 }
