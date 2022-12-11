@@ -31,6 +31,9 @@ namespace KKManager.ModpackTool
             olvColumnOutputPath.AspectName = nameof(ZipmodEntry.RelativeOutputPath);
             olvColumnStatus.FormatAsModpackToolEntryStatus();
             //todo load last loaded config
+
+            olvColumnContent.AspectName = nameof(ZipmodEntry.Info) + "." + nameof(ZipmodEntry.Info.ContentsKind);
+            olvColumnGames.AspectName = nameof(ZipmodEntry.Games);
         }
 
         private static TypedObjectListView<ZipmodEntry> _listView;
@@ -113,18 +116,21 @@ namespace KKManager.ModpackTool
 
         #endregion
 
-        private void buttonRead_Click(object sender, EventArgs e)
+        private async void buttonRead_Click(object sender, EventArgs e)
         {
             try
             {
+                Enabled = false;
+
                 if (!ModpackToolConfiguration.Instance.AllValid())
                     throw new Exception("Configuration looks to be invalid, check if all folder paths are correct and the folders exist.");
 
-                try { Directory.Delete(ModpackToolTempDir, true); } catch (IOException) { }
+                await new DirectoryInfo(ModpackToolTempDir).SafeDelete();
+
                 Directory.CreateDirectory(ModpackToolTempDir);
 
                 var rb = new ReplaySubject<SideloaderModInfo>();
-                SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.IngestFolder, rb, CancellationToken.None).Wait();
+                await SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.IngestFolder, rb, CancellationToken.None);
 
                 var all = rb.ToEnumerable().ToList();
 
@@ -147,7 +153,10 @@ namespace KKManager.ModpackTool
                 MessageBox.Show("ERROR, can't proceed:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Console.WriteLine(ex);
             }
-
+            finally
+            {
+                Enabled = true;
+            }
         }
 
         private void objectListViewMain_SelectionChanged(object sender, EventArgs e)
@@ -208,54 +217,11 @@ namespace KKManager.ModpackTool
             {
                 try
                 {
-                    if (entry.Status == ZipmodEntry.ZipmodEntryStatus.PASS)
-                    {
-                        var outputDirectory = Path.Combine(ModpackToolConfiguration.Instance.OutputFolder.Value, entry.OutputSubdirectory.Value);
-                        var outputPath = Path.Combine(outputDirectory, entry.Newfilename.Value);
-                        var finishedFile = new FileInfo(entry.GetTempOutputFilePath());
-                        if (!finishedFile.Exists)
-                        {
-                            Console.WriteLine($"ERROR: Can not output [{entry.Name}] because it wasn't processed or the resulting zipmod file got removed. Setting status to NeedsProcessing.");
-                            entry.Status = ZipmodEntry.ZipmodEntryStatus.NeedsProcessing;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Copying [{entry.Name}] ({entry.Status}) to {outputPath}");
-                            if (File.Exists(outputPath))
-                            {
-                                Console.WriteLine($"WARNING: File already existed and was overwritten! {outputPath}");
-                            }
-                            else if (!Directory.Exists(outputDirectory))
-                            {
-                                Console.WriteLine($"INFO: Output directory didn't exist and was created: {outputDirectory}");
-                                Directory.CreateDirectory(outputDirectory);
-                            }
-                            finishedFile.CopyTo(outputPath, true);
-                            entry.Status = ZipmodEntry.ZipmodEntryStatus.Outputted;
-                        }
-                    }
-                    else if (entry.Status == ZipmodEntry.ZipmodEntryStatus.FAIL)
-                    {
-                        var outputDirectory = ModpackToolConfiguration.Instance.FailFolder.Value;
-                        var outputPath = Path.Combine(outputDirectory, entry.FullPath.FullName);
-                        Console.WriteLine($"Copying [{entry.Name}] ({entry.Status}) to {outputPath}");
-                        if (File.Exists(outputPath))
-                        {
-                            Console.WriteLine($"WARNING: File already existed and was overwritten! {outputPath}");
-                        }
-                        else if (!Directory.Exists(outputDirectory))
-                        {
-                            Console.WriteLine($"INFO: Fail directory didn't exist and was created: {outputDirectory}");
-                            Directory.CreateDirectory(outputDirectory);
-                        }
-
-                        entry.FullPath.CopyTo(outputPath, true);
-                        entry.Status = ZipmodEntry.ZipmodEntryStatus.Outputted;
-                    }
+                    entry.OutputIfPossible();
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"ERROR: Failed to output [{entry.Name}] - " + exception);
+                    Console.WriteLine($"ERROR: Failed to output [{entry.OriginalFilename}] - " + exception);
                 }
             }
         }

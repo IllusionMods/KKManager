@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Ionic.Zip;
 using KKManager.SB3UGS;
 using KKManager.Util;
 using SharpCompress.Archives;
@@ -16,6 +18,7 @@ using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers.Zip;
+using CompressionLevel = Ionic.Zlib.CompressionLevel;
 
 namespace KKManager.ModpackTool;
 
@@ -91,6 +94,19 @@ public static class ZipmodProcessor
                     zf.ExtractArchiveToDirectory(tempDir);
                 }
 
+                // todo might work better but might also lock up if there's a ton of files
+                //await Task.WhenAll(Directory.GetFiles(tempDir, "*", SearchOption.AllDirectories).Select(async f =>
+                //{
+                //    try
+                //    {
+                //        await ProcessFile(zipmodEntry, new FileInfo(f));
+                //    }
+                //    catch (Exception e)
+                //    {
+                //        Console.WriteLine($"Failed to process file [{f}], the resulting zipmod might have issues. Error: {e}");
+                //    }
+                //}));
+
                 Parallel.ForEach(Directory.GetFiles(tempDir, "*", SearchOption.AllDirectories), s =>
                 {
                     try
@@ -120,17 +136,34 @@ public static class ZipmodProcessor
                     manifestWorkCopy.Save(writer, SaveOptions.OmitDuplicateNamespaces);
 
                 // ------ Recompress the archive
-                using (var zf = ZipArchive.Create())
+                //using (var zf = ZipArchive.Create())
+                //using (var writeStream = File.OpenWrite(outPath))
+                //{
+                //    zf.DeflateCompressionLevel = CompressionLevel.None;
+                //    zf.AddAllFromDirectory(tempDir);
+                //    zf.SaveTo(writeStream, new ZipWriterOptions(CompressionType.None)
+                //    {
+                //        //ArchiveEncoding = new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
+                //        //ArchiveComment = archiveComment
+                //    });
+                //}
+
                 using (var writeStream = File.OpenWrite(outPath))
+                using (var zf = new Ionic.Zip.ZipFile())
                 {
-                    zf.DeflateCompressionLevel = CompressionLevel.None;
-                    zf.AddAllFromDirectory(tempDir);
-                    zf.SaveTo(writeStream, new ZipWriterOptions(CompressionType.None)
-                    {
-                        ArchiveEncoding = new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
-                        ArchiveComment = archiveComment
-                    });
+                    zf.CompressionMethod = CompressionMethod.None;
+                    zf.CompressionLevel = CompressionLevel.None;
+                    zf.Comment = archiveComment;
+
+                    zf.AddDirectory(tempDir, "");
+                    zf.Save(writeStream);
                 }
+
+
+
+
+
+
 
                 // ------ Clean up
                 await new DirectoryInfo(tempDir).SafeDelete();

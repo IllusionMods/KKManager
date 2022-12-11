@@ -80,8 +80,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.checkBoxRandomizeCab = new System.Windows.Forms.CheckBox();
-            this.checkBoxPngCompress = new System.Windows.Forms.CheckBox();
             this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.checkBoxPngCompress = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -735,6 +735,10 @@
             this.checkBoxRandomizeCab.Text = "Randomize CABs (only works of AssetBundle is also compressed, see options below)";
             this.checkBoxRandomizeCab.UseVisualStyleBackColor = true;
             // 
+            // modpackToolConfigurationBindingSource
+            // 
+            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.ModpackToolConfiguration);
+            // 
             // checkBoxPngCompress
             // 
             this.checkBoxPngCompress.AutoSize = true;
@@ -746,10 +750,6 @@
             this.checkBoxPngCompress.TabIndex = 0;
             this.checkBoxPngCompress.Text = "Compress PNGs (pngcrush)";
             this.checkBoxPngCompress.UseVisualStyleBackColor = true;
-            // 
-            // modpackToolConfigurationBindingSource
-            // 
-            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.ModpackToolConfiguration);
             // 
             // ToolConfigurationEditor
             // 

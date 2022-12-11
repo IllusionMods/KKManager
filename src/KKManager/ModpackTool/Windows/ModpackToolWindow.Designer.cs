@@ -32,13 +32,12 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.configInputBox = new System.Windows.Forms.ToolStripComboBox();
-            this.configBrowseBtn = new System.Windows.Forms.ToolStripButton();
             this.configSaveBtn = new System.Windows.Forms.ToolStripButton();
             this.configLoadBtn = new System.Windows.Forms.ToolStripButton();
             this.configDeleteBtn = new System.Windows.Forms.ToolStripButton();
+            this.configBrowseBtn = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageConfiguration = new System.Windows.Forms.TabPage();
-            this.toolConfigurationEditor1 = new KKManager.ModpackTool.ToolConfigurationEditor();
             this.tabPageIngest = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.objectListViewMain = new BrightIdeasSoftware.ObjectListView();
@@ -55,8 +54,11 @@
             this.button4CopyToOut = new System.Windows.Forms.Button();
             this.button9Export = new System.Windows.Forms.Button();
             this.tabPageVerify = new System.Windows.Forms.TabPage();
-            this.verificationTool1 = new KKManager.ModpackTool.Windows.VerificationTool();
             this.tabPageHistory = new System.Windows.Forms.TabPage();
+            this.olvColumnGames = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnContent = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.toolConfigurationEditor1 = new KKManager.ModpackTool.ToolConfigurationEditor();
+            this.verificationTool1 = new KKManager.ModpackTool.Windows.VerificationTool();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageConfiguration.SuspendLayout();
@@ -97,16 +99,6 @@
             this.configInputBox.Size = new System.Drawing.Size(250, 25);
             this.configInputBox.Text = "test.xml";
             // 
-            // configBrowseBtn
-            // 
-            this.configBrowseBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.configBrowseBtn.Image = ((System.Drawing.Image)(resources.GetObject("configBrowseBtn.Image")));
-            this.configBrowseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.configBrowseBtn.Name = "configBrowseBtn";
-            this.configBrowseBtn.Size = new System.Drawing.Size(94, 22);
-            this.configBrowseBtn.Text = "Open config dir";
-            this.configBrowseBtn.Click += new System.EventHandler(this.configBrowseBtn_Click);
-            // 
             // configSaveBtn
             // 
             this.configSaveBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -137,6 +129,16 @@
             this.configDeleteBtn.Text = "Delete";
             this.configDeleteBtn.Click += new System.EventHandler(this.configDeleteBtn_Click);
             // 
+            // configBrowseBtn
+            // 
+            this.configBrowseBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.configBrowseBtn.Image = ((System.Drawing.Image)(resources.GetObject("configBrowseBtn.Image")));
+            this.configBrowseBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.configBrowseBtn.Name = "configBrowseBtn";
+            this.configBrowseBtn.Size = new System.Drawing.Size(94, 22);
+            this.configBrowseBtn.Text = "Open config dir";
+            this.configBrowseBtn.Click += new System.EventHandler(this.configBrowseBtn_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPageConfiguration);
@@ -162,15 +164,6 @@
             this.tabPageConfiguration.TabIndex = 0;
             this.tabPageConfiguration.Text = "Configuration";
             this.tabPageConfiguration.UseVisualStyleBackColor = true;
-            // 
-            // toolConfigurationEditor1
-            // 
-            this.toolConfigurationEditor1.AutoSize = true;
-            this.toolConfigurationEditor1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolConfigurationEditor1.Location = new System.Drawing.Point(3, 3);
-            this.toolConfigurationEditor1.Name = "toolConfigurationEditor1";
-            this.toolConfigurationEditor1.Size = new System.Drawing.Size(874, 688);
-            this.toolConfigurationEditor1.TabIndex = 2;
             // 
             // tabPageIngest
             // 
@@ -201,12 +194,16 @@
             this.objectListViewMain.AllColumns.Add(this.olvColumnOrigName);
             this.objectListViewMain.AllColumns.Add(this.olvColumnStatus);
             this.objectListViewMain.AllColumns.Add(this.olvColumnOutputPath);
+            this.objectListViewMain.AllColumns.Add(this.olvColumnGames);
+            this.objectListViewMain.AllColumns.Add(this.olvColumnContent);
             this.objectListViewMain.CellEditUseWholeCell = false;
             this.objectListViewMain.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnNo,
             this.olvColumnOrigName,
             this.olvColumnStatus,
-            this.olvColumnOutputPath});
+            this.olvColumnOutputPath,
+            this.olvColumnGames,
+            this.olvColumnContent});
             this.objectListViewMain.Cursor = System.Windows.Forms.Cursors.Default;
             this.objectListViewMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListViewMain.FullRowSelect = true;
@@ -355,14 +352,6 @@
             this.tabPageVerify.Text = "Verification tool";
             this.tabPageVerify.UseVisualStyleBackColor = true;
             // 
-            // verificationTool1
-            // 
-            this.verificationTool1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.verificationTool1.Location = new System.Drawing.Point(3, 3);
-            this.verificationTool1.Name = "verificationTool1";
-            this.verificationTool1.Size = new System.Drawing.Size(891, 474);
-            this.verificationTool1.TabIndex = 0;
-            // 
             // tabPageHistory
             // 
             this.tabPageHistory.Location = new System.Drawing.Point(4, 22);
@@ -371,6 +360,33 @@
             this.tabPageHistory.TabIndex = 2;
             this.tabPageHistory.Text = "History";
             this.tabPageHistory.UseVisualStyleBackColor = true;
+            // 
+            // olvColumnGames
+            // 
+            this.olvColumnGames.Text = "Game specific";
+            this.olvColumnGames.Width = 123;
+            // 
+            // olvColumnContent
+            // 
+            this.olvColumnContent.Text = "Content type";
+            this.olvColumnContent.Width = 108;
+            // 
+            // toolConfigurationEditor1
+            // 
+            this.toolConfigurationEditor1.AutoSize = true;
+            this.toolConfigurationEditor1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolConfigurationEditor1.Location = new System.Drawing.Point(3, 3);
+            this.toolConfigurationEditor1.Name = "toolConfigurationEditor1";
+            this.toolConfigurationEditor1.Size = new System.Drawing.Size(874, 688);
+            this.toolConfigurationEditor1.TabIndex = 2;
+            // 
+            // verificationTool1
+            // 
+            this.verificationTool1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.verificationTool1.Location = new System.Drawing.Point(3, 3);
+            this.verificationTool1.Name = "verificationTool1";
+            this.verificationTool1.Size = new System.Drawing.Size(891, 474);
+            this.verificationTool1.TabIndex = 0;
             // 
             // ModpackToolWindow
             // 
@@ -429,5 +445,7 @@
         private System.Windows.Forms.Button button2Process;
         private System.Windows.Forms.TabPage tabPageVerify;
         private Windows.VerificationTool verificationTool1;
+        private BrightIdeasSoftware.OLVColumn olvColumnGames;
+        private BrightIdeasSoftware.OLVColumn olvColumnContent;
     }
 }

@@ -130,7 +130,8 @@ namespace KKManager.Data.Zipmods
             if (!IsValidZipmodExtension(location.Extension))
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
-            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(location))
+            using (var reader = location.OpenRead())
+            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(reader))
             {
                 var manifest = Manifest.LoadFromZip(zf);
 

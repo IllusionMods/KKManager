@@ -60,6 +60,6 @@ namespace KKManager.ModpackTool
         private void buttonNextIssue_Click(object sender, System.EventArgs e) => ModpackToolWindow.SelectZipmodEntry(CurrentObject, SortOrder.Ascending, true);
         private void buttonNext_Click(object sender, System.EventArgs e) => ModpackToolWindow.SelectZipmodEntry(CurrentObject, SortOrder.Ascending, false);
         private void buttonFail_Click(object sender, System.EventArgs e) => CurrentObject.Status = ZipmodEntry.ZipmodEntryStatus.FAIL;
-        private void buttonReprocess_Click(object sender, System.EventArgs e) => CurrentObject.Status = CurrentObject.IsValid() ? ZipmodEntry.ZipmodEntryStatus.NeedsProcessing : ZipmodEntry.ZipmodEntryStatus.ManifestIssue;
+        private void buttonReprocess_Click(object sender, System.EventArgs e) => CurrentObject.ReprocessIfPossible();
     }
 }

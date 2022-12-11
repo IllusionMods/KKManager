@@ -54,12 +54,14 @@ namespace KKManager.ModpackTool.Windows
             }
         }
 
-        private void buttonStartVerify_Click(object sender, EventArgs e)
+        private async void buttonStartVerify_Click(object sender, EventArgs e)
         {
             try
             {
+                Enabled = false;
+
                 var testDir = new DirectoryInfo(GetTestDirPath());
-                testDir.SafeDelete().Wait();
+                await testDir.SafeDelete();
 
                 testDir.Create();
 
@@ -96,20 +98,24 @@ namespace KKManager.ModpackTool.Windows
                 {
                     if (entry.Status == ZipmodEntry.ZipmodEntryStatus.Verifying)
                     {
-                        new FileInfo(GetTestPathForEntry(entry)).SafeDelete().Wait();
+                        await new FileInfo(GetTestPathForEntry(entry)).SafeDelete();
                         entry.Status = ZipmodEntry.ZipmodEntryStatus.NeedsVerify;
                     }
                 }
             }
+            finally
+            {
+                Enabled = true;
+            }
         }
 
-        private void buttonPass_Click(object sender, EventArgs e)
+        private async void buttonPass_Click(object sender, EventArgs e)
         {
             foreach (var entry in GetSelectedObjects())
             {
                 if (entry.Status == ZipmodEntry.ZipmodEntryStatus.Verifying)
                 {
-                    new FileInfo(GetTestPathForEntry(entry)).SafeDelete().Wait();
+                    await new FileInfo(GetTestPathForEntry(entry)).SafeDelete();
                     entry.Status = ZipmodEntry.ZipmodEntryStatus.PASS;
                 }
                 else
@@ -119,13 +125,13 @@ namespace KKManager.ModpackTool.Windows
             }
         }
 
-        private void buttonFail_Click(object sender, EventArgs e)
+        private async void buttonFail_Click(object sender, EventArgs e)
         {
             foreach (var entry in GetSelectedObjects())
             {
                 if (entry.Status == ZipmodEntry.ZipmodEntryStatus.Verifying)
                 {
-                    new FileInfo(GetTestPathForEntry(entry)).SafeDelete().Wait();
+                    await new FileInfo(GetTestPathForEntry(entry)).SafeDelete();
                     entry.Status = ZipmodEntry.ZipmodEntryStatus.FAIL;
                 }
                 else
@@ -135,11 +141,11 @@ namespace KKManager.ModpackTool.Windows
             }
         }
 
-        private void buttonReverify_Click(object sender, EventArgs e)
+        private async void buttonReverify_Click(object sender, EventArgs e)
         {
             foreach (var entry in GetSelectedObjects())
             {
-                new FileInfo(GetTestPathForEntry(entry)).SafeDelete().Wait();
+                await new FileInfo(GetTestPathForEntry(entry)).SafeDelete();
                 entry.Status = ZipmodEntry.ZipmodEntryStatus.NeedsVerify;
             }
         }

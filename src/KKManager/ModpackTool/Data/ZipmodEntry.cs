@@ -83,7 +83,7 @@ public class ZipmodEntry : INotifyPropertyChanged
 
         // Auto generate new filename but allow it to be overriden
         Newfilename = new ValidatedString(s => !string.IsNullOrWhiteSpace(s) && s.IndexOfAny(Path.GetInvalidFileNameChars()) == -1);
-        void UpdateNewfilename(object sender, PropertyChangedEventArgs e) => Newfilename.Value = $"[{Author}] {Name} v{Version}.zipmod";
+        void UpdateNewfilename(object sender, PropertyChangedEventArgs e) => Newfilename.Value = $"[{Author.Value.Replace('\\', '_').Replace('/', '_')}] {Name} v{Version}.zipmod";
         UpdateNewfilename(null, null);
         Author.PropertyChanged += UpdateNewfilename;
         //Description.PropertyChanged += UpdateOutput;
@@ -110,6 +110,13 @@ public class ZipmodEntry : INotifyPropertyChanged
 
         OutputSubdirectory.PropertyChanged += (sender, args) => PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(nameof(OutputSubdirectory)));
         Newfilename.PropertyChanged += (sender, args) => PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(nameof(Newfilename)));
+
+        // Never comrpess head mods since it breaks them
+        if (Info.Contents.Any(x => x.EndsWith("head.unity3d", StringComparison.OrdinalIgnoreCase) && x.IndexOf("chara", StringComparison.OrdinalIgnoreCase) >= 0))
+        {
+            Console.WriteLine($"{Info.FileName} looks to be a headmod, disabling recompression");
+            Recompress = false;
+        }
     }
 
     public string RelativeOutputPath => Path.Combine(OutputSubdirectory.Value, Newfilename.Value);
@@ -159,8 +166,8 @@ public class ZipmodEntry : INotifyPropertyChanged
     }
 
     internal static List<string> GameNamesStrToList(string s) => s.Split(',').Select(x => x.Trim()).ToList();
-    internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetter(c) || c == ' '));
-    private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetter(c) || c == ' ') && ModpackToolConfiguration.Instance.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
+    internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ' ));
+    private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ') && ModpackToolConfiguration.Instance.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
 
     private static bool CanRecompress(SideloaderModInfo sideloaderModInfo)
     {
@@ -177,6 +184,11 @@ public class ZipmodEntry : INotifyPropertyChanged
     }
 
     private string GetOutputSubfolder()
+    {
+        return GetOutputSubfolderWithoutAuthor().Trim('\\', '/') + "\\" + Author.Value.Replace('\\', '_').Replace('/', '_');
+    }
+
+    private string GetOutputSubfolderWithoutAuthor()
     {
         foreach (var policy in ModpackToolConfiguration.Instance.ContentsHandlingPolicies)
         {
@@ -209,5 +221,85 @@ public class ZipmodEntry : INotifyPropertyChanged
     {
         // Prevent issues if values are changed outside main thread
         MainWindow.Instance.SafeInvoke(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+    }
+
+    public void ReprocessIfPossible()
+    {
+        if (Status == ZipmodEntryStatus.Outputted)
+        {
+            if (!File.Exists(FullPath.FullName))
+            {
+                if (File.Exists(GetBackupFullName()))
+                    File.Move(GetBackupFullName(), FullPath.FullName);
+                else
+                {
+                    Console.WriteLine($"Can't reprocess {OriginalFilename} because the file seems to be gone from both ingest and backup");
+                    return;
+                }
+            }
+        }
+
+        Status = IsValid() ? ZipmodEntry.ZipmodEntryStatus.NeedsProcessing : ZipmodEntry.ZipmodEntryStatus.ManifestIssue;
+    }
+
+    public void OutputIfPossible()
+    {
+        if (Status == ZipmodEntry.ZipmodEntryStatus.PASS)
+        {
+            var outputDirectory = Path.Combine(ModpackToolConfiguration.Instance.OutputFolder.Value, OutputSubdirectory.Value);
+            var outputPath = Path.Combine(outputDirectory, Newfilename.Value);
+            var finishedFile = new FileInfo(GetTempOutputFilePath());
+            if (!finishedFile.Exists)
+            {
+                Console.WriteLine($"ERROR: Can not output [{Name}] because it wasn't processed or the resulting zipmod file got removed. Setting status to NeedsProcessing.");
+                Status = ZipmodEntry.ZipmodEntryStatus.NeedsProcessing;
+            }
+            else
+            {
+                Console.WriteLine($"Copying [{Name}] ({Status}) to {outputPath}");
+                if (File.Exists(outputPath))
+                {
+                    Console.WriteLine($"WARNING: File already existed and was overwritten! {outputPath}");
+                }
+                else if (!Directory.Exists(outputDirectory))
+                {
+                    Console.WriteLine($"INFO: Output directory didn't exist and was created: {outputDirectory}");
+                    Directory.CreateDirectory(outputDirectory);
+                }
+
+                finishedFile.CopyTo(outputPath, true);
+
+                var backupPath = GetBackupFullName();
+                if (File.Exists(backupPath)) File.Delete(backupPath);
+                File.Move(FullPath.FullName, backupPath);
+                Status = ZipmodEntry.ZipmodEntryStatus.Outputted;
+            }
+        }
+        else if (Status == ZipmodEntry.ZipmodEntryStatus.FAIL)
+        {
+            var outputDirectory = ModpackToolConfiguration.Instance.FailFolder.Value;
+            var outputPath = Path.Combine(outputDirectory, OriginalFilename);
+            Console.WriteLine($"Copying [{Name}] ({Status}) to {outputPath}");
+            if (File.Exists(outputPath))
+            {
+                Console.WriteLine($"WARNING: File already existed and was overwritten! {outputPath}");
+            }
+            else if (!Directory.Exists(outputDirectory))
+            {
+                Console.WriteLine($"INFO: Fail directory didn't exist and was created: {outputDirectory}");
+                Directory.CreateDirectory(outputDirectory);
+            }
+
+            FullPath.CopyTo(outputPath, true);
+            var backupPath = GetBackupFullName();
+            if (File.Exists(backupPath)) File.Delete(backupPath);
+            File.Move(FullPath.FullName, backupPath);
+            Status = ZipmodEntry.ZipmodEntryStatus.Outputted;
+        }
+    }
+
+    private string GetBackupFullName()
+    {
+        return Path.Combine(ModpackToolConfiguration.Instance.BackupFolder.Value, OriginalFilename);
     }
 }

@@ -30,15 +30,15 @@ public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
     public ValidatedString FailFolder { get; } = new(Directory.Exists);
     public ValidatedString BackupFolder { get; } = new(Directory.Exists);
 
-    public ValidatedString Game1Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
+    public ValidatedString Game1Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
     public ValidatedStringWrapper Game1Longs { get; } = new(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game1LongsList { get; private set; } = Array.Empty<string>();
 
-    public ValidatedString Game2Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
+    public ValidatedString Game2Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
     public ValidatedStringWrapper Game2Longs { get; } = new(s => Game2LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game2LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game2LongsList { get; private set; } = Array.Empty<string>();
 
-    public ValidatedString Game3Short { get; } = new(s => s.All(x => char.IsLetter(x) && char.IsUpper(x)));
+    public ValidatedString Game3Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
     public ValidatedStringWrapper Game3Longs { get; } = new(s => Game3LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game3LongsList), ZipmodEntry.GameNamesVerifierLoose);
     public static IReadOnlyCollection<string> Game3LongsList { get; private set; } = Array.Empty<string>();
 
