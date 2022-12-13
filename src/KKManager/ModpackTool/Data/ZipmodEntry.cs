@@ -4,8 +4,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using KKManager.Data.Zipmods;
 using KKManager.Util;
 using KKManager.Windows;
@@ -64,7 +68,8 @@ public class ZipmodEntry : INotifyPropertyChanged
         Games = new ValidatedStringWrapper(s => Info.Manifest.Games = CleanUpManifestGameTags(GameNamesStrToList(s)).ToList(), () => GameNamesListToStr(CleanUpManifestGameTags(Info.Manifest.Games)), GameNamesVerifier);
         Guid = new ValidatedStringWrapper(s => Info.Manifest.GUID = s, () => Info.Manifest.GUID, s => !string.IsNullOrWhiteSpace(s) && !s.EndsWith("Example"));
         Name = new ValidatedStringWrapper(s => Info.Manifest.Name = s, () => Info.Manifest.Name, s => !string.IsNullOrWhiteSpace(s) && s.IndexOf("Name of your mod pack", StringComparison.OrdinalIgnoreCase) < 0 && !s.EndsWith(" Example"));
-        Version = new ValidatedStringWrapper(s => Info.Manifest.Version = s, () => Info.Manifest.Version, s => !string.IsNullOrWhiteSpace(s) && System.Version.TryParse(s, out var _));
+        Version = new ValidatedStringWrapper(s => Info.Manifest.Version = s, () => Info.Manifest.Version, s => !string.IsNullOrWhiteSpace(s) && System.Version.TryParse(s, out var _) &&
+                                                                                                               ExistingInOutput.Select(x => x.Version).All(v => SideloaderVersionComparer.CompareVersions(s, v) > 0));
         Website = new ValidatedStringWrapper(s => Info.Manifest.Website = s, () => Info.Manifest.Website, s => string.IsNullOrWhiteSpace(s) || Uri.TryCreate(s, UriKind.Absolute, out var uri) && !uri.IsFile && !uri.IsLoopback);
 
         // Clean up the manifest
@@ -166,7 +171,7 @@ public class ZipmodEntry : INotifyPropertyChanged
     }
 
     internal static List<string> GameNamesStrToList(string s) => s.Split(',').Select(x => x.Trim()).ToList();
-    internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ' ));
+    internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' '));
     private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ') && ModpackToolConfiguration.Instance.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
 
     private static bool CanRecompress(SideloaderModInfo sideloaderModInfo)
@@ -302,4 +307,57 @@ public class ZipmodEntry : INotifyPropertyChanged
     {
         return Path.Combine(ModpackToolConfiguration.Instance.BackupFolder.Value, OriginalFilename);
     }
+
+    public static async Task<List<ZipmodEntry>> ReadAllZipmodEntries()
+    {
+        var inputR = new ReplaySubject<SideloaderModInfo>();
+        var inputT = SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.IngestFolder, inputR, CancellationToken.None);
+
+        var outputR = new ReplaySubject<SideloaderModInfo>();
+        var outputT = SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.OutputFolder, outputR, CancellationToken.None);
+
+        await inputT;
+        var allInputs = inputR.ToEnumerable().Select(FromEntry).ToList();
+
+        await outputT;
+        var existingLookup = outputR.ToEnumerable().ToLookup(x => x.Manifest.GUID);
+
+        foreach (var input in allInputs)
+        {
+            var existing = existingLookup[input.Guid];
+            input.ExistingInOutput.AddRange(existing.OrderByDescending(x => x.Manifest.Version, SideloaderVersionComparer.Default));
+
+            input.FillInFromExisting();
+        }
+
+        return allInputs;
+    }
+
+    public void FillInFromExisting()
+    {
+        if (ExistingInOutput.Count == 0) return;
+
+        FillInFromExisting(Author, x => x.Manifest.Author);
+        FillInFromExisting(Name, x => x.Manifest.Name);
+        FillInFromExisting(Website, x => x.Manifest.Website);
+        FillInFromExisting(Description, x => x.Manifest.Description);
+
+        Notes = "EXISTS IN OUTPUT: " + string.Join(" ; ", ExistingInOutput.Select(x => x.Manifest.Version));
+
+        // update IsValid
+        Version.Value = Version;
+    }
+
+    private void FillInFromExisting(ValidatedStringWrapper stringWrapper, Func<SideloaderModInfo, string> manifestSelector)
+    {
+        var currentIsValid = !string.IsNullOrWhiteSpace(stringWrapper.Value) && stringWrapper.IsValid;
+        if (currentIsValid)
+            return;
+
+        var bestInExisting = ExistingInOutput.Select(manifestSelector).FirstOrDefault(x => !string.IsNullOrEmpty(x) && stringWrapper.VerifyString(x));
+        if (bestInExisting != null)
+            stringWrapper.Value = bestInExisting;
+    }
+
+    public List<SideloaderModInfo> ExistingInOutput { get; } = new();
 }

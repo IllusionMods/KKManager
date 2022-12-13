@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Data.Zipmods;
@@ -129,16 +131,9 @@ namespace KKManager.ModpackTool
 
                 Directory.CreateDirectory(ModpackToolTempDir);
 
-                var rb = new ReplaySubject<SideloaderModInfo>();
-                await SideloaderModLoader.TryReadSideloaderMods(ModpackToolConfiguration.Instance.IngestFolder, rb, CancellationToken.None);
+                var allInputs = await ZipmodEntry.ReadAllZipmodEntries();
 
-                var all = rb.ToEnumerable().ToList();
-
-
-                //var ingestZipmods = Directory.GetFiles(ModpackToolConfiguration.Instance.IngestFolder, "*.zipmod", SearchOption.AllDirectories);
-                //var existingZipmods = Directory.GetFiles(ModpackToolConfiguration.Instance.OutputFolder, "*.zipmod", SearchOption.AllDirectories);
-
-                _listView.Objects = all.Select(ZipmodEntry.FromEntry).ToList();
+                _listView.Objects = allInputs;
 
                 _listView.ListView.PrimarySortColumn = olvColumnStatus;
                 _listView.ListView.PrimarySortOrder = SortOrder.Ascending;
@@ -239,8 +234,8 @@ namespace KKManager.ModpackTool
             }
         }
 
-        public void RefreshList() { }
-        public void CancelRefreshing() { }
+        void IContentWindow.RefreshList() { }
+        void IContentWindow.CancelRefreshing() { }
         public void DeserializeContent(string contentString)
         {
             try

@@ -48,6 +48,7 @@ public class ValidatedStringWrapper : INotifyPropertyChanged
     }
 
     public virtual bool IsValid => VerifyValue(_get());//todo handle needs check values
+    public bool VerifyString(string value) => VerifyValue(value);
 
     public override string ToString() => Value ?? "";
 }
