@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
 using FluentFTP.Proxy;
+using FluentFTP.Proxy.AsyncProxy;
+using FluentFTP.Proxy.SyncProxy;
 using KKManager.Properties;
 using KKManager.Updater.Data;
 using KKManager.Util;
@@ -15,7 +17,7 @@ namespace KKManager.Updater.Sources
 {
     public class FtpUpdater : UpdateSourceBase
     {
-        private readonly FtpClient _client;
+        private readonly AsyncFtpClient _client;
 
         private FtpListItem[] _allNodes;
 
@@ -33,7 +35,7 @@ namespace KKManager.Updater.Sources
             if (Settings.Default.UseProxy && !System.Net.WebRequest.DefaultWebProxy.IsBypassed(serverUri))
             {
                 var proxy = System.Net.WebRequest.DefaultWebProxy.GetProxy(serverUri);
-                _client = new FtpClientHttp11Proxy(new ProxyInfo { Host = proxy.Host, Port = proxy.Port });
+                _client = new AsyncFtpClientHttp11Proxy(new FtpProxyProfile() { FtpHost = proxy.Host, FtpPort = proxy.Port });
                 _client.Host = serverUri.Host;
                 _client.Credentials = credentials;
                 if (!serverUri.IsDefaultPort)
@@ -44,15 +46,15 @@ namespace KKManager.Updater.Sources
             else
             {
                 if (serverUri.IsDefaultPort)
-                    _client = new FtpClient(serverUri.Host, credentials);
+                    _client = new AsyncFtpClient(serverUri.Host, credentials);
                 else
-                    _client = new FtpClient(serverUri.Host, serverUri.Port, credentials);
+                    _client = new AsyncFtpClient(serverUri.Host, credentials, serverUri.Port);
             }
-
-            _client.EncryptionMode = FtpEncryptionMode.Explicit;
-            _client.DataConnectionEncryption = true;
-            // Retrying is handled higher up the tree
-            _client.RetryAttempts = 1;
+            
+            //_client.EncryptionMode = FtpEncryptionMode.Explicit;
+            //_client.DataConnectionEncryption = true;
+            //// Retrying is handled higher up the tree
+            //_client.RetryAttempts = 1;
         }
 
         public override void Dispose()
@@ -63,7 +65,7 @@ namespace KKManager.Updater.Sources
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             await Connect(cancellationToken);
-            _allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
+            _allNodes = await _client.GetListing("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
             return await base.GetUpdateItems(cancellationToken);
         }
 
@@ -75,7 +77,7 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
             var str = new MemoryStream();
-            if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
+            if (await _client.DownloadStream(str, updateFileName, 0, null, cancellationToken))
             {
                 str.Seek(0, SeekOrigin.Begin);
                 return str;
@@ -107,7 +109,7 @@ namespace KKManager.Updater.Sources
                 // Need to wrap the connect into a new task because it can block main thread when failing to connect
                 await Task.Run(async () =>
                 {
-                    await _client.AutoConnectAsync(cancellationToken);
+                    await _client.AutoConnect(cancellationToken);
                 }, cancellationToken);
 
                 // todo hack, some servers don't announce the capability, needed for proper functionality
@@ -124,7 +126,7 @@ namespace KKManager.Updater.Sources
         private IEnumerable<FtpListItem> GetSubNodes(FtpListItem remoteDir)
         {
             if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
-            if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
+            if (remoteDir.Type != FtpObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
 
             var remoteDirName = PathTools.NormalizePath(remoteDir.FullName) + "/";
             var remoteDirDepth = remoteDirName.Count(c => c == '/' || c == '\\');
@@ -147,7 +149,7 @@ namespace KKManager.Updater.Sources
 
             await Connect(cancellationToken);
 
-            await _client.DownloadFileAsync(
+            await _client.DownloadFile(
                 targetPath.FullName, sourceItem.FullName,
                 FtpLocalExists.Resume, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
@@ -179,8 +181,8 @@ namespace KKManager.Updater.Sources
             public string Name => SourceItem.Name;
             public long ItemSize { get; }
             public DateTime ModifiedTime { get; }
-            public bool IsDirectory => SourceItem.Type == FtpFileSystemObjectType.Directory;
-            public bool IsFile => SourceItem.Type == FtpFileSystemObjectType.File;
+            public bool IsDirectory => SourceItem.Type == FtpObjectType.Directory;
+            public bool IsFile => SourceItem.Type == FtpObjectType.File;
             public string ClientRelativeFileName { get; }
 
             public FtpUpdater Source { get; }

@@ -80,7 +80,7 @@ namespace KKManager.Windows.Content
 
             SideloaderModLoader.Zipmods
                 .Buffer(TimeSpan.FromSeconds(3), ThreadPoolScheduler.Instance)
-                .ObserveOn(this)
+                .ObserveOn(Program.MainSynchronizationContext)
                 .Subscribe(list => objectListView1.AddObjects((ICollection)list),
                     () =>
                     {
