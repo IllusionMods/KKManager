@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using KKManager.Functions;
 using KKManager.Util;
+using Sideloader;
 
 namespace KKManager.Data.Zipmods
 {
@@ -21,27 +22,27 @@ namespace KKManager.Data.Zipmods
             get => _zipmods ?? StartReload();
         }
 
-        private static bool _isUpdating = false;
         private static readonly object _lock = new object();
         private static ReplaySubject<SideloaderModInfo> _zipmods;
 
         public static IObservable<SideloaderModInfo> StartReload()
         {
-            var needsUpdate = false;
             lock (_lock)
             {
-                if (_zipmods == null || !_isUpdating)
+                if (_zipmods == null || _currentTask == null || _currentTask.IsCompleted)
                 {
                     _zipmods = new ReplaySubject<SideloaderModInfo>();
-                    _isUpdating = true;
-                    needsUpdate = true;
+                    _cancelSource?.Dispose();
+                    _cancelSource = new CancellationTokenSource();
+                    _currentTask = TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName, _zipmods, _cancelSource.Token);
                 }
             }
-            if (needsUpdate) TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName, _zipmods);
             return _zipmods;
         }
 
         private static CancellationTokenSource _cancelSource;
+        private static Task _currentTask;
+
         public static void CancelReload()
         {
             _cancelSource?.Cancel();
@@ -53,13 +54,11 @@ namespace KKManager.Data.Zipmods
         /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
         /// <param name="subject"></param>
         /// <param name="searchOption">Where to search</param>
-        private static void TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, SearchOption searchOption = SearchOption.AllDirectories)
+        public static Task TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
         {
-            Console.WriteLine("Start loading zipmods");
+            Console.WriteLine("Start loading zipmods from " + modDirectory);
 
-            _cancelSource?.Dispose();
-            _cancelSource = new CancellationTokenSource();
-            var token = _cancelSource.Token;
+            var token = cancellationToken;
 
             void ReadSideloaderModsAsync()
             {
@@ -68,7 +67,6 @@ namespace KKManager.Data.Zipmods
                     if (!Directory.Exists(modDirectory))
                     {
                         subject.OnCompleted();
-                        _isUpdating = false;
                         Console.WriteLine("No zipmod folder detected");
                         return;
                     }
@@ -110,7 +108,6 @@ namespace KKManager.Data.Zipmods
                 }
                 finally
                 {
-                    _isUpdating = false;
                     Console.WriteLine("Finished loading zipmods");
                     subject.OnCompleted();
                 }
@@ -118,16 +115,11 @@ namespace KKManager.Data.Zipmods
 
             try
             {
-                Task.Run(ReadSideloaderModsAsync, token);
+                return Task.Run(ReadSideloaderModsAsync, token);
             }
             catch (OperationCanceledException)
             {
-                _isUpdating = false;
-            }
-            catch
-            {
-                _isUpdating = false;
-                throw;
+                return Task.FromCanceled(token);
             }
         }
 
@@ -138,52 +130,38 @@ namespace KKManager.Data.Zipmods
             if (!IsValidZipmodExtension(location.Extension))
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
-            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(location))
+            using (var reader = location.OpenRead())
+            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(reader))
             {
-                var manifestEntry = zf.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, "manifest.xml"));
+                var manifest = Manifest.LoadFromZip(zf);
 
-                if (manifestEntry == null)
+                if (manifest == null)
                     throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
 
-                using (var fileStream = manifestEntry.OpenEntryStream())
+                var images = new List<Image>();
+                // TODO load from drive instead of caching to ram
+                foreach (var imageFile in zf.Entries
+                                            .Where(x => ".jpg".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase) ||
+                                                        ".png".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase))
+                                            .OrderBy(x => x.Key).Take(3))
                 {
-                    var manifest = XDocument.Load(fileStream, LoadOptions.None);
-
-                    if (manifest.Root?.Element("guid")?.IsEmpty != false)
-                        throw new InvalidDataException("The manifest.xml file is in an invalid format");
-
-                    var guid = manifest.Root.Element("guid")?.Value;
-                    var version = manifest.Root.Element("version")?.Value;
-                    var name = manifest.Root.Element("name")?.Value ?? location.Name;
-                    var author = manifest.Root.Element("author")?.Value;
-                    var description = manifest.Root.Element("description")?.Value;
-                    var website = manifest.Root.Element("website")?.Value;
-
-                    var images = new List<Image>();
-                    // TODO load from drive instead of caching to ram
-                    foreach (var imageFile in zf.Entries
-                        .Where(x => ".jpg".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase) ||
-                                    ".png".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase))
-                        .OrderBy(x => x.Key).Take(3))
+                    try
                     {
-                        try
+                        using (var stream = imageFile.OpenEntryStream())
+                        using (var img = Image.FromStream(stream))
                         {
-                            using (var stream = imageFile.OpenEntryStream())
-                            using (var img = Image.FromStream(stream))
-                            {
-                                images.Add(img.GetThumbnailImage(200, 200, null, IntPtr.Zero));
-                            }
-                        }
-                        catch (SystemException ex)
-                        {
-                            Console.WriteLine($"Failed to load image \"{imageFile.Key}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
+                            images.Add(img.GetThumbnailImage(200, 200, null, IntPtr.Zero));
                         }
                     }
-
-                    var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.Key.Replace('/', '\\')).ToList();
-
-                    return new SideloaderModInfo(location, guid, name, version, author, description, website, images, contents);
+                    catch (SystemException ex)
+                    {
+                        Console.WriteLine($"Failed to load image \"{imageFile.Key}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
+                    }
                 }
+
+                var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.Key.Replace('/', '\\')).ToList();
+
+                return new SideloaderModInfo(location, manifest, images, contents);
             }
         }
 

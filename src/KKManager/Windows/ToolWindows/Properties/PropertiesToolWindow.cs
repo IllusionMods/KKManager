@@ -108,7 +108,11 @@ namespace KKManager.Windows.ToolWindows.Properties
 
                 return _defaultPropertyViewer;
             }
-            return null;
+            else
+            {
+                ShowViewer(null);
+                return null;
+            }
         }
 
         private IEnumerable<PropertyViewerBase> GetAllPropertyViewers()

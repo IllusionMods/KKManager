@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
@@ -47,7 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>embedded</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
@@ -58,13 +58,16 @@
     <Optimize>true</Optimize>
     <DebugType>embedded</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ben.Demystifier, Version=0.4.0.0, Culture=neutral, PublicKeyToken=a6d206e05440431a, processorArchitecture=MSIL">
       <HintPath>..\packages\Ben.Demystifier.0.4.1\lib\net45\Ben.Demystifier.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack, Version=2.3.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>..\packages\MessagePack.2.3.85\lib\netstandard2.0\MessagePack.dll</HintPath>
@@ -89,6 +92,9 @@
     </Reference>
     <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
       <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.30.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.30.0\lib\net461\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -116,6 +122,9 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -136,6 +145,30 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModpackTool\Data\ModpackToolConfiguration.cs" />
+    <Compile Include="ModpackTool\Data\ModpackToolExtensions.cs" />
+    <Compile Include="ModpackTool\Windows\ModpackToolManifestEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModpackTool\Windows\ModpackToolManifestEditor.Designer.cs">
+      <DependentUpon>ModpackToolManifestEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModpackTool\Windows\ToolConfigurationEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModpackTool\Windows\ToolConfigurationEditor.Designer.cs">
+      <DependentUpon>ToolConfigurationEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModpackTool\Data\ValidatedString.cs" />
+    <Compile Include="ModpackTool\Data\ValidatedStringWrapper.cs" />
+    <Compile Include="ModpackTool\Data\ZipmodEntry.cs" />
+    <Compile Include="ModpackTool\Data\ZipmodProcessor.cs" />
+    <Compile Include="ModpackTool\Windows\VerificationTool.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModpackTool\Windows\VerificationTool.Designer.cs">
+      <DependentUpon>VerificationTool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -154,11 +187,11 @@
       <DependentUpon>CardWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\Content\IContentWindow.cs" />
-    <Compile Include="Windows\Content\ModpackTool.cs">
+    <Compile Include="ModpackTool\Windows\ModpackToolWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Windows\Content\ModpackTool.Designer.cs">
-      <DependentUpon>ModpackTool.cs</DependentUpon>
+    <Compile Include="ModpackTool\Windows\ModpackToolWindow.Designer.cs">
+      <DependentUpon>ModpackToolWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Windows\Dialogs\PathSelectPopup.cs">
       <SubType>Form</SubType>
@@ -231,6 +264,15 @@
     <Compile Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.Designer.cs">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ModpackTool\Windows\ModpackToolManifestEditor.resx">
+      <DependentUpon>ModpackToolManifestEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModpackTool\Windows\ToolConfigurationEditor.resx">
+      <DependentUpon>ToolConfigurationEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModpackTool\Windows\VerificationTool.resx">
+      <DependentUpon>VerificationTool.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -247,8 +289,8 @@
     <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hant.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Windows\Content\ModpackTool.resx">
-      <DependentUpon>ModpackTool.cs</DependentUpon>
+    <EmbeddedResource Include="ModpackTool\Windows\ModpackToolWindow.resx">
+      <DependentUpon>ModpackToolWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hans.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
@@ -326,12 +368,17 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\KKManager.ModpackTool.ModpackToolConfiguration.datasource" />
+    <None Include="Properties\DataSources\KKManager.ModpackTool.ZipmodEntry.datasource" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="ModpackTool\pngcrush_1_8_11_w64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj">

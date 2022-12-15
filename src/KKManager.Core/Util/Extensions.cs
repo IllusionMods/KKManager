@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
 
@@ -46,7 +47,11 @@ namespace KKManager.Util
             {
                 var path = Path.Combine(targetDirectory, extractor.Entry.Key);
                 if (extractor.Entry.IsDirectory) Directory.CreateDirectory(path);
-                else extractor.WriteEntryTo(path);
+                else
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path) ?? throw new InvalidOperationException("wtf " + path));
+                    extractor.WriteEntryTo(path);
+                }
             }
         }
 
@@ -100,6 +105,27 @@ namespace KKManager.Util
         {
             if (fsi == null) throw new ArgumentNullException(nameof(fsi));
             return Path.GetFileNameWithoutExtension(fsi.Name);
+        }
+
+        public static bool IsNullOrWhiteSpace(this string self)
+        {
+            return string.IsNullOrWhiteSpace(self);
+        }
+
+        public static bool IsNullOrEmpty(this string self)
+        {
+            return string.IsNullOrEmpty(self);
+        }
+
+        public static XElement GetOrAddElement(this XElement e, string name)
+        {
+            var result = e.Element(name);
+            if (result == null)
+            {
+                result = new XElement(name);
+                e.Add(result);
+            }
+            return result;
         }
     }
 }

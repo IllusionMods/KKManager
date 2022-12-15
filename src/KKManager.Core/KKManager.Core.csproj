@@ -157,6 +157,9 @@
     <Compile Include="Data\ModInfoBase.cs" />
     <Compile Include="Data\Plugins\PluginInfo.cs" />
     <Compile Include="Data\Plugins\PluginLoader.cs" />
+    <Compile Include="Data\Zipmods\Manifest.cs" />
+    <Compile Include="Data\Zipmods\MigrationInfo.cs" />
+    <Compile Include="Data\Zipmods\MigrationType.cs" />
     <Compile Include="Data\Zipmods\SideloaderModInfo.cs" />
     <Compile Include="Data\Zipmods\SideloaderModLoader.cs" />
     <Compile Include="Data\Zipmods\SideloaderVersionComparer.cs" />

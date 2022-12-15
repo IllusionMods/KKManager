@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace KKManager.Data.Zipmods
 {
-    public class SideloaderVersionComparer : IComparer<string>
+    public class SideloaderVersionComparer : Comparer<string>
     {
-        public int Compare(string x, string y)
+        public override int Compare(string x, string y)
         {
             return CompareVersions(x, y);
         }
