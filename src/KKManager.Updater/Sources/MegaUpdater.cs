@@ -214,7 +214,7 @@ namespace KKManager.Updater.Sources
                 SourceItem = item ?? throw new ArgumentNullException(nameof(item));
                 _source = source ?? throw new ArgumentNullException(nameof(source));
                 ItemSize = item.Size;
-                ModifiedTime = item.ModificationDate ?? item.CreationDate;
+                ModifiedTime = item.ModificationDate ?? item.CreationDate ?? DateTime.MinValue;
                 Name = item.Name;
                 IsDirectory = item.Type == NodeType.Directory;
                 IsFile = item.Type == NodeType.File;

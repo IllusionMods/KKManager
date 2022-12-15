@@ -235,7 +235,7 @@ namespace KKManager.Windows.Content
             var processedCount = 0;
             cardLoadObservable
                 .Buffer(TimeSpan.FromSeconds(4), ThreadPoolScheduler.Instance)
-                .ObserveOn(this)
+                .ObserveOn(Program.MainSynchronizationContext)
                 .Subscribe(
                     list =>
                     {
@@ -341,7 +341,7 @@ namespace KKManager.Windows.Content
 
             updateSubject
                 .Buffer(TimeSpan.FromSeconds(3))
-                .ObserveOn(this)
+                .ObserveOn(Program.MainSynchronizationContext)
                 .Subscribe(list => listView.RefreshObjects((IList)list), token);
         }
 
