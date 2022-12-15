@@ -29,6 +29,7 @@ public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
     public ValidatedString TestGameFolder { get; } = new(s => Directory.Exists(s) && Directory.Exists(Path.Combine(s, "mods")));
     public ValidatedString FailFolder { get; } = new(Directory.Exists);
     public ValidatedString BackupFolder { get; } = new(Directory.Exists);
+    public ValidatedString LooseFilesFolder { get; } = new(Directory.Exists);
 
     public ValidatedString Game1Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
     public ValidatedStringWrapper Game1Longs { get; } = new(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifierLoose);

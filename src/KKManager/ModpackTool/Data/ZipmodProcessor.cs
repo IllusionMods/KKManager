@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Ionic.Zip;
+using KKManager.Data.Cards;
 using KKManager.SB3UGS;
 using KKManager.Util;
 using SharpCompress.Archives;
@@ -182,38 +183,51 @@ public static class ZipmodProcessor
 
     private static async Task ProcessFile(ZipmodEntry owner, FileInfo fileInfo)
     {
+        bool MoveToLooseIfCharaCard(string s)
+        {
+            if (CardLoader.TryParseCard(fileInfo, out _))
+            {
+                var newFilename = Path.Combine(Configuration.LooseFilesFolder, fileInfo.Name);
+                var exists = File.Exists(newFilename);
+                Console.WriteLine($"Found a character card in [{s}], moving it to [{newFilename}] {(exists ? "(an existing file will be overwritten)" : "")}");
+                if (exists) File.Delete(newFilename);
+                fileInfo.MoveTo(newFilename);
+                return true;
+            }
+            return false;
+        }
+
         var path = fileInfo.FullName;
 
-        bool IsModFile(FileInfo file)
+        bool IsAbdataFile(FileInfo file)
         {
             var tempDir = owner.GetTempDir();
             return file.FullName.StartsWith(Path.Combine(tempDir, "manifest.xml"), StringComparison.OrdinalIgnoreCase) ||
                    file.FullName.StartsWith(Path.Combine(tempDir, "abdata"), StringComparison.OrdinalIgnoreCase);
         }
 
-        if (!IsModFile(fileInfo))
+        if (!IsAbdataFile(fileInfo))
         {
             switch (fileInfo.Extension.ToLower())
             {
                 case ".jpg":
                 case ".jpeg":
+                case ".gif":
+                case ".webp":
                     //todo fileInfo.CopyTo(Path.Join(dirs.LooseImages, fileInfo.Name), true);
-                    Console.WriteLine("Deleting unnecessary file: " + path);
+                    Console.WriteLine("Deleting unnecessary image file: " + path);
                     await fileInfo.SafeDelete();
                     return;
+
                 case ".png":
-                    //todo
-                    //if (await CardUtilities.ContainsDataAfterIEndAsync(filename))
-                    //{
-                    //    fileInfo.CopyTo(Path.Join(dirs.LooseCards, fileInfo.Name), true);
-                    //}
-                    //else
-                    //{
-                    //    fileInfo.CopyTo(Path.Join(dirs.LooseImages, fileInfo.Name), true);
-                    //}
-                    Console.WriteLine("Deleting unnecessary file: " + path);
+                    if (MoveToLooseIfCharaCard(path))
+                        return;
+
+                    //todo fileInfo.CopyTo(Path.Join(dirs.LooseImages, fileInfo.Name), true);
+                    Console.WriteLine("Deleting unnecessary image file: " + path);
                     await fileInfo.SafeDelete();
                     return;
+
                 default:
                     return;
             }
@@ -226,36 +240,15 @@ public static class ZipmodProcessor
                     if (fileInfo.Name.EndsWith("-crushed.png"))
                     {
                         // Most likely another thread is crushing? Shouldn't actually happen?
-                        break;
                     }
-                    // todo
-                    //if (await CardUtilities.ContainsDataAfterIEndAsync(filename))
-                    //{
-                    //    // dealing with a card
-                    //    fileInfo.CopyTo(Path.Join(dirs.LooseCards, fileInfo.Name), true);
-                    //    fileInfo.Delete();
-                    //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.ImageDeleted));
-                    //}
-                    //else
-                    if (Configuration.CompressPNGs)
+                    else if (MoveToLooseIfCharaCard(path))
+                    {
+                    }
+                    else if (Configuration.CompressPNGs)
                     {
                         Console.WriteLine("Compressing PNG: " + path);
-
                         await CompressImageAsync(fileInfo);
-                        //if (didCompressImage)
-                        //{
-                        //    _logger.LogInformation("Image compression of {filename} took {time}ms", filename, compressImageTime.TotalMilliseconds);
-                        //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.ImageCompressed));
-                        //}
-                        //else
-                        //{
-                        //    // an error occured
-                        //    fileInfo.CopyTo(Path.Join(dirs.LooseImages, fileInfo.Name), true);
-                        //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.NoChange));
-                        //}
                     }
-                    // if compressed, it'll create a {filename}-orig.png, with the new file being compressed
-
                     break;
                 case ".unity3d":
                     if (owner.Recompress)
@@ -274,48 +267,11 @@ public static class ZipmodProcessor
                             Console.WriteLine($"Failed to compress file {fileInfo.FullName} - {ex.Message}");
                         }
                     }
-
-                    //if (repository.Configuration.RandomizeCab)
-                    //{
-                    //    _logger.LogInformation("Randomizing CAB for {file}", filename);
-                    //    var didRandomizeCab = false;
-                    //    var randomizeCabDuration = await TimingUtilities.TimeAsync(async () =>
-                    //    {
-                    //        didRandomizeCab = await _assetService.RandomizeCabAsync(repository.Configuration, filename);
-                    //
-                    //    });
-                    //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, didRandomizeCab ? SessionResultType.ResourceCabRandomized : SessionResultType.NoChange));
-                    //    if (didRandomizeCab)
-                    //    {
-                    //        _logger.LogInformation("CAB randomization of {file} took {time}ms", filename, randomizeCabDuration.TotalMilliseconds);
-                    //    }
-                    //
-                    //}
-                    //if (repository.Configuration.SkipCompression)
-                    //{
-                    //    _logger.LogInformation("Compression skipped, copying");
-                    //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.ResourceCopied));
-                    //}
-                    //else if (repository.Configuration.SkipCharaMods && hasCharaMods)
-                    //{
-                    //    _logger.LogInformation("Compression skipped for chara mods");
-                    //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.ResourceCopied));
-                    //}
-                    //else
-                    //{
-                    //    _logger.LogInformation("Compressing unity3d file");
-                    //    var didCompressResx = false;
-                    //    var compressionDuration = await TimingUtilities.TimeAsync(async () =>
-                    //    {
-                    //        didCompressResx = await _assetService.CompressUnityResxAsync(repository.Configuration, filename);
-                    //    });
-                    //    await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, didCompressResx ? SessionResultType.ResourceCompressed : SessionResultType.NoChange));
-                    //    if (didCompressResx)
-                    //    {
-                    //        _logger.LogInformation("Compression of {file} took {time}ms", filename, compressionDuration.TotalMilliseconds);
-                    //    }
-                    //
-                    //}
+                    else if (Configuration.RandomizeCABs)
+                    {
+                        //todo
+                        Console.WriteLine($"WARNING: DID NOT randomize CAB for [{fileInfo.FullName}] because the file can't be compressed");
+                    }
                     break;
                 case ".csv":
                 case ".xml":
@@ -329,8 +285,6 @@ public static class ZipmodProcessor
                     // this file is being worked on, skip //todo not really?
                     break;
                 default:
-                    //_logger.LogInformation("Invalid file {file}, deleting", filename);
-                    //await _sessionService.CommitResultAsync(new SessionResult(zipmod, filename, SessionResultType.ResourceDeleted));
                     Console.WriteLine("Removing invalid/unknown file: " + path);
                     await fileInfo.SafeDelete();
                     break;

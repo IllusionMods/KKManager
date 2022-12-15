@@ -19,6 +19,7 @@ namespace KKManager.ModpackTool
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.TestGameFolder), folderTestGametextBox, folderTestGameOk);
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.FailFolder), folderFailtextBox, folderFailOk);
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.BackupFolder), folderBackuptextBox, folderBackupOk);
+            ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.LooseFilesFolder), looseFolderTextBox, looseFolderOk);
 
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game1Short), textBoxG1ID, labelG1ID);
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game1Longs), textBoxG1Tag, labelG1Tag, DataSourceUpdateMode.OnValidation);
@@ -28,9 +29,6 @@ namespace KKManager.ModpackTool
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.Game3Longs), textBoxG3Tag, labelG3Tag, DataSourceUpdateMode.OnValidation);
 
             ValidatedString.Bind(modpackToolConfigurationBindingSource, nameof(configuration.GameOutputSubfolder), textBoxGameOutputSubfolder, labelGameOutputSubfolder);
-
-            //checkBoxPngCompress.DataBindings.Add(nameof(CheckBox.Checked), modpackToolConfigurationBindingSource, nameof(configuration.CompressPNGs));
-            //checkBoxRandomizeCab.DataBindings.Add(nameof(CheckBox.Checked), modpackToolConfigurationBindingSource, nameof(configuration.RandomizeCABs));
 
             objectListView1.UseCellFormatEvents = true;
             objectListView1.FormatCell += (sender, args) =>

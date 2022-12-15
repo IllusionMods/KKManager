@@ -82,6 +82,9 @@
             this.checkBoxRandomizeCab = new System.Windows.Forms.CheckBox();
             this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkBoxPngCompress = new System.Windows.Forms.CheckBox();
+            this.looseFolderOk = new System.Windows.Forms.Label();
+            this.looseFolderTextBox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -100,7 +103,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 53);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(637, 149);
+            this.groupBox1.Size = new System.Drawing.Size(637, 175);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Folders";
@@ -112,6 +115,9 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.label14, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.looseFolderTextBox, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.looseFolderOk, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.folderOutputtextBox, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.folderOutputOk, 2, 1);
@@ -130,13 +136,14 @@
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(631, 130);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(631, 156);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
@@ -320,7 +327,7 @@
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.tableLayoutPanel2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 202);
+            this.groupBox2.Location = new System.Drawing.Point(0, 228);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(637, 222);
             this.groupBox2.TabIndex = 1;
@@ -623,7 +630,7 @@
             this.groupBox3.Controls.Add(this.objectListView1);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox3.Location = new System.Drawing.Point(0, 424);
+            this.groupBox3.Location = new System.Drawing.Point(0, 450);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(637, 264);
             this.groupBox3.TabIndex = 2;
@@ -751,6 +758,41 @@
             this.checkBoxPngCompress.Text = "Compress PNGs (pngcrush)";
             this.checkBoxPngCompress.UseVisualStyleBackColor = true;
             // 
+            // looseFolderOk
+            // 
+            this.looseFolderOk.AutoSize = true;
+            this.looseFolderOk.BackColor = System.Drawing.Color.Green;
+            this.looseFolderOk.Dock = System.Windows.Forms.DockStyle.Top;
+            this.looseFolderOk.ForeColor = System.Drawing.Color.White;
+            this.looseFolderOk.Location = new System.Drawing.Point(534, 130);
+            this.looseFolderOk.Name = "looseFolderOk";
+            this.looseFolderOk.Padding = new System.Windows.Forms.Padding(4);
+            this.looseFolderOk.Size = new System.Drawing.Size(94, 21);
+            this.looseFolderOk.TabIndex = 5;
+            this.looseFolderOk.Text = "OK";
+            this.looseFolderOk.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // looseFolderTextBox
+            // 
+            this.looseFolderTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.looseFolderTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.looseFolderTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.looseFolderTextBox.Location = new System.Drawing.Point(275, 133);
+            this.looseFolderTextBox.Name = "looseFolderTextBox";
+            this.looseFolderTextBox.Size = new System.Drawing.Size(253, 20);
+            this.looseFolderTextBox.TabIndex = 6;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label14.Location = new System.Drawing.Point(3, 130);
+            this.label14.Name = "label14";
+            this.label14.Padding = new System.Windows.Forms.Padding(4);
+            this.label14.Size = new System.Drawing.Size(266, 21);
+            this.label14.TabIndex = 7;
+            this.label14.Text = "Loose cards folder (card PNGs from processed mods)";
+            // 
             // ToolConfigurationEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -834,5 +876,8 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox checkBoxRandomizeCab;
         private System.Windows.Forms.CheckBox checkBoxPngCompress;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox looseFolderTextBox;
+        private System.Windows.Forms.Label looseFolderOk;
     }
 }

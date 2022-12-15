@@ -46,15 +46,7 @@ namespace KKManager.Data.Cards
                         foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
                         {
                             if (cancellationToken.IsCancellationRequested) break;
-                            try
-                            {
-                                if (ParseCard(file, out Card card))
-                                    s.OnNext(card);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"Failed to parse card [{file}] with an error: {ex.Message}");
-                            }
+                            if (TryParseCard(file, out var card)) s.OnNext(card);
                         }
                     }
                     catch (Exception ex)
@@ -110,9 +102,24 @@ namespace KKManager.Data.Cards
                 Console.WriteLine(card.Location.Name + " requires zipmods that are missing: " + string.Join("; ", missingZipmods));
         }
 
-        private static bool ParseCard(FileInfo file, out Card card)
+        public static bool TryParseCard(FileInfo file, out Card card)
         {
-            card = null;
+            try
+            {
+                card = ParseCard(file);
+                return card != null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to parse card [{file}] with an error: {ex.Message}");
+                card = null;
+                return false;
+            }
+        }
+
+        public static Card ParseCard(FileInfo file)
+        {
+            if (!file.Exists) return null;
 
             using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
@@ -120,21 +127,22 @@ namespace KKManager.Data.Cards
                 var pngEnd = Utility.SearchForPngEnd(stream);
 
                 if (pngEnd == -1 || pngEnd >= stream.Length)
-                    return false;
+                    return null;
 
                 stream.Position = pngEnd;
 
                 try
                 {
                     var loadProductNo = reader.ReadInt32();
-                    if (loadProductNo > 100)
-                    {
-                        //return false;
-                    }
+                    //if (loadProductNo > 100)
+                    //{
+                    //    return null;
+                    //}
 
                     var marker = reader.ReadString();
                     var gameType = GetGameType(marker);
 
+                    Card card;
                     switch (gameType)
                     {
                         case CardType.Koikatu:
@@ -160,21 +168,19 @@ namespace KKManager.Data.Cards
                             break;
 
                         case CardType.Unknown:
-                            card = null;
-                            break;
-
                         default:
                             throw new ArgumentOutOfRangeException($"GameType={gameType} is not supported");
                     }
+
+                    if (card.Extended != null)
+                        ExtData.ExtDataParser.DeserializeInPlace(card.Extended);
+
+                    return card;
                 }
                 catch (EndOfStreamException e)
                 {
                     throw new IOException("The card is corrupted or in an unknown format", e);
                 }
-
-                if (card?.Extended != null) ExtData.ExtDataParser.DeserializeInPlace(card.Extended);
-
-                return card != null;
             }
         }
 
