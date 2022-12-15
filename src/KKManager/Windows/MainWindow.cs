@@ -68,7 +68,7 @@ namespace KKManager.Windows
             Settings.Default.Binder.SendUpdates(this);
 
             // Before using the window location, check if isn't the default value and that it's actually visible on the screen
-            if (Settings.Default.WindowLocation != new Point(-1, -1) && 
+            if (Settings.Default.WindowLocation != new Point(-1, -1) &&
                 Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(Settings.Default.WindowLocation, Settings.Default.WindowSize))))
             {
                 StartPosition = FormStartPosition.Manual;
@@ -349,10 +349,12 @@ namespace KKManager.Windows
                 Settings.Default.DockState = Encoding.Unicode.GetString(s.ToArray());
             }
 
-            Settings.Default.WindowLocation = Location;
-            var maximized = WindowState == FormWindowState.Maximized;
-            Settings.Default.WindowMaximized = maximized;
-            if (!maximized) Settings.Default.WindowSize = Size;
+            Settings.Default.WindowMaximized = WindowState is FormWindowState.Maximized;
+
+            if (WindowState is FormWindowState.Normal) 
+                Settings.Default.WindowSize = Size;
+            if (WindowState is FormWindowState.Normal or FormWindowState.Maximized) 
+                Settings.Default.WindowLocation = Location;
         }
 
         private void openFemaleCardFolderToolStripMenuItem_Click(object sender, EventArgs e)
