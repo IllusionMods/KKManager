@@ -320,7 +320,10 @@ public class ZipmodEntry : INotifyPropertyChanged
         var allInputs = inputR.ToEnumerable().Select(FromEntry).ToList();
 
         await outputT;
-        var existingLookup = outputR.ToEnumerable().ToLookup(x => x.Manifest.GUID);
+        var existingLookup = outputR.ToEnumerable()
+                                    .Where(x => x.Location.FullName.IndexOf("Sideloader Modpack - Bleeding Edge", StringComparison.OrdinalIgnoreCase) < 0 &&
+                                                x.Location.FullName.IndexOf("SideloaderModpack-BleedingEdge", StringComparison.OrdinalIgnoreCase) < 0)
+                                    .ToLookup(x => x.Manifest.GUID);
 
         foreach (var input in allInputs)
         {
