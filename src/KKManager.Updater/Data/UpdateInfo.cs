@@ -183,7 +183,7 @@ namespace KKManager.Updater.Data
             if (string.IsNullOrEmpty(deserialized.GUID)) throw new ArgumentNullException(nameof(GUID), "The GUID element is missing or empty in " + deserialized.Name);
             if (string.IsNullOrEmpty(deserialized.ServerPath)) throw new ArgumentNullException(nameof(ServerPath), "The ServerPath element is missing or empty in " + deserialized.GUID);
             if (string.IsNullOrEmpty(deserialized.ClientPath)) throw new ArgumentNullException(nameof(ClientPath), "The ClientPath element is missing or empty in " + deserialized.GUID);
-            if (deserialized.Versioning == VersioningMode.Contents && !deserialized.ContentHashes.Any()) throw new ArgumentException(nameof(ContentHashes), "ContentHashes are empty when VersioningMode is set to Contents");
+            if (deserialized.Versioning == VersioningMode.Contents && !deserialized.ContentHashes.Any()) throw new ArgumentException("ContentHashes are empty when VersioningMode is set to Contents", nameof(ContentHashes));
         }
 
         public static Updates Deserialize(Stream stream)
@@ -211,8 +211,9 @@ namespace KKManager.Updater.Data
                 {
                     stream.Position = 0;
                     var doc = XDocument.Load(stream);
-                    var ver = int.Parse(doc.Root.Element("Version").Value);
-                    CheckVersion(ver);
+                    var value = doc.Root?.Element("Version")?.Value;
+                    if (value != null && int.TryParse(value, out var ver))
+                        CheckVersion(ver);
                 }
                 throw;
             }

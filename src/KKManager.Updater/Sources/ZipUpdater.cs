@@ -23,11 +23,11 @@ namespace KKManager.Updater.Sources
             _archive.Dispose();
         }
 
-        protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
+        protected override Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
             var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, updateFileName));
             if (f == null) throw new FileNotFoundException("File doesn't exist in archive");
-            return f.OpenEntryStream();
+            return Task.FromResult(f.OpenEntryStream());
         }
 
         protected override IRemoteItem GetRemoteRootItem(string serverPath)

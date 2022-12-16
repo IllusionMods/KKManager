@@ -23,12 +23,12 @@ namespace KKManager.Updater.Data
         {
             var tempPath = Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "temp\\KKManager_downloads");
 
-            retryCreate:
+        retryCreate:
             try
             {
                 Directory.CreateDirectory(tempPath);
 
-                retry:
+            retry:
                 var fileName = Path.Combine(tempPath, Path.GetRandomFileName());
                 if (File.Exists(fileName))
                     goto retry;
@@ -75,10 +75,10 @@ namespace KKManager.Updater.Data
                 Console.WriteLine($"Downloaded {downloadTarget.Length} bytes successfully");
             }
 
-            retryDelete:
+        retryDelete:
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName));
+                Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName) ?? throw new InvalidOperationException("Invalid path " + TargetPath.FullName));
                 try
                 {
                     if (TargetPath.Exists)

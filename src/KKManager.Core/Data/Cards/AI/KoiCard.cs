@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using MessagePack;
@@ -68,9 +69,14 @@ namespace KKManager.Data.Cards.AI
                 if (info != null)
                 {
                     reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
+
                     var parameterBytes = reader.ReadBytes((int)info.size);
                     var parameter = MessagePackSerializer.Deserialize<T>(parameterBytes);
-                    typeof(T).GetProperty("version", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).SetValue(parameter, new Version(info.version), null);
+
+                    var versionProp = typeof(T).GetProperty("version", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+                    Debug.Assert(versionProp != null, nameof(versionProp) + " != null");
+                    if (versionProp != null) versionProp.SetValue(parameter, new Version(info.version), null);
+
                     set(parameter);
                 }
             }

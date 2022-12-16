@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace KKManager.Windows
 {
-    partial class AboutBox : Form
+    sealed partial class AboutBox : Form
     {
         public AboutBox()
         {

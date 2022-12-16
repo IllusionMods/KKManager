@@ -15,14 +15,11 @@ namespace KKManager.ModpackTool
 {
     public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
     {
-        public ModpackToolConfiguration()
-        {
-        }
-        private static ModpackToolConfiguration _Instance;
+        private static ModpackToolConfiguration _instance;
         private bool _compressPNGs = true;
         private bool _randomizeCABs = true;
 
-        public static ModpackToolConfiguration Instance => _Instance ??= new ModpackToolConfiguration();
+        public static ModpackToolConfiguration Instance => _instance ??= new ModpackToolConfiguration();
 
         public ValidatedString IngestFolder { get; } = new(Directory.Exists);
         public ValidatedString OutputFolder { get; } = new(Directory.Exists);

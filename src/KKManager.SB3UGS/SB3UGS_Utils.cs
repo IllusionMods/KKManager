@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace KKManager.SB3UGS
             var buffer = new byte[7];
             using (var fs = file.OpenRead())
             {
-                fs.Read(buffer, 0, buffer.Length);
+                _ = fs.Read(buffer, 0, buffer.Length);
                 fs.Close();
             }
             return Encoding.UTF8.GetString(buffer, 0, buffer.Length) == "UnityFS";

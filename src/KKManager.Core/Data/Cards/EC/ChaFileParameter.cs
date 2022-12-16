@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.EC

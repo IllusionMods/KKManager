@@ -42,7 +42,7 @@ namespace KKManager.Windows.Content
             if (!string.IsNullOrEmpty(contentString))
             {
                 try { objectListView1.RestoreState(Convert.FromBase64String(contentString)); }
-                catch { }
+                catch { /* Safe to ignore */ }
             }
         }
 
@@ -79,12 +79,12 @@ namespace KKManager.Windows.Content
             PluginLoader.Plugins
                 .Buffer(TimeSpan.FromSeconds(3), ThreadPoolScheduler.Instance)
                 .ObserveOn(Program.MainSynchronizationContext)
-                .Subscribe(list => objectListView1.AddObjects((ICollection)list),
-                    () =>
-                    {
-                        objectListView1.FastAutoResizeColumns();
-                        MainWindow.SetStatusText("Done loading plugins");
-                    }, token);
+                .Subscribe(list => objectListView1.AddObjects(list),
+                           () =>
+                           {
+                               objectListView1.FastAutoResizeColumns();
+                               MainWindow.SetStatusText("Done loading plugins");
+                           }, token);
         }
 
         public void CancelRefreshing()
@@ -175,7 +175,7 @@ namespace KKManager.Windows.Content
 
         private void RefreshView()
         {
-            objectListView1.RefreshObjects((IList)_listView.Objects);
+            objectListView1.RefreshObjects(_listView.Objects);
         }
 
         private void toolStripButtonDisable_Click(object sender, EventArgs e)

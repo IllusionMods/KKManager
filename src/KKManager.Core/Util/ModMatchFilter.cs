@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BrightIdeasSoftware;
 
 namespace KKManager.Util
@@ -12,60 +10,60 @@ namespace KKManager.Util
     {
         public StringComparison StringComparison
         {
-            get { return textMatchFilter.StringComparison; }
-            set { textMatchFilter.StringComparison = value; }
+            get => _textMatchFilter.StringComparison;
+            set => _textMatchFilter.StringComparison = value;
         }
 
-        public IEnumerable<string> ContainsStrings
+        public IReadOnlyCollection<string> ContainsStrings
         {
-            get { return _ContainsStrings; }
-            set { SetContainsStrings(value); }
+            get => _containsStrings;
+            set => SetContainsStrings(value);
         }
 
-        public ObjectListView ListView { get { return textMatchFilter.ListView; } }
+        public ObjectListView ListView => _textMatchFilter.ListView;
 
-        IEnumerable<string> _ContainsStrings;
-        TextMatchFilter textMatchFilter;
-        HashSet<Data.ModInfoBase> sameMods;
-        string sameCol;
-        bool isMod;
-        bool isFilterCol;
+        private IReadOnlyCollection<string> _containsStrings;
+        private readonly TextMatchFilter _textMatchFilter;
+        private readonly HashSet<Data.ModInfoBase> _sameMods;
+        private string _sameCol;
+        private bool _isMod;
+        private bool _isFilterCol;
 
 
         public ModMatchFilter(ObjectListView olv)
         {
-            textMatchFilter = new TextMatchFilter(olv);
-            sameMods = new HashSet<Data.ModInfoBase>();
+            _textMatchFilter = new TextMatchFilter(olv);
+            _sameMods = new HashSet<Data.ModInfoBase>();
         }
 
         public bool Filter(object modelObject)
         {
-            bool textMatch = textMatchFilter.Filter(modelObject);
+            bool textMatch = _textMatchFilter.Filter(modelObject);
 
-            if (isMod && isFilterCol && textMatch)
+            if (_isMod && _isFilterCol && textMatch)
             {
-                return sameMods.Contains(modelObject);
+                return _sameMods.Contains(modelObject);
             }
             return textMatch;
         }
 
 
-        private void SetContainsStrings(IEnumerable<string> strs)
+        private void SetContainsStrings(IReadOnlyCollection<string> strs)
         {
-            _ContainsStrings = strs;
-            sameCol = null;
-            isFilterCol = false;
-            isMod = false;
-            sameMods.Clear();
+            _containsStrings = strs;
+            _sameCol = null;
+            _isFilterCol = false;
+            _isMod = false;
+            _sameMods.Clear();
             if (strs == null)
             {
-                textMatchFilter.ContainsStrings = null;
+                _textMatchFilter.ContainsStrings = null;
                 return;
             }
 
             foreach (var item in ListView.Objects)
             {
-                isMod = item is Data.ModInfoBase;
+                _isMod = item is Data.ModInfoBase;
                 break;
             }
 
@@ -77,20 +75,20 @@ namespace KKManager.Util
                 if (item.Contains("same:guid"))   // same:guid
                 {
                     words = item.Replace("same:guid", "");
-                    sameCol = "guid";
+                    _sameCol = "guid";
                 }
                 else if (item.Contains("same:name"))   // same:name
                 {
                     words = item.Replace("same:name", "");
-                    sameCol = "name";
+                    _sameCol = "name";
                 }
                 textStrs.Add(words.Trim());
             }
 
-            isFilterCol = !string.IsNullOrWhiteSpace(sameCol);
-            textMatchFilter.ContainsStrings = textStrs;
+            _isFilterCol = !string.IsNullOrWhiteSpace(_sameCol);
+            _textMatchFilter.ContainsStrings = textStrs;
 
-            if (isMod)
+            if (_isMod)
             {
                 var mods = new List<Data.ModInfoBase>(500);
                 foreach (var item in ListView.Objects)
@@ -106,7 +104,7 @@ namespace KKManager.Util
         {
             IEnumerable<IGrouping<string, Data.ModInfoBase>> filterList;
 
-            switch (sameCol)
+            switch (_sameCol)
             {
                 case "guid":
                     filterList = from r in modelObjects
@@ -124,16 +122,16 @@ namespace KKManager.Util
                     return modelObjects;
             }
 
-            sameMods.Clear();
+            _sameMods.Clear();
             foreach (var item in filterList)
             {
                 foreach (var mod in item)
                 {
-                    sameMods.Add(mod);
+                    _sameMods.Add(mod);
                 }
             }
 
-            return sameMods;
+            return _sameMods;
         }
 
 

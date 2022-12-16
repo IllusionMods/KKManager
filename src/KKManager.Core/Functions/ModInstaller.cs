@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 
@@ -188,47 +187,43 @@ namespace KKManager.Functions
                 throw new InvalidDataException("The file is not a zipmod or is broken - " + ex.Message, ex);
             }
 
-            if (newMod != null)
+            if (newMod == null) throw new InvalidOperationException("Failed to install zipmod file for an unknown reason");
+
+            try
             {
-                try
+                var modDirectory = InstallDirectoryHelper.ModsPath.FullName;
+
+                var oldMod = SideloaderModLoader.Zipmods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
+
+                if (oldMod != null)
                 {
-                    var modDirectory = InstallDirectoryHelper.ModsPath.FullName;
-
-                    var oldMod = SideloaderModLoader.Zipmods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
-
-                    if (oldMod != null)
+                    switch (SideloaderVersionComparer.CompareVersions(newMod.Version, oldMod.Version))
                     {
-                        switch (SideloaderVersionComparer.CompareVersions(newMod.Version, oldMod.Version))
-                        {
-                            case -1:
-                                throw new InvalidOperationException("You already have a newer version of this zipmod installed");
-                            case 0:
-                                throw new InvalidOperationException("You already have this zipmod installed");
-                            case 1:
-                                oldMod.Location.Delete();
-                                var newPath = oldMod.Location.Directory?.FullName;
-                                if (!string.IsNullOrWhiteSpace(newPath))
-                                {
-                                    newMod.Location.CopyTo(Path.Combine(newPath, newMod.Location.Name));
-                                    return;
-                                }
-                                break;
-                        }
+                        case -1:
+                            throw new InvalidOperationException("You already have a newer version of this zipmod installed");
+                        case 0:
+                            throw new InvalidOperationException("You already have this zipmod installed");
+                        case 1:
+                            oldMod.Location.Delete();
+                            var newPath = oldMod.Location.Directory?.FullName;
+                            if (!string.IsNullOrWhiteSpace(newPath))
+                            {
+                                newMod.Location.CopyTo(Path.Combine(newPath, newMod.Location.Name));
+                                return;
+                            }
+                            break;
                     }
+                }
 
-                    var installModDir = Path.Combine(modDirectory, "Installed by KKManager");
-                    Directory.CreateDirectory(installModDir);
-                    newMod.Location.CopyTo(Path.Combine(installModDir, newMod.Location.Name));
-                    return;
-                }
-                catch (SystemException e)
-                {
-                    Console.WriteLine(e);
-                    throw new InvalidOperationException("Failed to install zipmod file - " + e.Message, e);
-                }
+                var installModDir = Path.Combine(modDirectory, "Installed by KKManager");
+                Directory.CreateDirectory(installModDir);
+                newMod.Location.CopyTo(Path.Combine(installModDir, newMod.Location.Name));
             }
-
-            throw new InvalidOperationException("Failed to install zipmod file for an unknown reason");
+            catch (SystemException e)
+            {
+                Console.WriteLine(e);
+                throw new InvalidOperationException("Failed to install zipmod file - " + e.Message, e);
+            }
         }
     }
 }

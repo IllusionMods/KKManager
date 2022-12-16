@@ -147,7 +147,7 @@ namespace KKManager.Updater.Sources
                 }
             }
 
-            retryLoginWithAuth:
+        retryLoginWithAuth:
             if (_authInfos != null)
             {
                 _loginToken = await _client.LoginAsync(_authInfos);

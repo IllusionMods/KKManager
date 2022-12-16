@@ -44,7 +44,7 @@ namespace KKManager.Windows.Content
             if (!string.IsNullOrEmpty(contentString))
             {
                 try { objectListView1.RestoreState(Convert.FromBase64String(contentString)); }
-                catch { }
+                catch { /* safe to ignore */ }
             }
         }
 
@@ -81,7 +81,7 @@ namespace KKManager.Windows.Content
             SideloaderModLoader.Zipmods
                 .Buffer(TimeSpan.FromSeconds(3), ThreadPoolScheduler.Instance)
                 .ObserveOn(Program.MainSynchronizationContext)
-                .Subscribe(list => objectListView1.AddObjects((ICollection)list),
+                .Subscribe(list => objectListView1.AddObjects(list),
                     () =>
                     {
                         objectListView1.FastAutoResizeColumns();

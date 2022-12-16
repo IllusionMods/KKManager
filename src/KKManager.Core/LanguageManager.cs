@@ -27,7 +27,7 @@ namespace KKManager
         {
             // Check what translations are available in program dir
             var location = typeof(LanguageManager).Assembly.Location;
-            if (location.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) location = Path.GetDirectoryName(location);
+            if (location.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)) location = Path.GetDirectoryName(location) ?? throw new InvalidOperationException("Invalid location " + location);
             var translationDirectories = new DirectoryInfo(location).GetDirectories()
                 .Where(x =>
                 {

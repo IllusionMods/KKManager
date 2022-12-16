@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using KKManager.Data.Cards;
-using KKManager.Data.Cards.AI;
-using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.ExtData.Deserializers

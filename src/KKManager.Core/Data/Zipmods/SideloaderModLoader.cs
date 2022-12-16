@@ -8,9 +8,7 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using KKManager.Functions;
-using KKManager.Util;
 using Sideloader;
 
 namespace KKManager.Data.Zipmods
@@ -53,6 +51,7 @@ namespace KKManager.Data.Zipmods
         /// </summary>
         /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
         /// <param name="subject"></param>
+        /// <param name="cancellationToken"></param>
         /// <param name="searchOption">Where to search</param>
         public static Task TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
         {

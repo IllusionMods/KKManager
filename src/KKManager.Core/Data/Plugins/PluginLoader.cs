@@ -18,14 +18,14 @@ namespace KKManager.Data.Plugins
     {
         public static IObservable<PluginInfo> Plugins => _plugins ?? StartReload();
 
-        private static bool _isUpdating = false;
-        private static readonly object _lock = new object();
+        private static bool _isUpdating;
+        private static readonly object _Lock = new object();
         private static ReplaySubject<PluginInfo> _plugins;
 
         public static IObservable<PluginInfo> StartReload()
         {
             var needsUpdate = false;
-            lock (_lock)
+            lock (_Lock)
             {
                 if (_plugins == null || !_isUpdating)
                 {

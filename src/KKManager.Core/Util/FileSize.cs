@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace KKManager.Util
 {
-    public struct FileSize : IComparable<FileSize>, IEquatable<FileSize>, IComparable
+    public readonly struct FileSize : IComparable<FileSize>, IEquatable<FileSize>, IComparable
     {
         public enum SizeRange
         {

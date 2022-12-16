@@ -99,7 +99,7 @@ namespace KKManager.Data.Cards.AI
 
 		public bool isHAddTaii1 { get; set; }
 
-		public ChaFileGameInfo()
+		/*public ChaFileGameInfo()
 		{
 			//for (int i = 0; i < 8; i++)
 			//{
@@ -115,7 +115,7 @@ namespace KKManager.Data.Cards.AI
 			//	normalSkill[k] = -1;
 			//	hSkill[k] = -1;
 			//}
-		}
+		}*/
 
 		[IgnoreMember]
 		public static readonly string BlockName = "GameInfo";

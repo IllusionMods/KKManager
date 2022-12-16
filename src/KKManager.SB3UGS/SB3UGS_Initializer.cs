@@ -18,7 +18,7 @@ namespace KKManager.SB3UGS
         {
             if (_pluginDirName != null) return;
 
-            var assLocation = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            var assLocation = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException("Invalid location " + Assembly.GetExecutingAssembly().Location));
             var directoryName = new DirectoryInfo(Path.Combine(assLocation.FullName, "SB3UGS"));
             _pluginDirName = new DirectoryInfo(Path.Combine(directoryName.FullName, "plugins"));
 

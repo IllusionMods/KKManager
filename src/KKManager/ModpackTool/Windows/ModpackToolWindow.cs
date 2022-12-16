@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
-using KKManager.Data.Zipmods;
 using KKManager.Windows;
 using KKManager.Windows.Content;
 using WeifenLuo.WinFormsUI.Docking;
@@ -32,7 +25,6 @@ namespace KKManager.ModpackTool
             olvColumnStatus.AspectName = nameof(ZipmodEntry.Status);
             olvColumnOutputPath.AspectName = nameof(ZipmodEntry.RelativeOutputPath);
             olvColumnStatus.FormatAsModpackToolEntryStatus();
-            //todo load last loaded config
 
             olvColumnContent.AspectName = nameof(ZipmodEntry.Info) + "." + nameof(ZipmodEntry.Info.ContentsKind);
             olvColumnGames.AspectName = nameof(ZipmodEntry.Games);
@@ -52,16 +44,13 @@ namespace KKManager.ModpackTool
         {
             var nextToEdit = _listView.Objects.FirstOrDefault(x => !x.IsValid());
             _listView.SelectedObject = nextToEdit;
-            if (nextToEdit == null)
-                Console.WriteLine("All manifests appear to PASS.");
-            else
-                Console.WriteLine("Opening in editor");
+            Console.WriteLine(nextToEdit == null ? "All manifests appear to PASS." : "Opening in editor");
         }
 
         #region Config
 
-        private static string ConfigDirectoryPath = Path.GetFullPath(Path.Combine(ModpackToolRootDir, "Config"));
-        private string GetFullPathToConfigFile() => Path.GetFullPath(Path.Combine(ConfigDirectoryPath, configInputBox.Text));
+        private static readonly string _ConfigDirectoryPath = Path.GetFullPath(Path.Combine(ModpackToolRootDir, "Config"));
+        private string GetFullPathToConfigFile() => Path.GetFullPath(Path.Combine(_ConfigDirectoryPath, configInputBox.Text));
 
         private void RefreshConfigSuggestions()
         {
@@ -69,10 +58,10 @@ namespace KKManager.ModpackTool
             {
                 configInputBox.Items.Clear();
 
-                if (Directory.Exists(ConfigDirectoryPath))
-                    configInputBox.Items.AddRange(Directory.GetFiles(ConfigDirectoryPath, "*.xml", SearchOption.AllDirectories)
+                if (Directory.Exists(_ConfigDirectoryPath))
+                    configInputBox.Items.AddRange(Directory.GetFiles(_ConfigDirectoryPath, "*.xml", SearchOption.AllDirectories)
                                                            .Select(Path.GetFullPath)
-                                                           .Select(x => (object)x.Substring(ConfigDirectoryPath.Length + 1))
+                                                           .Select(x => (object)x.Substring(_ConfigDirectoryPath.Length + 1))
                                                            .ToArray());
             }
             catch (Exception e)
@@ -85,7 +74,7 @@ namespace KKManager.ModpackTool
         {
             try
             {
-                Directory.CreateDirectory(ConfigDirectoryPath);
+                Directory.CreateDirectory(_ConfigDirectoryPath);
                 var fullName = GetFullPathToConfigFile();
                 ModpackToolConfiguration.Instance.Serialize(fullName);
                 Console.WriteLine("Serialized config to " + fullName);
@@ -225,8 +214,8 @@ namespace KKManager.ModpackTool
         {
             try
             {
-                Directory.CreateDirectory(ConfigDirectoryPath);
-                Process.Start(ConfigDirectoryPath);
+                Directory.CreateDirectory(_ConfigDirectoryPath);
+                Process.Start(_ConfigDirectoryPath);
             }
             catch (Exception exception)
             {
@@ -241,9 +230,9 @@ namespace KKManager.ModpackTool
             try
             {
                 var fullPath = Path.GetFullPath(contentString);
-                if (fullPath.StartsWith(ConfigDirectoryPath, StringComparison.OrdinalIgnoreCase))
+                if (fullPath.StartsWith(_ConfigDirectoryPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    configInputBox.Text = fullPath.Substring(ConfigDirectoryPath.Length).TrimStart('/', '\\');
+                    configInputBox.Text = fullPath.Substring(_ConfigDirectoryPath.Length).TrimStart('/', '\\');
                     configLoadBtn_Click(this, EventArgs.Empty);
                 }
             }

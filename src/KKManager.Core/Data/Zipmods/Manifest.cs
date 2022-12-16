@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using MessagePack;
-using SharpCompress.Common.Zip;
 using KKManager.Util;
 using SharpCompress.Archives;
 #if AI || HS2

@@ -61,7 +61,7 @@ namespace KKManager.Util.ProcessWaiter
                     Icon ico = null;
                     try
                     {
-                        ico = Icon.ExtractAssociatedIcon(p.MainModule.FileName);
+                        if (p.MainModule != null) ico = Icon.ExtractAssociatedIcon(p.MainModule.FileName);
                     }
                     catch (Exception ex)
                     {

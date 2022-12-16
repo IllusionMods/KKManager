@@ -28,7 +28,7 @@ namespace KKManager.Util
             var items = new PropertyDescriptorCollection(null);
             for (int i = 0; i < list.Count; i++)
             {
-                object item = list[i];
+                //object item = list[i];
                 items.Add(new ExpandableCollectionPropertyDescriptor(list, i));
             }
             return items;
@@ -36,13 +36,13 @@ namespace KKManager.Util
 
         public class ExpandableCollectionPropertyDescriptor : PropertyDescriptor
         {
-            private IList collection;
+            private readonly IList _collection;
             private readonly int _index;
 
             public ExpandableCollectionPropertyDescriptor(IList coll, int idx)
                 : base(GetDisplayName(coll, idx), null)
             {
-                collection = coll;
+                _collection = coll;
                 _index = idx;
             }
 
@@ -71,30 +71,18 @@ namespace KKManager.Util
                 return true;
             }
 
-            public override Type ComponentType
-            {
-                get { return this.collection.GetType(); }
-            }
+            public override Type ComponentType => _collection.GetType();
 
             public override object GetValue(object component)
             {
-                return collection[_index];
+                return _collection[_index];
             }
 
-            public override bool IsReadOnly
-            {
-                get { return collection.IsReadOnly; }
-            }
+            public override bool IsReadOnly => _collection.IsReadOnly;
 
-            public override string Name
-            {
-                get { return _index.ToString(CultureInfo.InvariantCulture); }
-            }
+            public override string Name => _index.ToString(CultureInfo.InvariantCulture);
 
-            public override Type PropertyType
-            {
-                get { return collection[_index].GetType(); }
-            }
+            public override Type PropertyType => _collection[_index].GetType();
 
             public override void ResetValue(object component)
             {
@@ -107,7 +95,7 @@ namespace KKManager.Util
 
             public override void SetValue(object component, object value)
             {
-                collection[_index] = value;
+                _collection[_index] = value;
             }
         }
     }

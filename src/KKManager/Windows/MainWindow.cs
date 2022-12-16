@@ -51,7 +51,7 @@ namespace KKManager.Windows
 
             SetupTabs();
 
-            Task.Run((Action)PopulateStartMenu);
+            Task.Run(PopulateStartMenu);
 
 #if DEBUG
             var version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -212,7 +212,7 @@ namespace KKManager.Windows
                     item.AutoToolTip = false;
                     item.ToolTipText = file.FullName;
 
-                    item.Click += (o, args) => { ProcessTools.SafeStartProcess(file.FullName); };
+                    item.Click += (_, _) => { ProcessTools.SafeStartProcess(file.FullName); };
 
                     try { item.Image = Icon.ExtractAssociatedIcon(file.FullName)?.ToBitmap(); }
                     catch { item.Image = null; }
@@ -261,7 +261,7 @@ namespace KKManager.Windows
 
         public IEnumerable<T> GetWindows<T>() where T : DockContent, new()
         {
-            return dockPanel.Contents.OfType<T>().Concat(dockPanel.FloatWindows.OfType<T>());
+            return dockPanel.Contents.OfType<T>();
         }
 
         public CardWindow OpenOrGetCardWindow(DirectoryInfo targetDir)
@@ -351,9 +351,9 @@ namespace KKManager.Windows
 
             Settings.Default.WindowMaximized = WindowState is FormWindowState.Maximized;
 
-            if (WindowState is FormWindowState.Normal) 
+            if (WindowState is FormWindowState.Normal)
                 Settings.Default.WindowSize = Size;
-            if (WindowState is FormWindowState.Normal or FormWindowState.Maximized) 
+            if (WindowState is FormWindowState.Normal or FormWindowState.Maximized)
                 Settings.Default.WindowLocation = Location;
         }
 
@@ -521,8 +521,8 @@ namespace KKManager.Windows
                     MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                SideloaderModLoader.StartReload();
-                PluginLoader.StartReload();
+                _ = SideloaderModLoader.StartReload();
+                _ = PluginLoader.StartReload();
 
                 var contentWindows = GetWindows<DockContent>().OfType<IContentWindow>().ToList();
                 foreach (var window in contentWindows) window.RefreshList();
@@ -536,7 +536,7 @@ namespace KKManager.Windows
             }
         }
 
-        private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
+        private readonly CancellationTokenSource _checkForUpdatesCancel = new();
 
         private async void MainWindow_Shown(object sender, EventArgs e)
         {
@@ -730,13 +730,13 @@ namespace KKManager.Windows
             if (languagesToolStripMenuItem.DropDownItems.Count == 0)
             {
                 var spaceWidth = TextRenderer.MeasureText(" ", Font, Size).Width;
-                ToolStripMenuItem CreateLanguageToggle(CultureInfo x)
+                ToolStripItem CreateLanguageToggle(CultureInfo x)
                 {
                     var textWidth = TextRenderer.MeasureText(x.NativeName, Font, Size).Width;
                     return new ToolStripMenuItem(
                             $"{x.NativeName.PadRight(50 - textWidth / spaceWidth)} {x.EnglishName}",
                             null,
-                            (obj, args) =>
+                            (obj, _) =>
                             {
                                 LanguageManager.CurrentCulture = (CultureInfo)((ToolStripMenuItem)obj).Tag;
                                 LanguageManager.ApplyCurrentCulture(this);

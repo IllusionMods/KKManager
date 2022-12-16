@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using BrightIdeasSoftware;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
 
@@ -127,5 +129,8 @@ namespace KKManager.Util
             }
             return result;
         }
+
+        public static void AddObjects<T>(this ObjectListView olv, IList<T> modelObjects) => olv.AddObjects((ICollection)modelObjects);
+        public static void RefreshObjects<T>(this ObjectListView olv, IList<T> modelObjects) => olv.RefreshObjects((IList)modelObjects);
     }
 }

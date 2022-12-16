@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MessagePack;
+﻿using MessagePack;
 
 namespace KKManager.Data.Cards.KKS
 {

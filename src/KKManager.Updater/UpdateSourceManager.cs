@@ -132,7 +132,7 @@ namespace KKManager.Updater
             var updateSourcesPath = Path.Combine(searchDirectory, "UpdateSources");
             var updateSourcesPathDebug = Path.Combine(searchDirectory, "UpdateSourcesDebug");
 
-            var updateSources = new string[0];
+            var updateSources = Array.Empty<string>();
 
             Console.WriteLine("Looking for update sources...");
 

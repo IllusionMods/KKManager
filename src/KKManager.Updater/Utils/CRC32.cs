@@ -250,11 +250,10 @@ namespace KKManager.Updater.Utils
             crc32Table = new UInt32[256];
             unchecked
             {
-                UInt32 dwCrc;
                 byte i = 0;
                 do
                 {
-                    dwCrc = i;
+                    UInt32 dwCrc = i;
                     for (byte j = 8; j > 0; j--)
                     {
                         if ((dwCrc & 1) == 1)

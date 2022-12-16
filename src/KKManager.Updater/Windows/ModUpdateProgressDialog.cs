@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ namespace KKManager.Updater.Windows
                 case GameType.AiShoujoSteam:
                 case GameType.AiShoujo:
                 case GameType.HoneySelect2:
+                case GameType.RoomGirl:
                     pictureBox1.Image = Resources.aichika;
                     break;
 
@@ -41,7 +43,9 @@ namespace KKManager.Updater.Windows
                     pictureBox1.Image = Resources.chikajump;
                     break;
 
-                case GameType.Unknown:
+                default:
+                    Debug.Fail("Unhandled game type: " + InstallDirectoryHelper.GameType);
+                    Console.WriteLine("WARNING: Unhandled game type: " + InstallDirectoryHelper.GameType);
                     break;
             }
         }
@@ -192,7 +196,7 @@ namespace KKManager.Updater.Windows
 
                     _completedSize = FileSize.SumFileSizes(downloadItems.Select(x => x.GetDownloadedSize()));
 
-                    var totalPercent = (double)_completedSize.GetKbSize() / (double)_overallSize.GetKbSize() * 100d;
+                    var totalPercent = (double)_completedSize.GetKbSize() / _overallSize.GetKbSize() * 100d;
                     if (double.IsNaN(totalPercent)) totalPercent = 0;
 
                     // Download speed calc

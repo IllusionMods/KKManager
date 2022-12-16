@@ -49,11 +49,10 @@ namespace KKManager.Data.Cards.RG
             var count = reader.ReadInt32();
             var bytes = reader.ReadBytes(count);
 
-            var DeserialOptions = MessagePackSerializerOptions.Standard
-                .WithSecurity(MessagePackSecurity.UntrustedData);
+            var deserializeOptions = MessagePackSerializerOptions.Standard.WithSecurity(MessagePackSecurity.UntrustedData);
 
             // deserialize messagepack json value array defined in RG/BlockHeader.cs
-            var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes, DeserialOptions);
+            var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes, deserializeOptions);
 
             reader.ReadInt64();
             var position = reader.BaseStream.Position;
@@ -67,7 +66,7 @@ namespace KKManager.Data.Cards.RG
                 {
                     reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
                     var parameterBytes = reader.ReadBytes((int)info.size);
-                    parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes, DeserialOptions);
+                    parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes, deserializeOptions);
                 }
             }
 
@@ -88,7 +87,7 @@ namespace KKManager.Data.Cards.RG
 
         public List<string> GetTraits(List<byte> features)
         {
-            var Traits = new List<string>();
+            var traits = new List<string>();
 
             string[] traitLookup =
             {
@@ -112,16 +111,16 @@ namespace KKManager.Data.Cards.RG
 
             foreach (var attribute in features)
             {
-                if (attribute < 0 || attribute > 15) Traits.Add("Invalid");
-                else if (traitLookup.Length > attribute) Traits.Add(traitLookup[attribute]);
-                else Traits.Add("Unknown");
+                if (attribute > 15) traits.Add("Invalid");
+                else if (traitLookup.Length > attribute) traits.Add(traitLookup[attribute]);
+                else traits.Add("Unknown");
             }
-            return Traits;
+            return traits;
         }
 
         public List<string> GetFetishes(List<byte> propensity)
         {
-            var Fetishes = new List<string>();
+            var fetishes = new List<string>();
         
             string[] fetishLookup =
             {
@@ -139,11 +138,11 @@ namespace KKManager.Data.Cards.RG
 
             foreach (var kink in propensity)
             {
-                if (kink < 0 || kink > 12) Fetishes.Add("Invalid");
-                else if (fetishLookup.Length > kink) Fetishes.Add(fetishLookup[kink]);
-                else Fetishes.Add("Unknown");
+                if (kink > 12) fetishes.Add("Invalid");
+                else if (fetishLookup.Length > kink) fetishes.Add(fetishLookup[kink]);
+                else fetishes.Add("Unknown");
             }
-            return Fetishes;
+            return fetishes;
         }
 
         // personality is actually profession lol

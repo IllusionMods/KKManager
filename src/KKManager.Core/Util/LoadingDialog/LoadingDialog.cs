@@ -102,8 +102,12 @@ namespace KKManager.Util
             {
                 try
                 {
-                    var filePath = Assembly.GetEntryAssembly().Location;
-                    Icon = Icon.ExtractAssociatedIcon(filePath);
+                    var entryAssembly = Assembly.GetEntryAssembly();
+                    if (entryAssembly != null)
+                    {
+                        var filePath = entryAssembly.Location;
+                        Icon = Icon.ExtractAssociatedIcon(filePath);
+                    }
                 }
                 catch
                 {
@@ -171,6 +175,9 @@ namespace KKManager.Util
                 case ContentAlignment.BottomRight:
                     newPos.Y = Owner.Location.Y + Owner.Size.Height - Size.Height;
                     break;
+
+                default:
+                    return;
             }
             switch (_ownerAlignment)
             {
@@ -184,6 +191,9 @@ namespace KKManager.Util
                 case ContentAlignment.BottomRight:
                     newPos.X = Owner.Location.X + Owner.Size.Width - Size.Width;
                     break;
+
+                default:
+                    return;
             }
 
             newPos.X += _offset.X;
@@ -200,7 +210,7 @@ namespace KKManager.Util
         /// <param name="offset">Offset from the alignment point</param>
         /// <param name="ownerAlignment">Alignment point to the parent</param>
         public static LoadingDialog Show(Form owner, string title, Action<LoadingDialogInterface> action,
-            Point offset = default(Point), ContentAlignment ownerAlignment = ContentAlignment.MiddleCenter)
+            Point offset = default, ContentAlignment ownerAlignment = ContentAlignment.MiddleCenter)
         {
             if (owner == null) owner = DefaultOwner;
             // Find the topmost form so clicking on forms above owner doesn't bring the loading form under the others
@@ -228,7 +238,7 @@ namespace KKManager.Util
         /// <param name="offset">Offset from the alignment point</param>
         /// <param name="ownerAlignment">Alignment point to the parent</param>
         public static Exception ShowDialog(Form owner, string title, Action<LoadingDialogInterface> action,
-            Point offset = default(Point), ContentAlignment ownerAlignment = ContentAlignment.MiddleCenter)
+            Point offset = default, ContentAlignment ownerAlignment = ContentAlignment.MiddleCenter)
         {
             using (var loadBar = new LoadingDialog(title, action)
             {

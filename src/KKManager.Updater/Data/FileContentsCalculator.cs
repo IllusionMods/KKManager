@@ -17,8 +17,8 @@ namespace KKManager.Updater.Data
 
         static FileContentsCalculator()
         {
-            var hashCachePath = Path.Combine(Path.GetDirectoryName(typeof(FileContentsCalculator).Assembly.Location),
-                "FileContentsHashCache.bin");
+            var assDir = Path.GetDirectoryName(typeof(FileContentsCalculator).Assembly.Location) ?? throw new InvalidOperationException("Invalid location " + typeof(FileContentsCalculator).Assembly.Location);
+            var hashCachePath = Path.Combine(assDir, "FileContentsHashCache.bin");
             var serializerOptions = MessagePackSerializerOptions.Standard
                 .WithCompression(MessagePackCompression.Lz4Block).WithOmitAssemblyVersion(true)
                 .WithResolver(StandardResolverAllowPrivate.Instance);

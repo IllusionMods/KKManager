@@ -18,7 +18,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.Content
 {
-    public partial class CardWindow : DockContent, IContentWindow
+    public sealed partial class CardWindow : DockContent, IContentWindow
     {
         private readonly Bitmap _emptyImage;
 
@@ -121,7 +121,7 @@ namespace KKManager.Windows.Content
                 if (parts.Length >= 2)
                 {
                     try { listView.RestoreState(Convert.FromBase64String(parts[1])); }
-                    catch { }
+                    catch { /* safe to ignore */ }
                 }
             }
         }
@@ -240,7 +240,7 @@ namespace KKManager.Windows.Content
                     list =>
                     {
                         MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
-                        listView.AddObjects((ICollection)list);
+                        listView.AddObjects(list);
                         //RefreshThumbnails(true);
                     },
                     ShowFailedToLoadDirError,
@@ -337,12 +337,12 @@ namespace KKManager.Windows.Content
                 updateSubject.OnCompleted();
             }
 
-            Task.Run((Action)CardThumbLoader, token);
+            Task.Run(CardThumbLoader, token);
 
             updateSubject
                 .Buffer(TimeSpan.FromSeconds(3))
                 .ObserveOn(Program.MainSynchronizationContext)
-                .Subscribe(list => listView.RefreshObjects((IList)list), token);
+                .Subscribe(list => listView.RefreshObjects(list), token);
         }
 
         private void SetupImageLists()
@@ -456,6 +456,9 @@ namespace KKManager.Windows.Content
                                 File.Move(file, Path.Combine(CurrentDirectory.FullName, Path.GetFileName(file) ?? throw new InvalidOperationException(file + " is not a valid path")));
                                 filesChanged = true;
                                 break;
+
+                            default:
+                                return;
                         }
                     }
 

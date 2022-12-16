@@ -13,6 +13,7 @@ namespace KKManager.Util
         /// <summary>
         /// Exception that does not trigger retries
         /// </summary>
+        /// <inheritdoc />
         public sealed class UnretryableException : Exception
         {
             internal UnretryableException(Exception ex) : base(string.Empty, ex)
@@ -53,7 +54,7 @@ namespace KKManager.Util
                     if (ex is OperationCanceledException || attempts >= times)
                         throw;
 
-                    if (ex is UnretryableException c)
+                    if (ex is UnretryableException c && c.InnerException != null) 
                         throw c.InnerException;
 
                     // Deal with exceptions caused by cancellation
@@ -71,7 +72,7 @@ namespace KKManager.Util
             return Task.Delay(delay, cancellationToken);
         }
 
-        private static int[] DelayPerAttemptInSeconds =
+        private static readonly int[] _DelayPerAttemptInSeconds =
         {
             (int) TimeSpan.FromSeconds(2).TotalSeconds,
             (int) TimeSpan.FromSeconds(30).TotalSeconds,
@@ -84,7 +85,7 @@ namespace KKManager.Util
         {
             if (failedAttempts <= 0) throw new ArgumentOutOfRangeException();
 
-            return failedAttempts > DelayPerAttemptInSeconds.Length ? DelayPerAttemptInSeconds.Last() : DelayPerAttemptInSeconds[failedAttempts];
+            return failedAttempts > _DelayPerAttemptInSeconds.Length ? _DelayPerAttemptInSeconds.Last() : _DelayPerAttemptInSeconds[failedAttempts];
         }
     }
 }
