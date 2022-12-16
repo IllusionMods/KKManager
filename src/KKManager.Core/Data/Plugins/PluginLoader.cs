@@ -51,7 +51,7 @@ namespace KKManager.Data.Plugins
         /// <param name="subject">Output stream</param>
         private static void TryLoadPlugins(string pluginDirectory, ReplaySubject<PluginInfo> subject)
         {
-            Console.WriteLine("Start loading plugins");
+            Console.WriteLine($"Start loading plugins from [{pluginDirectory}]");
 
             _cancelSource?.Dispose();
             _cancelSource = new CancellationTokenSource();
@@ -59,6 +59,7 @@ namespace KKManager.Data.Plugins
 
             void ReadPluginsAsync()
             {
+                var sw = Stopwatch.StartNew();
                 try
                 {
                     if (!Directory.Exists(pluginDirectory))
@@ -119,7 +120,7 @@ namespace KKManager.Data.Plugins
                 finally
                 {
                     _isUpdating = false;
-                    Console.WriteLine("Finished loading plugins");
+                    Console.WriteLine($"Finished loading plugins from [{pluginDirectory}] in {sw.ElapsedMilliseconds}ms");
                     subject.OnCompleted();
                 }
             }

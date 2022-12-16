@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Ionic.Zip;
 using KKManager.Util;
 using SharpCompress.Archives;
 #if AI || HS2
@@ -237,14 +238,26 @@ namespace Sideloader
             }
         }
 
+        internal static Manifest LoadFromZip(ZipFile zip)
+        {
+            var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && x.FileName == "manifest.xml");
+
+            return LoadFromZipInt(entry?.OpenReader());
+        }
+
         internal static Manifest LoadFromZip(IArchive zip)
         {
             var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && x.Key == "manifest.xml");
 
+            return LoadFromZipInt(entry?.OpenEntryStream());
+        }
+
+        private static Manifest LoadFromZipInt(Stream entry)
+        {
             if (entry == null)
                 throw new OperationCanceledException("Manifest.xml is missing, make sure this is a zipmod");
 
-            var manifest = new Manifest(entry.OpenEntryStream());
+            var manifest = new Manifest(entry);
 
             if (manifest.GUID == null)
                 throw new OperationCanceledException("Manifest.xml is missing the GUID");

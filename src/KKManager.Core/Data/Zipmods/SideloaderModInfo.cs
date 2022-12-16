@@ -10,7 +10,7 @@ namespace KKManager.Data.Zipmods
 {
     public class SideloaderModInfo : ModInfoBase
     {
-        public SideloaderModInfo(FileInfo location, Manifest manifest, IReadOnlyList<Image> images, IReadOnlyList<string> contents)
+        public SideloaderModInfo(FileInfo location, Manifest manifest, List<Func<Image>> images, IReadOnlyList<string> contents)
             : base(location, manifest.GUID, manifest.Name, manifest.Version, manifest.Author, manifest.Description, manifest.Website)
         {
             var extension = location.Extension;
@@ -18,18 +18,23 @@ namespace KKManager.Data.Zipmods
                 throw new InvalidOperationException("Zipmod has invalid extension: " + Location.Extension);
 
             Manifest = manifest;
-            Images = images;
-            Contents = contents;
+            _delayedImages = images ?? throw new ArgumentNullException(nameof(images));
+            Contents = contents ?? throw new ArgumentNullException(nameof(contents));
             ContentsKind = CheckContentsKinds(contents, manifest);
         }
+
+        private readonly List<Func<Image>> _delayedImages;
+        private List<Image> _cachedImages;
 
         ~SideloaderModInfo()
         {
             // todo handle properly or move images out of here
-            if (Images != null)
+            if (_cachedImages != null)
             {
-                foreach (var image in Images)
+                foreach (var image in _cachedImages)
                     image.Dispose();
+
+                _cachedImages = null;
             }
         }
 
@@ -37,7 +42,28 @@ namespace KKManager.Data.Zipmods
         public Manifest Manifest { get; }
 
         [Browsable(false)]
-        public IReadOnlyList<Image> Images { get; }
+        public IReadOnlyList<Image> Images
+        {
+            get
+            {
+                lock (_delayedImages)
+                {
+                    if (_cachedImages == null)
+                    {
+                        _cachedImages = new List<Image>();
+                        foreach (var delayedImage in _delayedImages)
+                        {
+                            if (_cachedImages.Count >= 3) break;
+
+                            var image = delayedImage();
+                            if (image != null)
+                                _cachedImages.Add(image);
+                        }
+                    }
+                    return _cachedImages;
+                }
+            }
+        }
 
         [Browsable(false)]
         public IReadOnlyList<string> Contents { get; }

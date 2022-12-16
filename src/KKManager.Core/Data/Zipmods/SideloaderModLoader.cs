@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Ionic.Zip;
+using Ionic.Zlib;
 using KKManager.Functions;
+using SharpCompress.Common;
 using Sideloader;
 
 namespace KKManager.Data.Zipmods
@@ -55,12 +60,13 @@ namespace KKManager.Data.Zipmods
         /// <param name="searchOption">Where to search</param>
         public static Task TryReadSideloaderMods(string modDirectory, ReplaySubject<SideloaderModInfo> subject, CancellationToken cancellationToken, SearchOption searchOption = SearchOption.AllDirectories)
         {
-            Console.WriteLine("Start loading zipmods from " + modDirectory);
+            Console.WriteLine($"Start loading zipmods from [{modDirectory}]");
 
             var token = cancellationToken;
 
             void ReadSideloaderModsAsync()
             {
+                var sw = Stopwatch.StartNew();
                 try
                 {
                     if (!Directory.Exists(modDirectory))
@@ -107,7 +113,7 @@ namespace KKManager.Data.Zipmods
                 }
                 finally
                 {
-                    Console.WriteLine("Finished loading zipmods");
+                    Console.WriteLine($"Finished loading zipmods from [{modDirectory}] in {sw.ElapsedMilliseconds}ms");
                     subject.OnCompleted();
                 }
             }
@@ -130,35 +136,71 @@ namespace KKManager.Data.Zipmods
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
             using (var reader = location.OpenRead())
-            using (var zf = SharpCompress.Archives.ArchiveFactory.Open(reader))
+            using (var zf = ZipFile.Read(reader))
             {
                 var manifest = Manifest.LoadFromZip(zf);
 
                 if (manifest == null)
                     throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
 
-                var images = new List<Image>();
+                var images = new List<Func<Image>>();
                 // TODO load from drive instead of caching to ram
                 foreach (var imageFile in zf.Entries
-                                            .Where(x => ".jpg".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase) ||
-                                                        ".png".Equals(Path.GetExtension(x.Key), StringComparison.OrdinalIgnoreCase))
-                                            .OrderBy(x => x.Key).Take(3))
+                                            .Where(x => ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
+                                                        ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase))
+                                            .OrderBy(x => x.FileName).Take(5))
                 {
-                    try
+                    var imgName = imageFile.FileName;
+
+                    if (imageFile.CompressionLevel == CompressionLevel.None)
                     {
-                        using (var stream = imageFile.OpenEntryStream())
-                        using (var img = Image.FromStream(stream))
+                        var prop = typeof(ZipEntry).GetProperty("FileDataPosition", BindingFlags.Instance | BindingFlags.NonPublic);
+                        if (prop == null) throw new ArgumentNullException(nameof(prop));
+                        var pos = (long)prop.GetValue(imageFile, null);
+                        images.Add(() =>
                         {
-                            images.Add(img.GetThumbnailImage(200, 200, null, IntPtr.Zero));
-                        }
+                            try
+                            {
+                                using (var archiveStream = new FileStream(location.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                                {
+                                    archiveStream.Position = pos;
+                                    using (var img = Image.FromStream(archiveStream))
+                                    {
+                                        return img.GetThumbnailImage(200, 200, null, IntPtr.Zero);
+                                    }
+                                }
+                            }
+                            catch (SystemException ex)
+                            {
+                                Console.WriteLine($"Failed to load image \"{imgName}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
+                                return null;
+                            }
+                        });
                     }
-                    catch (SystemException ex)
+                    else
                     {
-                        Console.WriteLine($"Failed to load image \"{imageFile.Key}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
+                        images.Add(() =>
+                        {
+                            try
+                            {
+                                using (var archiveStream = new FileStream(location.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                                using (var archive = ZipFile.Read(archiveStream))
+                                using (var imgStream = archive.Entries.First(x => x.FileName == imgName).OpenReader())
+                                using (var img = Image.FromStream(imgStream))
+                                {
+                                    return img.GetThumbnailImage(200, 200, null, IntPtr.Zero);
+                                }
+                            }
+                            catch (SystemException ex)
+                            {
+                                Console.WriteLine($"Failed to load image \"{imgName}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
+                                return null;
+                            }
+                        });
                     }
                 }
 
-                var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.Key.Replace('/', '\\')).ToList();
+                var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.FileName.Replace('/', '\\')).ToList();
 
                 return new SideloaderModInfo(location, manifest, images, contents);
             }
