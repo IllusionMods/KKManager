@@ -70,36 +70,51 @@ namespace KKManager.Functions
             string newUrl = url;
             do
             {
-                HttpWebResponse resp = null;
+                WebResponse resp = null;
                 try
                 {
                     var req = (HttpWebRequest)WebRequest.Create(url);
                     req.Method = "HEAD";
                     req.AllowAutoRedirect = false;
-                    resp = (HttpWebResponse)await req.GetResponseAsync();
-                    switch (resp.StatusCode)
+                    try
                     {
-                        case HttpStatusCode.OK:
-                            return newUrl;
-                        case HttpStatusCode.Redirect:
-                        case HttpStatusCode.MovedPermanently:
-                        case HttpStatusCode.RedirectKeepVerb:
-                        case HttpStatusCode.RedirectMethod:
-                            newUrl = resp.Headers["Location"];
-                            if (newUrl == null)
-                                return url;
+                        var httpresp = (HttpWebResponse)await req.GetResponseAsync();
 
-                            if (newUrl.IndexOf("://", StringComparison.Ordinal) == -1)
-                            {
-                                // Doesn't have a URL Schema, meaning it's a relative or absolute URL
-                                Uri u = new Uri(new Uri(url), newUrl);
-                                newUrl = u.ToString();
-                            }
+                        switch (httpresp.StatusCode)
+                        {
+                            case HttpStatusCode.OK:
+                                return newUrl;
+                            case HttpStatusCode.Redirect:
+                            case HttpStatusCode.MovedPermanently:
+                            case HttpStatusCode.RedirectKeepVerb:
+                            case HttpStatusCode.RedirectMethod:
+                                // Handle redirects below
+                                break;
+                            default:
+                                return newUrl;
+                        }
 
-                            break;
-                        default:
-                            return newUrl;
+                        resp = httpresp;
                     }
+                    catch (WebException ex)
+                    {
+                        // Handle redirects below. Needed for .NET Core because for some reason it throws on success
+                        if (ex.Message.Contains("302"))
+                            resp = ex.Response;
+                        else throw;
+                    }
+
+                    newUrl = resp.Headers["Location"];
+                    if (newUrl == null)
+                        return url;
+
+                    if (newUrl.IndexOf("://", StringComparison.Ordinal) == -1)
+                    {
+                        // Doesn't have a URL Schema, meaning it's a relative or absolute URL
+                        Uri u = new Uri(new Uri(url), newUrl);
+                        newUrl = u.ToString();
+                    }
+
                     url = newUrl;
                 }
                 catch (WebException)
