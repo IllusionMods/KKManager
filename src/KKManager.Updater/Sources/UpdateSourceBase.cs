@@ -70,7 +70,7 @@ namespace KKManager.Updater.Sources
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to download Updates file {fn} from {Origin} - {ex.Message}");
+                    Console.WriteLine($"[{Origin}] Failed to download Updates file {fn} - {ex.Message}");
                 }
 
                 if (str != null)
@@ -81,12 +81,12 @@ namespace KKManager.Updater.Sources
                     }
                     catch (OutdatedVersionException ex)
                     {
-                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex.Message}");
+                        Console.WriteLine($"[{Origin}] Failed to parse update manifest file {fn} - {ex.Message}");
                         throw;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to parse update manifest file {fn} from {Origin} - {ex.ToStringDemystified()}");
+                        Console.WriteLine($"[{Origin}] Failed to parse update manifest file {fn} - {ex.ToStringDemystified()}");
                     }
                     finally
                     {
@@ -96,14 +96,14 @@ namespace KKManager.Updater.Sources
             }
 
             if (updateInfos.Count == 0)
-                throw new FileNotFoundException($"Failed to get update list from host {Origin} - check log for details.");
+                throw new FileNotFoundException($"[{Origin}] Failed to get update list, check previous log for details.");
 
             updateInfos.RemoveAll(
                 info =>
                 {
                     if (!info.CheckConditions())
                     {
-                        Console.WriteLine($"Skipping {info.GUID} because of conditions");
+                        Console.WriteLine($"[{Origin}] Skipping {info.GUID} because of conditions");
                         return true;
                     }
                     return false;
@@ -137,7 +137,7 @@ namespace KKManager.Updater.Sources
                 {
                     if (!string.IsNullOrEmpty(resultTask.Info.ExpandsGUID))
                     {
-                        Console.WriteLine($"Expanding task {resultTask.Info.ExpandsGUID} with task {resultTask.Info.GUID}");
+                        Console.WriteLine($"[{Origin}] Expanding task {resultTask.Info.ExpandsGUID} with task {resultTask.Info.GUID}");
                         ApplyExtendedItems(resultTask.Info.ExpandsGUID, resultTask.Items, allResults);
                     }
                 }
