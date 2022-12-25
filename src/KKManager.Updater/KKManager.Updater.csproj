@@ -63,8 +63,8 @@
     <Reference Include="Ben.Demystifier, Version=0.4.0.0, Culture=neutral, PublicKeyToken=a6d206e05440431a, processorArchitecture=MSIL">
       <HintPath>..\packages\Ben.Demystifier.0.4.1\lib\net45\Ben.Demystifier.dll</HintPath>
     </Reference>
-    <Reference Include="FluentFTP, Version=42.1.0.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentFTP.42.1.0\lib\net472\FluentFTP.dll</HintPath>
+    <Reference Include="FluentFTP, Version=35.0.5.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentFTP.35.0.5\lib\net45\FluentFTP.dll</HintPath>
     </Reference>
     <Reference Include="MegaApiClient, Version=1.10.3.0, Culture=neutral, PublicKeyToken=0480d311efbeb4e2, processorArchitecture=MSIL">
       <HintPath>..\packages\MegaApiClient.1.10.3\lib\net471\MegaApiClient.dll</HintPath>
