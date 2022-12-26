@@ -57,37 +57,34 @@ namespace KKManager.Updater
             Exception criticalException = null;
 
             // First start all of the sources, then wait until they all finish
-            var concurrentTasks = updateSources.Select(source => new
+            var concurrentTasks = updateSources.Select(source =>
             {
-                task = RetryHelper.RetryOnExceptionAsync(
-                    async () =>
+                async Task DoUpdate()
+                {
+                    try
                     {
-                        try
+                        foreach (var task in await source.GetUpdateItems(cancellationToken))
                         {
-                            foreach (var task in await source.GetUpdateItems(cancellationToken))
-                            {
-                                anySuccessful = true;
+                            anySuccessful = true;
 
-                                if (cancellationToken.IsCancellationRequested || criticalException != null) break;
+                            if (cancellationToken.IsCancellationRequested || criticalException != null) break;
 
-                                // todo move further inside or decouple getting update tasks and actually processing them
-                                if (filterByGuids != null && filterByGuids.Length > 0 &&
-                                    !filterByGuids.Contains(task.Info.GUID))
-                                    continue;
+                            // todo move further inside or decouple getting update tasks and actually processing them
+                            if (filterByGuids != null && filterByGuids.Length > 0 && !filterByGuids.Contains(task.Info.GUID)) continue;
 
-                                task.Items.RemoveAll(x => x.UpToDate || 
-                                                          // Todo disable updating by default instead whenever that's done
-                                                          (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)) || (x.TargetPath != null && ignoreList.Any(x.TargetPath.GetNameWithoutExtension().Contains)));
-                                results.Add(task);
-                            }
+                            task.Items.RemoveAll(x => x.UpToDate ||
+                                                      // Todo disable updating by default instead whenever that's done
+                                                      (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)) || (x.TargetPath != null && ignoreList.Any(x.TargetPath.GetNameWithoutExtension().Contains)));
+                            results.Add(task);
                         }
-                        catch (OutdatedVersionException ex)
-                        {
-                            criticalException = ex;
-                        }
-                    },
-                    3, TimeSpan.FromSeconds(3), cancellationToken),
-                source
+                    }
+                    catch (OutdatedVersionException ex)
+                    {
+                        criticalException = ex;
+                    }
+                }
+                var updateTask = source.HandlesRetry ? DoUpdate() : RetryHelper.RetryOnExceptionAsync(DoUpdate, 3, TimeSpan.FromSeconds(3), cancellationToken);
+                return new { task = updateTask, source };
             }).ToList();
 
             foreach (var task in concurrentTasks)

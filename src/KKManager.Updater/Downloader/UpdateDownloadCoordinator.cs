@@ -128,9 +128,7 @@ namespace KKManager.Updater.Downloader
                     {
                         currentDownloadItem.FinishPercent = 0;
 
-                        await RetryHelper.RetryOnExceptionAsync(
-                            () => currentlyDownloading.Update(progress, cancellationToken), 3, TimeSpan.FromSeconds(3),
-                            cancellationToken);
+                        await currentlyDownloading.Update(progress, cancellationToken);
 
                         currentDownloadItem.FinishPercent = 100;
                         currentDownloadItem.Status = UpdateDownloadStatus.Finished;
@@ -149,8 +147,7 @@ namespace KKManager.Updater.Downloader
                                 continue;
                         }
 
-                        Console.WriteLine(
-                            $"Marking source {updateSource.Source.Origin} as broken because of exception: {e.ToStringDemystified()}");
+                        Console.WriteLine($"Marking source {updateSource.Source.Origin} as broken because of exception: {e.ToStringDemystified()}");
 
                         lock (_updateItems)
                         {

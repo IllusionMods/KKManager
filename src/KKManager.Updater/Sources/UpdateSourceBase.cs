@@ -17,11 +17,12 @@ namespace KKManager.Updater.Sources
     {
         private DateTime _latestModifiedDate = DateTime.MinValue;
 
-        protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority)
+        protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority, bool handlesRetry = false)
         {
             Origin = origin;
             DiscoveryPriority = discoveryPriority;
             DownloadPriority = downloadPriority;
+            HandlesRetry = handlesRetry;
         }
 
         /// <summary>
@@ -38,6 +39,11 @@ namespace KKManager.Updater.Sources
         /// Priority of the source if multiple sources for a download are available. Higher will be attempted to be downloaded first.
         /// </summary>
         public int DownloadPriority { get; }
+
+        /// <summary>
+        /// The source handles retrying failed downloads by itself. If false, retrying is handled by <see cref="UpdateSourceManager"/> instead.
+        /// </summary>
+        public bool HandlesRetry { get; }
 
         public abstract void Dispose();
 
@@ -59,7 +65,10 @@ namespace KKManager.Updater.Sources
                 }
                 catch (TimeoutException ex)
                 {
-                    throw RetryHelper.DoNotAttemptToRetry(ex);
+                    if (HandlesRetry)
+                        throw;
+                    else
+                        throw RetryHelper.DoNotAttemptToRetry(ex);
                 }
                 catch (FileNotFoundException)
                 {

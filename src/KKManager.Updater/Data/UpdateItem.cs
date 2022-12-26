@@ -66,7 +66,11 @@ namespace KKManager.Updater.Data
             if (RemoteFile != null)
             {
                 Console.WriteLine($"Attempting download of {TargetPath.Name} from source {RemoteFile.Source.Origin}");
-                await RetryHelper.RetryOnExceptionAsync(async () => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken), 2, TimeSpan.FromSeconds(10), cancellationToken);
+                async Task DoDownload() => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken);
+                if (RemoteFile.Source.HandlesRetry)
+                    await DoDownload();
+                else
+                    await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
                 if (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)
@@ -112,7 +116,7 @@ namespace KKManager.Updater.Data
             catch (IOException ex)
             {
                 if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
-                    throw RetryHelper.DoNotAttemptToRetry(new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex));
+                    throw new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex);
 
                 goto retryDelete;
             }
@@ -123,7 +127,7 @@ namespace KKManager.Updater.Data
 
                 var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);
                 if (fixPermissions == null)
-                    throw RetryHelper.DoNotAttemptToRetry(new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex));
+                    throw new IOException($"Failed to create file in directory {TargetPath.FullName} because of a security issue - {ex.Message}", ex);
                 fixPermissions.WaitForExit();
                 goto retryDelete;
             }

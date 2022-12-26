@@ -19,7 +19,7 @@ namespace KKManager.Updater.Sources
 
         private FtpListItem[] _allNodes;
 
-        public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null) : base(serverUri.Host, discoveryPriority, downloadPriority)
+        public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null) : base(serverUri.Host, discoveryPriority, downloadPriority, true)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
 
@@ -51,8 +51,9 @@ namespace KKManager.Updater.Sources
 
             _client.EncryptionMode = FtpEncryptionMode.Explicit;
             _client.DataConnectionEncryption = true;
-            // Retrying is handled higher up the tree
-            _client.RetryAttempts = 1;
+            _client.RetryAttempts = 3;
+            _client.DownloadDataType = FtpDataType.Binary;
+            _client.ListingDataType = FtpDataType.Binary;
         }
 
         public override void Dispose()
