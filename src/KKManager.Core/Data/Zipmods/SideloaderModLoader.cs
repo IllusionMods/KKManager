@@ -135,19 +135,33 @@ namespace KKManager.Data.Zipmods
             if (!IsValidZipmodExtension(location.Extension))
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
-            using (var reader = location.OpenRead())
-            using (var zf = ZipFile.Read(reader))
+            using (var zf = new ZipFile())
             {
+                // Without this reading crashes if any entry name has invalid characters
+                zf.IgnoreDuplicateFiles = true;
+                zf.Initialize(location.FullName);
+
                 var manifest = Manifest.LoadFromZip(zf);
 
                 if (manifest == null)
                     throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
 
                 var images = new List<Func<Image>>();
-                // TODO load from drive instead of caching to ram
                 foreach (var imageFile in zf.Entries
-                                            .Where(x => ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
-                                                        ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase))
+                                            .Where(x =>
+                                            {
+                                                try
+                                                {
+                                                    return ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
+                                                           ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase);
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    // Handle entries with invalid characters in filename
+                                                    Console.WriteLine($"WARN: Zipmod={location.Name} Entry={x.FileName} Error={e.Message}");
+                                                    return false;
+                                                }
+                                            })
                                             .OrderBy(x => x.FileName).Take(5))
                 {
                     var imgName = imageFile.FileName;
