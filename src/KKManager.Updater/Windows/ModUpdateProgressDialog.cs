@@ -144,16 +144,16 @@ namespace KKManager.Updater.Windows
                     return;
                 }
 
+                var skipped = updateTasks.RemoveAll(x => x.UpToDate);
                 var isAutoInstall = _autoInstallGuids != null && _autoInstallGuids.Length > 0;
                 if (!isAutoInstall)
                 {
-                    SetStatus($"Found {updateTasks.Count} updates, waiting for user confirmation.");
+                    SetStatus($"Found {updateTasks.Count} update tasks ({skipped} were already up-to-date), waiting for user confirmation.");
                     updateTasks = ModUpdateSelectDialog.ShowWindow(this, updateTasks);
                 }
                 else
                 {
-                    var skipped = updateTasks.RemoveAll(x => x.UpToDate);
-                    SetStatus($"Found {updateTasks.Count} update tasks in silent mode, {skipped} are already up-to-date.", true, true);
+                    SetStatus($"Found {updateTasks.Count} update tasks in silent mode ({skipped} were already up-to-date).", true, true);
                 }
 
                 if (updateTasks == null)
