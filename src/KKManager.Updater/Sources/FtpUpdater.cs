@@ -64,7 +64,20 @@ namespace KKManager.Updater.Sources
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             await Connect(cancellationToken);
-            _allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
+            
+            var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
+
+            // Deal with case-insensitive servers having duplicate files with different cases
+            var groups = allNodes.GroupBy(x => x.FullName, StringComparer.InvariantCultureIgnoreCase);
+#if DEBUG
+            foreach (var group in groups)
+            {
+                if (group.Count() > 1)
+                    Console.WriteLine($"Multiple copies on [{Origin}]: {string.Join(" | ", group.Select(x => x.FullName))}");
+            }
+#endif
+            _allNodes = groups.Select(x => x.OrderByDescending(GetDate).First()).ToArray();
+
             return await base.GetUpdateItems(cancellationToken);
         }
 
