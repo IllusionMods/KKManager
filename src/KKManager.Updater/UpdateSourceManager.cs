@@ -59,11 +59,11 @@ namespace KKManager.Updater
             // First start all of the sources, then wait until they all finish
             var concurrentTasks = updateSources.Select(source =>
             {
-                async Task DoUpdate()
+                void DoUpdate()
                 {
                     try
                     {
-                        foreach (var task in await source.GetUpdateItems(cancellationToken))
+                        foreach (var task in source.GetUpdateItems(cancellationToken).Result)
                         {
                             anySuccessful = true;
 
@@ -83,7 +83,9 @@ namespace KKManager.Updater
                         criticalException = ex;
                     }
                 }
-                var updateTask = source.HandlesRetry ? DoUpdate() : RetryHelper.RetryOnExceptionAsync(DoUpdate, 3, TimeSpan.FromSeconds(3), cancellationToken);
+                var updateTask = source.HandlesRetry ? 
+                    Task.Run(DoUpdate, cancellationToken) :
+                    RetryHelper.RetryOnExceptionAsync(() => Task.Run(DoUpdate, cancellationToken), 3, TimeSpan.FromSeconds(3), cancellationToken);
                 return new { task = updateTask, source };
             }).ToList();
 
