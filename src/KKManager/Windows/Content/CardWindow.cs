@@ -42,13 +42,6 @@ namespace KKManager.Windows.Content
             UniversalDragAndDrop.SetupDragAndDrop(listView, SimpleDropSink_Dropped, SimpleDropSink_CanDrop, (sender, args) => RefreshList());
             SetupImageLists();
 
-            olvColumnName.AspectGetter = rowObject => (rowObject as Card)?.Name;
-            olvColumnFilename.AspectGetter = rowObject => (rowObject as Card)?.Location.Name;
-            olvColumnModDate.AspectGetter = rowObject => (rowObject as Card)?.Location.LastWriteTime;
-            olvColumnSex.AspectGetter = rowObject => (rowObject as Card)?.Sex;
-            olvColumnPersonality.AspectGetter = rowObject => (rowObject as Card)?.PersonalityName;
-            olvColumnExtended.AspectGetter = rowObject => (rowObject as Card)?.Extended?.Count.ToString() ?? "-";
-
             Details(this, EventArgs.Empty);
 
             ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;

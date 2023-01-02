@@ -58,6 +58,9 @@ namespace KKManager.Windows.Content
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnUserID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnCardType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +72,10 @@ namespace KKManager.Windows.Content
             this.listView.AllColumns.Add(this.olvColumnPersonality);
             this.listView.AllColumns.Add(this.olvColumnExtended);
             this.listView.AllColumns.Add(this.olvColumnModDate);
+            this.listView.AllColumns.Add(this.olvColumnFileSize);
             this.listView.AllColumns.Add(this.olvColumnFilename);
+            this.listView.AllColumns.Add(this.olvColumnCardType);
+            this.listView.AllColumns.Add(this.olvColumnUserID);
             this.listView.CellEditUseWholeCell = false;
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
@@ -77,7 +83,10 @@ namespace KKManager.Windows.Content
             this.olvColumnPersonality,
             this.olvColumnExtended,
             this.olvColumnModDate,
-            this.olvColumnFilename});
+            this.olvColumnFileSize,
+            this.olvColumnFilename,
+            this.olvColumnCardType,
+            this.olvColumnUserID});
             resources.ApplyResources(this.listView, "listView");
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
@@ -95,34 +104,40 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnName
             // 
+            this.olvColumnName.AspectName = "Name";
             this.olvColumnName.MinimumWidth = 150;
             resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.UseFiltering = false;
             // 
             // olvColumnSex
             // 
+            this.olvColumnSex.AspectName = "Sex";
             this.olvColumnSex.MinimumWidth = 35;
             resources.ApplyResources(this.olvColumnSex, "olvColumnSex");
             // 
             // olvColumnPersonality
             // 
+            this.olvColumnPersonality.AspectName = "PersonalityName";
             this.olvColumnPersonality.MinimumWidth = 70;
             resources.ApplyResources(this.olvColumnPersonality, "olvColumnPersonality");
             // 
             // olvColumnExtended
             // 
+            this.olvColumnExtended.AspectName = "Extended.Count";
             this.olvColumnExtended.MinimumWidth = 40;
             this.olvColumnExtended.Searchable = false;
             resources.ApplyResources(this.olvColumnExtended, "olvColumnExtended");
             // 
             // olvColumnModDate
             // 
+            this.olvColumnModDate.AspectName = "Location.LastWriteTime";
             this.olvColumnModDate.MinimumWidth = 60;
             resources.ApplyResources(this.olvColumnModDate, "olvColumnModDate");
             this.olvColumnModDate.UseFiltering = false;
             // 
             // olvColumnFilename
             // 
+            this.olvColumnFilename.AspectName = "Location.Name";
             this.olvColumnFilename.MinimumWidth = 60;
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.UseFiltering = false;
@@ -274,6 +289,21 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
+            // olvColumnUserID
+            // 
+            this.olvColumnUserID.AspectName = "UserID";
+            resources.ApplyResources(this.olvColumnUserID, "olvColumnUserID");
+            // 
+            // olvColumnCardType
+            // 
+            this.olvColumnCardType.AspectName = "Type";
+            resources.ApplyResources(this.olvColumnCardType, "olvColumnCardType");
+            // 
+            // olvColumnFileSize
+            // 
+            this.olvColumnFileSize.AspectName = "FileSize";
+            resources.ApplyResources(this.olvColumnFileSize, "olvColumnFileSize");
+            // 
             // CardWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -320,6 +350,9 @@ namespace KKManager.Windows.Content
         private ToolStripTextBox toolStripTextBoxSearch;
         private ToolStripButton toolStripButtonDelete;
         private ToolStripSeparator toolStripSeparator4;
+        private BrightIdeasSoftware.OLVColumn olvColumnUserID;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileSize;
+        private BrightIdeasSoftware.OLVColumn olvColumnCardType;
     }
 }
 

@@ -145,8 +145,17 @@
   <data name="olvColumnModDate.Text" xml:space="preserve">
     <value>Modified</value>
   </data>
+  <data name="olvColumnFileSize.Text" xml:space="preserve">
+    <value>File Size</value>
+  </data>
   <data name="olvColumnFilename.Text" xml:space="preserve">
     <value>Filename</value>
+  </data>
+  <data name="olvColumnCardType.Text" xml:space="preserve">
+    <value>Card Type</value>
+  </data>
+  <data name="olvColumnUserID.Text" xml:space="preserve">
+    <value>UserID</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="listView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
@@ -582,10 +591,28 @@
   <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;olvColumnUserID.Name" xml:space="preserve">
+    <value>olvColumnUserID</value>
+  </data>
+  <data name="&gt;&gt;olvColumnUserID.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnCardType.Name" xml:space="preserve">
+    <value>olvColumnCardType</value>
+  </data>
+  <data name="&gt;&gt;olvColumnCardType.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnFileSize.Name" xml:space="preserve">
+    <value>olvColumnFileSize</value>
+  </data>
+  <data name="&gt;&gt;olvColumnFileSize.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>CardWindow</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=3.0.6.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
+    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
   </data>
 </root>

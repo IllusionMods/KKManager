@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using MessagePack;
 
@@ -11,14 +12,14 @@ namespace KKManager.Data.Cards.KKS
         public override CharaSex Sex => Parameter == null ? CharaSex.Unknown : Parameter.sex == 0 ? CharaSex.Male : CharaSex.Female;
         public override string PersonalityName => GetPersonalityName(Parameter?.personality ?? -1);
 
-        public ChaFileParameter Parameter { get; }
-        public ChaFileAbout About { get; }
+        [ReadOnly(true)] public ChaFileParameter Parameter { get; }
+        [ReadOnly(true), Browsable(false)] public ChaFileAbout About { get; }
 
         public override int Language => About.language;
         public override string UserID => About.userID;
         public override string DataID => About.dataID;
 
-        private KoiSunCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, ChaFileAbout about, Version version) : 
+        private KoiSunCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, ChaFileAbout about, Version version) :
             base(cardFile, type, extended, about?.version ?? version)
         {
             Parameter = parameter;
