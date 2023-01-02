@@ -163,7 +163,7 @@
     <Compile Include="Data\Cards\EC\BlockHeader.cs" />
     <Compile Include="Data\Cards\EC\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\EC\ChaFileParameter.cs" />
-    <Compile Include="Data\Cards\AI\KoiCard.cs" />
+    <Compile Include="Data\Cards\AI\AiCard.cs" />
     <Compile Include="Data\Cards\EC\EmoCard.cs" />
     <Compile Include="Data\Cards\RG\RoomGirlCard.cs" />
     <Compile Include="Data\Cards\Utility.cs" />
