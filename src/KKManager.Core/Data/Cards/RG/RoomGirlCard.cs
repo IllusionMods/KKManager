@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using MessagePack;
 
@@ -13,9 +14,9 @@ namespace KKManager.Data.Cards.RG
         public string Birthday => $"{GetBirthMonth(Parameter.birthMonth)} {Parameter.birthDay}";
         public string Fetishes => String.Join(", ", GetFetishes(Parameter.propensity));
         public string Traits => String.Join(", ", GetTraits(Parameter.features));
-        public ChaFileParameter Parameter { get; }
+        [ReadOnly(true)] public ChaFileParameter Parameter { get; }
 
-        private RoomGirlCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter) : base(cardFile, type, extended)
+        private RoomGirlCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, Version version) : base(cardFile, type, extended, version)
         {
             Parameter = parameter;
         }
@@ -29,11 +30,11 @@ namespace KKManager.Data.Cards.RG
                 //return null;
             }
 
-            var zeropadding = reader.ReadInt32();
+            var language = reader.ReadInt32();
 
             // two GUIDs, one is a meme, the other is unique to the card
-            string guidstring1 = reader.ReadString(); // this is always 'illusion-2022-0825-xxxx-roomgirlocha'
-            string guidstring2 = reader.ReadString();
+            string userID = reader.ReadString(); // this is always 'illusion-2022-0825-xxxx-roomgirlocha'
+            string dataID = reader.ReadString();
 
             // the next int32 contains a byte-offset value from the beginning of the file
             // to the end of the 2nd PNG file, which is where the juicy metadata is
@@ -80,7 +81,12 @@ namespace KKManager.Data.Cards.RG
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
 
-            var card = new RoomGirlCard(file, gameType, extData, parameter);
+            var card = new RoomGirlCard(file, gameType, extData, parameter, loadVersion)
+            {
+                Language = language,
+                UserID = userID,
+                DataID = dataID,
+            };
 
             return card;
         }

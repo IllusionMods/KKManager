@@ -19,11 +19,6 @@ namespace KKManager.Data.Cards.AI
         [ReadOnly(true)] public ChaFileGameInfo Gameinfo { get; private set; }
         [ReadOnly(true)] public ChaFileGameInfo2 Gameinfo2 { get; private set; }
 
-        [ReadOnly(true)] public int Language { get; private set; }
-        [ReadOnly(true)] public string UserID { get; private set; }
-        [ReadOnly(true)] public string DataID { get; private set; }
-        [ReadOnly(true)] public Version Version { get; private set; }
-
         public override Image GetCardFaceImage()
         {
             return null;
@@ -55,12 +50,11 @@ namespace KKManager.Data.Cards.AI
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
 
-            var card = new AiCard(file, gameType, extData)
+            var card = new AiCard(file, gameType, extData, loadVersion)
             {
                 Language = language,
                 UserID = userID,
-                DataID = dataID,
-                Version = loadVersion
+                DataID = dataID
             };
 
             void SetData<T>(string blockName, Action<T> set)
@@ -111,7 +105,7 @@ namespace KKManager.Data.Cards.AI
             return "Unknown";
         }
 
-        public AiCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended) : base(cardFile, type, extended)
+        public AiCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version loadVersion) : base(cardFile, type, extended, loadVersion)
         {
         }
     }

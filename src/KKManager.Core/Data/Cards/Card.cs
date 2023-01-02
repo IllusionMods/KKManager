@@ -16,6 +16,10 @@ namespace KKManager.Data.Cards
         public string FileSize { get; }
         public abstract CharaSex Sex { get; }
         public abstract string PersonalityName { get; }
+        [ReadOnly(true)] public virtual int Language { get; protected set; }
+        [ReadOnly(true)] public virtual string UserID { get; protected set; }
+        [ReadOnly(true)] public virtual string DataID { get; protected set; }
+        public Version Version { get; }
 
         //[Browsable(false)]
         [DisplayName("Extended Data (plugins)")]
@@ -49,13 +53,13 @@ namespace KKManager.Data.Cards
             }
         }
 
-        internal Card(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended)
+        internal Card(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version version)
         {
             Location = cardFile ?? throw new ArgumentNullException(nameof(cardFile));
+            Version = version ?? throw new ArgumentNullException(nameof(version));
             Type = type;
             Extended = extended ?? new Dictionary<string, PluginData>();
-            
-     
+
             FileSize = Util.FileSize.FromBytes(cardFile.Length).ToString();
         }
     }

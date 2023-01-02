@@ -14,13 +14,9 @@ namespace KKManager.Data.Cards.EC
         public override CharaSex Sex => Parameter == null ? CharaSex.Unknown : Parameter.sex == 0 ? CharaSex.Male : CharaSex.Female;
         public override string PersonalityName => GetPersonalityName(Parameter?.personality ?? -1);
 
-        public int Language { get; private set; }
-        public string UserID { get; private set; }
-        public string DataID { get; private set; }
-
         public ChaFileParameter Parameter { get; }
 
-        private EmoCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter) : base(cardFile, type, extended)
+        private EmoCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, Version loadVersion) : base(cardFile, type, extended, loadVersion)
         {
             Parameter = parameter;
         }
@@ -76,10 +72,12 @@ namespace KKManager.Data.Cards.EC
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
 
-            var card = new EmoCard(file, gameType, extData, parameter);
-            card.Language = language;
-            card.DataID = dataID;
-            card.UserID = userID;
+            var card = new EmoCard(file, gameType, extData, parameter, loadVersion)
+            {
+                Language = language,
+                DataID = dataID,
+                UserID = userID
+            };
             return card;
         }
 

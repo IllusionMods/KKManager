@@ -143,6 +143,7 @@
     <Compile Include="Data\Cards\AI\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\KKS\ChaFileAbout.cs" />
     <Compile Include="Data\Cards\RG\BlockHeader.cs" />
     <Compile Include="Data\Cards\RG\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\RG\ChaFileParameter.cs" />
