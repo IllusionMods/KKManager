@@ -153,7 +153,8 @@ namespace KKManager.Data.Plugins
                 var pluginClasses = classes.Where(x => x.HasCustomAttributes).Select(c => new
                 {
                     c,
-                    bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin")
+                    bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin" || 
+                                                                x.AttributeType.FullName == "BepInEx.Preloader.Core.Patching.PatcherPluginInfoAttribute")
                 }).Where(x => x.bp != null).ToList();
 
                 if (pluginClasses.Count != 0)
