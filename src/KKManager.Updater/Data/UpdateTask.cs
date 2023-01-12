@@ -29,24 +29,28 @@ namespace KKManager.Updater.Data
 
         public IGrouping<string, Tuple<UpdateInfo, UpdateItem>>[] GetUpdateItems()
         {
-            // Find identical versions of items available at other sources
-            var alternativeItems = AlternativeSources.SelectMany(
-                task => task.Items.Where(
-                    altItem => Items.Any(
-                        localItem => PathTools.PathsEqual(localItem.TargetPath.FullName, altItem.TargetPath.FullName) && localItem.RemoteFile?.ItemSize == altItem.RemoteFile?.ItemSize))
-                        .Select(item => new Tuple<UpdateInfo, UpdateItem>(task.Info, item)))
-                        .ToList();
+            string NormalizePath(UpdateItem x) => PathTools.NormalizePath(x.TargetPath.FullName).Replace('/', '\\').ToLowerInvariant();
 
-            var mergedItems = Items.Select(x => new Tuple<UpdateInfo, UpdateItem>(Info, x)).Concat(alternativeItems).GroupBy(item => item.Item2.TargetPath.FullName.ToLower()).ToArray();
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+            // Add all items from the primary source
+            var results = Items.ToDictionary(NormalizePath, item => new List<Tuple<UpdateInfo, UpdateItem>> { new Tuple<UpdateInfo, UpdateItem>(Info, item) });
+
+            // Find identical versions of items available at other sources
+            foreach (var alternativeSource in AlternativeSources)
             {
-                // Updates missing a mirror
-                var _ = Items.Select(x => x.TargetPath.FullName).Except(alternativeItems.Select(x => x.Item2.TargetPath.FullName)).ToList();
-                //System.Diagnostics.Debugger.Break();
+                foreach (var alternativeSourceItem in alternativeSource.Items)
+                {
+                    if (results.TryGetValue(NormalizePath(alternativeSourceItem), out var list))
+                    {
+                        if (list[0].Item2.RemoteFile?.ItemSize == alternativeSourceItem.RemoteFile?.ItemSize)
+                        {
+                            list.Add(new Tuple<UpdateInfo, UpdateItem>(alternativeSource.Info, alternativeSourceItem));
+                        }
+                    }
+                }
             }
-#endif
-            return mergedItems;
+            
+            // Convert from dict to igrouping
+            return results.SelectMany(x => x.Value.Select(y => new { x.Key, y })).GroupBy(x => x.Key, x => x.y).ToArray();
         }
     }
 }
