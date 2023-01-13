@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,7 +18,9 @@ namespace KKManager.Updater.Sources
     {
         private readonly FtpClient _client;
 
-        private FtpListItem[] _allNodes;
+        private Dictionary<string, FtpListItem> _allNodesLookup;
+        private Dictionary<FtpListItem, string> _allNodesNameLookup;
+        private ILookup<string, FtpListItem> _childNodesLookup;
 
         public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null) : base(serverUri.Host, discoveryPriority, downloadPriority, true)
         {
@@ -64,7 +67,7 @@ namespace KKManager.Updater.Sources
         public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
         {
             await Connect(cancellationToken);
-            
+
             var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
 
             // Deal with case-insensitive servers having duplicate files with different cases
@@ -76,9 +79,24 @@ namespace KKManager.Updater.Sources
                     Console.WriteLine($"Multiple copies on [{Origin}]: {string.Join(" | ", group.Select(x => x.FullName))}");
             }
 #endif
-            _allNodes = groups.Select(x => x.OrderByDescending(GetDate).First()).ToArray();
+            _allNodesLookup = groups.Select(x => x.OrderByDescending(GetDate).First()).ToDictionary(
+                item => GetNormalizedNodeName(item.FullName),
+                item => item);
+            _allNodesNameLookup = _allNodesLookup.ToDictionary(x => x.Value, x => x.Key);
+
+            _childNodesLookup = _allNodesLookup.ToLookup(x =>
+            {
+                var normalizedNodeName = GetNormalizedNodeName(Path.GetDirectoryName(x.Key));
+                Debug.Assert(x.Key.StartsWith(normalizedNodeName), "wtf " + normalizedNodeName + " - " + x.Key);
+                return normalizedNodeName;
+            }, x => x.Value);
 
             return await base.GetUpdateItems(cancellationToken);
+        }
+
+        private static string GetNormalizedNodeName(string itemFullName)
+        {
+            return PathTools.NormalizePath(itemFullName).Replace('\\', '/').TrimEnd('/').ToLowerInvariant();
         }
 
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
@@ -111,7 +129,9 @@ namespace KKManager.Updater.Sources
 
         private FtpListItem GetRemoteItem(string serverPath)
         {
-            return _allNodes.FirstOrDefault(item => PathTools.PathsEqual(item.FullName, serverPath));
+            if (!_allNodesLookup.TryGetValue(GetNormalizedNodeName(serverPath), out var item))
+                Debug.Assert(serverPath.StartsWith("Updates"), "Could not find " + serverPath);
+            return item;
         }
 
         private async Task Connect(CancellationToken cancellationToken)
@@ -140,18 +160,8 @@ namespace KKManager.Updater.Sources
             if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
 
-            var remoteDirName = PathTools.NormalizePath(remoteDir.FullName) + "/";
-            var remoteDirDepth = remoteDirName.Count(c => c == '/' || c == '\\');
-
-            return _allNodes.Where(
-                item =>
-                {
-                    if (item == remoteDir) return false;
-                    var itemFilename = PathTools.NormalizePath(item.FullName);
-                    // Make sure it's inside the directory and not inside one of the subdirectories
-                    return itemFilename.StartsWith(remoteDirName, StringComparison.OrdinalIgnoreCase) &&
-                           itemFilename.Count(c => c == '/' || c == '\\') == remoteDirDepth;
-                });
+            var name = _allNodesNameLookup[remoteDir];
+            return _childNodesLookup[name];
         }
 
         private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)

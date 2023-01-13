@@ -129,16 +129,12 @@ namespace KKManager.Updater.Sources
 
                     var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
 
-                    await Task.Run(
-                        () =>
-                        {
-                            var results = ProcessDirectory(
-                                remoteItem, updateInfo.ClientPathInfo,
-                                updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
-                                cancellationToken);
+                    var results = ProcessDirectory(
+                        remoteItem, updateInfo.ClientPathInfo,
+                        updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
+                        cancellationToken);
 
-                            allResults.Add(new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, _latestModifiedDate));
-                        }, cancellationToken);
+                    allResults.Add(new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, _latestModifiedDate));
                 }
 
                 // If a task is expanded by other tasks, remove the items that other tasks expand from it
