@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentFTP;
+using FluentFTP.Helpers;
 using FluentFTP.Proxy;
 using KKManager.Properties;
 using KKManager.Updater.Data;
@@ -57,6 +58,8 @@ namespace KKManager.Updater.Sources
             _client.RetryAttempts = 3;
             _client.DownloadDataType = FtpDataType.Binary;
             _client.ListingDataType = FtpDataType.Binary;
+
+            FtpTrace.EnableTracing = false;
         }
 
         public override void Dispose()
