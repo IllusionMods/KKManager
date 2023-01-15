@@ -255,12 +255,12 @@ namespace Sideloader
         private static Manifest LoadFromZipInt(Stream entry)
         {
             if (entry == null)
-                throw new OperationCanceledException("Manifest.xml is missing, make sure this is a zipmod");
+                throw new InvalidDataException("Manifest.xml is missing, make sure this is a zipmod");
 
             var manifest = new Manifest(entry);
 
             if (manifest.GUID == null)
-                throw new OperationCanceledException("Manifest.xml is missing the GUID");
+                throw new InvalidDataException("Manifest.xml is missing the GUID");
 
             manifest.LoadMigrationInfo();
 #if AI || HS2
