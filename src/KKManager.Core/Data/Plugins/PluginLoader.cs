@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using Mono.Cecil;
 
@@ -18,27 +19,27 @@ namespace KKManager.Data.Plugins
     {
         public static IObservable<PluginInfo> Plugins => _plugins ?? StartReload();
 
-        private static bool _isUpdating;
         private static readonly object _Lock = new object();
         private static ReplaySubject<PluginInfo> _plugins;
 
         public static IObservable<PluginInfo> StartReload()
         {
-            var needsUpdate = false;
             lock (_Lock)
             {
-                if (_plugins == null || !_isUpdating)
+                if (_plugins == null || _currentTask == null || _currentTask.IsCompleted)
                 {
                     _plugins = new ReplaySubject<PluginInfo>();
-                    _isUpdating = true;
-                    needsUpdate = true;
+                    _cancelSource?.Dispose();
+                    _cancelSource = new CancellationTokenSource();
+                    _currentTask =  TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName, _plugins);
                 }
             }
-            if (needsUpdate) TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName, _plugins);
             return _plugins;
         }
-
+        
         private static CancellationTokenSource _cancelSource;
+        private static Task _currentTask;
+
         public static void CancelReload()
         {
             _cancelSource?.Cancel();
@@ -49,7 +50,7 @@ namespace KKManager.Data.Plugins
         /// </summary>
         /// <param name="pluginDirectory">Directory containing the plugins to gather info from. Usually BepInEx directory inside game root.</param>
         /// <param name="subject">Output stream</param>
-        private static void TryLoadPlugins(string pluginDirectory, ReplaySubject<PluginInfo> subject)
+        private static Task TryLoadPlugins(string pluginDirectory, ReplaySubject<PluginInfo> subject)
         {
             Console.WriteLine($"Start loading plugins from [{pluginDirectory}]");
 
@@ -84,13 +85,13 @@ namespace KKManager.Data.Plugins
                     var configDir = new DirectoryInfo(Path.Combine(pluginDirectory, "config"));
                     var configFiles = configDir.Exists ? configDir.GetFiles("*.cfg", SearchOption.TopDirectoryOnly) : Array.Empty<FileInfo>();
 
-                    foreach (var file in files)
+                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
                     {
                         try
                         {
                             token.ThrowIfCancellationRequested();
-                            var ext = Path.GetExtension(file);
-                            if (!IsValidPluginExtension(ext)) continue;
+
+                            if (!IsValidPluginExtension(Path.GetExtension(file))) return;
 
                             foreach (var pluginInfo in LoadFromFile(file, configFiles))
                                 subject.OnNext(pluginInfo);
@@ -103,13 +104,16 @@ namespace KKManager.Data.Plugins
                         {
                             Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex}");
                         }
-                    }
-                }
-                catch (OperationCanceledException)
-                {
+                    });
                 }
                 catch (Exception ex)
                 {
+                    if (ex is AggregateException aggr)
+                        ex = aggr.Flatten().InnerExceptions.First();
+
+                    if (ex is OperationCanceledException)
+                        return;
+
                     if (ex is SecurityException || ex is UnauthorizedAccessException)
                         MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
                             "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -119,7 +123,6 @@ namespace KKManager.Data.Plugins
                 }
                 finally
                 {
-                    _isUpdating = false;
                     Console.WriteLine($"Finished loading plugins from [{pluginDirectory}] in {sw.ElapsedMilliseconds}ms");
                     subject.OnCompleted();
                 }
@@ -127,16 +130,13 @@ namespace KKManager.Data.Plugins
 
             try
             {
-                Task.Run(ReadPluginsAsync, token);
+                var task = new Task(ReadPluginsAsync, token, TaskCreationOptions.LongRunning);
+                task.Start();
+                return task;
             }
             catch (OperationCanceledException)
             {
-                _isUpdating = false;
-            }
-            catch
-            {
-                _isUpdating = false;
-                throw;
+                return Task.FromCanceled(token);
             }
         }
 

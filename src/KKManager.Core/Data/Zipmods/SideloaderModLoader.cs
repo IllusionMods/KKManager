@@ -20,10 +20,7 @@ namespace KKManager.Data.Zipmods
 {
     public static class SideloaderModLoader
     {
-        public static IObservable<SideloaderModInfo> Zipmods
-        {
-            get => _zipmods ?? StartReload();
-        }
+        public static IObservable<SideloaderModInfo> Zipmods => _zipmods ?? StartReload();
 
         private static readonly object _lock = new object();
         private static ReplaySubject<SideloaderModInfo> _zipmods;
@@ -76,17 +73,15 @@ namespace KKManager.Data.Zipmods
                         return;
                     }
 
-                    foreach (var file in Directory.EnumerateFiles(modDirectory, "*.*", searchOption))
+                    var files = Directory.EnumerateFiles(modDirectory, "*.*", searchOption);
+                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
                     {
                         try
                         {
                             token.ThrowIfCancellationRequested();
 
-                            if (!IsValidZipmodExtension(Path.GetExtension(file))) continue;
+                            if (!IsValidZipmodExtension(Path.GetExtension(file))) return;
 
-                            //var modInfo = Task.Run(() => LoadFromFile(file), token);
-                            //if (!modInfo.Wait(TimeSpan.FromSeconds(8))) throw new TimeoutException();
-                            //subject.OnNext(modInfo.Result);
                             subject.OnNext(LoadFromFile(file));
                         }
                         catch (OperationCanceledException)
@@ -97,13 +92,16 @@ namespace KKManager.Data.Zipmods
                         {
                             Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex}");
                         }
-                    }
-                }
-                catch (OperationCanceledException)
-                {
+                    });
                 }
                 catch (Exception ex)
                 {
+                    if (ex is AggregateException aggr)
+                        ex = aggr.Flatten().InnerExceptions.First();
+
+                    if (ex is OperationCanceledException)
+                        return;
+
                     if (ex is SecurityException || ex is UnauthorizedAccessException)
                         MessageBox.Show("Could not load information about zipmods because access to the plugins folder was denied. Check the permissions of your mods folder and try again.\n\n" + ex.Message,
                             "Load zipmods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -120,7 +118,9 @@ namespace KKManager.Data.Zipmods
 
             try
             {
-                return Task.Run(ReadSideloaderModsAsync, token);
+                var task = new Task(ReadSideloaderModsAsync, token, TaskCreationOptions.LongRunning);
+                task.Start();
+                return task;
             }
             catch (OperationCanceledException)
             {
