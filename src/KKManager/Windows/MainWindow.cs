@@ -289,25 +289,26 @@ namespace KKManager.Windows
 
         private void SetupTabs()
         {
-            // Try to load saved state first, if that fails load defaults
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(Settings.Default.DockState))
-                {
-                    using (var s = new MemoryStream(Encoding.Unicode.GetBytes(Settings.Default.DockState)))
-                    {
-                        dockPanel.LoadFromXml(s, DeserializeTab);
-                        return;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
-                foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
-                dockPanel.ResumeLayout(true, true);
-            }
+           // Try to load saved state first, if that fails load defaults
+           try
+           {
+               if (!string.IsNullOrWhiteSpace(Settings.Default.DockState))
+               {
+                   using (var s = new MemoryStream(Encoding.Unicode.GetBytes(Settings.Default.DockState)))
+                   {
+                       dockPanel.LoadFromXml(s, DeserializeTab);
+                       return;
+                   }
+               }
+           }
+           catch (Exception ex)
+           {
+               Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
+               foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
+               dockPanel.ResumeLayout(true, true);
+           }
 
+            // Load defaults
             OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
             OpenOrGetCardWindow(InstallDirectoryHelper.FemaleCardDir);
 
@@ -315,11 +316,9 @@ namespace KKManager.Windows
             GetOrCreateWindow<PluginsWindow>();
 
             dockPanel.DockRightPortion = 400;
-            var propertiesToolWindow = GetOrCreateWindow<PropertiesToolWindow>();
-            propertiesToolWindow.DockState = DockState.DockRight;
+            GetOrCreateWindow<PropertiesToolWindow>().Show(dockPanel, DockState.DockRight);
 
-            var logWindow = GetOrCreateWindow<LogViewer>();
-            logWindow.DockState = DockState.DockBottomAutoHide;
+            GetOrCreateWindow<LogViewer>().Show(dockPanel, DockState.DockBottomAutoHide);
         }
 
         private static IDockContent DeserializeTab(string persistString)
