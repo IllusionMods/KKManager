@@ -73,7 +73,7 @@ namespace KKManager.Util
 
                     if (parts[0] == "P") // correct format?
                     {
-                        // which index postion to use
+                        // which index position to use
                         var partIndex = arg.ToString() == "1" ? 2 : 1;
                         // pick string (safe guard for array bounds) and format
                         return string.Format("{0} {1}", arg, parts.Length > partIndex ? parts[partIndex] : "");
