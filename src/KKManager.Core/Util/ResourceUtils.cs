@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace KKManager.Util
 {
@@ -24,6 +25,17 @@ namespace KKManager.Util
                 return ms.ToArray();
             }
         }
+        public static async Task<byte[]> ReadAllBytesAsync(this Stream input)
+        {
+            var buffer = new byte[16 * 1024];
+            using (var ms = new MemoryStream())
+            {
+                int read;
+                while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    ms.Write(buffer, 0, read);
+                return ms.ToArray();
+            }
+        }
 
         /// <summary>
         /// Get a file set as "Embedded Resource" from the assembly that is calling this code, or optionally from a specified assembly.
@@ -39,7 +51,7 @@ namespace KKManager.Util
                 containingAssembly = Assembly.GetCallingAssembly();
 
             var resourceNames = containingAssembly.GetManifestResourceNames().Where(str => str.EndsWith(resourceFileName)).Take(2).ToList();
-            
+
             if (resourceNames.Count == 0)
                 throw new IOException($"Could not find resource with name {resourceNames} inside assembly {containingAssembly} - make sure the name and assembly are correct");
 

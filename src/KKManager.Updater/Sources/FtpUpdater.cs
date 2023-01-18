@@ -23,7 +23,8 @@ namespace KKManager.Updater.Sources
         private Dictionary<FtpListItem, string> _allNodesNameLookup;
         private ILookup<string, FtpListItem> _childNodesLookup;
 
-        public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null) : base(serverUri.Host, discoveryPriority, downloadPriority, true)
+        public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null, int maxConcurrentDownloads = 1)
+            : base(serverUri.Host, discoveryPriority, downloadPriority, maxConcurrentDownloads, true)
         {
             if (serverUri == null) throw new ArgumentNullException(nameof(serverUri));
 

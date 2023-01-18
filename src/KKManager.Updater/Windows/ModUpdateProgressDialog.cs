@@ -66,6 +66,9 @@ namespace KKManager.Updater.Windows
 
             var w = new ModUpdateProgressDialog();
             w._updaters = updaters;
+#if DEBUG
+            w._updaters = w._updaters.Where(x => x.Origin.Contains("hf.honeyselect2.com")).ToArray(); //todo remove or improve
+#endif
             w._autoInstallGuids = autoInstallGuids;
             return w;
         }

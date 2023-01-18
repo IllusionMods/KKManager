@@ -63,16 +63,23 @@ namespace KKManager.Updater.Downloader
                     .SelectMany(x => x.DownloadSources.Keys)
                     .Distinct();
 
-                var runningTasks = new List<Tuple<Task, DownloadSourceInfo>>();
+                var runningTasks = new List<Tuple<Thread, DownloadSourceInfo>>();
                 foreach (var updateSource in allSources)
                 {
-                    var updateSourceInfo = new DownloadSourceInfo(updateSource);
-                    var task = Task.Run(async () => await UpdateThread(updateSourceInfo, cancellationToken),
-                        cancellationToken);
-                    runningTasks.Add(new Tuple<Task, DownloadSourceInfo>(task, updateSourceInfo));
+                    if(updateSource is TorrentUpdater.TorrentSource) //todo
+                    for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
+                    {
+                        var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
+                        var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
+                        thread.Start();
+                        runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
+                    }
                 }
 
-                await Task.WhenAll(runningTasks.Select(x => x.Item1));
+                while (runningTasks.Any(x => x.Item1.IsAlive))
+                {
+                    await Task.Delay(1000, CancellationToken.None);
+                }
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
@@ -93,7 +100,7 @@ namespace KKManager.Updater.Downloader
         /// It looks for updates that can be downloaded from that server and picks what it can download.
         /// When no more work is available the task finishes.
         /// </summary>
-        private async Task UpdateThread(DownloadSourceInfo updateSource, CancellationToken cancellationToken)
+        private void UpdateThread(DownloadSourceInfo updateSource, CancellationToken cancellationToken)
         {
             Exception failReason = null;
             try
@@ -118,7 +125,7 @@ namespace KKManager.Updater.Downloader
 
                     if (currentlyDownloading == null || cancellationToken.IsCancellationRequested)
                     {
-                        Console.WriteLine($"Closing source downloader {updateSource.Source.Origin}");
+                        Console.WriteLine($"Closing source downloader {updateSource}");
                         return;
                     }
 
@@ -128,15 +135,20 @@ namespace KKManager.Updater.Downloader
                     {
                         currentDownloadItem.FinishPercent = 0;
 
-                        await currentlyDownloading.Update(progress, cancellationToken);
+                        currentlyDownloading.Update(progress, cancellationToken).Wait(CancellationToken.None);
 
                         currentDownloadItem.FinishPercent = 100;
                         currentDownloadItem.Status = UpdateDownloadStatus.Finished;
 
                         failCount = 0;
+
+                        TorrentUpdater.OnFileUpdateFinished(currentDownloadItem);
                     }
                     catch (Exception e)
                     {
+                        if (e is AggregateException aex)
+                            e = aex.Flatten().InnerExceptions.First();
+
                         if (e is OperationCanceledException)
                         {
                             currentDownloadItem.MarkAsCancelled(e);
@@ -170,7 +182,7 @@ namespace KKManager.Updater.Downloader
                 {
                     lock (_updateItems)
                     {
-                        var e = new DownloadSourceCrashedException("Update source " + updateSource.Source.Origin + " closed early because of other issues", updateSource.Source, failReason);
+                        var e = new DownloadSourceCrashedException("Update source " + updateSource + " closed early because of other issues", updateSource.Source, failReason);
                         foreach (var updateTask in _updateItems)
                             updateTask.TryMarkSourceAsFailed(updateSource.Source, e);
                     }
@@ -180,11 +192,23 @@ namespace KKManager.Updater.Downloader
 
         private class DownloadSourceInfo
         {
+            /// <summary>
+            /// Used when a source supports multiple simultaneous downloads to specify which download thread this is.
+            /// </summary>
+            public readonly int Index;
             public readonly UpdateSourceBase Source;
 
-            public DownloadSourceInfo(UpdateSourceBase updateSource)
+            public DownloadSourceInfo(UpdateSourceBase updateSource, int index = -1)
             {
-                Source = updateSource;
+                Source = updateSource ?? throw new ArgumentNullException(nameof(updateSource));
+                if (Source.MaxConcurrentDownloads > 1 && index < 0)
+                    throw new ArgumentException($"Invalid download index {index} for source with MaxConcurrentDownloads={Source.MaxConcurrentDownloads}", nameof(index));
+                Index = index;
+            }
+
+            public override string ToString()
+            {
+                return Source.MaxConcurrentDownloads > 1 ? $"{Source.Origin}(#{Index + 1}/{Source.MaxConcurrentDownloads})" : Source.Origin;
             }
         }
     }

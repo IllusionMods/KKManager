@@ -12,16 +12,23 @@ namespace KKManager.Updater.Data
 {
     public class UpdateItem
     {
-        public UpdateItem(FileSystemInfo targetPath, IRemoteItem remoteFile, bool upToDate)
+        /// <summary>
+        /// Move downloaded file from temporary current path to the target path.
+        /// Should return true on success, false if a normal FileInfo.MoveTo should be used instead.
+        /// </summary>
+        public delegate bool CustomMoveTo(FileInfo currentPath, FileInfo targetPath, UpdateItem item);
+
+        public UpdateItem(FileInfo targetPath, IRemoteItem remoteFile, bool upToDate, CustomMoveTo customMoveResult = null)
         {
             TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
             RemoteFile = remoteFile;
             UpToDate = upToDate;
+            CustomMoveResult = customMoveResult;
         }
 
         public static async Task<FileInfo> GetTempDownloadFilename()
         {
-            var tempPath = Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "temp\\KKManager_downloads");
+            var tempPath = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_downloads");
 
         retryCreate:
             try
@@ -59,7 +66,9 @@ namespace KKManager.Updater.Data
         /// <exception cref="IOException">Failed to apply the update.</exception>
         public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
         {
-            var downloadTarget = await GetTempDownloadFilename();
+            var inPlace = PathTools.PathsEqual(RemoteFile?.ClientRelativeFileName, TargetPath.FullName);
+
+            var downloadTarget = inPlace ? TargetPath : await GetTempDownloadFilename();
             // Need to store the filename because MoveTo changes it to the new filename
             var downloadFilename = downloadTarget.FullName;
 
@@ -79,7 +88,10 @@ namespace KKManager.Updater.Data
                 Console.WriteLine($"Downloaded {downloadTarget.Length} bytes successfully");
             }
 
-        retryDelete:
+            if (inPlace)
+                return;
+
+            retryDelete:
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName) ?? throw new InvalidOperationException("Invalid path " + TargetPath.FullName));
@@ -96,14 +108,18 @@ namespace KKManager.Updater.Data
                     }
 
                     if (RemoteFile != null)
-                        downloadTarget.MoveTo(TargetPath.FullName);
+                    {
+                        if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
+                            downloadTarget.MoveTo(TargetPath.FullName);
+                    }
                 }
                 catch (IOException)
                 {
                     if (RemoteFile != null)
                     {
                         await Task.Delay(1000, cancellationToken);
-                        downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
+                        if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
+                            downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
                         await Task.Delay(1000, cancellationToken);
                         File.Delete(TargetPath.FullName + ".old");
                     }
@@ -138,14 +154,20 @@ namespace KKManager.Updater.Data
             }
         }
 
-        public FileSystemInfo TargetPath { get; }
+        public FileInfo TargetPath { get; }
         public IRemoteItem RemoteFile { get; }
         public bool UpToDate { get; }
+        public CustomMoveTo CustomMoveResult { get; }
 
         public FileSize GetDownloadSize()
         {
             if (RemoteFile == null) return FileSize.Empty;
             return FileSize.FromBytes(RemoteFile.ItemSize);
+        }
+
+        public override string ToString()
+        {
+            return RemoteFile != null ? RemoteFile + " -> " + TargetPath : "Delete " + TargetPath;
         }
     }
 }

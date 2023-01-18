@@ -18,8 +18,7 @@ namespace KKManager.Updater.Sources
 
         private readonly AmazonS3Client _s3Client;
 
-        public S3Updater(Uri serverUri, int discoveryPriority, int downloadPriority) : base(serverUri.Host,
-            discoveryPriority, downloadPriority)
+        public S3Updater(Uri serverUri, int discoveryPriority, int downloadPriority) : base(serverUri.Host, discoveryPriority, downloadPriority, 2)
         {
             var info = serverUri.UserInfo.Split(new[] { ':' }, 2, StringSplitOptions.None);
             if (info.Length != 2)

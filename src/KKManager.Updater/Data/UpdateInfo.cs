@@ -112,6 +112,11 @@ namespace KKManager.Updater.Data
         /// </summary>
         public VersioningMode Versioning { get; set; }
 
+        /// <summary>
+        /// Relative server filename of an optional .torrent file that serves as a mirror of this update.
+        /// </summary>
+        public string TorrentFileName { get; set; }
+
         public bool IsGameSupported(GameType gameType) => SupportedGames == null || SupportedGames.Count == 0 || SupportedGames.Contains(gameType);
 
         public bool CheckConditions()
@@ -222,6 +227,22 @@ namespace KKManager.Updater.Data
         public static UpdateInfo Deserialize(XmlReader reader)
         {
             return (UpdateInfo)new XmlSerializer(typeof(UpdateInfo)).Deserialize(reader);
+        }
+
+        public UpdateInfo Copy(UpdateSourceBase newSource)
+        {
+            using (var tw = new StringWriter())
+            using (var xw = new XmlTextWriter(tw))
+            {
+                Serialize(xw, this);
+                using (var r = new StringReader(tw.ToString()))
+                using (var xr = new XmlTextReader(r))
+                {
+                    var copy = Deserialize(xr);
+                    copy.Source = newSource;
+                    return copy;
+                }
+            }
         }
 
         public override string ToString()
