@@ -93,8 +93,38 @@
     <Reference Include="Mono.Nat, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6c9468a3c21bc6d1, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Nat.3.0.1\lib\netstandard2.0\Mono.Nat.dll</HintPath>
     </Reference>
-    <Reference Include="MonoTorrent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.2.0.7\lib\netstandard2.0\MonoTorrent.dll</HintPath>
+    <Reference Include="MonoTorrent, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.BEncoding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.BEncoding.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Client, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Connections, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Connections.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Dht, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Dht.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Factories, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Factories.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Messages, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Messages.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.PiecePicking, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.PiecePicking.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.PieceWriter, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.PieceWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.PortForwarding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.PortForwarding.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Trackers, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MonoTorrent.3.0.0-beta.rev0106\lib\netstandard2.0\MonoTorrent.Trackers.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -103,7 +133,7 @@
       <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="ReusableTasks, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReusableTasks.2.0.0\lib\netstandard2.0\ReusableTasks.dll</HintPath>
+      <HintPath>..\packages\ReusableTasks.2.0.2\lib\netstandard2.0\ReusableTasks.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress, Version=0.32.2.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpCompress.0.32.2\lib\net461\SharpCompress.dll</HintPath>
@@ -256,4 +286,11 @@
     <Analyzer Include="..\packages\AWSSDK.S3.3.7.101.37\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\ReusableTasks.2.0.2\build\ReusableTasks.targets" Condition="Exists('..\packages\ReusableTasks.2.0.2\build\ReusableTasks.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ReusableTasks.2.0.2\build\ReusableTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ReusableTasks.2.0.2\build\ReusableTasks.targets'))" />
+  </Target>
 </Project>

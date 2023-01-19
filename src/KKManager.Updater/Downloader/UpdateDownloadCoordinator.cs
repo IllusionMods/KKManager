@@ -13,7 +13,43 @@ namespace KKManager.Updater.Downloader
 {
     internal class UpdateDownloadCoordinator
     {
+        public enum UpdateStatus
+        {
+            Aborted = -1,
+            Stopped = 0,
+            Starting,
+            Running,
+            Finished,
+        }
+
+        public UpdateStatus Status
+        {
+            get => _status;
+            private set
+            {
+                if (_status != value)
+                {
+                    _status = value;
+                    UpdateStatusChanged?.Invoke(this, new UpdateStatusChangedEventArgs(this, value));
+                }
+            }
+        }
+
+        public class UpdateStatusChangedEventArgs : EventArgs
+        {
+            public UpdateStatusChangedEventArgs(UpdateDownloadCoordinator source, UpdateStatus status)
+            {
+                Source = source;
+                Status = status;
+            }
+            public UpdateDownloadCoordinator Source { get; }
+            public UpdateStatus Status { get; }
+        }
+
+        public static event EventHandler<UpdateStatusChangedEventArgs> UpdateStatusChanged;
+
         private List<UpdateDownloadItem> _updateItems;
+        private UpdateStatus _status = UpdateStatus.Stopped;
 
         private UpdateDownloadCoordinator()
         {
@@ -56,25 +92,28 @@ namespace KKManager.Updater.Downloader
 
         public async Task RunUpdate(CancellationToken cancellationToken)
         {
+            Status = UpdateStatus.Starting;
             try
             {
                 // One thread per server
                 var allSources = _updateItems
-                    .SelectMany(x => x.DownloadSources.Keys)
-                    .Distinct();
+                                 .SelectMany(x => x.DownloadSources.Keys)
+                                 .Distinct();
 
                 var runningTasks = new List<Tuple<Thread, DownloadSourceInfo>>();
                 foreach (var updateSource in allSources)
                 {
-                    if(updateSource is TorrentUpdater.TorrentSource) //todo
-                    for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
-                    {
-                        var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
-                        var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
-                        thread.Start();
-                        runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
-                    }
+                    if (updateSource is TorrentUpdater.TorrentSource) //todo
+                        for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
+                        {
+                            var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
+                            var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
+                            thread.Start();
+                            runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
+                        }
                 }
+
+                Status = UpdateStatus.Running;
 
                 while (runningTasks.Any(x => x.Item1.IsAlive))
                 {
@@ -82,6 +121,8 @@ namespace KKManager.Updater.Downloader
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
+
+                Status = UpdateStatus.Finished;
             }
             catch (OperationCanceledException)
             {
@@ -91,6 +132,12 @@ namespace KKManager.Updater.Downloader
                         updateItem.MarkAsCancelled();
                 }
 
+                Status = UpdateStatus.Aborted;
+                throw;
+            }
+            catch
+            {
+                Status = UpdateStatus.Aborted;
                 throw;
             }
         }

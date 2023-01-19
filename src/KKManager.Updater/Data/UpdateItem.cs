@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
+using KKManager.Updater.Sources;
 using KKManager.Util;
 using KKManager.Util.ProcessWaiter;
 
@@ -82,10 +83,10 @@ namespace KKManager.Updater.Data
                     await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
-                if (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)
+                if (!(RemoteFile is TorrentUpdater.TorrentFileInfo) && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug dont explicitly check type
                     throw new IOException($"Failed to download the update file {RemoteFile.Name} - the downloaded file doesn't exist or is corrupted");
 
-                Console.WriteLine($"Downloaded {downloadTarget.Length} bytes successfully");
+                Console.WriteLine($"Downloaded {RemoteFile.ItemSize} bytes successfully");
             }
 
             if (inPlace)
