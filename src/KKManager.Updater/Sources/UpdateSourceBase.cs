@@ -128,21 +128,8 @@ namespace KKManager.Updater.Sources
             {
                 foreach (var updateInfo in updateInfos)
                 {
-                    var remoteItem = GetRemoteRootItem(updateInfo.ServerPath);
-                    if (remoteItem == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {Origin}");
-
-                    var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
-
-                    var latestModifiedDate = DateTime.MinValue;
-                    var results = ProcessDirectory(
-                        remoteItem, updateInfo.ClientPathInfo,
-                        updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
-                        cancellationToken, ref latestModifiedDate);
-
-                    var updateTask = new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, latestModifiedDate);
-                    allResults.Add(updateTask);
-
                     // todo allow disabling
+                    // If a torrent of this update exists, try to use it instead of this source first
                     if (!string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
                     {
                         try
@@ -151,12 +138,36 @@ namespace KKManager.Updater.Sources
                             if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
                                 throw new TimeoutException("Timeout when trying to download");
                             var torrent = await Torrent.LoadAsync(await downloadFileAsync);
-                            updateTask.AlternativeSources.Add(await TorrentUpdater.GetUpdateTask(torrent, updateInfo, cancellationToken));
+
+                            Console.WriteLine($"Using torrent [{updateInfo.TorrentFileName}] to get update [{updateInfo.GUID}]");
+
+                            var torrentUpdateTask = await TorrentUpdater.GetUpdateTask(torrent, updateInfo, cancellationToken);
+                            allResults.Add(torrentUpdateTask);
+
+                            // Skip grabbing FTP updates
+                            continue;
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine($"Failed to get torrent [{updateInfo.TorrentFileName}] mentioned in [{updateInfo.GUID}] - {e.Message}");
                         }
+                    }
+
+                    // If no torrent is available, use this source as usual
+                    {
+                        var remoteItem = await GetRemoteRootItem(updateInfo.ServerPath, cancellationToken);
+                        if (remoteItem == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {Origin}");
+
+                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+
+                        var latestModifiedDate = DateTime.MinValue;
+                        var results = ProcessDirectory(
+                            remoteItem, updateInfo.ClientPathInfo,
+                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
+                            cancellationToken, ref latestModifiedDate);
+
+                        var updateTask = new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, latestModifiedDate);
+                        allResults.Add(updateTask);
                     }
                 }
 
@@ -175,7 +186,7 @@ namespace KKManager.Updater.Sources
 
         protected abstract Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken);
 
-        protected abstract IRemoteItem GetRemoteRootItem(string serverPath);
+        protected abstract Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken);
 
         private static void ApplyExtendedItems(string targetGuid, List<UpdateItem> itemsToReplace, List<UpdateTask> allResults)
         {

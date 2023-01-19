@@ -30,11 +30,11 @@ namespace KKManager.Updater.Sources
             return Task.FromResult(f.OpenEntryStream());
         }
 
-        protected override IRemoteItem GetRemoteRootItem(string serverPath)
+        protected override Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken)
         {
             var f = _archive.Entries.FirstOrDefault(x => PathTools.PathsEqual(x.Key, serverPath));
             if (f == null) return null;
-            return new ArchiveItem(f, f.Key, this);
+            return Task.FromResult((IRemoteItem)new ArchiveItem(f, f.Key, this));
         }
 
         private static string NormalizePath(string path)

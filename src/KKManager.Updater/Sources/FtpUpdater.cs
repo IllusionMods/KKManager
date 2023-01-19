@@ -19,9 +19,66 @@ namespace KKManager.Updater.Sources
     {
         private readonly FtpClient _client;
 
-        private Dictionary<string, FtpListItem> _allNodesLookup;
+        private Dictionary<string, FtpListItem> AllNodesLookup
+        {
+            get
+            {
+                if (_allNodesLookup == null)
+                    PopulateNodeLookups(CancellationToken.None).Wait();
+                return _allNodesLookup;
+            }
+        }
+
+        public Dictionary<FtpListItem, string> AllNodesNameLookup
+        {
+            get
+            {
+                if (_allNodesNameLookup == null)
+                    PopulateNodeLookups(CancellationToken.None).Wait();
+                return _allNodesNameLookup;
+            }
+        }
+
+        public ILookup<string, FtpListItem> ChildNodesLookup
+        {
+            get
+            {
+                if (_childNodesLookup == null)
+                    PopulateNodeLookups(CancellationToken.None).Wait();
+                return _childNodesLookup;
+            }
+        }
+
+        private async Task PopulateNodeLookups(CancellationToken cancellationToken)
+        {
+            if (_childNodesLookup != null) return;
+
+            var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
+
+            // Deal with case-insensitive servers having duplicate files with different cases
+            var groups = allNodes.GroupBy(x => x.FullName, StringComparer.InvariantCultureIgnoreCase);
+#if DEBUG
+            foreach (var group in groups)
+            {
+                if (group.Count() > 1)
+                    Console.WriteLine($"Multiple copies on [{Origin}]: {string.Join(" | ", group.Select(x => x.FullName))}");
+            }
+#endif
+            _allNodesLookup = groups.Select(x => x.OrderByDescending(GetDate).First()).ToDictionary(
+                item => GetNormalizedNodeName(item.FullName),
+                item => item);
+            _allNodesNameLookup = AllNodesLookup.ToDictionary(x => x.Value, x => x.Key);
+
+            _childNodesLookup = AllNodesLookup.ToLookup(x =>
+            {
+                var normalizedNodeName = GetNormalizedNodeName(Path.GetDirectoryName(x.Key));
+                Debug.Assert(x.Key.StartsWith(normalizedNodeName), "wtf " + normalizedNodeName + " - " + x.Key);
+                return normalizedNodeName;
+            }, x => x.Value);
+        }
         private Dictionary<FtpListItem, string> _allNodesNameLookup;
         private ILookup<string, FtpListItem> _childNodesLookup;
+        private Dictionary<string, FtpListItem> _allNodesLookup;
 
         public FtpUpdater(Uri serverUri, int discoveryPriority, int downloadPriority = 1, NetworkCredential credentials = null, int maxConcurrentDownloads = 1)
             : base(serverUri.Host, discoveryPriority, downloadPriority, maxConcurrentDownloads, true)
@@ -72,29 +129,6 @@ namespace KKManager.Updater.Sources
         {
             await Connect(cancellationToken);
 
-            var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
-
-            // Deal with case-insensitive servers having duplicate files with different cases
-            var groups = allNodes.GroupBy(x => x.FullName, StringComparer.InvariantCultureIgnoreCase);
-#if DEBUG
-            foreach (var group in groups)
-            {
-                if (group.Count() > 1)
-                    Console.WriteLine($"Multiple copies on [{Origin}]: {string.Join(" | ", group.Select(x => x.FullName))}");
-            }
-#endif
-            _allNodesLookup = groups.Select(x => x.OrderByDescending(GetDate).First()).ToDictionary(
-                item => GetNormalizedNodeName(item.FullName),
-                item => item);
-            _allNodesNameLookup = _allNodesLookup.ToDictionary(x => x.Value, x => x.Key);
-
-            _childNodesLookup = _allNodesLookup.ToLookup(x =>
-            {
-                var normalizedNodeName = GetNormalizedNodeName(Path.GetDirectoryName(x.Key));
-                Debug.Assert(x.Key.StartsWith(normalizedNodeName), "wtf " + normalizedNodeName + " - " + x.Key);
-                return normalizedNodeName;
-            }, x => x.Value);
-
             return await base.GetUpdateItems(cancellationToken);
         }
 
@@ -105,9 +139,9 @@ namespace KKManager.Updater.Sources
 
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)
         {
-            var item = GetRemoteItem(updateFileName);
-            if (item == null)
-                throw new FileNotFoundException("File doesn't exist on host");
+            //var item = GetRemoteItem(updateFileName);
+            //if (item == null)
+            //    throw new FileNotFoundException("File doesn't exist on host");
 
             cancellationToken.ThrowIfCancellationRequested();
             var str = new MemoryStream();
@@ -116,26 +150,29 @@ namespace KKManager.Updater.Sources
                 str.Seek(0, SeekOrigin.Begin);
                 return str;
             }
-            // Cleanup if download fails
-            str.Dispose();
-            cancellationToken.ThrowIfCancellationRequested();
-            throw new IOException("Failed to download file");
+            else
+            {
+                // Cleanup if download fails
+                str.Dispose();
+                cancellationToken.ThrowIfCancellationRequested();
+                throw new IOException("Failed to download file");
+            }
         }
 
-        protected override IRemoteItem GetRemoteRootItem(string serverPath)
+        protected override async Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken)
         {
             if (serverPath == null) throw new ArgumentNullException(nameof(serverPath));
-            FtpListItem remote = GetRemoteItem(serverPath);
-            if (remote == null) return null;
+
+            await PopulateNodeLookups(cancellationToken);
+
+            if (!AllNodesLookup.TryGetValue(GetNormalizedNodeName(serverPath), out var remote) || remote == null)
+            {
+                Debug.Fail("Could not find " + serverPath);
+                return null;
+            }
+
             var remoteItem = new FtpRemoteItem(remote, this, remote.FullName);
             return remoteItem;
-        }
-
-        private FtpListItem GetRemoteItem(string serverPath)
-        {
-            if (!_allNodesLookup.TryGetValue(GetNormalizedNodeName(serverPath), out var item))
-                Debug.Assert(serverPath.StartsWith("Updates"), "Could not find " + serverPath);
-            return item;
         }
 
         private async Task Connect(CancellationToken cancellationToken)
@@ -164,8 +201,8 @@ namespace KKManager.Updater.Sources
             if (remoteDir == null) throw new ArgumentNullException(nameof(remoteDir));
             if (remoteDir.Type != FtpFileSystemObjectType.Directory) throw new ArgumentException("remoteDir has to be a directory");
 
-            var name = _allNodesNameLookup[remoteDir];
-            return _childNodesLookup[name];
+            var name = AllNodesNameLookup[remoteDir];
+            return ChildNodesLookup[name];
         }
 
         private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)

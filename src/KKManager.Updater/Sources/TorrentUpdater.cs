@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,43 +28,6 @@ namespace KKManager.Updater.Sources
 
             if (_source == null) _source = new TorrentSource();
 
-
-            //var t = await _source.Client.AddAsync(torrent, "e:\\test", new TorrentSettingsBuilder()
-            //{
-            //    CreateContainingDirectory = false,
-            //    AllowInitialSeeding = true
-            //    //todo
-            //}.ToSettings());
-            //
-            //await t.WaitForMetadataAsync(cancellationToken);
-            //await t.HashCheckAsync(false);
-            //
-            //foreach (var f in t.Files)
-            //{
-            //    await t.SetFilePriorityAsync(f, Priority.DoNotDownload);
-            //    await t.MoveFileAsync(f, Path.Combine("e:\\test2", Path.GetRandomFileName()));
-            //}
-            //
-            //await t.StartAsync(); 
-            //
-            //
-            //await Task.Delay(20000);
-            //
-            //    foreach (var f in t.Files)
-            //{
-            //    await t.SetFilePriorityAsync(f, Priority.High);
-            //}
-            //
-            //    await t.PauseAsync();
-            //    await t.StartAsync();
-            //while (!t.Complete)
-            //{
-            //    await Task.Delay(1000);
-            //    Console.WriteLine($"State={t.State} Progress={t.Progress} Seeds={t.Peers.Seeds}");
-            //}
-            //
-            //Debugger.Break();
-
             var existing = _source.Client.Torrents.FirstOrDefault(x => torrent.Equals(x.Torrent));
             if (existing != null)
             {
@@ -81,7 +45,7 @@ namespace KKManager.Updater.Sources
             {
                 CreateContainingDirectory = false,
                 AllowInitialSeeding = true
-                //todo
+                //todo 
             }.ToSettings());
 
 
@@ -140,6 +104,7 @@ namespace KKManager.Updater.Sources
 
             public TorrentSource(int discoveryPriority = -1, int downloadPriority = 69, bool handlesRetry = true) : base("p2p/torrent", discoveryPriority, downloadPriority, 5, handlesRetry)
             {
+                const int clientPort = 15847;
                 Client = new ClientEngine(new EngineSettingsBuilder
                 {
                     DhtEndPoint = null,
@@ -148,6 +113,7 @@ namespace KKManager.Updater.Sources
                     AllowLocalPeerDiscovery = false,
                     AutoSaveLoadDhtCache = false,
                     //todo allow specifying port
+                    ListenEndPoint = new IPEndPoint(IPAddress.Any, clientPort)
                 }.ToSettings());
 
                 UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
@@ -207,7 +173,7 @@ namespace KKManager.Updater.Sources
                 throw new NotSupportedException();
             }
 
-            protected override IRemoteItem GetRemoteRootItem(string serverPath)
+            protected override Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken)
             {
                 throw new NotSupportedException();
             }
