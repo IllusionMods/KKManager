@@ -26,16 +26,14 @@ namespace KKManager.Updater.Sources
             if (_client == null) UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
             if (_client == null || _client.Disposed)
             {
-                const int clientPort = 15847;
                 _client = new ClientEngine(new EngineSettingsBuilder
                 {
                     DhtEndPoint = null,
                     CacheDirectory = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_p2pcache"),
-                    AllowPortForwarding = true,
+                    AllowPortForwarding = KKManager.Properties.Settings.Default.P2P_PortForward,
                     AllowLocalPeerDiscovery = false,
                     AutoSaveLoadDhtCache = false,
-                    //todo allow specifying port
-                    ListenEndPoint = new IPEndPoint(IPAddress.Any, clientPort)
+                    ListenEndPoint = new IPEndPoint(IPAddress.Any, KKManager.Properties.Settings.Default.P2P_Port)
                     //UsePartialFiles = true todo bugged in beta builds
                 }.ToSettings());
             }

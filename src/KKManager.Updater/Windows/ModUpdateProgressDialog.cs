@@ -98,6 +98,12 @@ namespace KKManager.Updater.Windows
                     labelPercent.Text += offsetStr + "( o . o)";
                 }
 
+                if (!KKManager.Properties.Settings.Default.P2P_SettingsShown)
+                {
+                    using (var settingsDialog = new P2PSettingsDialog())
+                        settingsDialog.ShowDialog(this);
+                }
+
                 olvColumnProgress.Renderer = new BarRenderer(0, 100);
                 olvColumnProgress.AspectGetter = rowObject => (int)Math.Round(((UpdateDownloadItem)rowObject).FinishPercent);
                 olvColumnSize.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).TotalSize;

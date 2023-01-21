@@ -61,12 +61,14 @@ namespace KKManager.Windows
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openModpackToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateContentsOfUpdatexmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressBundlesAndRandomizeCABsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.p2PDownloaderSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +83,6 @@ namespace KKManager.Windows
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openModpackToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -298,6 +299,12 @@ namespace KKManager.Windows
             this.developersToolStripMenuItem.Name = "developersToolStripMenuItem";
             resources.ApplyResources(this.developersToolStripMenuItem, "developersToolStripMenuItem");
             // 
+            // openModpackToolToolStripMenuItem
+            // 
+            this.openModpackToolToolStripMenuItem.Name = "openModpackToolToolStripMenuItem";
+            resources.ApplyResources(this.openModpackToolToolStripMenuItem, "openModpackToolToolStripMenuItem");
+            this.openModpackToolToolStripMenuItem.Click += new System.EventHandler(this.openModpackToolToolStripMenuItem_Click);
+            // 
             // generateContentsOfUpdatexmlToolStripMenuItem
             // 
             this.generateContentsOfUpdatexmlToolStripMenuItem.Name = "generateContentsOfUpdatexmlToolStripMenuItem";
@@ -321,6 +328,7 @@ namespace KKManager.Windows
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkForUpdatesOnStartupToolStripMenuItem,
             this.useSystemProxyServerToolStripMenuItem,
+            this.p2PDownloaderSettingsToolStripMenuItem,
             this.toolStripSeparator5,
             this.changeGameInstallDirectoryToolStripMenuItem,
             this.languagesToolStripMenuItem});
@@ -337,6 +345,12 @@ namespace KKManager.Windows
             // 
             this.useSystemProxyServerToolStripMenuItem.Name = "useSystemProxyServerToolStripMenuItem";
             resources.ApplyResources(this.useSystemProxyServerToolStripMenuItem, "useSystemProxyServerToolStripMenuItem");
+            // 
+            // p2PDownloaderSettingsToolStripMenuItem
+            // 
+            this.p2PDownloaderSettingsToolStripMenuItem.Name = "p2PDownloaderSettingsToolStripMenuItem";
+            resources.ApplyResources(this.p2PDownloaderSettingsToolStripMenuItem, "p2PDownloaderSettingsToolStripMenuItem");
+            this.p2PDownloaderSettingsToolStripMenuItem.Click += new System.EventHandler(this.p2PDownloaderSettingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -424,12 +438,6 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
             // 
-            // openModpackToolToolStripMenuItem
-            // 
-            this.openModpackToolToolStripMenuItem.Name = "openModpackToolToolStripMenuItem";
-            resources.ApplyResources(this.openModpackToolToolStripMenuItem, "openModpackToolToolStripMenuItem");
-            this.openModpackToolToolStripMenuItem.Click += new System.EventHandler(this.openModpackToolToolStripMenuItem_Click);
-            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -504,5 +512,6 @@ namespace KKManager.Windows
         private ToolStripMenuItem useSystemProxyServerToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem openModpackToolToolStripMenuItem;
+        private ToolStripMenuItem p2PDownloaderSettingsToolStripMenuItem;
     }
 }

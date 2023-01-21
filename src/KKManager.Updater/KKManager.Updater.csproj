@@ -146,6 +146,7 @@
       <HintPath>..\packages\System.Collections.Immutable.7.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
@@ -233,6 +234,12 @@
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Downloader\UpdateDownloadCoordinator.cs" />
+    <Compile Include="Windows\P2PSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\P2PSettingsDialog.Designer.cs">
+      <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\UpdateInfoEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -256,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ModUpdateSelectDialog.resx">
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\P2PSettingsDialog.resx">
+      <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.resx">
       <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>

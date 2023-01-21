@@ -32,5 +32,17 @@
     <Setting Name="mega_sessionToken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="P2P_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="P2P_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15847</Value>
+    </Setting>
+    <Setting Name="P2P_PortForward" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="P2P_SettingsShown" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

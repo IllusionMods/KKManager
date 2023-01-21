@@ -128,9 +128,8 @@ namespace KKManager.Updater.Sources
             {
                 foreach (var updateInfo in updateInfos)
                 {
-                    // todo allow disabling
                     // If a torrent of this update exists, try to use it instead of this source first
-                    if (!string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
+                    if (KKManager.Properties.Settings.Default.P2P_Enabled && !string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
                     {
                         try
                         {
