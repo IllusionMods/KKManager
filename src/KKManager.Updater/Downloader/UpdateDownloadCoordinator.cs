@@ -136,6 +136,11 @@ namespace KKManager.Updater.Downloader
                 SetStatus(UpdateStatus.Aborted, this);
                 throw;
             }
+            finally
+            {
+                try { Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true); }
+                catch (Exception ex) { Console.WriteLine(ex); }
+            }
         }
 
         /// <summary>

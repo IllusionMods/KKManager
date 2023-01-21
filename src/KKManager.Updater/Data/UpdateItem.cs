@@ -27,9 +27,14 @@ namespace KKManager.Updater.Data
             CustomMoveResult = customMoveResult;
         }
 
+        public static string GetTempDownloadDirectory()
+        {
+            return Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_downloads");
+        }
+
         public static async Task<FileInfo> GetTempDownloadFilename()
         {
-            var tempPath = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_downloads");
+            var tempPath = GetTempDownloadDirectory();
 
         retryCreate:
             try
