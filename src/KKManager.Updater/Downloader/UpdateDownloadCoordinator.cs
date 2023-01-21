@@ -100,14 +100,13 @@ namespace KKManager.Updater.Downloader
                 var runningTasks = new List<Tuple<Thread, DownloadSourceInfo>>();
                 foreach (var updateSource in allSources)
                 {
-                    if (updateSource is TorrentUpdater.TorrentSource) //todo
-                        for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
-                        {
-                            var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
-                            var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
-                            thread.Start();
-                            runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
-                        }
+                    for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
+                    {
+                        var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
+                        var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
+                        thread.Start();
+                        runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
+                    }
                 }
 
                 SetStatus(UpdateStatus.Running, this);
