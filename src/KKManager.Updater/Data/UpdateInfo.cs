@@ -116,6 +116,10 @@ namespace KKManager.Updater.Data
         /// Relative server filename of an optional .torrent file that serves as a mirror of this update.
         /// </summary>
         public string TorrentFileName { get; set; }
+        /// <summary>
+        /// Relative server path to create the torrent file from. If null, ServerPath is used instead.
+        /// </summary>
+        public string TorrentServerPath { get; set; }
 
         public bool IsGameSupported(GameType gameType) => SupportedGames == null || SupportedGames.Count == 0 || SupportedGames.Contains(gameType);
 
@@ -186,7 +190,7 @@ namespace KKManager.Updater.Data
         {
             if (string.IsNullOrEmpty(deserialized.Name)) throw new ArgumentNullException(nameof(Name), "The Name element is missing or empty in " + deserialized.GUID);
             if (string.IsNullOrEmpty(deserialized.GUID)) throw new ArgumentNullException(nameof(GUID), "The GUID element is missing or empty in " + deserialized.Name);
-            if (string.IsNullOrEmpty(deserialized.ServerPath)) throw new ArgumentNullException(nameof(ServerPath), "The ServerPath element is missing or empty in " + deserialized.GUID);
+            if (string.IsNullOrEmpty(deserialized.ServerPath) && string.IsNullOrEmpty(deserialized.TorrentFileName)) throw new ArgumentException("Both ServerPath and TorrentFileName elements are missing or empty in " + deserialized.GUID);
             if (string.IsNullOrEmpty(deserialized.ClientPath)) throw new ArgumentNullException(nameof(ClientPath), "The ClientPath element is missing or empty in " + deserialized.GUID);
             if (deserialized.Versioning == VersioningMode.Contents && !deserialized.ContentHashes.Any()) throw new ArgumentException("ContentHashes are empty when VersioningMode is set to Contents", nameof(ContentHashes));
         }

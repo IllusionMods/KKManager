@@ -22,16 +22,13 @@ namespace KKManager.Updater.Downloader
             Finished,
         }
 
-        public UpdateStatus Status
+        public static UpdateStatus Status { get; private set; } = UpdateStatus.Stopped;
+        internal static void SetStatus(UpdateStatus value, UpdateDownloadCoordinator source)
         {
-            get => _status;
-            private set
+            if (Status != value)
             {
-                if (_status != value)
-                {
-                    _status = value;
-                    UpdateStatusChanged?.Invoke(this, new UpdateStatusChangedEventArgs(this, value));
-                }
+                Status = value;
+                UpdateStatusChanged?.Invoke(source, new UpdateStatusChangedEventArgs(source, value));
             }
         }
 
@@ -49,7 +46,6 @@ namespace KKManager.Updater.Downloader
         public static event EventHandler<UpdateStatusChangedEventArgs> UpdateStatusChanged;
 
         private List<UpdateDownloadItem> _updateItems;
-        private UpdateStatus _status = UpdateStatus.Stopped;
 
         private UpdateDownloadCoordinator()
         {
@@ -87,12 +83,13 @@ namespace KKManager.Updater.Downloader
 
             downloadCoordinator._updateItems = sortedUpdateItemInfos;
 
+            SetStatus(UpdateStatus.Stopped, downloadCoordinator);
             return downloadCoordinator;
         }
 
         public async Task RunUpdate(CancellationToken cancellationToken)
         {
-            Status = UpdateStatus.Starting;
+            SetStatus(UpdateStatus.Starting, this);
             try
             {
                 // One thread per server
@@ -113,7 +110,7 @@ namespace KKManager.Updater.Downloader
                         }
                 }
 
-                Status = UpdateStatus.Running;
+                SetStatus(UpdateStatus.Running, this);
 
                 while (runningTasks.Any(x => x.Item1.IsAlive))
                 {
@@ -122,7 +119,7 @@ namespace KKManager.Updater.Downloader
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Status = UpdateStatus.Finished;
+                SetStatus(UpdateStatus.Finished, this);
             }
             catch (OperationCanceledException)
             {
@@ -132,12 +129,12 @@ namespace KKManager.Updater.Downloader
                         updateItem.MarkAsCancelled();
                 }
 
-                Status = UpdateStatus.Aborted;
+                SetStatus(UpdateStatus.Aborted, this);
                 throw;
             }
             catch
             {
-                Status = UpdateStatus.Aborted;
+                SetStatus(UpdateStatus.Aborted, this);
                 throw;
             }
         }
@@ -188,8 +185,6 @@ namespace KKManager.Updater.Downloader
                         currentDownloadItem.Status = UpdateDownloadStatus.Finished;
 
                         failCount = 0;
-
-                        TorrentUpdater.OnFileUpdateFinished(currentDownloadItem);
                     }
                     catch (Exception e)
                     {

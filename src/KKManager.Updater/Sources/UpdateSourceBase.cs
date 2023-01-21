@@ -144,7 +144,7 @@ namespace KKManager.Updater.Sources
                             var torrentUpdateTask = await TorrentUpdater.GetUpdateTask(torrent, updateInfo, cancellationToken);
                             allResults.Add(torrentUpdateTask);
 
-                            // Skip grabbing FTP updates
+                            // Skip grabbing updates from the source, torrent is enough
                             continue;
                         }
                         catch (Exception e)
@@ -154,6 +154,7 @@ namespace KKManager.Updater.Sources
                     }
 
                     // If no torrent is available, use this source as usual
+                    if (!string.IsNullOrWhiteSpace(updateInfo.ServerPath))
                     {
                         var remoteItem = await GetRemoteRootItem(updateInfo.ServerPath, cancellationToken);
                         if (remoteItem == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {Origin}");
@@ -168,6 +169,10 @@ namespace KKManager.Updater.Sources
 
                         var updateTask = new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, latestModifiedDate);
                         allResults.Add(updateTask);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[{Origin}] WARN: Skipping {updateInfo.GUID} because neither torrent or direct downloads are available");
                     }
                 }
 

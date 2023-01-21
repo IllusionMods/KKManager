@@ -144,6 +144,7 @@ namespace KKManager.Updater.Windows
                     SetStatus("Everything is up to date!");
                     progressBar1.Value = progressBar1.Maximum;
                     _cancelToken.Cancel();
+                    UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.UpdateStatus.Finished, null);
                     return;
                 }
 
@@ -269,10 +270,12 @@ namespace KKManager.Updater.Windows
             {
                 SetStatus("KK Manager needs to be updated to get updates.", true, true);
                 ex.ShowKkmanOutdatedMessage();
+                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.UpdateStatus.Aborted, null);
             }
             catch (OperationCanceledException)
             {
                 SetStatus("Update was cancelled by the user.", true, true);
+                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.UpdateStatus.Aborted, null);
             }
             catch (Exception ex)
             {
@@ -286,6 +289,7 @@ namespace KKManager.Updater.Windows
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
                                 "and that you did not hit your download limits, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
                                 "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.UpdateStatus.Aborted, null);
             }
             finally
             {

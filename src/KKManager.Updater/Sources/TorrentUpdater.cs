@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Functions;
@@ -19,20 +18,51 @@ namespace KKManager.Updater.Sources
 {
     public static class TorrentUpdater
     {
-        private static TorrentSource _source;
+        private static ClientEngine _client;
+
+        private static ClientEngine GetClient()
+        {
+            if (_client == null)
+            {
+                UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
+            }
+            if (_client == null || _client.Disposed)
+            {
+                const int clientPort = 15847;
+                _client = new ClientEngine(new EngineSettingsBuilder
+                {
+                    DhtEndPoint = null,
+                    CacheDirectory = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_p2pcache"),
+                    AllowPortForwarding = true,
+                    AllowLocalPeerDiscovery = false,
+                    AutoSaveLoadDhtCache = false,
+                    //todo allow specifying port
+                    ListenEndPoint = new IPEndPoint(IPAddress.Any, clientPort),
+                    //UsePartialFiles = true todo bugged in beta builds
+                }.ToSettings());
+            }
+            return _client;
+        }
+
+        private static void DisposeClient()
+        {
+            if (_client == null || _client.Disposed) return;
+            try { _client.StopAllAsync().Wait(60); } catch (Exception e) { Console.WriteLine(e); }
+            _client.Dispose();
+        }
 
         public static async Task<UpdateTask> GetUpdateTask(Torrent torrent, UpdateInfo updateInfo, CancellationToken cancellationToken)
         {
             if (torrent == null) throw new ArgumentNullException(nameof(torrent));
             if (updateInfo == null) throw new ArgumentNullException(nameof(updateInfo));
 
-            if (_source == null) _source = new TorrentSource();
+            var client = GetClient();
 
-            var existing = _source.Client.Torrents.FirstOrDefault(x => torrent.Equals(x.Torrent));
+            var existing = client.Torrents.FirstOrDefault(x => torrent.Equals(x.Torrent));
             if (existing != null)
             {
                 await existing.StopAsync();
-                await _source.Client.RemoveAsync(existing, RemoveMode.KeepAllData);
+                await client.RemoveAsync(existing, RemoveMode.KeepAllData);
             }
 
             var targetDir = updateInfo.ClientPathInfo;
@@ -41,14 +71,15 @@ namespace KKManager.Updater.Sources
             // Check if the torrent's root directory is inside targetDir, or if targetDir itself is the torrent's root directory in which case we need to save to directory that contains targetDir
             var adjustedTargetDir = torrent.Files.Any(x => x.Path.StartsWith(targetDir.Name)) ? targetDir.Parent.FullName : targetDir.FullName;
 
-            var torrentManager = await _source.Client.AddAsync(torrent, adjustedTargetDir, new TorrentSettingsBuilder()
+            var torrentManager = await client.AddAsync(torrent, adjustedTargetDir, new TorrentSettingsBuilder()
             {
                 CreateContainingDirectory = false,
-                AllowInitialSeeding = true
-                //todo 
+                AllowInitialSeeding = true,
+                AllowDht = false,
+                AllowPeerExchange = false,
             }.ToSettings());
 
-
+            // Doesn't do anything on torrent files?
             await torrentManager.WaitForMetadataAsync(cancellationToken);
 
             var sw = Stopwatch.StartNew();
@@ -63,99 +94,94 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            var newSource = new TorrentSource($"{updateInfo.Source.Origin}->{updateInfo.TorrentFileName}");
+
             var remoteFiles = new List<UpdateItem>();
             foreach (var file in torrentManager.Files)
             {
                 // Seed finished files, but do not download unfinished yet
                 var isFinished = file.BitField.PercentComplete >= 100d;
 
-                var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName);
-                var ui = new UpdateItem(new FileInfo(file.FullPath), info, isFinished, CustomMoveResult);
+                //bug downloaded files get reported as not finished
+
+                var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName, newSource);
+                var targetPath = new FileInfo(file.FullPath);
+                var ui = new UpdateItem(targetPath, info, isFinished, CustomMoveResult); // (path, targetPath, item) => true);
                 remoteFiles.Add(ui);
 
                 await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : Priority.DoNotDownload);
-                if (!isFinished)
+                if (!isFinished && targetPath.Exists && targetPath.Length == 0)
                     await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
+
+                //Console.WriteLine($"{isFinished} - {file.DownloadIncompleteFullPath}  |  {file.DownloadCompleteFullPath}");
             }
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Start seeding already
-            //await torrentManager.StartAsync();
+            if (updateInfo.RemoveExtraClientFiles)
+            {
+                string NormalizePath(string x) => PathTools.NormalizePath(x).Replace('/', '\\').ToLowerInvariant();
+                var allTorrentFiles = new HashSet<string>(torrentManager.Files.Select(x => NormalizePath(x.DownloadCompleteFullPath)));
+                var localFiles = updateInfo.ClientPathInfo.GetFiles("*", SearchOption.AllDirectories);
+                var toRemove = localFiles.Where(x => !allTorrentFiles.Contains(NormalizePath(x.FullName))).ToList();
+                Debug.WriteLine($"{toRemove.Count} / {localFiles.Length} local files will be removed based on torrent ({torrentManager.Files.Count(x => x.Priority != Priority.DoNotDownload)} / {torrentManager.Files} already finished) from {updateInfo.GUID}");
+                remoteFiles.AddRange(toRemove.Select(file => new UpdateItem(file, null, false)));
+            }
 
-            var updateInfoCopy = updateInfo.Copy(_source);
-            //updateInfo.Source + " -> " + updateInfo.TorrentFileName
+            var updateInfoCopy = updateInfo.Copy(newSource);
             updateInfoCopy.TorrentFileName = null;
             return new UpdateTask(updateInfo.Name, remoteFiles, updateInfoCopy, torrent.CreationDate);
-
-            //bug downloads never progress despite peer connection active
-            //todo try a minimal setup
         }
 
+        private static ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>> _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
         private static bool CustomMoveResult(FileInfo currentpath, FileInfo targetpath, UpdateItem item)
         {
-            _source.MoveItemOnceUpdateFinishes(((TorrentFileInfo)item.RemoteFile), (targetpath));
+            _filesToMove.Add(new KeyValuePair<TorrentFileInfo, FileInfo>((TorrentFileInfo)item.RemoteFile, targetpath));
             return true;
+        }
+        private static void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
+        {
+            //todo not called until after update starts, cancelling before breaks stuff
+            switch (e.Status)
+            {
+                case UpdateDownloadCoordinator.UpdateStatus.Starting:
+                    _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
+                    break;
+
+                case UpdateDownloadCoordinator.UpdateStatus.Running:
+                    if (_client != null && !_client.Disposed && _client.Torrents.Any(x => !x.Complete))
+                        _client.StartAllAsync().Wait();
+                    break;
+
+                case UpdateDownloadCoordinator.UpdateStatus.Aborted:
+                    //todo handle cancelling the update, unfinished files need to be cleaned up, but only if torrent was actually started
+                    
+                case UpdateDownloadCoordinator.UpdateStatus.Finished:
+                    DisposeClient();
+                    foreach (var pair in _filesToMove)
+                    {
+                        try
+                        {
+                            pair.Key.Move(pair.Value);
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception);
+                        }
+                    }
+                    _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
+                    break;
+            }
         }
 
         public class TorrentSource : UpdateSourceBase
         {
-            public ClientEngine Client { get; }
-
-            public TorrentSource(int discoveryPriority = -1, int downloadPriority = 69, bool handlesRetry = true) : base("p2p/torrent", discoveryPriority, downloadPriority, 5, handlesRetry)
+            public TorrentSource(string origin, int discoveryPriority = 99, int downloadPriority = 99, bool handlesRetry = true) : base($"p2p ({origin})", discoveryPriority, downloadPriority, 5, handlesRetry)
             {
-                const int clientPort = 15847;
-                Client = new ClientEngine(new EngineSettingsBuilder
-                {
-                    DhtEndPoint = null,
-                    CacheDirectory = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_p2pcache"),
-                    AllowPortForwarding = true,
-                    AllowLocalPeerDiscovery = false,
-                    AutoSaveLoadDhtCache = false,
-                    //todo allow specifying port
-                    ListenEndPoint = new IPEndPoint(IPAddress.Any, clientPort)
-                }.ToSettings());
-
-                UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
-            }
-
-
-            private ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>> _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
-
-            public void MoveItemOnceUpdateFinishes(TorrentFileInfo finishedTorrent, FileInfo targetpath)
-            {
-                _filesToMove.Add(new KeyValuePair<TorrentFileInfo, FileInfo>(finishedTorrent, targetpath));
-            }
-
-            private void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
-            {
-                if (Client.Disposed) return;
-                //todo not called until after update starts, cancelling before breaks stuff
-                switch (e.Status)
-                {
-                    case UpdateDownloadCoordinator.UpdateStatus.Starting:
-                        _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
-                        break;
-                    case UpdateDownloadCoordinator.UpdateStatus.Running:
-                        Client.StartAllAsync().Wait();
-                        break;
-                    case UpdateDownloadCoordinator.UpdateStatus.Aborted:
-                    case UpdateDownloadCoordinator.UpdateStatus.Finished:
-                        Client.StopAllAsync().Wait();
-                        Client.Dispose();
-                        _source = null;
-                        foreach (var pair in _filesToMove)
-                        {
-                            pair.Key.Move(pair.Value);
-                        }
-                        _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
-                        break;
-                }
             }
 
             public override void Dispose()
             {
-                Client.Dispose();
             }
 
             public override Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
@@ -185,17 +211,22 @@ namespace KKManager.Updater.Sources
             private readonly ITorrentManagerFile _info;
             //internal IRemoteItem[] Contents { get; set; }
 
-            public TorrentFileInfo(ITorrentManagerFile torrentFileInfo, TorrentManager torrent, string rootDirectory)
+            public TorrentFileInfo(ITorrentManagerFile torrentFileInfo, TorrentManager torrent, string rootDirectory, TorrentSource torrentSource)
             {
+                if (rootDirectory == null) throw new ArgumentNullException(nameof(rootDirectory));
                 _info = torrentFileInfo ?? throw new ArgumentNullException(nameof(torrentFileInfo));
-                _torrent = torrent;
+                _torrent = torrent ?? throw new ArgumentNullException(nameof(torrent));
+                if (torrent.Torrent == null) throw new ArgumentException("Only torrent files are supported, not magnets");
+                Source = torrentSource ?? throw new ArgumentNullException(nameof(torrentSource));
+
                 var targetPath = torrentFileInfo.FullPath;
                 Name = Path.GetFileName(targetPath);
                 ItemSize = torrentFileInfo.Length;
+                ClientRelativeFileName = targetPath.StartsWith(rootDirectory, StringComparison.OrdinalIgnoreCase) ? targetPath.Substring(rootDirectory.Length) : targetPath;
+
                 ModifiedTime = torrent.Torrent.CreationDate;
                 IsDirectory = false;
                 IsFile = true;
-                ClientRelativeFileName = targetPath.StartsWith(rootDirectory, StringComparison.OrdinalIgnoreCase) ? targetPath.Substring(rootDirectory.Length) : targetPath;
             }
 
             public string Name { get; }
@@ -204,7 +235,7 @@ namespace KKManager.Updater.Sources
             public bool IsDirectory { get; }
             public bool IsFile { get; }
             public string ClientRelativeFileName { get; }
-            public UpdateSourceBase Source => _source;
+            public UpdateSourceBase Source { get; }
             /// <summary>
             /// 0-100
             /// </summary>
@@ -217,8 +248,6 @@ namespace KKManager.Updater.Sources
 
             public async Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-
-                _info.GetType().GetProperty(nameof(_info.DownloadCompleteFullPath), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).SetValue(_info, downloadTarget.FullName);
                 await _torrent.SetFilePriorityAsync(_info, Priority.High);
                 //if (_torrent.State == TorrentState.Stopped)
                 //{
@@ -251,18 +280,18 @@ namespace KKManager.Updater.Sources
                 ((IProgress<double>)progressCallback).Report(100d);
             }
 
-            public void StartSeeding()
-            {
-                if (_info.Priority == Priority.DoNotDownload)
-                {
-                    //bug needs its path to be moved to actual output
-                    var f = new FileInfo(_info.FullPath);
-                    if (f.Exists && f.Length == _info.Length)
-                        _torrent.SetFilePriorityAsync(_info, Priority.Low).Wait();
-                    else
-                        Console.WriteLine($"WARN: Tried to start seeding [{f.FullName}] but it looks like it {(f.Exists ? "doesn't exist" : $"has size {f.Length} instead of expected {_info.Length}")}!");
-                }
-            }
+            //public void StartSeeding()
+            //{
+            //    if (_info.Priority == Priority.DoNotDownload)
+            //    {
+            //        //bug needs its path to be moved to actual output
+            //        var f = new FileInfo(_info.FullPath);
+            //        if (f.Exists && f.Length == _info.Length)
+            //            _torrent.SetFilePriorityAsync(_info, Priority.Low).Wait();
+            //        else
+            //            Console.WriteLine($"WARN: Tried to start seeding [{f.FullName}] but it looks like it {(f.Exists ? "doesn't exist" : $"has size {f.Length} instead of expected {_info.Length}")}!");
+            //    }
+            //}
 
             public void Move(FileInfo targetpath)
             {
@@ -274,12 +303,12 @@ namespace KKManager.Updater.Sources
             }
         }
 
-        internal static void OnFileUpdateFinished(UpdateDownloadItem updateItem)
-        {
-            foreach (var torrentFileInfo in updateItem.DownloadSources.Select(x => x.Value.RemoteFile).OfType<TorrentFileInfo>())
-            {
-                torrentFileInfo.StartSeeding();
-            }
-        }
+        //internal static void OnFileUpdateFinished(UpdateDownloadItem updateItem)
+        //{
+        //    foreach (var torrentFileInfo in updateItem.DownloadSources.Select(x => x.Value.RemoteFile).OfType<TorrentFileInfo>())
+        //    {
+        //        torrentFileInfo.StartSeeding();
+        //    }
+        //}
     }
 }

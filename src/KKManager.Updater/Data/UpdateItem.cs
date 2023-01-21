@@ -83,7 +83,7 @@ namespace KKManager.Updater.Data
                     await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
-                if (!(RemoteFile is TorrentUpdater.TorrentFileInfo) && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug dont explicitly check type
+                if (CustomMoveResult == null && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug a better way than CustomMoveResult is needed 
                     throw new IOException($"Failed to download the update file {RemoteFile.Name} - the downloaded file doesn't exist or is corrupted");
 
                 Console.WriteLine($"Downloaded {RemoteFile.ItemSize} bytes successfully");
@@ -98,20 +98,22 @@ namespace KKManager.Updater.Data
                 Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName) ?? throw new InvalidOperationException("Invalid path " + TargetPath.FullName));
                 try
                 {
-                    if (TargetPath.Exists)
+                    if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
                     {
-                        Console.WriteLine($"Deleting old file {TargetPath.FullName}");
-                        // Prevent issues removing readonly files
-                        TargetPath.Attributes = FileAttributes.Normal;
-                        TargetPath.Delete();
-                        // Make sure the file gets deleted before continuing
-                        await Task.Delay(200, cancellationToken);
-                    }
+                        if (TargetPath.Exists)
+                        {
+                            Console.WriteLine($"Deleting old file {TargetPath.FullName}");
+                            // Prevent issues removing readonly files
+                            TargetPath.Attributes = FileAttributes.Normal;
+                            TargetPath.Delete();
+                            // Make sure the file gets deleted before continuing
+                            await Task.Delay(200, cancellationToken);
+                        }
 
-                    if (RemoteFile != null)
-                    {
-                        if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
+                        if (RemoteFile != null)
+                        {
                             downloadTarget.MoveTo(TargetPath.FullName);
+                        }
                     }
                 }
                 catch (IOException)
@@ -120,9 +122,11 @@ namespace KKManager.Updater.Data
                     {
                         await Task.Delay(1000, cancellationToken);
                         if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
+                        {
                             downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
-                        await Task.Delay(1000, cancellationToken);
-                        File.Delete(TargetPath.FullName + ".old");
+                            await Task.Delay(1000, cancellationToken);
+                            File.Delete(TargetPath.FullName + ".old");
+                        }
                     }
                     else
                     {
