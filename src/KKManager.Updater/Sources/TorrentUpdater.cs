@@ -74,7 +74,8 @@ namespace KKManager.Updater.Sources
             if (targetDir.Parent == null) throw new ArgumentException("targetDir.Parent == null");
 
             // Check if the torrent's root directory is inside targetDir, or if targetDir itself is the torrent's root directory in which case we need to save to directory that contains targetDir
-            var adjustedTargetDir = torrent.Files.Any(x => x.Path.StartsWith(targetDir.Name)) ? targetDir.Parent.FullName : targetDir.FullName;
+            var allFilesInsideSubdirectory = torrent.Files.All(x => x.Path.StartsWith(targetDir.Name + "\\", StringComparison.OrdinalIgnoreCase) || x.Path.StartsWith(targetDir.Name + "/", StringComparison.OrdinalIgnoreCase));
+            var adjustedTargetDir = allFilesInsideSubdirectory ? targetDir.Parent.FullName : targetDir.FullName;
 
             var torrentManager = await client.AddAsync(torrent, adjustedTargetDir, new TorrentSettingsBuilder
             {
@@ -111,8 +112,6 @@ namespace KKManager.Updater.Sources
 
                 var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName, newSource);
                 var targetPath = new FileInfo(file.FullPath);
-                var updateItem = new UpdateItem(targetPath, info, isFinished, CustomMoveResult);
-                remoteFiles.Add(updateItem);
 
                 await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : Priority.DoNotDownload);
                 // If files don't exist, a 0 byte placeholder is created by HashCheckAsync, which messes things up later
@@ -123,6 +122,8 @@ namespace KKManager.Updater.Sources
                     await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
                     Debug.WriteLine($"{isFinished} - {file.DownloadIncompleteFullPath}  ->  {file.DownloadCompleteFullPath}");
                 }
+                var updateItem = new UpdateItem(targetPath, info, isFinished, CustomMoveResult);
+                remoteFiles.Add(updateItem);
             }
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -315,7 +316,13 @@ namespace KKManager.Updater.Sources
 
             public void Move(FileInfo targetpath)
             {
-                if (!PathTools.PathsEqual(_info.FullPath, targetpath.FullName)) File.Move(_info.FullPath, targetpath.FullName);
+                //bug should use FullPath instead of DownloadCompleteFullPath but it's bugged and file exists at both different paths
+                if (!PathTools.PathsEqual(_info.DownloadCompleteFullPath, targetpath.FullName))
+                {
+                    //Console.WriteLine($"FullPath={_info.FullPath} {(File.Exists(_info.FullPath) ? new FileInfo(_info.FullPath).Length : -1)}  targetpath={targetpath.FullName} {(targetpath.Exists ? targetpath.Length : -1)}");
+                    //if (File.Exists(_info.FullPath)) 
+                    File.Move(_info.FullPath, targetpath.FullName);
+                }
             }
         }
     }
