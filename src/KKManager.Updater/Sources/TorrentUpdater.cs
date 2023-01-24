@@ -152,7 +152,7 @@ namespace KKManager.Updater.Sources
             return true;
         }
 
-        private static void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
+        private static async void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
         {
             switch (e.Status)
             {
@@ -166,7 +166,6 @@ namespace KKManager.Updater.Sources
                 case UpdateDownloadCoordinator.UpdateStatus.Running:
                     if (_client != null && !_client.Disposed)
                     {
-                        /*//todo this deadlocks sometimes, try after monotorrent update
                         if (_client.Torrents.Any(x => !x.Complete))
                         {
                             foreach (var torrent in _client.Torrents)
@@ -182,15 +181,15 @@ namespace KKManager.Updater.Sources
                                     // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
                                     if (!isFinished && targetPath.Exists && targetPath.Length > 0)
                                     {
-                                        torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName).Wait();
+                                        await torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName);
                                         Debug.WriteLine($"{isFinished} - {file.DownloadIncompleteFullPath}  ->  {file.DownloadCompleteFullPath}");
                                     }
                                 }
                             }
 
-                        }*/
+                        }
 
-                        _client.StartAllAsync().Wait();
+                        await _client.StartAllAsync();
                     }
                     break;
 
@@ -298,7 +297,6 @@ namespace KKManager.Updater.Sources
                 while (PercentComplete < 100d)
                 {
                     await Task.Delay(1000, CancellationToken.None);
-
                     if (cancellationToken.IsCancellationRequested)
                     {
                         // Managed to finish in time
