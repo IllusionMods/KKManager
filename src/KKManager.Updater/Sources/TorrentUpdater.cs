@@ -128,7 +128,7 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (updateInfo.RemoveExtraClientFiles)
+            if (updateInfo.RemoveExtraClientFiles && updateInfo.ClientPathInfo.Exists)
             {
                 string NormalizePath(string x)
                 {
