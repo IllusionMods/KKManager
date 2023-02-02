@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Functions;
+using KKManager.Properties;
 using KKManager.Updater.Data;
 using KKManager.Updater.Downloader;
 using KKManager.Updater.Utils;
@@ -144,6 +145,7 @@ namespace KKManager.Updater.Sources
         {
             if (torrent == null) throw new ArgumentNullException(nameof(torrent));
             if (updateInfo == null) throw new ArgumentNullException(nameof(updateInfo));
+            if (!Settings.Default.P2P_Enabled) throw new InvalidOperationException("P2P is disabled");
 
             var client = await GetClient();
 
@@ -261,6 +263,7 @@ namespace KKManager.Updater.Sources
 
         private static async void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
         {
+            if (!Settings.Default.P2P_Enabled) return;
             try
             {
                 switch (e.Status)
