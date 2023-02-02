@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Reflection;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -78,6 +79,10 @@ namespace KKManager.Data.Cards
                                 if (ex.InnerException is OperationCanceledException) return;
                                 throw;
                             }
+
+                            // Free up memory stuck in LOH from loading cards, can be fairly substantial
+                            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+                            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
                         }, cancellationToken);
                 }
                 catch (OperationCanceledException) { }

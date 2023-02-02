@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Runtime;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,6 +94,9 @@ namespace KKManager.Data.Zipmods
                             Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex}");
                         }
                     });
+
+                    GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+                    GC.Collect();
                 }
                 catch (Exception ex)
                 {
