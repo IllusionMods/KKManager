@@ -159,8 +159,9 @@ namespace KKManager.Updater.Data
             }
             finally
             {
-                try { File.Delete(downloadFilename); }
-                catch (SystemException ex) { Console.WriteLine(ex); }
+                // this clashes with torrent downloads
+                //try { File.Delete(downloadFilename); }
+                //catch (SystemException ex) { Console.WriteLine(ex); }
             }
         }
 

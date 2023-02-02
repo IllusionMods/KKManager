@@ -136,7 +136,14 @@ namespace KKManager.Updater.Sources
                             var downloadFileAsync = DownloadFileAsync(updateInfo.TorrentFileName, cancellationToken);
                             if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
                                 throw new TimeoutException("Timeout when trying to download");
-                            var torrent = await Torrent.LoadAsync(await downloadFileAsync);
+
+                            var bytes = await (await downloadFileAsync).ReadAllBytesAsync();
+#if DEBUG
+                            var dumpDir = Path.Combine(UpdateItem.GetTempDownloadDirectory(), "Torrents");
+                            Directory.CreateDirectory(dumpDir);
+                            File.WriteAllBytes(Path.Combine(dumpDir, $"[{PathTools.SanitizeFileName(Origin)}] {updateInfo.TorrentFileName}"), bytes);
+#endif
+                            var torrent = await Torrent.LoadAsync(bytes);
 
                             Console.WriteLine($"Using torrent [{updateInfo.TorrentFileName}] to get update [{updateInfo.GUID}]");
 

@@ -11,10 +11,11 @@ using KKManager.Util;
 
 namespace KKManager.Updater.Downloader
 {
-    internal class UpdateDownloadCoordinator
+    internal class UpdateDownloadCoordinator : IDisposable
     {
-        public enum UpdateStatus
+        public enum CoordinatorStatus
         {
+            Disposed = -2,
             Aborted = -1,
             Stopped = 0,
             Starting,
@@ -22,8 +23,9 @@ namespace KKManager.Updater.Downloader
             Finished,
         }
 
-        public static UpdateStatus Status { get; private set; } = UpdateStatus.Stopped;
-        internal static void SetStatus(UpdateStatus value, UpdateDownloadCoordinator source)
+        public static CoordinatorStatus Status { get; private set; } = CoordinatorStatus.Stopped;
+
+        internal static void SetStatus(CoordinatorStatus value, UpdateDownloadCoordinator source)
         {
             if (Status != value)
             {
@@ -32,30 +34,48 @@ namespace KKManager.Updater.Downloader
             }
         }
 
+        internal void SetStatus(CoordinatorStatus value)
+        {
+            SetStatus(value, this);
+        }
+
         public class UpdateStatusChangedEventArgs : EventArgs
         {
-            public UpdateStatusChangedEventArgs(UpdateDownloadCoordinator source, UpdateStatus status)
+            public UpdateStatusChangedEventArgs(UpdateDownloadCoordinator source, CoordinatorStatus status)
             {
                 Source = source;
                 Status = status;
             }
             public UpdateDownloadCoordinator Source { get; }
-            public UpdateStatus Status { get; }
+            public CoordinatorStatus Status { get; }
         }
 
         public static event EventHandler<UpdateStatusChangedEventArgs> UpdateStatusChanged;
 
-        private List<UpdateDownloadItem> _updateItems;
+        private readonly List<UpdateDownloadItem> _updateItems;
+        private readonly CancellationToken _cancellationToken;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private UpdateDownloadCoordinator()
+        private UpdateDownloadCoordinator(List<UpdateDownloadItem> updateItems, CancellationToken cancellationToken)
         {
+            _updateItems = updateItems ?? throw new ArgumentNullException(nameof(updateItems));
+
+            cancellationToken.Register(() =>
+            {
+                if (Status == CoordinatorStatus.Stopped)
+                    SetStatus(CoordinatorStatus.Aborted);
+            });
+
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _cancellationToken = _cancellationTokenSource.Token;
         }
 
         public IReadOnlyList<UpdateDownloadItem> UpdateItems => _updateItems;
 
-        public static UpdateDownloadCoordinator Create(IEnumerable<UpdateTask> updateTasks)
+        public static UpdateDownloadCoordinator Create(IEnumerable<UpdateTask> updateTasks, CancellationToken cancellationToken)
         {
-            var downloadCoordinator = new UpdateDownloadCoordinator();
+            if (updateTasks == null) throw new ArgumentNullException(nameof(updateTasks));
+            cancellationToken.ThrowIfCancellationRequested();
 
             // Split the tasks into individual files to download with lists of servers to they can be downloaded from
             // so later the download threads can pick them easily
@@ -81,17 +101,26 @@ namespace KKManager.Updater.Downloader
             for (var i = 0; i < sortedUpdateItemInfos.Count; i++)
                 sortedUpdateItemInfos[i].Order = i + 1;
 
-            downloadCoordinator._updateItems = sortedUpdateItemInfos;
+            var downloadCoordinator = new UpdateDownloadCoordinator(sortedUpdateItemInfos, cancellationToken);
 
-            SetStatus(UpdateStatus.Stopped, downloadCoordinator);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            SetStatus(CoordinatorStatus.Stopped, downloadCoordinator);
+
             return downloadCoordinator;
         }
 
-        public async Task RunUpdate(CancellationToken cancellationToken)
+        public async Task RunUpdate()
         {
-            SetStatus(UpdateStatus.Starting, this);
+            if (Status != CoordinatorStatus.Stopped)
+                throw new InvalidOperationException("Can only start when status is Stopped. Current status: " + Status);
+
+            SetStatus(CoordinatorStatus.Starting);
+
             try
             {
+                _cancellationToken.ThrowIfCancellationRequested();
+
                 // One thread per server
                 var allSources = _updateItems
                                  .SelectMany(x => x.DownloadSources.Keys)
@@ -103,22 +132,22 @@ namespace KKManager.Updater.Downloader
                     for (int i = 0; i < updateSource.MaxConcurrentDownloads; i++)
                     {
                         var updateSourceInfo = new DownloadSourceInfo(updateSource, i);
-                        var thread = new Thread(() => UpdateThread(updateSourceInfo, cancellationToken));
+                        var thread = new Thread(() => UpdateThread(updateSourceInfo));
                         thread.Start();
                         runningTasks.Add(new Tuple<Thread, DownloadSourceInfo>(thread, updateSourceInfo));
                     }
                 }
 
-                SetStatus(UpdateStatus.Running, this);
+                SetStatus(CoordinatorStatus.Running);
 
                 while (runningTasks.Any(x => x.Item1.IsAlive))
                 {
                     await Task.Delay(1000, CancellationToken.None);
                 }
 
-                cancellationToken.ThrowIfCancellationRequested();
+                _cancellationToken.ThrowIfCancellationRequested();
 
-                SetStatus(UpdateStatus.Finished, this);
+                SetStatus(CoordinatorStatus.Finished);
             }
             catch (OperationCanceledException)
             {
@@ -128,18 +157,13 @@ namespace KKManager.Updater.Downloader
                         updateItem.MarkAsCancelled();
                 }
 
-                SetStatus(UpdateStatus.Aborted, this);
+                SetStatus(CoordinatorStatus.Aborted);
                 throw;
             }
             catch
             {
-                SetStatus(UpdateStatus.Aborted, this);
+                SetStatus(CoordinatorStatus.Aborted);
                 throw;
-            }
-            finally
-            {
-                try { Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true); }
-                catch (Exception ex) { Console.WriteLine(ex); }
             }
         }
 
@@ -148,14 +172,14 @@ namespace KKManager.Updater.Downloader
         /// It looks for updates that can be downloaded from that server and picks what it can download.
         /// When no more work is available the task finishes.
         /// </summary>
-        private void UpdateThread(DownloadSourceInfo updateSource, CancellationToken cancellationToken)
+        private void UpdateThread(DownloadSourceInfo updateSource)
         {
             Exception failReason = null;
             try
             {
                 // Exit early if the source keeps failing
                 var failCount = 0;
-                while (!cancellationToken.IsCancellationRequested)
+                while (!_cancellationToken.IsCancellationRequested)
                 {
                     UpdateDownloadItem currentDownloadItem = null;
                     UpdateItem currentlyDownloading = null;
@@ -171,7 +195,7 @@ namespace KKManager.Updater.Downloader
                         }
                     }
 
-                    if (currentlyDownloading == null || cancellationToken.IsCancellationRequested)
+                    if (currentlyDownloading == null || _cancellationToken.IsCancellationRequested)
                     {
                         Console.WriteLine($"Closing source downloader {updateSource}");
                         return;
@@ -183,7 +207,7 @@ namespace KKManager.Updater.Downloader
                     {
                         currentDownloadItem.FinishPercent = 0;
 
-                        currentlyDownloading.Update(progress, cancellationToken).Wait(CancellationToken.None);
+                        currentlyDownloading.Update(progress, _cancellationToken).Wait(CancellationToken.None);
 
                         currentDownloadItem.FinishPercent = 100;
                         currentDownloadItem.Status = UpdateDownloadStatus.Finished;
@@ -199,7 +223,7 @@ namespace KKManager.Updater.Downloader
                         {
                             currentDownloadItem.MarkAsCancelled(e);
 
-                            if (cancellationToken.IsCancellationRequested)
+                            if (_cancellationToken.IsCancellationRequested)
                                 return;
                             else
                                 continue;
@@ -256,6 +280,12 @@ namespace KKManager.Updater.Downloader
             {
                 return Source.MaxConcurrentDownloads > 1 ? $"{Source.Origin}(#{Index + 1}/{Source.MaxConcurrentDownloads})" : Source.Origin;
             }
+        }
+
+        public void Dispose()
+        {
+            _cancellationTokenSource.Cancel();
+            SetStatus(CoordinatorStatus.Disposed);
         }
     }
 }
