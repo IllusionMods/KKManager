@@ -83,7 +83,7 @@ namespace KKManager.Updater
                         criticalException = ex;
                     }
                 }
-                var updateTask = source.HandlesRetry ? 
+                var updateTask = source.HandlesRetry ?
                     Task.Run(DoUpdate, cancellationToken) :
                     RetryHelper.RetryOnExceptionAsync(() => Task.Run(DoUpdate, cancellationToken), 3, TimeSpan.FromSeconds(3), cancellationToken);
                 return new { task = updateTask, source };
@@ -113,13 +113,21 @@ namespace KKManager.Updater
             var filteredTasks = new List<UpdateTask>();
             foreach (var modGroup in results.GroupBy(x => x.Info.GUID))
             {
-                var ordered = modGroup.OrderByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ThenByDescending(x => x.Info.Source.DiscoveryPriority).ToList();
+                var ordered = modGroup.OrderByDescending(x => x.Info.Source is TorrentUpdater.TorrentSource).ThenByDescending(x => x.ModifiedTime ?? DateTime.MinValue).ThenByDescending(x => x.Info.Source.DiscoveryPriority).ToList();
+                var mainTask = ordered[0];
                 if (ordered.Count > 1)
                 {
-                    ordered[0].AlternativeSources.AddRange(ordered.Skip(1));
-                    Console.WriteLine($"Found {ordered.Count} sources for mod GUID {modGroup.Key} - choosing {ordered[0].Info.Source.Origin} as latest");
+                    if (mainTask.Info.Source is TorrentUpdater.TorrentSource)
+                    {
+                        Console.WriteLine($"Found torrent source [{mainTask.Info.Source.Origin}] for mod GUID {modGroup.Key} - using it to download the update");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Found {ordered.Count} direct download sources for mod GUID {modGroup.Key} - choosing {mainTask.Info.Source.Origin} as latest");
+                        mainTask.AlternativeSources.AddRange(ordered.Skip(1));
+                    }
                 }
-                filteredTasks.Add(ordered[0]);
+                filteredTasks.Add(mainTask);
             }
 
             Console.WriteLine($"Update search finished. Found {filteredTasks.Count} update tasks.");

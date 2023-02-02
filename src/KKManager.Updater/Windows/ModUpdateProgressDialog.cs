@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Functions;
+using KKManager.Updater.Data;
 using KKManager.Updater.Downloader;
 using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
@@ -66,6 +69,9 @@ namespace KKManager.Updater.Windows
 
             var w = new ModUpdateProgressDialog();
             w._updaters = updaters;
+#if DEBUG
+            w._updaters = w._updaters.Where(x => x.Origin.Contains("hf.honeyselect2.com")).ToArray(); //todo remove or improve
+#endif
             w._autoInstallGuids = autoInstallGuids;
             return w;
         }
@@ -74,6 +80,7 @@ namespace KKManager.Updater.Windows
         {
             var averageDownloadSpeed = new MovingAverage(20);
             var downloadStartTime = DateTime.MinValue;
+            UpdateDownloadCoordinator downloader = null;
             try
             {
                 #region Initialize UI
@@ -93,6 +100,12 @@ namespace KKManager.Updater.Windows
                     var offsetStr = new string(Enumerable.Repeat(' ', offset).ToArray());
                     labelPercent.Text = offsetStr + " ( )  ( )\n";
                     labelPercent.Text += offsetStr + "( o . o)";
+                }
+
+                if (!KKManager.Properties.Settings.Default.P2P_SettingsShown)
+                {
+                    using (var settingsDialog = new P2PSettingsDialog())
+                        settingsDialog.ShowDialog(this);
                 }
 
                 olvColumnProgress.Renderer = new BarRenderer(0, 100);
@@ -141,6 +154,7 @@ namespace KKManager.Updater.Windows
                     SetStatus("Everything is up to date!");
                     progressBar1.Value = progressBar1.Maximum;
                     _cancelToken.Cancel();
+                    UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
                     return;
                 }
 
@@ -167,7 +181,7 @@ namespace KKManager.Updater.Windows
 
                 downloadStartTime = DateTime.Now;
 
-                var downloader = UpdateDownloadCoordinator.Create(updateTasks);
+                downloader = UpdateDownloadCoordinator.Create(updateTasks, _cancelToken.Token);
                 var downloadItems = downloader.UpdateItems;
 
                 SetStatus($"{downloadItems.Count(items => items.DownloadSources.Count > 1)} out of {downloadItems.Count} items have more than 1 source", false, true);
@@ -220,7 +234,7 @@ namespace KKManager.Updater.Windows
 
                 SetStatus("Downloading updates...", true, true);
 
-                await downloader.RunUpdate(_cancelToken.Token);
+                await downloader.RunUpdate();
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -265,6 +279,7 @@ namespace KKManager.Updater.Windows
             catch (OutdatedVersionException ex)
             {
                 SetStatus("KK Manager needs to be updated to get updates.", true, true);
+                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
                 ex.ShowKkmanOutdatedMessage();
             }
             catch (OperationCanceledException)
@@ -283,6 +298,7 @@ namespace KKManager.Updater.Windows
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
                                 "and that you did not hit your download limits, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
                                 "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
             }
             finally
             {
@@ -311,6 +327,8 @@ namespace KKManager.Updater.Windows
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
                 button1.Text = "OK";
+
+                downloader?.Dispose();
 
                 if (_autoInstallGuids != null && _autoInstallGuids.Length > 0) Close();
 
@@ -353,9 +371,27 @@ namespace KKManager.Updater.Windows
             }
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override async void OnClosed(EventArgs e)
         {
             _cancelToken.Cancel();
+
+            try
+            {
+                Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+            }
+            catch
+            {
+                await Task.Delay(500);
+                try
+                {
+                    Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
             base.OnClosed(e);
         }
     }

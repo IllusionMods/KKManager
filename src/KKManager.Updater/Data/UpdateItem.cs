@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
+using KKManager.Updater.Sources;
+using KKManager.Updater.Utils;
 using KKManager.Util;
 using KKManager.Util.ProcessWaiter;
 
@@ -12,16 +14,28 @@ namespace KKManager.Updater.Data
 {
     public class UpdateItem
     {
-        public UpdateItem(FileSystemInfo targetPath, IRemoteItem remoteFile, bool upToDate)
+        /// <summary>
+        /// Move downloaded file from temporary current path to the target path.
+        /// Should return true on success, false if a normal FileInfo.MoveTo should be used instead.
+        /// </summary>
+        public delegate bool CustomMoveTo(FileInfo currentPath, FileInfo targetPath, UpdateItem item);
+
+        public UpdateItem(FileInfo targetPath, IRemoteItem remoteFile, bool upToDate, CustomMoveTo customMoveResult = null)
         {
             TargetPath = targetPath ?? throw new ArgumentNullException(nameof(targetPath));
             RemoteFile = remoteFile;
             UpToDate = upToDate;
+            CustomMoveResult = customMoveResult;
+        }
+
+        public static string GetTempDownloadDirectory()
+        {
+            return Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_downloads");
         }
 
         public static async Task<FileInfo> GetTempDownloadFilename()
         {
-            var tempPath = Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "temp\\KKManager_downloads");
+            var tempPath = GetTempDownloadDirectory();
 
         retryCreate:
             try
@@ -59,13 +73,15 @@ namespace KKManager.Updater.Data
         /// <exception cref="IOException">Failed to apply the update.</exception>
         public async Task Update(Progress<double> progressCallback, CancellationToken cancellationToken)
         {
-            var downloadTarget = await GetTempDownloadFilename();
+            var inPlace = PathTools.PathsEqual(RemoteFile?.ClientRelativeFileName, TargetPath.FullName);
+
+            var downloadTarget = inPlace ? TargetPath : await GetTempDownloadFilename();
             // Need to store the filename because MoveTo changes it to the new filename
             var downloadFilename = downloadTarget.FullName;
 
             if (RemoteFile != null)
             {
-                Console.WriteLine($"Attempting download of {TargetPath.Name} from source {RemoteFile.Source.Origin}");
+                Console.WriteLine($"Attempting download of [{TargetPath.Name}] ({GetDownloadSize()}) from source {RemoteFile.Source.Origin}");
                 async Task DoDownload() => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken);
                 if (RemoteFile.Source.HandlesRetry)
                     await DoDownload();
@@ -73,39 +89,51 @@ namespace KKManager.Updater.Data
                     await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken);
 
                 downloadTarget.Refresh();
-                if (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)
+                if (CustomMoveResult == null && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug a better way than CustomMoveResult is needed 
                     throw new IOException($"Failed to download the update file {RemoteFile.Name} - the downloaded file doesn't exist or is corrupted");
-
-                Console.WriteLine($"Downloaded {downloadTarget.Length} bytes successfully");
+                
+                // todo make this show size of the actual downloaded file? needs changes to torrent update items to make it work
+                Console.WriteLine($"Downloaded [{TargetPath.Name}] successfully ({RemoteFile.GetFancyItemSize()})");
             }
 
-        retryDelete:
+            if (inPlace)
+                return;
+
+            retryDelete:
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(TargetPath.FullName) ?? throw new InvalidOperationException("Invalid path " + TargetPath.FullName));
                 try
                 {
-                    if (TargetPath.Exists)
+                    if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
                     {
-                        Console.WriteLine($"Deleting old file {TargetPath.FullName}");
-                        // Prevent issues removing readonly files
-                        TargetPath.Attributes = FileAttributes.Normal;
-                        TargetPath.Delete();
-                        // Make sure the file gets deleted before continuing
-                        await Task.Delay(200, cancellationToken);
-                    }
+                        if (TargetPath.Exists)
+                        {
+                            Console.WriteLine($"Deleting old file {TargetPath.FullName}");
+                            // Prevent issues removing readonly files
+                            TargetPath.Attributes = FileAttributes.Normal;
+                            TargetPath.Delete();
+                            // Make sure the file gets deleted before continuing
+                            await Task.Delay(200, cancellationToken);
+                        }
 
-                    if (RemoteFile != null)
-                        downloadTarget.MoveTo(TargetPath.FullName);
+                        if (RemoteFile != null)
+                        {
+                            downloadTarget.MoveTo(TargetPath.FullName);
+                        }
+                    }
                 }
                 catch (IOException)
                 {
                     if (RemoteFile != null)
                     {
                         await Task.Delay(1000, cancellationToken);
-                        downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
-                        await Task.Delay(1000, cancellationToken);
-                        File.Delete(TargetPath.FullName + ".old");
+                        if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
+                        {
+                            downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
+                            await Task.Delay(1000, cancellationToken);
+                            File.Delete(TargetPath.FullName + ".old");
+                        }
                     }
                     else
                     {
@@ -133,19 +161,26 @@ namespace KKManager.Updater.Data
             }
             finally
             {
-                try { File.Delete(downloadFilename); }
-                catch (SystemException ex) { Console.WriteLine(ex); }
+                // this clashes with torrent downloads
+                //try { File.Delete(downloadFilename); }
+                //catch (SystemException ex) { Console.WriteLine(ex); }
             }
         }
 
-        public FileSystemInfo TargetPath { get; }
+        public FileInfo TargetPath { get; }
         public IRemoteItem RemoteFile { get; }
         public bool UpToDate { get; }
+        public CustomMoveTo CustomMoveResult { get; }
 
         public FileSize GetDownloadSize()
         {
             if (RemoteFile == null) return FileSize.Empty;
             return FileSize.FromBytes(RemoteFile.ItemSize);
+        }
+
+        public override string ToString()
+        {
+            return RemoteFile != null ? RemoteFile + " -> " + TargetPath : "Delete " + TargetPath;
         }
     }
 }

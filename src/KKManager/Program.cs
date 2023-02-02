@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using KKManager.Properties;
+using KKManager.Updater.Sources;
 using KKManager.Util;
 using KKManager.Windows;
 
@@ -22,6 +23,7 @@ namespace KKManager
         [STAThread]
         private static void Main()
         {
+            TorrentUpdater.Test().Wait();
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);

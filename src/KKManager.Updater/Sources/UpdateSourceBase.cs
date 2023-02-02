@@ -10,18 +10,18 @@ using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 using KKManager.Updater.Data;
 using KKManager.Util;
+using MonoTorrent;
 
 namespace KKManager.Updater.Sources
 {
     public abstract class UpdateSourceBase : IDisposable
     {
-        private DateTime _latestModifiedDate = DateTime.MinValue;
-
-        protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority, bool handlesRetry = false)
+        protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority, int maxConcurrentDownloads = 1, bool handlesRetry = false)
         {
             Origin = origin;
             DiscoveryPriority = discoveryPriority;
             DownloadPriority = downloadPriority;
+            MaxConcurrentDownloads = maxConcurrentDownloads;
             HandlesRetry = handlesRetry;
         }
 
@@ -45,6 +45,11 @@ namespace KKManager.Updater.Sources
         /// </summary>
         public bool HandlesRetry { get; }
 
+        /// <summary>
+        /// How many simultaneous downloads are allowed from this source instance
+        /// </summary>
+        public int MaxConcurrentDownloads { get; }
+
         public abstract void Dispose();
 
         public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
@@ -61,7 +66,7 @@ namespace KKManager.Updater.Sources
                     var downloadFileAsync = DownloadFileAsync(fn, cancellationToken);
                     if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
                         throw new TimeoutException("Timeout when trying to download " + fn);
-                    str = downloadFileAsync.Result;
+                    str = await downloadFileAsync;
                 }
                 catch (TimeoutException ex)
                 {
@@ -123,18 +128,58 @@ namespace KKManager.Updater.Sources
             {
                 foreach (var updateInfo in updateInfos)
                 {
-                    _latestModifiedDate = DateTime.MinValue;
-                    var remoteItem = GetRemoteRootItem(updateInfo.ServerPath);
-                    if (remoteItem == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {Origin}");
+                    // If a torrent of this update exists, try to use it instead of this source first
+                    if (KKManager.Properties.Settings.Default.P2P_Enabled && !string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
+                    {
+                        try
+                        {
+                            var downloadFileAsync = DownloadFileAsync(updateInfo.TorrentFileName, cancellationToken);
+                            if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
+                                throw new TimeoutException("Timeout when trying to download");
 
-                    var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+                            var bytes = await (await downloadFileAsync).ReadAllBytesAsync();
+#if DEBUG
+                            var dumpDir = Path.Combine(UpdateItem.GetTempDownloadDirectory(), "Torrents");
+                            Directory.CreateDirectory(dumpDir);
+                            File.WriteAllBytes(Path.Combine(dumpDir, $"[{PathTools.SanitizeFileName(Origin)}] {updateInfo.TorrentFileName}"), bytes);
+#endif
+                            var torrent = await Torrent.LoadAsync(bytes);
 
-                    var results = ProcessDirectory(
-                        remoteItem, updateInfo.ClientPathInfo,
-                        updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
-                        cancellationToken);
+                            Console.WriteLine($"Using torrent [{updateInfo.TorrentFileName}] to get update [{updateInfo.GUID}]");
 
-                    allResults.Add(new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, _latestModifiedDate));
+                            var torrentUpdateTask = await TorrentUpdater.GetUpdateTask(torrent, updateInfo, cancellationToken);
+                            allResults.Add(torrentUpdateTask);
+
+                            // Skip grabbing updates from the source, torrent is enough
+                            continue;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Failed to get torrent [{updateInfo.TorrentFileName}] mentioned in [{updateInfo.GUID}] - {e.Message}");
+                        }
+                    }
+
+                    // If no torrent is available, use this source as usual
+                    if (!string.IsNullOrWhiteSpace(updateInfo.ServerPath))
+                    {
+                        var remoteItem = await GetRemoteRootItem(updateInfo.ServerPath, cancellationToken);
+                        if (remoteItem == null) throw new DirectoryNotFoundException($"Could not find ServerPath: {updateInfo.ServerPath} in host: {Origin}");
+
+                        var versionEqualsComparer = GetVersionEqualsComparer(updateInfo);
+
+                        var latestModifiedDate = DateTime.MinValue;
+                        var results = ProcessDirectory(
+                            remoteItem, updateInfo.ClientPathInfo,
+                            updateInfo.Recursive, updateInfo.RemoveExtraClientFiles, versionEqualsComparer,
+                            cancellationToken, ref latestModifiedDate);
+
+                        var updateTask = new UpdateTask(updateInfo.Name ?? remoteItem.Name, results, updateInfo, latestModifiedDate);
+                        allResults.Add(updateTask);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[{Origin}] WARN: Skipping {updateInfo.GUID} because neither torrent or direct downloads are available");
+                    }
                 }
 
                 // If a task is expanded by other tasks, remove the items that other tasks expand from it
@@ -152,7 +197,7 @@ namespace KKManager.Updater.Sources
 
         protected abstract Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken);
 
-        protected abstract IRemoteItem GetRemoteRootItem(string serverPath);
+        protected abstract Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken);
 
         private static void ApplyExtendedItems(string targetGuid, List<UpdateItem> itemsToReplace, List<UpdateTask> allResults)
         {
@@ -222,9 +267,9 @@ namespace KKManager.Updater.Sources
             }
         }
 
-        private List<UpdateItem> ProcessDirectory(IRemoteItem remoteDir, DirectoryInfo localDir,
-            bool recursive, bool removeNotExisting, Func<IRemoteItem, FileInfo, bool> versionEqualsComparer,
-            CancellationToken cancellationToken)
+        internal static List<UpdateItem> ProcessDirectory(IRemoteItem remoteDir, DirectoryInfo localDir,
+                                                          bool recursive, bool removeNotExisting, Func<IRemoteItem, FileInfo, bool> versionEqualsComparer,
+                                                          CancellationToken cancellationToken, ref DateTime latestModifiedDate)
         {
             if (!remoteDir.IsDirectory) throw new DirectoryNotFoundException();
 
@@ -250,13 +295,13 @@ namespace KKManager.Updater.Sources
                         else
                             localContents.Remove(localItem);
 
-                        results.AddRange(ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken));
+                        results.AddRange(ProcessDirectory(remoteItem, localItem, recursive, removeNotExisting, versionEqualsComparer, cancellationToken, ref latestModifiedDate));
                     }
                 }
                 else if (remoteItem.IsFile)
                 {
                     var itemDate = remoteItem.ModifiedTime;
-                    if (itemDate > _latestModifiedDate) _latestModifiedDate = itemDate;
+                    if (itemDate > latestModifiedDate) latestModifiedDate = itemDate;
 
                     var localFile = localContents.OfType<FileInfo>().FirstOrDefault(x => string.Equals(enabledName[x], remoteItem.Name, StringComparison.OrdinalIgnoreCase));
                     if (localFile == null)

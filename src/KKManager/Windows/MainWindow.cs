@@ -289,24 +289,24 @@ namespace KKManager.Windows
 
         private void SetupTabs()
         {
-           // Try to load saved state first, if that fails load defaults
-           try
-           {
-               if (!string.IsNullOrWhiteSpace(Settings.Default.DockState))
-               {
-                   using (var s = new MemoryStream(Encoding.Unicode.GetBytes(Settings.Default.DockState)))
-                   {
-                       dockPanel.LoadFromXml(s, DeserializeTab);
-                       return;
-                   }
-               }
-           }
-           catch (Exception ex)
-           {
-               Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
-               foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
-               dockPanel.ResumeLayout(true, true);
-           }
+            // Try to load saved state first, if that fails load defaults
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(Settings.Default.DockState))
+                {
+                    using (var s = new MemoryStream(Encoding.Unicode.GetBytes(Settings.Default.DockState)))
+                    {
+                        dockPanel.LoadFromXml(s, DeserializeTab);
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
+                foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
+                dockPanel.ResumeLayout(true, true);
+            }
 
             // Load defaults
             OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
@@ -798,6 +798,12 @@ namespace KKManager.Windows
         private void openModpackToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GetOrCreateWindow<ModpackToolWindow>().Show(dockPanel, DockState.Document);
+        }
+
+        private void p2PDownloaderSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new P2PSettingsDialog())
+                dialog.ShowDialog(this);
         }
     }
 }

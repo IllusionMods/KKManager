@@ -18,8 +18,7 @@ namespace KKManager.Updater.Sources
 
         private readonly AmazonS3Client _s3Client;
 
-        public S3Updater(Uri serverUri, int discoveryPriority, int downloadPriority) : base(serverUri.Host,
-            discoveryPriority, downloadPriority)
+        public S3Updater(Uri serverUri, int discoveryPriority, int downloadPriority) : base(serverUri.Host, discoveryPriority, downloadPriority, 2)
         {
             var info = serverUri.UserInfo.Split(new[] { ':' }, 2, StringSplitOptions.None);
             if (info.Length != 2)
@@ -52,9 +51,10 @@ namespace KKManager.Updater.Sources
             return objectResponse.ResponseStream;
         }
 
-        protected override IRemoteItem GetRemoteRootItem(string serverPath)
+        protected override async Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken)
         {
-            Task.Run(() => GetFileListing().Wait()).Wait(); //todo async? move somewhere else? Need to run through task.run to avoid deadlock
+            // Need to run through Task.Run to avoid deadlock (todo still necessary?)
+            await Task.Run(() => GetFileListing().Wait(cancellationToken), cancellationToken);
 
             var pathParts = serverPath.Trim().Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
             var cleanPath = string.Join("/", pathParts);

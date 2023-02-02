@@ -11,6 +11,7 @@ namespace KKManager.Functions
         private static DirectoryInfo _femaleCardDir;
         private static DirectoryInfo _maleCardDir;
         private static DirectoryInfo _modsPath;
+        private static DirectoryInfo _tempPath;
         public static DirectoryInfo GameDirectory
         {
             get
@@ -56,6 +57,15 @@ namespace KKManager.Functions
             }
             private set => _femaleCardDir = value;
         }
+        public static DirectoryInfo TempDir
+        {
+            get
+            {
+                ThrowIfNotInitialized();
+                return _tempPath;
+            }
+            private set => _tempPath = value;
+        }
 
         public static GameType GameType { get; private set; } = GameType.Unknown;
 
@@ -82,6 +92,7 @@ namespace KKManager.Functions
             FemaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\female"));
             ModsPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "mods"));
             PluginPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "BepInEx"));
+            TempDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "temp"));
         }
 
         /// <summary>

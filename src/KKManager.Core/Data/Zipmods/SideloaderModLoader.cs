@@ -152,8 +152,8 @@ namespace KKManager.Data.Zipmods
                                             {
                                                 try
                                                 {
-                                                    return ".jpg".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase) ||
-                                                           ".png".Equals(Path.GetExtension(x.FileName), StringComparison.OrdinalIgnoreCase);
+                                                    return x.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                           x.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
                                                 }
                                                 catch (Exception e)
                                                 {

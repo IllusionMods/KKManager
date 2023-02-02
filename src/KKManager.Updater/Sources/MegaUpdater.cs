@@ -89,10 +89,10 @@ namespace KKManager.Updater.Sources
             return await _client.DownloadAsync(nodeAtPath, new Progress<double>(), cancellationToken);
         }
 
-        protected override IRemoteItem GetRemoteRootItem(string serverPath)
+        protected override Task<IRemoteItem> GetRemoteRootItem(string serverPath, CancellationToken cancellationToken)
         {
             var updateNode = GetNodeAtPath(serverPath);
-            return updateNode != null ? new MegaUpdateItem(updateNode, this, null) : null;
+            return Task.FromResult(updateNode != null ? (IRemoteItem)new MegaUpdateItem(updateNode, this, null) : null);
         }
 
         private INode GetNodeAtPath(string serverPath)

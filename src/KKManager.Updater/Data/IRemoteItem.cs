@@ -8,6 +8,9 @@ namespace KKManager.Updater.Data
 {
     public interface IRemoteItem
     {
+        /// <summary>
+        /// Get name and extension of the file without path
+        /// </summary>
         string Name { get; }
         long ItemSize { get; }
         DateTime ModifiedTime { get; }
