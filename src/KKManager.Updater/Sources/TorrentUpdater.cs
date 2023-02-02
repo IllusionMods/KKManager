@@ -57,7 +57,7 @@ namespace KKManager.Updater.Sources
                 AllowPeerExchange = true
             }.ToSettings());
 
-            AddDebugLogging(client);
+            client.AddDebugLogging();
 
             await torrentManager.WaitForMetadataAsync();
             await torrentManager.HashCheckAsync(false);
