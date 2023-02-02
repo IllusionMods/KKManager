@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using KKManager.Functions;
 using KKManager.Updater.Data;
 using KKManager.Updater.Downloader;
+using KKManager.Updater.Utils;
 using KKManager.Updater.Windows;
 using KKManager.Util;
 using MonoTorrent;
@@ -98,8 +99,8 @@ namespace KKManager.Updater.Sources
                     ListenEndPoints = new Dictionary<string, IPEndPoint> { { "ipv4", new IPEndPoint(IPAddress.Any, KKManager.Properties.Settings.Default.P2P_Port) } }
                     //UsePartialFiles = true todo bugged in beta builds
                 }.ToSettings());
-                AddDebugLogging(_client);
 
+                _client.AddDebugLogging();
 
                 if (IPAddress.TryParse((await new HttpClient().GetStringAsync("http://icanhazip.com")).Trim(), out var publicIp))
                 {
@@ -168,7 +169,7 @@ namespace KKManager.Updater.Sources
                 AllowPeerExchange = true
             }.ToSettings());
 
-            AddDebugLogging(torrentManager);
+            torrentManager.AddDebugLogging();
 
             // Doesn't do anything on torrent files?
             await torrentManager.WaitForMetadataAsync(cancellationToken);
@@ -345,38 +346,6 @@ namespace KKManager.Updater.Sources
                 Console.WriteLine(exception);
                 throw;
             }
-        }
-
-        [Conditional("TRACE")]
-        private static void AddDebugLogging(ClientEngine clientEngine)
-        {
-            foreach (var torrentManager in clientEngine.Torrents)
-            {
-                AddDebugLogging(torrentManager);
-            }
-
-            clientEngine.ConnectionManager.BanPeer += (sender, eventArgs) =>
-            {
-                if (eventArgs.BanPeer)
-                    Console.WriteLine($"BanPeer BanPeer={eventArgs.BanPeer} Peer={eventArgs.Peer.ConnectionUri}");
-            };
-        }
-        [Conditional("TRACE")]
-        private static void AddDebugLogging(TorrentManager torrentManager)
-        {
-#if DEBUG
-            torrentManager.PieceHashed += (sender, eventArgs) =>
-            {
-                if (!eventArgs.HashPassed)
-                    Console.WriteLine($"[{eventArgs.TorrentManager.Name}] PieceHashed FAILED PieceIndex={eventArgs.PieceIndex} Progress={eventArgs.Progress}");
-            };
-#endif
-            torrentManager.ConnectionAttemptFailed += (sender, eventArgs) => Console.WriteLine($"[{eventArgs.TorrentManager.Name}] ConnectionAttemptFailed Peer={eventArgs.Peer.ConnectionUri} Reason={eventArgs.Reason}");
-            torrentManager.PeerDisconnected += (sender, eventArgs) => Console.WriteLine($"[{eventArgs.TorrentManager.Name}] PeerDisconnected Peer={eventArgs.Peer.Uri}");
-            torrentManager.PeerConnected += (sender, eventArgs) => Console.WriteLine($"[{eventArgs.TorrentManager.Name}] PeerConnected Peer={eventArgs.Peer.Uri}");
-            torrentManager.PeersFound += (sender, eventArgs) => Console.WriteLine($"[{eventArgs.TorrentManager.Name}] PeersFound ExistingPeers={eventArgs.ExistingPeers} NewPeers={eventArgs.NewPeers}");
-            torrentManager.TrackerManager.AnnounceComplete += (sender, eventArgs) => Console.WriteLine($"[{torrentManager.Name}] AnnounceComplete Successful={eventArgs.Successful} Tracker={eventArgs.Tracker.Uri} PeersCount={eventArgs.Peers.Count}");
-            torrentManager.TrackerManager.ScrapeComplete += (sender, eventArgs) => Console.WriteLine($"[{torrentManager.Name}] ScrapeComplete Successful={eventArgs.Successful} Tracker={eventArgs.Tracker.Uri}");
         }
 
         public class TorrentSource : UpdateSourceBase
