@@ -229,6 +229,7 @@
     <Compile Include="Sources\ZipUpdater.cs" />
     <Compile Include="Data\UpdateInfo.cs" />
     <Compile Include="UpdateSourceManager.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Windows\MegaLoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>

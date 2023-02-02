@@ -16,6 +16,7 @@ using KKManager.Util;
 using MonoTorrent;
 using MonoTorrent.BEncoding;
 using MonoTorrent.Client;
+using MonoTorrent.Logging;
 
 namespace KKManager.Updater.Sources
 {
@@ -34,6 +35,7 @@ namespace KKManager.Updater.Sources
             // 
             // Debugger.Break();
 
+            LoggerFactory.Register (className => new TextLogger (Console.Out, className));
 
             var client = new ClientEngine(new EngineSettingsBuilder
             {
@@ -77,7 +79,14 @@ namespace KKManager.Updater.Sources
 
         private static async Task<ClientEngine> GetClient()
         {
-            if (_client == null) UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
+            if (_client == null)
+            {
+                UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
+#if TRACE
+                LoggerFactory.Register(className => new TextLogger(Console.Out, className));
+#endif
+            }
+
             if (_client == null || _client.Disposed)
             {
                 _client = new ClientEngine(new EngineSettingsBuilder
@@ -466,11 +475,11 @@ namespace KKManager.Updater.Sources
 
             public void Move(FileInfo targetpath)
             {
-                //bug should use FullPath instead of DownloadCompleteFullPath but it's bugged and file exists at both different paths
-                Console.WriteLine($"FullPath={_info.FullPath} {(File.Exists(_info.FullPath) ? new FileInfo(_info.FullPath).Length : -1)}  targetpath={targetpath.FullName} {(targetpath.Exists ? targetpath.Length : -1)}");
-                //_torrent.MoveFileAsync(_info, targetpath.FullName);
-                if (!PathTools.PathsEqual(_info.DownloadCompleteFullPath, targetpath.FullName))
+                //todo do this in a cleaner way
+                if (PercentComplete >= 100 && !PathTools.PathsEqual(_info.DownloadCompleteFullPath, targetpath.FullName))
                 {
+                    Console.WriteLine($"Moving finished torrent download [{_info.FullPath}] to [{targetpath.FullName}]{(targetpath.Exists ? " (overwrite existing)" : "")}");
+
                     //if (File.Exists(_info.FullPath)) 
                     File.Move(_info.FullPath, targetpath.FullName);
                 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
 using KKManager.Updater.Sources;
+using KKManager.Updater.Utils;
 using KKManager.Util;
 using KKManager.Util.ProcessWaiter;
 
@@ -80,7 +81,7 @@ namespace KKManager.Updater.Data
 
             if (RemoteFile != null)
             {
-                Console.WriteLine($"Attempting download of {TargetPath.Name} from source {RemoteFile.Source.Origin}");
+                Console.WriteLine($"Attempting download of [{TargetPath.Name}] ({GetDownloadSize()}) from source {RemoteFile.Source.Origin}");
                 async Task DoDownload() => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken);
                 if (RemoteFile.Source.HandlesRetry)
                     await DoDownload();
@@ -90,8 +91,9 @@ namespace KKManager.Updater.Data
                 downloadTarget.Refresh();
                 if (CustomMoveResult == null && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug a better way than CustomMoveResult is needed 
                     throw new IOException($"Failed to download the update file {RemoteFile.Name} - the downloaded file doesn't exist or is corrupted");
-
-                Console.WriteLine($"Downloaded {RemoteFile.ItemSize} bytes successfully");
+                
+                // todo make this show size of the actual downloaded file? needs changes to torrent update items to make it work
+                Console.WriteLine($"Downloaded [{TargetPath.Name}] successfully ({RemoteFile.GetFancyItemSize()})");
             }
 
             if (inPlace)

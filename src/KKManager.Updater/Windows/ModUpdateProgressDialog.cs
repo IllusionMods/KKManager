@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Functions;
@@ -370,12 +371,27 @@ namespace KKManager.Updater.Windows
             }
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override async void OnClosed(EventArgs e)
         {
-            try { Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true); }
-            catch (Exception ex) { Console.WriteLine(ex); }
-
             _cancelToken.Cancel();
+
+            try
+            {
+                Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+            }
+            catch
+            {
+                await Task.Delay(500);
+                try
+                {
+                    Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
             base.OnClosed(e);
         }
     }
