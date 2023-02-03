@@ -84,6 +84,7 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.openIndividualDownloadWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -249,6 +250,7 @@ namespace KKManager.Windows
             // 
             this.updateSideloaderModpackToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lookForModUpdatesToolStripMenuItem,
+            this.openIndividualDownloadWebsiteToolStripMenuItem,
             this.toolStripSeparator6,
             this.checkForUpdatesOnStartupToolStripMenuItem,
             this.useSystemProxyServerToolStripMenuItem,
@@ -445,6 +447,12 @@ namespace KKManager.Windows
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
             // 
+            // openIndividualDownloadWebsiteToolStripMenuItem
+            // 
+            this.openIndividualDownloadWebsiteToolStripMenuItem.Name = "openIndividualDownloadWebsiteToolStripMenuItem";
+            resources.ApplyResources(this.openIndividualDownloadWebsiteToolStripMenuItem, "openIndividualDownloadWebsiteToolStripMenuItem");
+            this.openIndividualDownloadWebsiteToolStripMenuItem.Click += new System.EventHandler(this.openIndividualDownloadWebsiteToolStripMenuItem_Click);
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -521,5 +529,6 @@ namespace KKManager.Windows
         private ToolStripMenuItem p2PDownloaderSettingsToolStripMenuItem;
         private ToolStripMenuItem changeGameInstallDirectoryToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem openIndividualDownloadWebsiteToolStripMenuItem;
     }
 }

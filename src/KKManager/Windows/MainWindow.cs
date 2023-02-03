@@ -805,5 +805,10 @@ namespace KKManager.Windows
             using (var dialog = new P2PSettingsDialog())
                 dialog.ShowDialog(this);
         }
+
+        private void openIndividualDownloadWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProcessTools.SafeStartProcess(@"https://sideload.betterrepack.com");
+        }
     }
 }
