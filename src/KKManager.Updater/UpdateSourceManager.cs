@@ -100,7 +100,10 @@ namespace KKManager.Updater
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
+                    if (e is AggregateException ae && ae.InnerExceptions.Any(x => x is OperationCanceledException))
+                        continue;
+                    else
+                        Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
                 }
             }
 

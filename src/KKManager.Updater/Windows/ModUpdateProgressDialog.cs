@@ -375,24 +375,32 @@ namespace KKManager.Updater.Windows
         {
             _cancelToken.Cancel();
 
+            await RemoveTempDownloadDirectory();
+
+            base.OnClosed(e);
+        }
+
+        private static async Task RemoveTempDownloadDirectory()
+        {
+            var downloadDirectory = UpdateItem.GetTempDownloadDirectory();
             try
             {
-                Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+                if (Directory.Exists(downloadDirectory))
+                    Directory.Delete(downloadDirectory, true);
             }
             catch
             {
                 await Task.Delay(500);
                 try
                 {
-                    Directory.Delete(UpdateItem.GetTempDownloadDirectory(), true);
+                    if (Directory.Exists(downloadDirectory))
+                        Directory.Delete(downloadDirectory, true);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
             }
-
-            base.OnClosed(e);
         }
     }
 }
