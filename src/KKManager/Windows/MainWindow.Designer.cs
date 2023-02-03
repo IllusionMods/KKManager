@@ -54,8 +54,12 @@ namespace KKManager.Windows
             this.kKManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.installANewModToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateSideloaderModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lookForModUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.p2PDownloaderSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fixesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,11 +70,6 @@ namespace KKManager.Windows
             this.compressBundlesAndRandomizeCABsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.p2PDownloaderSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +82,8 @@ namespace KKManager.Windows
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -106,6 +107,8 @@ namespace KKManager.Windows
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeGameInstallDirectoryToolStripMenuItem,
+            this.toolStripSeparator5,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             resources.ApplyResources(this.fileToolStripMenuItem, "fileToolStripMenuItem");
@@ -244,27 +247,52 @@ namespace KKManager.Windows
             // 
             // updateSideloaderModpackToolStripMenuItem
             // 
+            this.updateSideloaderModpackToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lookForModUpdatesToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.checkForUpdatesOnStartupToolStripMenuItem,
+            this.useSystemProxyServerToolStripMenuItem,
+            this.p2PDownloaderSettingsToolStripMenuItem});
             this.updateSideloaderModpackToolStripMenuItem.Name = "updateSideloaderModpackToolStripMenuItem";
             resources.ApplyResources(this.updateSideloaderModpackToolStripMenuItem, "updateSideloaderModpackToolStripMenuItem");
-            this.updateSideloaderModpackToolStripMenuItem.Click += new System.EventHandler(this.updateSideloaderModpackToolStripMenuItem_Click);
+            // 
+            // lookForModUpdatesToolStripMenuItem
+            // 
+            this.lookForModUpdatesToolStripMenuItem.Name = "lookForModUpdatesToolStripMenuItem";
+            resources.ApplyResources(this.lookForModUpdatesToolStripMenuItem, "lookForModUpdatesToolStripMenuItem");
+            this.lookForModUpdatesToolStripMenuItem.Click += new System.EventHandler(this.updateSideloaderModpackToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            resources.ApplyResources(this.toolStripSeparator6, "toolStripSeparator6");
+            // 
+            // checkForUpdatesOnStartupToolStripMenuItem
+            // 
+            this.checkForUpdatesOnStartupToolStripMenuItem.Name = "checkForUpdatesOnStartupToolStripMenuItem";
+            resources.ApplyResources(this.checkForUpdatesOnStartupToolStripMenuItem, "checkForUpdatesOnStartupToolStripMenuItem");
+            // 
+            // useSystemProxyServerToolStripMenuItem
+            // 
+            this.useSystemProxyServerToolStripMenuItem.Name = "useSystemProxyServerToolStripMenuItem";
+            resources.ApplyResources(this.useSystemProxyServerToolStripMenuItem, "useSystemProxyServerToolStripMenuItem");
+            // 
+            // p2PDownloaderSettingsToolStripMenuItem
+            // 
+            this.p2PDownloaderSettingsToolStripMenuItem.Name = "p2PDownloaderSettingsToolStripMenuItem";
+            resources.ApplyResources(this.p2PDownloaderSettingsToolStripMenuItem, "p2PDownloaderSettingsToolStripMenuItem");
+            this.p2PDownloaderSettingsToolStripMenuItem.Click += new System.EventHandler(this.p2PDownloaderSettingsToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fixesToolStripMenuItem,
+            this.fixFileAndFolderPermissionsToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
             this.cleanUpDuplicateZipmodsToolStripMenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             resources.ApplyResources(this.toolsToolStripMenuItem, "toolsToolStripMenuItem");
-            // 
-            // fixesToolStripMenuItem
-            // 
-            this.fixesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fixFileAndFolderPermissionsToolStripMenuItem});
-            this.fixesToolStripMenuItem.Name = "fixesToolStripMenuItem";
-            resources.ApplyResources(this.fixesToolStripMenuItem, "fixesToolStripMenuItem");
             // 
             // fixFileAndFolderPermissionsToolStripMenuItem
             // 
@@ -326,42 +354,10 @@ namespace KKManager.Windows
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdatesOnStartupToolStripMenuItem,
-            this.useSystemProxyServerToolStripMenuItem,
-            this.p2PDownloaderSettingsToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.changeGameInstallDirectoryToolStripMenuItem,
             this.languagesToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             resources.ApplyResources(this.settingsToolStripMenuItem, "settingsToolStripMenuItem");
             this.settingsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.settingsToolStripMenuItem_DropDownOpening);
-            // 
-            // checkForUpdatesOnStartupToolStripMenuItem
-            // 
-            this.checkForUpdatesOnStartupToolStripMenuItem.Name = "checkForUpdatesOnStartupToolStripMenuItem";
-            resources.ApplyResources(this.checkForUpdatesOnStartupToolStripMenuItem, "checkForUpdatesOnStartupToolStripMenuItem");
-            // 
-            // useSystemProxyServerToolStripMenuItem
-            // 
-            this.useSystemProxyServerToolStripMenuItem.Name = "useSystemProxyServerToolStripMenuItem";
-            resources.ApplyResources(this.useSystemProxyServerToolStripMenuItem, "useSystemProxyServerToolStripMenuItem");
-            // 
-            // p2PDownloaderSettingsToolStripMenuItem
-            // 
-            this.p2PDownloaderSettingsToolStripMenuItem.Name = "p2PDownloaderSettingsToolStripMenuItem";
-            resources.ApplyResources(this.p2PDownloaderSettingsToolStripMenuItem, "p2PDownloaderSettingsToolStripMenuItem");
-            this.p2PDownloaderSettingsToolStripMenuItem.Click += new System.EventHandler(this.p2PDownloaderSettingsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
-            // 
-            // changeGameInstallDirectoryToolStripMenuItem
-            // 
-            this.changeGameInstallDirectoryToolStripMenuItem.Name = "changeGameInstallDirectoryToolStripMenuItem";
-            resources.ApplyResources(this.changeGameInstallDirectoryToolStripMenuItem, "changeGameInstallDirectoryToolStripMenuItem");
-            this.changeGameInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.changeGameInstallDirectoryToolStripMenuItem_Click);
             // 
             // languagesToolStripMenuItem
             // 
@@ -438,6 +434,17 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
             // 
+            // changeGameInstallDirectoryToolStripMenuItem
+            // 
+            this.changeGameInstallDirectoryToolStripMenuItem.Name = "changeGameInstallDirectoryToolStripMenuItem";
+            resources.ApplyResources(this.changeGameInstallDirectoryToolStripMenuItem, "changeGameInstallDirectoryToolStripMenuItem");
+            this.changeGameInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.changeGameInstallDirectoryToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -489,17 +496,14 @@ namespace KKManager.Windows
         private System.Windows.Forms.ToolStripMenuItem updateSideloaderModpackToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem kKManagerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fixesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixFileAndFolderPermissionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem changeGameInstallDirectoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem developersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateContentsOfUpdatexmlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressGameFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compressBundlesAndRandomizeCABsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openLogViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesOnStartupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem languagesToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox LanguagesToolStripComboBox;
@@ -509,9 +513,13 @@ namespace KKManager.Windows
         private ToolStripMenuItem websiteToolStripMenuItem;
         private ToolStripMenuItem cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem;
         private ToolStripMenuItem cleanUpDuplicateZipmodsToolStripMenuItem;
-        private ToolStripMenuItem useSystemProxyServerToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem openModpackToolToolStripMenuItem;
+        private ToolStripMenuItem lookForModUpdatesToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem checkForUpdatesOnStartupToolStripMenuItem;
+        private ToolStripMenuItem useSystemProxyServerToolStripMenuItem;
         private ToolStripMenuItem p2PDownloaderSettingsToolStripMenuItem;
+        private ToolStripMenuItem changeGameInstallDirectoryToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
