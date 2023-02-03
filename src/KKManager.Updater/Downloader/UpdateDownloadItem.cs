@@ -45,17 +45,25 @@ namespace KKManager.Updater.Downloader
 
         public int Order { get; set; }
 
-        public FileSize GetDownloadedSize()
+        public Exception[] GetFlattenedExceptions()
         {
-            return FileSize.FromKilobytes((long)Math.Round(TotalSize.GetKbSize() * (FinishPercent / 100d)));
+            lock (Exceptions)
+                return Exceptions.SelectMany(x => x is AggregateException ae ? ae.Flatten().InnerExceptions : Enumerable.Repeat(x, 1)).ToArray();
         }
+
+        public FileSize GetDownloadedSize() => FileSize.FromKilobytes((long)Math.Round(TotalSize.GetKbSize() * (FinishPercent / 100d)));
 
         public void TryMarkSourceAsFailed(UpdateSourceBase source, Exception exception)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (DownloadSources.Remove(source))
             {
-                if (exception != null) Exceptions.Add(exception);
+                if (exception != null)
+                {
+                    lock (Exceptions)
+                        Exceptions.Add(exception);
+                }
+
                 if (Status != UpdateDownloadStatus.Finished && Status != UpdateDownloadStatus.Failed)
                 {
                     if (DownloadSources.Count == 0)
@@ -67,7 +75,11 @@ namespace KKManager.Updater.Downloader
         public void MarkAsCancelled(Exception cancelException = null)
         {
             Status = UpdateDownloadStatus.Cancelled;
-            if (cancelException != null) Exceptions.Add(cancelException);
+            if (cancelException != null)
+            {
+                lock (Exceptions)
+                    Exceptions.Add(cancelException);
+            }
         }
     }
 }

@@ -115,9 +115,9 @@ namespace KKManager.Updater.Windows
                 olvColumnStatus.AspectGetter = rowObject =>
                 {
                     var item = (UpdateDownloadItem)rowObject;
-                    return item.Exceptions.Count == 0
+                    return item.Status == UpdateDownloadStatus.Cancelled || item.Exceptions.Count == 0
                         ? item.Status.ToString()
-                        : item.Status + " - " + string.Join("; ", item.Exceptions.Select(x => x.Message));
+                        : item.Status + " - " + string.Join("\n", item.GetFlattenedExceptions().Select(x => x.Message));
                 };
                 olvColumnName.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).DownloadPath.Name;
                 olvColumnNo.AspectGetter = rowObject => ((UpdateDownloadItem)rowObject).Order;
@@ -258,7 +258,7 @@ namespace KKManager.Updater.Windows
                 if (failedItems.Any(x => x.Exceptions.Count > 0))
                 {
                     var exceptionMessages = failedItems
-                        .SelectMany(x => x.Exceptions)
+                        .SelectMany(x => x.GetFlattenedExceptions())
                         .Where(y => !(y is DownloadSourceCrashedException))
                         // Deal with wrapped exceptions
                         .Select(y => y.Message.Contains("InnerException") && y.InnerException != null ? y.InnerException.Message : y.Message)
