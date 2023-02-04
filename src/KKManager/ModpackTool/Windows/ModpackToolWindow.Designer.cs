@@ -38,6 +38,7 @@
             this.configBrowseBtn = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageConfiguration = new System.Windows.Forms.TabPage();
+            this.toolConfigurationEditor1 = new KKManager.ModpackTool.ToolConfigurationEditor();
             this.tabPageIngest = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.objectListViewMain = new BrightIdeasSoftware.ObjectListView();
@@ -45,6 +46,8 @@
             this.olvColumnOrigName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnStatus = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnOutputPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnGames = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnContent = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button0Read = new System.Windows.Forms.Button();
@@ -54,11 +57,8 @@
             this.button4CopyToOut = new System.Windows.Forms.Button();
             this.button9Export = new System.Windows.Forms.Button();
             this.tabPageVerify = new System.Windows.Forms.TabPage();
-            this.tabPageHistory = new System.Windows.Forms.TabPage();
-            this.olvColumnGames = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnContent = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.toolConfigurationEditor1 = new KKManager.ModpackTool.ToolConfigurationEditor();
             this.verificationTool1 = new KKManager.ModpackTool.Windows.VerificationTool();
+            this.tabPageHistory = new System.Windows.Forms.TabPage();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPageConfiguration.SuspendLayout();
@@ -165,6 +165,15 @@
             this.tabPageConfiguration.Text = "Configuration";
             this.tabPageConfiguration.UseVisualStyleBackColor = true;
             // 
+            // toolConfigurationEditor1
+            // 
+            this.toolConfigurationEditor1.AutoSize = true;
+            this.toolConfigurationEditor1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.toolConfigurationEditor1.Location = new System.Drawing.Point(3, 3);
+            this.toolConfigurationEditor1.Name = "toolConfigurationEditor1";
+            this.toolConfigurationEditor1.Size = new System.Drawing.Size(874, 714);
+            this.toolConfigurationEditor1.TabIndex = 2;
+            // 
             // tabPageIngest
             // 
             this.tabPageIngest.Controls.Add(this.groupBox3);
@@ -240,6 +249,16 @@
             this.olvColumnOutputPath.AspectName = "";
             this.olvColumnOutputPath.Text = "Output path (relative)";
             this.olvColumnOutputPath.Width = 400;
+            // 
+            // olvColumnGames
+            // 
+            this.olvColumnGames.Text = "Game specific";
+            this.olvColumnGames.Width = 123;
+            // 
+            // olvColumnContent
+            // 
+            this.olvColumnContent.Text = "Content type";
+            this.olvColumnContent.Width = 108;
             // 
             // groupBoxInput
             // 
@@ -324,9 +343,9 @@
             this.button4CopyToOut.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.button4CopyToOut.Location = new System.Drawing.Point(3, 32);
             this.button4CopyToOut.Name = "button4CopyToOut";
-            this.button4CopyToOut.Size = new System.Drawing.Size(217, 23);
+            this.button4CopyToOut.Size = new System.Drawing.Size(322, 23);
             this.button4CopyToOut.TabIndex = 0;
-            this.button4CopyToOut.Text = "4 - Copy to output folders (if PASS or FAIL)";
+            this.button4CopyToOut.Text = "4 - Copy to output folders (if PASS or FAIL) or remove (if EXISTS)";
             this.button4CopyToOut.UseVisualStyleBackColor = true;
             this.button4CopyToOut.Click += new System.EventHandler(this.button4CopyToOut_Click);
             // 
@@ -334,7 +353,7 @@
             // 
             this.button9Export.AutoSize = true;
             this.button9Export.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button9Export.Location = new System.Drawing.Point(226, 32);
+            this.button9Export.Location = new System.Drawing.Point(331, 32);
             this.button9Export.Name = "button9Export";
             this.button9Export.Size = new System.Drawing.Size(92, 23);
             this.button9Export.TabIndex = 0;
@@ -352,6 +371,14 @@
             this.tabPageVerify.Text = "Verification tool";
             this.tabPageVerify.UseVisualStyleBackColor = true;
             // 
+            // verificationTool1
+            // 
+            this.verificationTool1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.verificationTool1.Location = new System.Drawing.Point(3, 3);
+            this.verificationTool1.Name = "verificationTool1";
+            this.verificationTool1.Size = new System.Drawing.Size(891, 474);
+            this.verificationTool1.TabIndex = 0;
+            // 
             // tabPageHistory
             // 
             this.tabPageHistory.Location = new System.Drawing.Point(4, 22);
@@ -360,33 +387,6 @@
             this.tabPageHistory.TabIndex = 2;
             this.tabPageHistory.Text = "History";
             this.tabPageHistory.UseVisualStyleBackColor = true;
-            // 
-            // olvColumnGames
-            // 
-            this.olvColumnGames.Text = "Game specific";
-            this.olvColumnGames.Width = 123;
-            // 
-            // olvColumnContent
-            // 
-            this.olvColumnContent.Text = "Content type";
-            this.olvColumnContent.Width = 108;
-            // 
-            // toolConfigurationEditor1
-            // 
-            this.toolConfigurationEditor1.AutoSize = true;
-            this.toolConfigurationEditor1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolConfigurationEditor1.Location = new System.Drawing.Point(3, 3);
-            this.toolConfigurationEditor1.Name = "toolConfigurationEditor1";
-            this.toolConfigurationEditor1.Size = new System.Drawing.Size(874, 688);
-            this.toolConfigurationEditor1.TabIndex = 2;
-            // 
-            // verificationTool1
-            // 
-            this.verificationTool1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.verificationTool1.Location = new System.Drawing.Point(3, 3);
-            this.verificationTool1.Name = "verificationTool1";
-            this.verificationTool1.Size = new System.Drawing.Size(891, 474);
-            this.verificationTool1.TabIndex = 0;
             // 
             // ModpackToolWindow
             // 

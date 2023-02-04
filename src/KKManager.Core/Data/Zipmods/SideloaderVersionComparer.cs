@@ -49,6 +49,12 @@ namespace KKManager.Data.Zipmods
             var results = new List<IComparable>(2);
             foreach (var part in version.Trim().Split('.', ' ', '-', ',', '_'))
             {
+                if (part.Length == 0)
+                {
+                    results.Add("");
+                    continue;
+                }
+
                 // Handle mixed digit + letter parts by splitting them (1.0a -> 1 0 a)
                 var isDigit = char.IsDigit(part[0]);
                 var current = part[0].ToString();

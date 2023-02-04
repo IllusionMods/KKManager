@@ -67,8 +67,20 @@ namespace KKManager.ModpackTool
             Games = new ValidatedStringWrapper(s => Info.Manifest.Games = CleanUpManifestGameTags(GameNamesStrToList(s)).ToList(), () => GameNamesListToStr(CleanUpManifestGameTags(Info.Manifest.Games)), GameNamesVerifier);
             Guid = new ValidatedStringWrapper(s => Info.Manifest.GUID = s, () => Info.Manifest.GUID, s => !string.IsNullOrWhiteSpace(s) && !s.EndsWith("Example"));
             Name = new ValidatedStringWrapper(s => Info.Manifest.Name = s, () => Info.Manifest.Name, s => !string.IsNullOrWhiteSpace(s) && s.IndexOf("Name of your mod pack", StringComparison.OrdinalIgnoreCase) < 0 && !s.EndsWith(" Example"));
+
+            var manifestVersion = Info.Manifest.Version?.Trim();
+            if (!string.IsNullOrEmpty(manifestVersion) && manifestVersion.All(char.IsDigit))
+                Info.Manifest.Version = manifestVersion + ".0";
+
             Version = new ValidatedStringWrapper(s => Info.Manifest.Version = s, () => Info.Manifest.Version, s => !string.IsNullOrWhiteSpace(s) && System.Version.TryParse(s, out var _) &&
                                                                                                                    ExistingInOutput.Select(x => x.Version).All(v => SideloaderVersionComparer.CompareVersions(s, v) > 0));
+            var manifestWebsite = Info.Manifest.Website;
+            if (!string.IsNullOrWhiteSpace(manifestWebsite) && !Uri.TryCreate(manifestWebsite, UriKind.Absolute, out _))
+            {
+                Console.WriteLine($"Removing invalid Website tag from [{sideloaderModInfo.FileName}]: {manifestWebsite}");
+                Info.Manifest.Website = "";
+            }
+
             Website = new ValidatedStringWrapper(s => Info.Manifest.Website = s, () => Info.Manifest.Website, s => string.IsNullOrWhiteSpace(s) || Uri.TryCreate(s, UriKind.Absolute, out var uri) && !uri.IsFile && !uri.IsLoopback);
 
             // Clean up the manifest
@@ -104,9 +116,20 @@ namespace KKManager.ModpackTool
 
             void CheckManifestIssueStatus(object sender, PropertyChangedEventArgs args)
             {
+                if (Status <= ZipmodEntryStatus.NeedsProcessing || Status == ZipmodEntryStatus.EXISTS && 
+                    ExistingInOutput.Count > 0 && !string.IsNullOrWhiteSpace(Version.Value))
+                {
+                    var existingVersion = ExistingInOutput.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Version))?.Version;
+                    if (existingVersion != null && SideloaderVersionComparer.CompareVersions(existingVersion, Version.Value) >= 0)
+                    {
+                        Status = ZipmodEntryStatus.EXISTS;
+                        return;
+                    }
+                }
+
                 if (!IsValid())
                     Status = ZipmodEntryStatus.ManifestIssue;
-                else if (Status < ZipmodEntryStatus.NeedsProcessing)
+                else if (Status < ZipmodEntryStatus.NeedsProcessing || Status == ZipmodEntryStatus.EXISTS)
                     Status = ZipmodEntryStatus.NeedsProcessing;
             }
             CheckManifestIssueStatus(null, null);
@@ -217,6 +240,7 @@ namespace KKManager.ModpackTool
             Verifying,
             PASS,
             FAIL,
+            EXISTS,
             Outputted
         }
 
@@ -295,6 +319,14 @@ namespace KKManager.ModpackTool
                 }
 
                 FullPath.CopyTo(outputPath, true);
+                var backupPath = GetBackupFullName();
+                if (File.Exists(backupPath)) File.Delete(backupPath);
+                File.Move(FullPath.FullName, backupPath);
+                Status = ZipmodEntry.ZipmodEntryStatus.Outputted;
+            }
+            else if (Status == ZipmodEntryStatus.EXISTS)
+            {
+                Console.WriteLine($"Removing [{Name}] ({Status})");
                 var backupPath = GetBackupFullName();
                 if (File.Exists(backupPath)) File.Delete(backupPath);
                 File.Move(FullPath.FullName, backupPath);
