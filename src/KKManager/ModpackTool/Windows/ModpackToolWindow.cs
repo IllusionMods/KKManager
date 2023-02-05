@@ -205,7 +205,7 @@ namespace KKManager.ModpackTool
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"ERROR: Failed to output [{entry.OriginalFilename}] - " + exception);
+                    Console.WriteLine($"ERROR: Failed to output [{entry.OriginalFilename}] - " + exception.ToStringDemystified());
                 }
             }
         }

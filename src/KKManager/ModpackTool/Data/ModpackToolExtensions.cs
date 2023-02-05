@@ -136,7 +136,7 @@ namespace KKManager.ModpackTool
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to delete [{info.FullName}] because of error: {ex}");
+                    Console.WriteLine($"Failed to delete [{info.FullName}] because of error: {ex.ToStringDemystified()}");
                     return false;
                 }
             }

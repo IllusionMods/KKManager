@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using Ionic.Zip;
 using KKManager.Util;
 using SharpCompress.Archives;
+using System.Diagnostics;
 #if AI || HS2
 using AIChara;
 #endif
@@ -216,7 +217,7 @@ namespace Sideloader
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Could not load migration data for {GUID}, skipping line. Error: " + ex);
+                    Console.WriteLine($"Could not load migration data for {GUID}, skipping line. Error: " + ex.ToStringDemystified());
                 }
             }
         }
@@ -233,7 +234,7 @@ namespace Sideloader
             {
                 Console.WriteLine($"Cannot load {zip} - {ex.Message}.");
                 if (!(ex is OperationCanceledException))
-                    Console.WriteLine("Error details: " + ex);
+                    Console.WriteLine("Error details: " + ex.ToStringDemystified());
                 return false;
             }
         }

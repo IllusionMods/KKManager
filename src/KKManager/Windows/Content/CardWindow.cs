@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -547,7 +548,7 @@ namespace KKManager.Windows.Content
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine($"Failed to delete card {selectedObject.Location?.Name} - " + exception);
+                    Console.WriteLine($"Failed to delete card {selectedObject.Location?.Name} - " + exception.ToStringDemystified());
                 }
             }
 

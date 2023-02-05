@@ -343,7 +343,7 @@ namespace KKManager.Updater.Sources
                     }
                 }
             }
-            catch (Exception exc) { Console.WriteLine($"Ping {Origin} failed: {exc}"); }
+            catch (Exception exc) { Console.WriteLine($"Ping {Origin} failed: {exc.ToStringDemystified()}"); }
             return TimeSpan.MaxValue;
         }
     }

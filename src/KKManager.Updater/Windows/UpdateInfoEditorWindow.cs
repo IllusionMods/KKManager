@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -128,7 +129,7 @@ namespace KKManager.Updater.Windows
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
-                        MessageBox.Show("Failed to gather hashes: " + ex, "Generate file hashes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Failed to gather hashes: " + ex.ToStringDemystified(), "Generate file hashes", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

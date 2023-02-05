@@ -340,7 +340,7 @@ namespace KKManager.ModpackTool
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to PNG compress [{originalFilename}] in {sw.ElapsedMilliseconds}ms, original file will be used. Error: {(ex is TargetException ? ex.Message : ex)}");
+                Console.WriteLine($"Failed to PNG compress [{originalFilename}] in {sw.ElapsedMilliseconds}ms, original file will be used. Error: {(ex is TargetException ? ex.Message : ex.ToStringDemystified())}");
                 return false;
             }
             finally

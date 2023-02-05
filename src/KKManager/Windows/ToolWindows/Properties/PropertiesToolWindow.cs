@@ -78,7 +78,7 @@ namespace KKManager.Windows.ToolWindows.Properties
                     if (e is ReflectionTypeLoadException re)
                     {
                         foreach (var loaderException in re.LoaderExceptions)
-                            Console.WriteLine("LoaderException: " + loaderException);
+                            Console.WriteLine("LoaderException: " + loaderException.ToStringDemystified());
                     }
 
                     Console.WriteLine(e);

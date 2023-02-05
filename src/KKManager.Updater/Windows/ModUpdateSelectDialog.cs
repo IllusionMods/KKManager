@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -60,7 +61,7 @@ namespace KKManager.Updater.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Failed to get updates", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.ToStringDemystified(), "Failed to get updates", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return null;

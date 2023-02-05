@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -52,7 +53,7 @@ namespace KKManager.Data.Cards
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to read cards from directory [{path.FullName}] with an error: {ex}");
+                        Console.WriteLine($"Failed to read cards from directory [{path.FullName}] with an error: {ex.ToStringDemystified()}");
                     }
 
                     s.OnCompleted();

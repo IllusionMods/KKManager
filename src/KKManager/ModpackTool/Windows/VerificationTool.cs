@@ -93,7 +93,7 @@ namespace KKManager.ModpackTool.Windows
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to start verification: " + ex);
+                Console.WriteLine("Failed to start verification: " + ex.ToStringDemystified());
                 foreach (var entry in GetSelectedObjects(false))
                 {
                     if (entry.Status == ZipmodEntry.ZipmodEntryStatus.Verifying)

@@ -91,7 +91,7 @@ namespace KKManager.Data.Zipmods
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex}");
+                            Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex.ToStringDemystified()}");
                         }
                     });
 
@@ -110,7 +110,7 @@ namespace KKManager.Data.Zipmods
                         MessageBox.Show("Could not load information about zipmods because access to the plugins folder was denied. Check the permissions of your mods folder and try again.\n\n" + ex.Message,
                             "Load zipmods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                    Console.WriteLine("Crash when loading zipmods: " + ex);
+                    Console.WriteLine("Crash when loading zipmods: " + ex.ToStringDemystified());
                     subject.OnError(ex);
                 }
                 finally

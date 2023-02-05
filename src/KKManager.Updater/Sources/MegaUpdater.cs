@@ -33,7 +33,7 @@ namespace KKManager.Updater.Sources
                 throw new NotSupportedException("The link doesn't point to mega.nz - " + serverUri);
 
             _client = new MegaApiClient();
-            _client.ApiRequestFailed += (sender, args) => Console.WriteLine($@"MEGA API ERROR: {args.ApiResult}   {args.Exception}");
+            _client.ApiRequestFailed += (sender, args) => Console.WriteLine($@"MEGA API ERROR: {args.ApiResult} - {args.Exception.ToStringDemystified()}");
 
             _currentFolderLink = serverUri;
 

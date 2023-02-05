@@ -102,7 +102,7 @@ namespace KKManager.Data.Plugins
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex}");
+                            Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex.ToStringDemystified()}");
                         }
                     });
                 }
@@ -118,7 +118,7 @@ namespace KKManager.Data.Plugins
                         MessageBox.Show("Could not load information about plugins because access to the plugins folder was denied. Check the permissions of your plugins folder and try again.\n\n" + ex.Message,
                             "Load plugins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                    Console.WriteLine("Crash when loading plugins: " + ex);
+                    Console.WriteLine("Crash when loading plugins: " + ex.ToStringDemystified());
                     subject.OnError(ex);
                 }
                 finally

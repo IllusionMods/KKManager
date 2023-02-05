@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using KKManager.Data.Zipmods;
@@ -36,7 +37,7 @@ namespace KKManager.Windows
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to remove duplicate zipmods: " + e);
+                Console.WriteLine($"Failed to remove duplicate zipmods: " + e.ToStringDemystified());
             }
             finally
             {
