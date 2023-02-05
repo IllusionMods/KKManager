@@ -24,3 +24,13 @@ You can turn on automatic checking for updates in the Tools menu. If there are a
 ![kkmanager updater preview](https://user-images.githubusercontent.com/39247311/70381094-dded2c00-1944-11ea-9502-db5ced9dd3e0.PNG)
 
 You can support development of this tool through the [patreon page](https://www.patreon.com/ManlyMarco).
+
+# Contributing
+If you would like to make changes to KKManager or build the latest version with unreleased features, you can build this project with Visual Studio Community (2022 recommended). Simply clone or download code zip, open the .sln, and hit `Build > Build Solution`.
+You can submit code fixes and improvements with a PR, they are being actively merged.
+
+If you would like to translate KKManager to your language, you can use https://github.com/HakanL/resxtranslator. First clone this repository, then open it in the translator app, select your language and go ham. You can build and run KKManager to test your changes.
+You can submit new translations with a PR, or if you don't have a GitHub account you can zip it up and send it to ManlyMarco on Koikatsu or IllusionSoft Discord server.
+
+If you've found a bug and can't fix it yourself, feel free to post it in Issues. Make sure to include as many details as possible - how to reproduce the issue, exactly what the effects are, and what should happen instead. Please make sure that there is no open issue for your bug before posting.
+Please don't post issues related to the Sideloader Modpacks and the update servers being slow (but do post issues related to the update process failing).
