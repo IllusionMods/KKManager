@@ -64,7 +64,7 @@ namespace KKManager.Updater.Sources
                 try
                 {
                     var downloadFileAsync = DownloadFileAsync(fn, cancellationToken);
-                    if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
+                    if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(80), cancellationToken))
                         throw new TimeoutException("Timeout when trying to download " + fn);
                     str = await downloadFileAsync;
                 }
@@ -134,7 +134,7 @@ namespace KKManager.Updater.Sources
                         try
                         {
                             var downloadFileAsync = DownloadFileAsync(updateInfo.TorrentFileName, cancellationToken);
-                            if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(20), cancellationToken))
+                            if (!await downloadFileAsync.WithTimeout(TimeSpan.FromSeconds(120), cancellationToken))
                                 throw new TimeoutException("Timeout when trying to download");
 
                             var bytes = await (await downloadFileAsync).ReadAllBytesAsync();
