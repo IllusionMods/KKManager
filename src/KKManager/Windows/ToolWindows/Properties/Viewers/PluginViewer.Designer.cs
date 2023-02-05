@@ -57,24 +57,16 @@
             // 
             this.groupBox1.Controls.Add(this.propertyGrid1);
             this.groupBox1.Controls.Add(this.toolStrip1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(377, 232);
-            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "General";
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.DisabledItemForeColor = System.Drawing.SystemColors.ControlText;
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 41);
+            resources.ApplyResources(this.propertyGrid1, "propertyGrid1");
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-            this.propertyGrid1.Size = new System.Drawing.Size(371, 188);
-            this.propertyGrid1.TabIndex = 1;
             this.propertyGrid1.ToolbarVisible = false;
             // 
             // toolStrip1
@@ -83,69 +75,50 @@
             this.toolStripButtonLocation,
             this.toolStripButtonConf,
             this.toolStripButtonUrl});
-            this.toolStrip1.Location = new System.Drawing.Point(3, 16);
+            resources.ApplyResources(this.toolStrip1, "toolStrip1");
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(371, 25);
-            this.toolStrip1.TabIndex = 2;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripButtonLocation
             // 
             this.toolStripButtonLocation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonLocation.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLocation.Image")));
-            this.toolStripButtonLocation.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.toolStripButtonLocation, "toolStripButtonLocation");
             this.toolStripButtonLocation.Name = "toolStripButtonLocation";
-            this.toolStripButtonLocation.Size = new System.Drawing.Size(120, 22);
-            this.toolStripButtonLocation.Text = "Open install location";
             this.toolStripButtonLocation.Click += new System.EventHandler(this.toolStripButtonLocation_Click);
             // 
             // toolStripButtonConf
             // 
             this.toolStripButtonConf.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonConf.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonConf.Image")));
-            this.toolStripButtonConf.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.toolStripButtonConf, "toolStripButtonConf");
             this.toolStripButtonConf.Name = "toolStripButtonConf";
-            this.toolStripButtonConf.Size = new System.Drawing.Size(96, 22);
-            this.toolStripButtonConf.Text = "Open config file";
             this.toolStripButtonConf.Click += new System.EventHandler(this.toolStripButtonConf_Click);
             // 
             // toolStripButtonUrl
             // 
             this.toolStripButtonUrl.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonUrl.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUrl.Image")));
-            this.toolStripButtonUrl.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.toolStripButtonUrl, "toolStripButtonUrl");
             this.toolStripButtonUrl.Name = "toolStripButtonUrl";
-            this.toolStripButtonUrl.Size = new System.Drawing.Size(83, 22);
-            this.toolStripButtonUrl.Text = "Open website";
             this.toolStripButtonUrl.Click += new System.EventHandler(this.toolStripButtonUrl_Click);
             // 
             // toolStripButtonWebsite
             // 
             this.toolStripButtonWebsite.Name = "toolStripButtonWebsite";
-            this.toolStripButtonWebsite.Size = new System.Drawing.Size(23, 23);
+            resources.ApplyResources(this.toolStripButtonWebsite, "toolStripButtonWebsite");
             // 
             // groupBoxRefs
             // 
             this.groupBoxRefs.Controls.Add(this.listViewRefs);
-            this.groupBoxRefs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRefs.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.groupBoxRefs, "groupBoxRefs");
             this.groupBoxRefs.Name = "groupBoxRefs";
-            this.groupBoxRefs.Size = new System.Drawing.Size(377, 241);
-            this.groupBoxRefs.TabIndex = 5;
             this.groupBoxRefs.TabStop = false;
-            this.groupBoxRefs.Text = "These plugins require this plugin:";
             // 
             // listViewRefs
             // 
-            this.listViewRefs.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.listViewRefs, "listViewRefs");
             this.listViewRefs.FullRowSelect = true;
             this.listViewRefs.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewRefs.HideSelection = false;
-            this.listViewRefs.Location = new System.Drawing.Point(3, 16);
             this.listViewRefs.Name = "listViewRefs";
             this.listViewRefs.ShowGroups = false;
-            this.listViewRefs.Size = new System.Drawing.Size(371, 222);
-            this.listViewRefs.TabIndex = 0;
             this.listViewRefs.UseCompatibleStateImageBehavior = false;
             this.listViewRefs.View = System.Windows.Forms.View.List;
             this.listViewRefs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewRefs_MouseClick);
@@ -153,36 +126,26 @@
             // groupBoxDeps
             // 
             this.groupBoxDeps.Controls.Add(this.listViewDeps);
-            this.groupBoxDeps.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxDeps.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.groupBoxDeps, "groupBoxDeps");
             this.groupBoxDeps.Name = "groupBoxDeps";
-            this.groupBoxDeps.Size = new System.Drawing.Size(377, 264);
-            this.groupBoxDeps.TabIndex = 6;
             this.groupBoxDeps.TabStop = false;
-            this.groupBoxDeps.Text = "This plugin requires the following plugins:";
             // 
             // listViewDeps
             // 
-            this.listViewDeps.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.listViewDeps, "listViewDeps");
             this.listViewDeps.FullRowSelect = true;
             this.listViewDeps.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewDeps.HideSelection = false;
-            this.listViewDeps.Location = new System.Drawing.Point(3, 16);
             this.listViewDeps.Name = "listViewDeps";
             this.listViewDeps.ShowGroups = false;
-            this.listViewDeps.Size = new System.Drawing.Size(371, 245);
-            this.listViewDeps.TabIndex = 0;
             this.listViewDeps.UseCompatibleStateImageBehavior = false;
             this.listViewDeps.View = System.Windows.Forms.View.List;
             this.listViewDeps.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewDeps_MouseClick);
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 232);
-            this.splitContainer1.MinimumSize = new System.Drawing.Size(0, 100);
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
             this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
@@ -191,18 +154,14 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBoxRefs);
-            this.splitContainer1.Size = new System.Drawing.Size(377, 509);
-            this.splitContainer1.SplitterDistance = 264;
-            this.splitContainer1.TabIndex = 7;
             // 
             // PluginViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.groupBox1);
             this.Name = "PluginViewer";
-            this.Size = new System.Drawing.Size(377, 741);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);

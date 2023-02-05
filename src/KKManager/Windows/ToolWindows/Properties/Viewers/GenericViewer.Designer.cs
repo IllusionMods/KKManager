@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenericViewer));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.toolStripButtonWebsite = new System.Windows.Forms.ToolStripButton();
@@ -37,36 +38,27 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.propertyGrid1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(377, 741);
-            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Properties";
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.DisabledItemForeColor = System.Drawing.SystemColors.ControlText;
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 16);
+            resources.ApplyResources(this.propertyGrid1, "propertyGrid1");
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(371, 722);
-            this.propertyGrid1.TabIndex = 1;
             // 
             // toolStripButtonWebsite
             // 
             this.toolStripButtonWebsite.Name = "toolStripButtonWebsite";
-            this.toolStripButtonWebsite.Size = new System.Drawing.Size(23, 23);
+            resources.ApplyResources(this.toolStripButtonWebsite, "toolStripButtonWebsite");
             // 
             // GenericViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox1);
             this.Name = "GenericViewer";
-            this.Size = new System.Drawing.Size(377, 741);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

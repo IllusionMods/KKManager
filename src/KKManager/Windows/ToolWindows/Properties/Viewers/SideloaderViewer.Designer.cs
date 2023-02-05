@@ -52,129 +52,88 @@
             this.groupBox2.Controls.Add(this.pictureBox1);
             this.groupBox2.Controls.Add(this.buttonImageLeft);
             this.groupBox2.Controls.Add(this.buttonImageRight);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 310);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(377, 431);
-            this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Images";
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.DimGray;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(26, 16);
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(325, 412);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
             // buttonImageLeft
             // 
-            this.buttonImageLeft.AutoSize = true;
-            this.buttonImageLeft.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonImageLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.buttonImageLeft.Location = new System.Drawing.Point(3, 16);
+            resources.ApplyResources(this.buttonImageLeft, "buttonImageLeft");
             this.buttonImageLeft.Name = "buttonImageLeft";
-            this.buttonImageLeft.Size = new System.Drawing.Size(23, 412);
-            this.buttonImageLeft.TabIndex = 3;
-            this.buttonImageLeft.Text = "<";
             this.buttonImageLeft.UseVisualStyleBackColor = true;
             this.buttonImageLeft.Click += new System.EventHandler(this.buttonImageLeft_Click);
             // 
             // buttonImageRight
             // 
-            this.buttonImageRight.AutoSize = true;
-            this.buttonImageRight.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonImageRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.buttonImageRight.Location = new System.Drawing.Point(351, 16);
+            resources.ApplyResources(this.buttonImageRight, "buttonImageRight");
             this.buttonImageRight.Name = "buttonImageRight";
-            this.buttonImageRight.Size = new System.Drawing.Size(23, 412);
-            this.buttonImageRight.TabIndex = 2;
-            this.buttonImageRight.Text = ">";
             this.buttonImageRight.UseVisualStyleBackColor = true;
             this.buttonImageRight.Click += new System.EventHandler(this.buttonImageRight_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.propertyGrid1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(0, 25);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(377, 160);
-            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Metadata";
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.DisabledItemForeColor = System.Drawing.SystemColors.ControlText;
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.propertyGrid1.HelpVisible = false;
-            this.propertyGrid1.Location = new System.Drawing.Point(3, 16);
+            resources.ApplyResources(this.propertyGrid1, "propertyGrid1");
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-            this.propertyGrid1.Size = new System.Drawing.Size(371, 161);
-            this.propertyGrid1.TabIndex = 1;
             this.propertyGrid1.ToolbarVisible = false;
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonWebsite});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.toolStrip1, "toolStrip1");
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(377, 25);
-            this.toolStrip1.TabIndex = 6;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripButtonWebsite
             // 
             this.toolStripButtonWebsite.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonWebsite.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWebsite.Image")));
-            this.toolStripButtonWebsite.ImageTransparentColor = System.Drawing.Color.Magenta;
+            resources.ApplyResources(this.toolStripButtonWebsite, "toolStripButtonWebsite");
             this.toolStripButtonWebsite.Name = "toolStripButtonWebsite";
-            this.toolStripButtonWebsite.Size = new System.Drawing.Size(83, 22);
-            this.toolStripButtonWebsite.Text = "Open website";
             this.toolStripButtonWebsite.Click += new System.EventHandler(this.toolStripButtonWebsite_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.listView1);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox3.Location = new System.Drawing.Point(0, 185);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(377, 125);
-            this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Contents";
             // 
             // listView1
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderPath});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.listView1, "listView1");
             this.listView1.GridLines = true;
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listView1.Location = new System.Drawing.Point(3, 16);
+            this.listView1.HideSelection = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(371, 106);
-            this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
             // SideloaderViewerBase
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "SideloaderViewerBase";
-            this.Size = new System.Drawing.Size(377, 741);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

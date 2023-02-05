@@ -28,23 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropertiesToolWindow));
             this.propViewerContainer = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // propViewerContainer
             // 
-            this.propViewerContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propViewerContainer.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.propViewerContainer, "propViewerContainer");
             this.propViewerContainer.Name = "propViewerContainer";
-            this.propViewerContainer.Size = new System.Drawing.Size(341, 321);
-            this.propViewerContainer.TabIndex = 0;
             // 
             // PropertiesToolWindow
             // 
-            this.ClientSize = new System.Drawing.Size(341, 321);
+            resources.ApplyResources(this, "$this");
             this.Controls.Add(this.propViewerContainer);
             this.Name = "PropertiesToolWindow";
-            this.Text = "Properties";
             this.ResumeLayout(false);
 
         }
