@@ -52,7 +52,7 @@ namespace KKManager.Updater.Sources
 
         public abstract void Dispose();
 
-        public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
         {
             var updateInfos = new List<UpdateInfo>();
 

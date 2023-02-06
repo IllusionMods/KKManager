@@ -125,11 +125,11 @@ namespace KKManager.Updater.Sources
             _client.Dispose();
         }
 
-        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
         {
             await Connect(cancellationToken);
 
-            return await base.GetUpdateItems(cancellationToken);
+            return await base.GetUpdateItems(cancellationToken, onlyDiscover);
         }
 
         private static string GetNormalizedNodeName(string itemFullName)

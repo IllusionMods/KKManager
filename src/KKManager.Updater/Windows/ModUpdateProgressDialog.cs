@@ -143,7 +143,7 @@ namespace KKManager.Updater.Windows
 
                 SetStatus("Searching for mod updates...");
                 labelPercent.Text = "Please wait, this might take a couple of minutes.";
-                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids);
+                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 

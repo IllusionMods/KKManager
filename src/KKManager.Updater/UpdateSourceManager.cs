@@ -37,13 +37,13 @@ namespace KKManager.Updater
             }
         }
 
-        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids = null)
+        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover)
         {
             Console.WriteLine("Starting update search...");
-            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids), cancellationToken);
+            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids, onlyDiscover), cancellationToken);
         }
 
-        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids)
+        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover)
         {
             var results = new ConcurrentBag<UpdateTask>();
 
@@ -63,7 +63,7 @@ namespace KKManager.Updater
                 {
                     try
                     {
-                        foreach (var task in source.GetUpdateItems(cancellationToken).Result)
+                        foreach (var task in source.GetUpdateItems(cancellationToken, onlyDiscover).Result)
                         {
                             anySuccessful = true;
 
