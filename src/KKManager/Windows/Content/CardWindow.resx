@@ -358,7 +358,7 @@
     <value>View</value>
   </data>
   <data name="segregateBySexToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>222, 22</value>
+    <value>235, 22</value>
   </data>
   <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
     <value>Segregate selected by sex</value>
@@ -367,10 +367,16 @@
     <value>False</value>
   </data>
   <data name="renameCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>222, 22</value>
+    <value>235, 22</value>
   </data>
   <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
     <value>Rename selected card files...</value>
+  </data>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export a list of missing mods...</value>
   </data>
   <data name="toolStripDropDownButtonTools.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -471,10 +477,28 @@
   <data name="&gt;&gt;olvColumnModDate.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
+  <data name="&gt;&gt;olvColumnFileSize.Name" xml:space="preserve">
+    <value>olvColumnFileSize</value>
+  </data>
+  <data name="&gt;&gt;olvColumnFileSize.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
   <data name="&gt;&gt;olvColumnFilename.Name" xml:space="preserve">
     <value>olvColumnFilename</value>
   </data>
   <data name="&gt;&gt;olvColumnFilename.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnCardType.Name" xml:space="preserve">
+    <value>olvColumnCardType</value>
+  </data>
+  <data name="&gt;&gt;olvColumnCardType.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnUserID.Name" xml:space="preserve">
+    <value>olvColumnUserID</value>
+  </data>
+  <data name="&gt;&gt;olvColumnUserID.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;addressBar.Name" xml:space="preserve">
@@ -591,23 +615,11 @@
   <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;olvColumnUserID.Name" xml:space="preserve">
-    <value>olvColumnUserID</value>
+  <data name="&gt;&gt;exportAListOfMissingModsToolStripMenuItem.Name" xml:space="preserve">
+    <value>exportAListOfMissingModsToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;olvColumnUserID.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
-  </data>
-  <data name="&gt;&gt;olvColumnCardType.Name" xml:space="preserve">
-    <value>olvColumnCardType</value>
-  </data>
-  <data name="&gt;&gt;olvColumnCardType.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
-  </data>
-  <data name="&gt;&gt;olvColumnFileSize.Name" xml:space="preserve">
-    <value>olvColumnFileSize</value>
-  </data>
-  <data name="&gt;&gt;olvColumnFileSize.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  <data name="&gt;&gt;exportAListOfMissingModsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>CardWindow</value>

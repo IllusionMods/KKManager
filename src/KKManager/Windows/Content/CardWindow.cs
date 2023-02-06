@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -56,7 +57,7 @@ namespace KKManager.Windows.Content
 
             listView.FormatRow += (sender, args) =>
             {
-                if(args.Model is Card card)
+                if (args.Model is Card card)
                 {
                     if (card.MissingPlugins?.Length > 0 || card.MissingZipmods?.Length > 0)
                         args.Item.BackColor = Color.MistyRose;
@@ -562,6 +563,87 @@ namespace KKManager.Windows.Content
             }
 
             RefreshList();
+        }
+
+        private void exportAListOfMissingModsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedObjects = _typedListView.SelectedObjects;
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+
+            var cardsWithMissingMods = selectedObjects.Where(x => x.MissingPlugins?.Length > 0 || x.MissingZipmods?.Length > 0).ToList();
+            if (cardsWithMissingMods.Count == 0)
+            {
+                MessageBox.Show("None of the selected cards are using mods or plugins that are missing. Make sure that you selected the cards you want to export in the card list.",
+                                "Nothing to export", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var sfd = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                DefaultExt = "txt",
+                Filter = "Text file|*.txt",
+                OverwritePrompt = true,
+                ValidateNames = true,
+                Title = "Export a list of missing mods",
+                RestoreDirectory = true,
+                //InitialDirectory = InstallDirectoryHelper.GameDirectory.FullName,
+                DereferenceLinks = true,
+                FileName = "Missing mod export",
+            })
+            {
+                try
+                {
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
+                        {
+                            writer.WriteLine("# All missing plugins:");
+                            foreach (var missingPlugin in cardsWithMissingMods.Where(x => x.MissingPlugins != null).SelectMany(x => x.MissingPlugins).Distinct().OrderBy(x => x))
+                                writer.WriteLine(missingPlugin);
+
+                            writer.WriteLine();
+
+                            writer.WriteLine("# All missing zipmods:");
+                            foreach (var missingZipmod in cardsWithMissingMods.Where(x => x.MissingZipmods != null).SelectMany(x => x.MissingZipmods).Distinct().OrderBy(x => x))
+                                writer.WriteLine(missingZipmod);
+
+                            writer.WriteLine();
+
+
+                            foreach (var cardWithMissingMods in cardsWithMissingMods)
+                            {
+                                writer.WriteLine("----------------------------------------------------------");
+
+                                writer.WriteLine(cardWithMissingMods.Location.FullName);
+
+                                writer.WriteLine("# Missing plugins:");
+                                if (cardWithMissingMods.MissingPlugins != null)
+                                {
+                                    foreach (var missingPlugin in cardWithMissingMods.MissingPlugins)
+                                        writer.WriteLine(missingPlugin);
+                                }
+
+                                writer.WriteLine("# Missing zipmods:");
+                                if (cardWithMissingMods.MissingZipmods != null)
+                                {
+                                    foreach (var missingZipmod in cardWithMissingMods.MissingZipmods)
+                                        writer.WriteLine(missingZipmod);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+
+                    MessageBox.Show($"Failed to export: {exception.Message}\n\nTry saving to a different location. If the error persists, report it on GitHub together with the log file.",
+                                    "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
