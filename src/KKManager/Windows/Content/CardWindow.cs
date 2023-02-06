@@ -54,6 +54,15 @@ namespace KKManager.Windows.Content
             listView.EmptyListMsgFont = new Font(Font.FontFamily, 24);
             listView.EmptyListMsg = "No cards were found";
 
+            listView.FormatRow += (sender, args) =>
+            {
+                if(args.Model is Card card)
+                {
+                    if (card.MissingPlugins?.Length > 0 || card.MissingZipmods?.Length > 0)
+                        args.Item.BackColor = Color.MistyRose;
+                }
+            };
+
             ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
         }
 

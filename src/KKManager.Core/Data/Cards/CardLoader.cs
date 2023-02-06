@@ -102,7 +102,7 @@ namespace KKManager.Data.Cards
             if (missingPlugs.Length > 0)
             {
                 card.MissingPlugins = missingPlugs;
-                Console.WriteLine(card.Location.Name + " requires plugins that are missing: " + string.Join("; ", missingPlugs));
+                //Console.WriteLine(card.Location.Name + " requires plugins that are missing: " + string.Join("; ", missingPlugs));
             }
 
             var zipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs);
@@ -110,7 +110,7 @@ namespace KKManager.Data.Cards
             if (missingZipmods.Length > 0)
             {
                 card.MissingZipmods = missingZipmods;
-                Console.WriteLine(card.Location.Name + " requires zipmods that are missing: " + string.Join("; ", missingZipmods));
+                //Console.WriteLine(card.Location.Name + " requires zipmods that are missing: " + string.Join("; ", missingZipmods));
             }
         }
 
