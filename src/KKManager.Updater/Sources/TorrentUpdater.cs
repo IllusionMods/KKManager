@@ -190,7 +190,7 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var newSource = new TorrentSource(origin, Math.Min(50, torrentManager.Files.Count(x => x.BitField.PercentComplete < 100d)));
+            var newSource = new TorrentSource(origin, Math.Max(1, Math.Min(50, torrentManager.Files.Count(x => x.BitField.PercentComplete < 100d))));
 
             var remoteFiles = new List<UpdateItem>();
             foreach (var file in torrentManager.Files)
@@ -359,7 +359,7 @@ namespace KKManager.Updater.Sources
 
             public override void Dispose() { }
 
-            public override Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken)
+            public override Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
             {
                 throw new NotSupportedException();
             }

@@ -18,6 +18,9 @@ namespace KKManager.Updater.Sources
     {
         protected UpdateSourceBase(string origin, int discoveryPriority, int downloadPriority, int maxConcurrentDownloads = 1, bool handlesRetry = false)
         {
+            if (origin == null) throw new ArgumentNullException(nameof(origin));
+            if (maxConcurrentDownloads <= 0) throw new ArgumentOutOfRangeException(nameof(maxConcurrentDownloads));
+
             Origin = origin;
             DiscoveryPriority = discoveryPriority;
             DownloadPriority = downloadPriority;
@@ -129,7 +132,7 @@ namespace KKManager.Updater.Sources
                 foreach (var updateInfo in updateInfos)
                 {
                     // If a torrent of this update exists, try to use it instead of this source first
-                    if (KKManager.Properties.Settings.Default.P2P_Enabled && !string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
+                    if (!onlyDiscover && KKManager.Properties.Settings.Default.P2P_Enabled && !string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
                     {
                         try
                         {
