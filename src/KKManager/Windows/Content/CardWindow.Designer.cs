@@ -63,6 +63,7 @@ namespace KKManager.Windows.Content
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAListOfMissingModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnRelativeFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -75,6 +76,7 @@ namespace KKManager.Windows.Content
             this.listView.AllColumns.Add(this.olvColumnExtended);
             this.listView.AllColumns.Add(this.olvColumnModDate);
             this.listView.AllColumns.Add(this.olvColumnFileSize);
+            this.listView.AllColumns.Add(this.olvColumnRelativeFilename);
             this.listView.AllColumns.Add(this.olvColumnFilename);
             this.listView.AllColumns.Add(this.olvColumnCardType);
             this.listView.AllColumns.Add(this.olvColumnUserID);
@@ -86,7 +88,7 @@ namespace KKManager.Windows.Content
             this.olvColumnExtended,
             this.olvColumnModDate,
             this.olvColumnFileSize,
-            this.olvColumnFilename,
+            this.olvColumnRelativeFilename,
             this.olvColumnCardType,
             this.olvColumnUserID});
             resources.ApplyResources(this.listView, "listView");
@@ -145,8 +147,9 @@ namespace KKManager.Windows.Content
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "Location.Name";
-            this.olvColumnFilename.MinimumWidth = 60;
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
+            this.olvColumnFilename.IsVisible = false;
+            this.olvColumnFilename.MinimumWidth = 60;
             this.olvColumnFilename.UseFiltering = false;
             // 
             // olvColumnCardType
@@ -322,6 +325,11 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
+            // olvColumnRelativeFilename
+            // 
+            this.olvColumnRelativeFilename.MinimumWidth = 60;
+            resources.ApplyResources(this.olvColumnRelativeFilename, "olvColumnRelativeFilename");
+            // 
             // CardWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -373,6 +381,7 @@ namespace KKManager.Windows.Content
         private BrightIdeasSoftware.OLVColumn olvColumnCardType;
         private ToolStripMenuItem exportAListOfMissingModsToolStripMenuItem;
         private ToolStripButton toolStripButtonSubdirs;
+        private BrightIdeasSoftware.OLVColumn olvColumnRelativeFilename;
     }
 }
 

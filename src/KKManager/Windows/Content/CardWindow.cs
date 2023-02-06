@@ -64,6 +64,8 @@ namespace KKManager.Windows.Content
                 }
             };
 
+            olvColumnRelativeFilename.AspectGetter = rowObject => rowObject is Card card ? card.Location.FullName.Substring(_currentDirectory.FullName.Length).TrimStart('/', '\\') : rowObject;
+
             ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
         }
 
@@ -234,6 +236,9 @@ namespace KKManager.Windows.Content
                 return;
             }
 
+            var prevEmptyListMsg = listView.EmptyListMsg;
+            listView.EmptyListMsg = "Loading...";
+
             var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, DirectorySearchMode, _cancellationTokenSource.Token);
 
             var processedCount = 0;
@@ -254,6 +259,7 @@ namespace KKManager.Windows.Content
                         RefreshThumbnails(true);
 
                         MainWindow.SetStatusText("Done loading cards");
+                        listView.EmptyListMsg = prevEmptyListMsg;
                     },
                     _cancellationTokenSource.Token);
         }

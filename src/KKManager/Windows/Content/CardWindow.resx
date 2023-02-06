@@ -148,6 +148,12 @@
   <data name="olvColumnFileSize.Text" xml:space="preserve">
     <value>File Size</value>
   </data>
+  <data name="olvColumnRelativeFilename.Text" xml:space="preserve">
+    <value>Relative Filename</value>
+  </data>
+  <data name="olvColumnFilename.DisplayIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
   <data name="olvColumnFilename.Text" xml:space="preserve">
     <value>Filename</value>
   </data>
@@ -654,6 +660,12 @@ If off, only cards from the top directory are shown.</value>
   </data>
   <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;olvColumnRelativeFilename.Name" xml:space="preserve">
+    <value>olvColumnRelativeFilename</value>
+  </data>
+  <data name="&gt;&gt;olvColumnRelativeFilename.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>CardWindow</value>
