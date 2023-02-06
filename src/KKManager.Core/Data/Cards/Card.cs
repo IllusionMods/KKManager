@@ -26,6 +26,9 @@ namespace KKManager.Data.Cards
         [TypeConverter(typeof(DictionaryTypeConverter<string, PluginData>))]
         public Dictionary<string, PluginData> Extended { get; }
 
+        [ReadOnly(true)] public string[] MissingZipmods { get; set; }
+        [ReadOnly(true)] public string[] MissingPlugins { get; set; }
+
         public virtual Image GetCardImage()
         {
             using (var stream = Location.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
