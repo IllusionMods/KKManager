@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -31,6 +30,7 @@ namespace KKManager.Windows.Content
 
         private CancellationTokenSource _thumbnailCancellationTokenSource;
         private CharacterRange _previousLoadedItemRange;
+        private SearchOption DirectorySearchMode => toolStripButtonSubdirs.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
         public CardWindow()
         {
@@ -234,7 +234,7 @@ namespace KKManager.Windows.Content
                 return;
             }
 
-            var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, _cancellationTokenSource.Token);
+            var cardLoadObservable = CardLoader.ReadCards(CurrentDirectory, DirectorySearchMode, _cancellationTokenSource.Token);
 
             var processedCount = 0;
             cardLoadObservable
@@ -644,6 +644,11 @@ namespace KKManager.Windows.Content
                                     "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void toolStripButtonSubdirs_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshList();
         }
     }
 }

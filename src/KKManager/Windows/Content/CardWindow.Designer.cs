@@ -45,6 +45,7 @@ namespace KKManager.Windows.Content
             this.addressBar = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSubdirs = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripOpenDropdown = new System.Windows.Forms.ToolStripSplitButton();
             this.femaleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,8 +61,8 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             this.exportAListOfMissingModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -165,6 +166,7 @@ namespace KKManager.Windows.Content
             this.addressBar,
             this.toolStripButtonGo,
             this.toolStripButtonRefresh,
+            this.toolStripButtonSubdirs,
             this.toolStripSeparator3,
             this.toolStripOpenDropdown,
             this.toolStripSeparator1,
@@ -198,6 +200,14 @@ namespace KKManager.Windows.Content
             resources.ApplyResources(this.toolStripButtonRefresh, "toolStripButtonRefresh");
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // toolStripButtonSubdirs
+            // 
+            this.toolStripButtonSubdirs.CheckOnClick = true;
+            this.toolStripButtonSubdirs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            resources.ApplyResources(this.toolStripButtonSubdirs, "toolStripButtonSubdirs");
+            this.toolStripButtonSubdirs.Name = "toolStripButtonSubdirs";
+            this.toolStripButtonSubdirs.CheckedChanged += new System.EventHandler(this.toolStripButtonSubdirs_CheckedChanged);
             // 
             // toolStripSeparator3
             // 
@@ -299,18 +309,18 @@ namespace KKManager.Windows.Content
             this.renameCardsToolStripMenuItem.Name = "renameCardsToolStripMenuItem";
             this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
             // 
+            // exportAListOfMissingModsToolStripMenuItem
+            // 
+            this.exportAListOfMissingModsToolStripMenuItem.Name = "exportAListOfMissingModsToolStripMenuItem";
+            resources.ApplyResources(this.exportAListOfMissingModsToolStripMenuItem, "exportAListOfMissingModsToolStripMenuItem");
+            this.exportAListOfMissingModsToolStripMenuItem.Click += new System.EventHandler(this.exportAListOfMissingModsToolStripMenuItem_Click);
+            // 
             // toolStripTextBoxSearch
             // 
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            // 
-            // exportAListOfMissingModsToolStripMenuItem
-            // 
-            this.exportAListOfMissingModsToolStripMenuItem.Name = "exportAListOfMissingModsToolStripMenuItem";
-            resources.ApplyResources(this.exportAListOfMissingModsToolStripMenuItem, "exportAListOfMissingModsToolStripMenuItem");
-            this.exportAListOfMissingModsToolStripMenuItem.Click += new System.EventHandler(this.exportAListOfMissingModsToolStripMenuItem_Click);
             // 
             // CardWindow
             // 
@@ -362,6 +372,7 @@ namespace KKManager.Windows.Content
         private BrightIdeasSoftware.OLVColumn olvColumnFileSize;
         private BrightIdeasSoftware.OLVColumn olvColumnCardType;
         private ToolStripMenuItem exportAListOfMissingModsToolStripMenuItem;
+        private ToolStripButton toolStripButtonSubdirs;
     }
 }
 

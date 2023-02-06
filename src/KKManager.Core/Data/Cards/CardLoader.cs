@@ -23,7 +23,7 @@ namespace KKManager.Data.Cards
 {
     public static class CardLoader
     {
-        public static IObservable<Card> ReadCards(DirectoryInfo path, CancellationToken cancellationToken)
+        public static IObservable<Card> ReadCards(DirectoryInfo path, SearchOption searchOption, CancellationToken cancellationToken)
         {
             var s = new ReplaySubject<Card>();
 
@@ -45,7 +45,7 @@ namespace KKManager.Data.Cards
                 {
                     try
                     {
-                        foreach (var file in path.EnumerateFiles("*.png", SearchOption.TopDirectoryOnly))
+                        foreach (var file in path.EnumerateFiles("*.png", searchOption))
                         {
                             if (cancellationToken.IsCancellationRequested) break;
                             if (TryParseCard(file, out var card)) s.OnNext(card);
