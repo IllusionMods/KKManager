@@ -168,7 +168,7 @@ namespace KKManager.Updater.Sources
                 AllowDht = false,
                 AllowPeerExchange = true,
                 MaximumConnections = 120,
-                UploadSlots = 15
+                UploadSlots = 20
             }.ToSettings());
 
             torrentManager.AddDebugLogging();
