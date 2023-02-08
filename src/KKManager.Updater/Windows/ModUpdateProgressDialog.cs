@@ -81,6 +81,51 @@ namespace KKManager.Updater.Windows
             var averageDownloadSpeed = new MovingAverage(20);
             var downloadStartTime = DateTime.MinValue;
             UpdateDownloadCoordinator downloader = null;
+
+            IReadOnlyList<UpdateDownloadItem> downloadItems = null;
+            var lastCompletedSize = FileSize.Empty;
+            void DoStatusLabelUpdate(object o, EventArgs args)
+            {
+                if (downloadItems == null) throw new ArgumentNullException(nameof(downloadItems));
+
+                var itemCount = fastObjectListView1.GetItemCount();
+                if (itemCount > 0)
+                {
+                    fastObjectListView1.BeginUpdate();
+                    fastObjectListView1.RedrawItems(0, itemCount - 1, true);
+                    // Needed if user changes sorting column
+                    //fastObjectListView1.SecondarySortColumn = olvColumnNo;
+                    fastObjectListView1.Sort();
+                    fastObjectListView1.EndUpdate();
+                }
+
+                _completedSize = FileSize.SumFileSizes(downloadItems.Select(x => x.GetDownloadedSize()));
+
+                var totalPercent = (double)_completedSize.GetKbSize() / _overallSize.GetKbSize() * 100d;
+                if (double.IsNaN(totalPercent)) totalPercent = 0;
+
+                // Download speed calc
+                var secondsPassed = updateTimer.Interval / 1000d;
+                var downloadedSinceLast = FileSize.FromKilobytes((long)((_completedSize - lastCompletedSize).GetKbSize() / secondsPassed));
+                lastCompletedSize = _completedSize;
+                averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
+                var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
+                var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds
+                    ? "Unknown"
+                    : TimeSpan.FromSeconds(etaSeconds).GetReadableTimespan();
+
+                var text = $"Overall: {totalPercent:F1}% done  ({_completedSize} out of {_overallSize})";
+
+                var uploadSpeed = TorrentUpdater.GetCurrentUpload();
+                if (uploadSpeed.HasValue) labelPercent.Text += $" / Seeding: {FileSize.FromBytes(uploadSpeed.Value)}/s";
+
+                text += $"\r\nSpeed: {downloadedSinceLast}/s  (ETA: {eta})";
+
+                labelPercent.Text = text;
+
+                progressBar1.Value = Math.Min((int)Math.Round(totalPercent * 10), progressBar1.Maximum);
+            }
+
             try
             {
                 #region Initialize UI
@@ -142,7 +187,10 @@ namespace KKManager.Updater.Windows
                 #region Find and select updates
 
                 SetStatus("Searching for mod updates...");
-                labelPercent.Text = "Please wait, this might take a couple of minutes.";
+                labelPercent.Text = "Please wait, this might take a few minutes.";
+                if (KKManager.Properties.Settings.Default.P2P_Enabled)
+                    labelPercent.Text += " On slow HDDs\nit can take over 10 minutes when P2P is enabled.";
+
                 var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false);
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
@@ -154,7 +202,7 @@ namespace KKManager.Updater.Windows
                     SetStatus("Everything is up to date!");
                     progressBar1.Value = progressBar1.Maximum;
                     _cancelToken.Cancel();
-                    UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
+                    await TorrentUpdater.Start();
                     return;
                 }
 
@@ -175,6 +223,8 @@ namespace KKManager.Updater.Windows
 
                 #endregion
 
+                await TorrentUpdater.Start();
+
                 SleepControls.PreventSleepOrShutdown(Handle, "Update is in progress");
 
                 #region Set up update downloader and start downloading
@@ -182,7 +232,7 @@ namespace KKManager.Updater.Windows
                 downloadStartTime = DateTime.Now;
 
                 downloader = UpdateDownloadCoordinator.Create(updateTasks, _cancelToken.Token);
-                var downloadItems = downloader.UpdateItems;
+                downloadItems = downloader.UpdateItems;
 
                 SetStatus($"{downloadItems.Count(items => items.DownloadSources.Count > 1)} out of {downloadItems.Count} items have more than 1 source", false, true);
 
@@ -194,47 +244,15 @@ namespace KKManager.Updater.Windows
 
                 _overallSize = FileSize.SumFileSizes(downloadItems.Select(x => x.TotalSize));
 
-                var lastCompletedSize = FileSize.Empty;
-                updateTimer.Tick += (o, args) =>
-                {
-                    var itemCount = fastObjectListView1.GetItemCount();
-                    if (itemCount > 0)
-                    {
-                        fastObjectListView1.BeginUpdate();
-                        fastObjectListView1.RedrawItems(0, itemCount - 1, true);
-                        // Needed if user changes sorting column
-                        //fastObjectListView1.SecondarySortColumn = olvColumnNo;
-                        fastObjectListView1.Sort();
-                        fastObjectListView1.EndUpdate();
-                    }
 
-                    _completedSize = FileSize.SumFileSizes(downloadItems.Select(x => x.GetDownloadedSize()));
-
-                    var totalPercent = (double)_completedSize.GetKbSize() / _overallSize.GetKbSize() * 100d;
-                    if (double.IsNaN(totalPercent)) totalPercent = 0;
-
-                    // Download speed calc
-                    var secondsPassed = updateTimer.Interval / 1000d;
-                    var downloadedSinceLast = FileSize.FromKilobytes((long)((_completedSize - lastCompletedSize).GetKbSize() / secondsPassed));
-                    lastCompletedSize = _completedSize;
-                    averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
-                    var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
-                    var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds
-                        ? "Unknown"
-                        : TimeSpan.FromSeconds(etaSeconds).GetReadableTimespan();
-
-                    labelPercent.Text =
-                        $"Overall: {totalPercent:F1}% done  ({_completedSize} out of {_overallSize})\r\n" +
-                        $"Speed: {downloadedSinceLast}/s  (ETA: {eta})";
-                    //$"Speed: {downloadedSinceLast:F1}KB/s";
-
-                    progressBar1.Value = Math.Min((int)Math.Round(totalPercent * 10), progressBar1.Maximum);
-                };
+                updateTimer.Tick += DoStatusLabelUpdate;
                 updateTimer.Start();
 
                 SetStatus("Downloading updates...", true, true);
 
                 await downloader.RunUpdate();
+
+                updateTimer.Stop();
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
@@ -251,7 +269,6 @@ namespace KKManager.Updater.Windows
 
                 SetStatus(s, true, true);
 
-                updateTimer.Stop();
                 progressBar1.Value = progressBar1.Maximum;
                 labelPercent.Text = "";
 
@@ -279,7 +296,7 @@ namespace KKManager.Updater.Windows
             catch (OutdatedVersionException ex)
             {
                 SetStatus("KK Manager needs to be updated to get updates.", true, true);
-                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
+                await TorrentUpdater.Stop();
                 ex.ShowKkmanOutdatedMessage();
             }
             catch (OperationCanceledException)
@@ -298,11 +315,13 @@ namespace KKManager.Updater.Windows
                 MessageBox.Show("Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, " +
                                 "and that you did not hit your download limits, then try again.\n\nError message (check log for more):\n" + string.Join("\n", exceptions.Select(x => x.Message)),
                                 "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                UpdateDownloadCoordinator.SetStatus(UpdateDownloadCoordinator.CoordinatorStatus.Aborted, null);
+                await TorrentUpdater.Stop();
             }
             finally
             {
+                updateTimer.Tick -= DoStatusLabelUpdate;
                 updateTimer.Stop();
+
                 checkBoxSleep.Enabled = false;
 
                 fastObjectListView1.EmptyListMsg = "Nothing was downloaded";
@@ -310,19 +329,40 @@ namespace KKManager.Updater.Windows
                 _cancelToken.Cancel();
 
                 labelPercent.Text = "";
+
+                string topText;
                 if (_completedSize != FileSize.Empty)
                 {
-                    labelPercent.Text += $"Downloaded {_completedSize} out of {_overallSize}";
+                    topText = $"Downloaded {_completedSize} out of {_overallSize}";
                     if (downloadStartTime != DateTime.MinValue)
                     {
                         var timeSpent = DateTime.Now - downloadStartTime;
-                        labelPercent.Text += $" in {timeSpent.GetReadableTimespan()}";
+                        topText += $" in {timeSpent.GetReadableTimespan()}";
                     }
-                    labelPercent.Text += "\n";
                 }
-                var averageDlSpeed = averageDownloadSpeed.GetAverage();
-                if (averageDlSpeed > 0)
-                    labelPercent.Text += $"Average download speed: {new FileSize(averageDlSpeed)}/s";
+                else
+                {
+                    topText = "Nothing was downloaded";
+                }
+
+                if (TorrentUpdater.GetCurrentUpload() != null)
+                {
+                    updateTimer.Tick += (o, args) =>
+                    {
+                        labelPercent.Text = topText;
+                        var uploadSpeed = TorrentUpdater.GetCurrentUpload();
+                        if (uploadSpeed.HasValue) labelPercent.Text += $"\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)";
+                    };
+                    updateTimer.Start();
+                }
+                else
+                {
+                    var averageDlSpeed = averageDownloadSpeed.GetAverage();
+                    if (averageDlSpeed > 0)
+                        topText += $"\nAverage download speed: {new FileSize(averageDlSpeed)}/s)";
+                }
+
+                labelPercent.Text = topText;
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
                 button1.Enabled = true;
@@ -374,6 +414,9 @@ namespace KKManager.Updater.Windows
         protected override async void OnClosed(EventArgs e)
         {
             _cancelToken.Cancel();
+
+            await TorrentUpdater.Stop();
+            await Task.Delay(200);
 
             await RemoveTempDownloadDirectory();
 

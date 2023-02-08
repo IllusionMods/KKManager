@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Updater.Data;
@@ -23,34 +24,7 @@ namespace KKManager.Updater.Downloader
             Finished,
         }
 
-        public static CoordinatorStatus Status { get; private set; } = CoordinatorStatus.Stopped;
-
-        internal static void SetStatus(CoordinatorStatus value, UpdateDownloadCoordinator source)
-        {
-            if (Status != value)
-            {
-                Status = value;
-                UpdateStatusChanged?.Invoke(source, new UpdateStatusChangedEventArgs(source, value));
-            }
-        }
-
-        internal void SetStatus(CoordinatorStatus value)
-        {
-            SetStatus(value, this);
-        }
-
-        public class UpdateStatusChangedEventArgs : EventArgs
-        {
-            public UpdateStatusChangedEventArgs(UpdateDownloadCoordinator source, CoordinatorStatus status)
-            {
-                Source = source;
-                Status = status;
-            }
-            public UpdateDownloadCoordinator Source { get; }
-            public CoordinatorStatus Status { get; }
-        }
-
-        public static event EventHandler<UpdateStatusChangedEventArgs> UpdateStatusChanged;
+        public BehaviorSubject<CoordinatorStatus> Status { get; } = new BehaviorSubject<CoordinatorStatus>(CoordinatorStatus.Stopped);
 
         private readonly List<UpdateDownloadItem> _updateItems;
         private readonly CancellationToken _cancellationToken;
@@ -62,8 +36,8 @@ namespace KKManager.Updater.Downloader
 
             cancellationToken.Register(() =>
             {
-                if (Status == CoordinatorStatus.Stopped)
-                    SetStatus(CoordinatorStatus.Aborted);
+                if (Status.Value == CoordinatorStatus.Stopped)
+                    Status.OnNext(CoordinatorStatus.Aborted);
             });
 
             _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -105,17 +79,15 @@ namespace KKManager.Updater.Downloader
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            SetStatus(CoordinatorStatus.Stopped, downloadCoordinator);
-
             return downloadCoordinator;
         }
 
         public async Task RunUpdate()
         {
-            if (Status != CoordinatorStatus.Stopped)
+            if (Status.Value != CoordinatorStatus.Stopped)
                 throw new InvalidOperationException("Can only start when status is Stopped. Current status: " + Status);
 
-            SetStatus(CoordinatorStatus.Starting);
+            Status.OnNext(CoordinatorStatus.Starting);
 
             try
             {
@@ -138,7 +110,7 @@ namespace KKManager.Updater.Downloader
                     }
                 }
 
-                SetStatus(CoordinatorStatus.Running);
+                Status.OnNext(CoordinatorStatus.Running);
 
                 while (runningTasks.Any(x => x.Item1.IsAlive))
                 {
@@ -147,7 +119,7 @@ namespace KKManager.Updater.Downloader
 
                 _cancellationToken.ThrowIfCancellationRequested();
 
-                SetStatus(CoordinatorStatus.Finished);
+                Status.OnNext(CoordinatorStatus.Finished);
             }
             catch (OperationCanceledException)
             {
@@ -157,12 +129,12 @@ namespace KKManager.Updater.Downloader
                         updateItem.MarkAsCancelled();
                 }
 
-                SetStatus(CoordinatorStatus.Aborted);
+                Status.OnNext(CoordinatorStatus.Aborted);
                 throw;
             }
             catch
             {
-                SetStatus(CoordinatorStatus.Aborted);
+                Status.OnNext(CoordinatorStatus.Aborted);
                 throw;
             }
         }
@@ -285,7 +257,9 @@ namespace KKManager.Updater.Downloader
         public void Dispose()
         {
             _cancellationTokenSource.Cancel();
-            SetStatus(CoordinatorStatus.Disposed);
+            Status.OnNext(CoordinatorStatus.Disposed);
+            Status.OnCompleted();
+            Status.Dispose();
         }
     }
 }

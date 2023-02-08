@@ -9,11 +9,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Functions;
-using KKManager.Properties;
 using KKManager.Updater.Data;
-using KKManager.Updater.Downloader;
 using KKManager.Updater.Utils;
-using KKManager.Updater.Windows;
 using KKManager.Util;
 using MonoTorrent;
 using MonoTorrent.BEncoding;
@@ -37,7 +34,7 @@ namespace KKManager.Updater.Sources
             // 
             // Debugger.Break();
 
-            LoggerFactory.Register (className => new TextLogger (Console.Out, className));
+            LoggerFactory.Register(className => new TextLogger(Console.Out, className));
 
             var client = new ClientEngine(new EngineSettingsBuilder
             {
@@ -81,14 +78,10 @@ namespace KKManager.Updater.Sources
 
         private static async Task<ClientEngine> GetClient()
         {
+#if DEBUG
             if (_client == null)
-            {
-                UpdateDownloadCoordinator.UpdateStatusChanged += UpdateStatusChanged;
-#if TRACE
                 LoggerFactory.Register(className => new TextLogger(Console.Out, className));
 #endif
-            }
-
             if (_client == null || _client.Disposed)
             {
                 _client = new ClientEngine(new EngineSettingsBuilder
@@ -97,7 +90,10 @@ namespace KKManager.Updater.Sources
                     CacheDirectory = Path.Combine(InstallDirectoryHelper.TempDir.FullName, "KKManager_p2pcache"),
                     AllowPortForwarding = KKManager.Properties.Settings.Default.P2P_PortForward,
                     AllowLocalPeerDiscovery = false,
-                    ListenEndPoints = new Dictionary<string, IPEndPoint> { { "ipv4", new IPEndPoint(IPAddress.Any, KKManager.Properties.Settings.Default.P2P_Port) } }
+                    ListenEndPoints = new Dictionary<string, IPEndPoint> { { "ipv4", new IPEndPoint(IPAddress.Any, KKManager.Properties.Settings.Default.P2P_Port) } },
+                    MaximumOpenFiles = 900000,
+                    MaximumHalfOpenConnections = 15,
+                    MaximumConnections = 200,
                     //UsePartialFiles = true todo bugged in beta builds
                 }.ToSettings());
 
@@ -111,7 +107,7 @@ namespace KKManager.Updater.Sources
                         if (IPAddress.TryParse(eventArgs.Peer.ConnectionUri.Host, out var addr) && (addr.Equals(publicIp) || addr.Equals(loopbackIp)))
                         {
 #if DEBUG
-                            Console.WriteLine($"Banning own IP to stop failed connections ({eventArgs.Peer.ConnectionUri})");
+                            Console.WriteLine($"[P2P] Banning own IP to stop failed connections ({eventArgs.Peer.ConnectionUri})");
 #endif
                             eventArgs.BanPeer = true;
                         }
@@ -119,19 +115,21 @@ namespace KKManager.Updater.Sources
                 }
                 else
                 {
-                    Console.WriteLine("Failed to get the public IP address");
+                    Console.WriteLine("[P2P] Failed to get the public IP address");
                 }
             }
 
             return _client;
         }
 
-        private static void DisposeClient()
+        private static async Task DisposeClient()
         {
             if (_client == null || _client.Disposed) return;
             try
             {
-                _client.StopAllAsync().Wait(60);
+                Console.WriteLine("[P2P] Stopping the client");
+
+                await _client.StopAllAsync();
             }
             catch (Exception e)
             {
@@ -145,7 +143,7 @@ namespace KKManager.Updater.Sources
         {
             if (torrent == null) throw new ArgumentNullException(nameof(torrent));
             if (updateInfo == null) throw new ArgumentNullException(nameof(updateInfo));
-            if (!Settings.Default.P2P_Enabled) throw new InvalidOperationException("P2P is disabled");
+            if (!KKManager.Properties.Settings.Default.P2P_Enabled) throw new InvalidOperationException("P2P is disabled");
 
             var client = await GetClient();
 
@@ -168,7 +166,9 @@ namespace KKManager.Updater.Sources
                 CreateContainingDirectory = false,
                 AllowInitialSeeding = true,
                 AllowDht = false,
-                AllowPeerExchange = true
+                AllowPeerExchange = true,
+                MaximumConnections = 120,
+                UploadSlots = 15
             }.ToSettings());
 
             torrentManager.AddDebugLogging();
@@ -182,15 +182,15 @@ namespace KKManager.Updater.Sources
 
             if (torrentManager.State == TorrentState.Stopped)
             {
-                Console.WriteLine($"Hash checking {origin}, this can take a while!");
+                Console.WriteLine($"[P2P] Hash checking {origin}, this can take a while!");
                 //todo fast resume?
                 await torrentManager.HashCheckAsync(false);
-                Console.WriteLine($"Hash checking {origin} finished in {sw.ElapsedMilliseconds}ms");
+                Console.WriteLine($"[P2P] Hash checking {origin} finished in {sw.ElapsedMilliseconds}ms");
             }
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var newSource = new TorrentSource(origin, Math.Max(1, Math.Min(50, torrentManager.Files.Count(x => x.BitField.PercentComplete < 100d))));
+            var newSource = new TorrentSource(origin, Math.Max(1, Math.Min(80, torrentManager.Files.Count(x => x.BitField.PercentComplete < 100d))));
 
             var remoteFiles = new List<UpdateItem>();
             foreach (var file in torrentManager.Files)
@@ -207,7 +207,7 @@ namespace KKManager.Updater.Sources
                 // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
                 if (!isFinished && targetPath.Exists && targetPath.Length == 0)
                 {
-                    Debug.WriteLine($"{isFinished} - {file.DownloadIncompleteFullPath}  ->  {file.DownloadCompleteFullPath}");
+                    Debug.WriteLine($"IncompletePath={file.DownloadIncompleteFullPath}  ->  CompletePath={file.DownloadCompleteFullPath}");
                     await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
 
                     if (torrentManager.State == TorrentState.Error)
@@ -259,96 +259,6 @@ namespace KKManager.Updater.Sources
             //((TorrentFileInfo)item.RemoteFile).Move(targetpath);
             _filesToMove.Add(new KeyValuePair<TorrentFileInfo, FileInfo>((TorrentFileInfo)item.RemoteFile, targetpath));
             return true;
-        }
-
-        private static async void UpdateStatusChanged(object sender, UpdateDownloadCoordinator.UpdateStatusChangedEventArgs e)
-        {
-            if (!Settings.Default.P2P_Enabled) return;
-            try
-            {
-                switch (e.Status)
-                {
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Stopped:
-                        break;
-
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Starting:
-                        _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
-                        break;
-
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Running:
-                        if (_client == null || _client.Disposed)
-                            throw new InvalidOperationException("Client is " + (_client == null ? "null" : "disposed"));
-
-                        if (_client.Torrents.Any(x => !x.Complete))
-                        {
-                            foreach (var torrent in _client.Torrents)
-                            {
-                                foreach (var file in torrent.Files)
-                                {
-                                    // Seed finished files, but do not download unfinished yet
-                                    var isFinished = file.BitField.PercentComplete >= 100d;
-
-                                    var targetPath = new FileInfo(file.FullPath);
-                                    // If files don't exist, a 0 byte placeholder is created by HashCheckAsync, which messes things up later
-                                    // Partially downloaded files aren't changed until the torrent is started
-                                    // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
-                                    if (!isFinished && targetPath.Exists && targetPath.Length > 0)
-                                    {
-                                        Debug.WriteLine($"{isFinished} - {file.DownloadIncompleteFullPath}  ->  {file.DownloadCompleteFullPath}");
-                                        await torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName);
-                                        if (torrent.State == TorrentState.Error)
-                                        {
-                                            await torrent.StopAsync();
-                                            await Task.Delay(200, CancellationToken.None);
-                                            await torrent.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
-                                            if (torrent.State == TorrentState.Error)
-                                                throw new IOException("Failed to move file " + file.FullPath, torrent.Error?.Exception);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        await _client.StartAllAsync();
-                        break;
-
-                    //case UpdateDownloadCoordinator.CoordinatorStatus.Aborted:
-                    //    // Unfinished files are already moved to temp directory so no need to clean them up
-                    //    goto case UpdateDownloadCoordinator.CoordinatorStatus.Finished;
-                    //
-                    //case UpdateDownloadCoordinator.CoordinatorStatus.Finished:
-
-                    // Keep seeding until the update dialog is closed
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Finished:
-                        break;
-
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Aborted:
-                    case UpdateDownloadCoordinator.CoordinatorStatus.Disposed:
-                        DisposeClient();
-                        foreach (var pair in _filesToMove)
-                        {
-                            try
-                            {
-                                pair.Key.Move(pair.Value);
-                            }
-                            catch (Exception exception)
-                            {
-                                Console.WriteLine(exception);
-                            }
-                        }
-
-                        _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(e.Status), e.Status, "Unknown enum value");
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-                throw;
-            }
         }
 
         public class TorrentSource : UpdateSourceBase
@@ -450,12 +360,95 @@ namespace KKManager.Updater.Sources
                 //todo do this in a cleaner way
                 if (PercentComplete >= 100 && !PathTools.PathsEqual(_info.DownloadCompleteFullPath, targetpath.FullName))
                 {
-                    Console.WriteLine($"Moving finished torrent download [{_info.FullPath}] to [{targetpath.FullName}]{(targetpath.Exists ? " (overwrite existing)" : "")}");
+                    Console.WriteLine($"[P2P] Moving finished torrent download [{_info.FullPath}] to [{targetpath.FullName}]{(targetpath.Exists ? " (overwrite existing)" : "")}");
 
                     //if (File.Exists(_info.FullPath)) 
                     File.Move(_info.FullPath, targetpath.FullName);
                 }
             }
+        }
+
+        public static async Task Stop()
+        {
+            await DisposeClient();
+
+            foreach (var pair in _filesToMove)
+            {
+                try
+                {
+                    pair.Key.Move(pair.Value);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+            }
+
+            _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
+        }
+
+        public static async Task Start()
+        {
+            // If null, there's nothing to seed
+            if (_client == null || _client.IsRunning)
+                return;
+
+            if (_client.Disposed)
+                throw new InvalidOperationException("Client is disposed");
+
+            _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
+
+            var unfinishedCount = _client.Torrents.Count(x => !x.Complete);
+
+            Console.WriteLine($"[P2P] Starting the client with {_client.Torrents.Count} torrents ({unfinishedCount} unfinished)");
+
+            if (unfinishedCount > 0)
+            {
+                foreach (var torrent in _client.Torrents)
+                {
+                    foreach (var file in torrent.Files)
+                    {
+                        // Seed finished files, but do not download unfinished yet
+                        var isFinished = file.BitField.PercentComplete >= 100d;
+
+                        var targetPath = new FileInfo(file.FullPath);
+                        // If files don't exist, a 0 byte placeholder is created by HashCheckAsync, which messes things up later
+                        // Partially downloaded files aren't changed until the torrent is started
+                        // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
+                        if (!isFinished && targetPath.Exists && targetPath.Length > 0)
+                        {
+                            Debug.WriteLine($"IncompletePath={file.DownloadIncompleteFullPath}  ->  CompletePath={file.DownloadCompleteFullPath}");
+                            await torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName);
+                            if (torrent.State == TorrentState.Error)
+                            {
+                                await torrent.StopAsync();
+                                await Task.Delay(200, CancellationToken.None);
+                                await torrent.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
+                                if (torrent.State == TorrentState.Error)
+                                    throw new IOException("Failed to move file " + file.FullPath, torrent.Error?.Exception);
+                            }
+                        }
+                    }
+                }
+            }
+
+            await _client.StartAllAsync();
+        }
+
+        public static long? GetCurrentUpload()
+        {
+            if (_client == null || !_client.IsRunning)
+                return null;
+
+            return _client.TotalUploadRate;
+        }
+
+        public static int? GetPeerCount()
+        {
+            if (_client == null || !_client.IsRunning)
+                return null;
+
+            return _client.ConnectionManager.OpenConnections;
         }
     }
 }
