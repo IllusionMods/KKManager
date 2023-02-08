@@ -552,7 +552,7 @@ namespace KKManager.Windows
                 var updateSources = GetUpdateSources();
                 if (updateSources.Any())
                 {
-                    var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources, null, true);
+                    var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources, null, true, new Progress<float>());
                     var updates = results.Count(item => !item.UpToDate);
 
                     _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();

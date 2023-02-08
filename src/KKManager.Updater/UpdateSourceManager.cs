@@ -37,14 +37,16 @@ namespace KKManager.Updater
             }
         }
 
-        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover)
+        public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover, IProgress<float> progressCallback)
         {
             Console.WriteLine("Starting update search...");
-            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids, onlyDiscover), cancellationToken);
+            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids, onlyDiscover, progressCallback), cancellationToken);
         }
 
-        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover)
+        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover, IProgress<float> progressCallback)
         {
+            progressCallback.Report(0);
+
             var results = new ConcurrentBag<UpdateTask>();
 
             var ignoreListPath = "ignorelist.txt";
@@ -89,21 +91,25 @@ namespace KKManager.Updater
                 return new { task = updateTask, source };
             }).ToList();
 
+            var finishedTasks = 0;
             foreach (var task in concurrentTasks)
             {
                 try
                 {
                     await task.task;
                 }
-                catch (OperationCanceledException)
-                {
-                }
+                catch (OperationCanceledException) { }
                 catch (Exception e)
                 {
                     if (e is AggregateException ae && ae.InnerExceptions.Any(x => x is OperationCanceledException))
                         continue;
                     else
                         Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
+                }
+                finally
+                {
+                    finishedTasks++;
+                    progressCallback.Report((float)finishedTasks / (float)concurrentTasks.Count);
                 }
             }
 

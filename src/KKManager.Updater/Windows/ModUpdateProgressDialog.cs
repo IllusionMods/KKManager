@@ -189,13 +189,18 @@ namespace KKManager.Updater.Windows
                 SetStatus("Searching for mod updates...");
                 labelPercent.Text = "Please wait, this might take a few minutes.";
                 if (KKManager.Properties.Settings.Default.P2P_Enabled)
-                    labelPercent.Text += " On slow HDDs\nit can take over 10 minutes when P2P is enabled.";
+                    labelPercent.Text += "\nIt can take over 10 minutes when P2P is enabled.";
 
-                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false);
+                progressBar1.Maximum = 1000;
+                progressBar1.Style = ProgressBarStyle.Blocks;
+
+                var progress = new Progress<float>(p => progressBar1.Value = (int)Math.Round(p * 1000));
+
+                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress);
+
+                progressBar1.Value = 0;
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
-
-                progressBar1.Style = ProgressBarStyle.Blocks;
 
                 if (updateTasks.All(x => x.UpToDate))
                 {
