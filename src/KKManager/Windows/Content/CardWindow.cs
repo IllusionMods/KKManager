@@ -283,7 +283,9 @@ namespace KKManager.Windows.Content
 
             if (!additive)
             {
+                foreach (Image image in listView.SmallImageList.Images) image.Dispose();
                 listView.SmallImageList.Images.Clear();
+                foreach (Image image in listView.LargeImageList.Images) image.Dispose();
                 listView.LargeImageList.Images.Clear();
             }
 
