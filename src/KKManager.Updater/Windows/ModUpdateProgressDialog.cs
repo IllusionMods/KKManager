@@ -407,6 +407,8 @@ namespace KKManager.Updater.Windows
             if (_cancelToken.IsCancellationRequested)
             {
                 UseWaitCursor = true;
+                SetStatus("Finishing the update process, please wait...");
+                labelPercent.Text = "This could take a minute.";
                 Application.DoEvents();
                 Close();
             }
