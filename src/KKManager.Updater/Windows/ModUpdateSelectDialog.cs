@@ -54,7 +54,7 @@ namespace KKManager.Updater.Windows
                         w.Icon = owner.Icon;
                     w.StartPosition = FormStartPosition.CenterParent;
                     w._updateTasks = updateTasks.OrderBy(x => x.UpToDate).ThenBy(x => x.TaskName).ToList();
-                    w.ShowDialog();
+                    w.ShowDialog(owner);
 
                     return w._selectedItems;
                 }
