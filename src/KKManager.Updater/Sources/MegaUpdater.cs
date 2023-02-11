@@ -74,11 +74,11 @@ namespace KKManager.Updater.Sources
             }
         }
 
-        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
+        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
         {
             await Connect(false);
             await RetryHelper.RetryOnExceptionAsync(async () => _allNodes = (await _client.GetNodesFromLinkAsync(_currentFolderLink)).ToList(), 2, TimeSpan.FromSeconds(1), cancellationToken);
-            return await base.GetUpdateItems(cancellationToken, onlyDiscover);
+            return await base.GetUpdateItems(cancellationToken, onlyDiscover, progressCallback);
         }
 
         protected override async Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken)

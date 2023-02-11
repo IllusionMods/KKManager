@@ -269,7 +269,7 @@ namespace KKManager.Updater.Sources
 
             public override void Dispose() { }
 
-            public override Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
+            public override Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
             {
                 throw new NotSupportedException();
             }

@@ -55,7 +55,7 @@ namespace KKManager.Updater.Sources
 
         public abstract void Dispose();
 
-        public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover)
+        public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
         {
             var updateInfos = new List<UpdateInfo>();
 
@@ -129,8 +129,12 @@ namespace KKManager.Updater.Sources
             var allResults = new List<UpdateTask>();
             if (updateInfos.Any())
             {
-                foreach (var updateInfo in updateInfos)
+                for (var index = 0; index < updateInfos.Count; index++)
                 {
+                    var updateInfo = updateInfos[index];
+
+                    progressCallback.Report((1 + index) / (float)(updateInfos.Count + 2));
+
                     // If a torrent of this update exists, try to use it instead of this source first
                     if (!onlyDiscover && KKManager.Properties.Settings.Default.P2P_Enabled && !string.IsNullOrWhiteSpace(updateInfo.TorrentFileName))
                     {
@@ -195,6 +199,8 @@ namespace KKManager.Updater.Sources
                     }
                 }
             }
+            progressCallback.Report(1);
+
             return allResults;
         }
 

@@ -58,14 +58,22 @@ namespace KKManager.Updater
 
             Exception criticalException = null;
 
+            var progressArr = new float[updateSources.Length];
+
             // First start all of the sources, then wait until they all finish
-            var concurrentTasks = updateSources.Select(source =>
+            var concurrentTasks = updateSources.Select((source, index) =>
             {
+                IProgress<float> taskProgress = new Progress<float>(f =>
+                {
+                    progressArr[index] = f;
+                    progressCallback.Report(progressArr.Sum(pr => pr / progressArr.Length));
+                });
+
                 void DoUpdate()
                 {
                     try
                     {
-                        foreach (var task in source.GetUpdateItems(cancellationToken, onlyDiscover).Result)
+                        foreach (var task in source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).Result)
                         {
                             anySuccessful = true;
 
@@ -76,13 +84,18 @@ namespace KKManager.Updater
 
                             task.Items.RemoveAll(x => x.UpToDate ||
                                                       // Todo disable updating by default instead whenever that's done
-                                                      (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)) || (x.TargetPath != null && ignoreList.Any(x.TargetPath.GetNameWithoutExtension().Contains)));
+                                                      (x.RemoteFile != null && ignoreList.Any(x.RemoteFile.Name.Contains)) ||
+                                                      (x.TargetPath != null && ignoreList.Any(x.TargetPath.GetNameWithoutExtension().Contains)));
                             results.Add(task);
                         }
                     }
                     catch (OutdatedVersionException ex)
                     {
                         criticalException = ex;
+                    }
+                    finally
+                    {
+                        taskProgress.Report(1);
                     }
                 }
                 var updateTask = source.HandlesRetry ?
@@ -91,7 +104,6 @@ namespace KKManager.Updater
                 return new { task = updateTask, source };
             }).ToList();
 
-            var finishedTasks = 0;
             foreach (var task in concurrentTasks)
             {
                 try
@@ -106,12 +118,8 @@ namespace KKManager.Updater
                     else
                         Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
                 }
-                finally
-                {
-                    finishedTasks++;
-                    progressCallback.Report((float)finishedTasks / (float)concurrentTasks.Count);
-                }
             }
+            progressCallback.Report(1);
 
             cancellationToken.ThrowIfCancellationRequested();
 
