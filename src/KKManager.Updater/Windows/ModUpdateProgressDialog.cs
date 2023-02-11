@@ -206,7 +206,6 @@ namespace KKManager.Updater.Windows
                 {
                     SetStatus("Everything is up to date!");
                     progressBar1.Value = progressBar1.Maximum;
-                    _cancelToken.Cancel();
                     await TorrentUpdater.Start();
                     return;
                 }
@@ -407,6 +406,8 @@ namespace KKManager.Updater.Windows
         {
             if (_cancelToken.IsCancellationRequested)
             {
+                UseWaitCursor = true;
+                Application.DoEvents();
                 Close();
             }
             else
@@ -416,7 +417,16 @@ namespace KKManager.Updater.Windows
             }
         }
 
-        protected override async void OnClosed(EventArgs e)
+        protected override void OnClosed(EventArgs e)
+        {
+            Task.Run(Finish).Wait();
+
+            UseWaitCursor = false;
+
+            base.OnClosed(e);
+        }
+
+        private async Task Finish()
         {
             _cancelToken.Cancel();
 
@@ -424,8 +434,6 @@ namespace KKManager.Updater.Windows
             await Task.Delay(200);
 
             await RemoveTempDownloadDirectory();
-
-            base.OnClosed(e);
         }
 
         private static async Task RemoveTempDownloadDirectory()
