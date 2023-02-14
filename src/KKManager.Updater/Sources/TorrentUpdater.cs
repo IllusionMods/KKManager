@@ -195,17 +195,21 @@ namespace KKManager.Updater.Sources
             var remoteFiles = new List<UpdateItem>();
             foreach (var file in torrentManager.Files)
             {
-                // Seed finished files, but do not download unfinished yet
-                var isFinished = file.BitField.PercentComplete >= 100d;
-
-                var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName, newSource);
                 var targetPath = new FileInfo(file.FullPath);
 
-                await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : Priority.DoNotDownload);
+                // Seed finished files, but do not download unfinished yet
+                var isFinished = file.BitField.PercentComplete >= 100d;
+                // The file is most likely downloaded entirely, but a different file that shares a chunk with this file is missing
+                // which causes the chunk to be lost after the torrent starts downloading
+                var isProbablyFinished = isFinished || (targetPath.Exists && targetPath.Length == file.Length);
+
+                var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName, newSource);
+
+                await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : isProbablyFinished ? Priority.Highest : Priority.DoNotDownload);
                 // If files don't exist, a 0 byte placeholder is created by HashCheckAsync, which messes things up later
                 // Partially downloaded files aren't changed until the torrent is started
                 // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
-                if (!isFinished && targetPath.Exists && targetPath.Length == 0)
+                if (!isProbablyFinished && targetPath.Exists && targetPath.Length == 0)
                 {
                     Debug.WriteLine($"IncompletePath={file.DownloadIncompleteFullPath}  ->  CompletePath={file.DownloadCompleteFullPath}");
                     await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
@@ -218,8 +222,11 @@ namespace KKManager.Updater.Sources
                         if (torrentManager.State == TorrentState.Error)
                             throw new IOException("Failed to move file " + file.FullPath, torrentManager.Error?.Exception);
                     }
+
+                    // File was moved so it no longer exists at the path, need to refresh or UI will think it still exists
+                    targetPath.Refresh();
                 }
-                var updateItem = new UpdateItem(targetPath, info, isFinished, CustomMoveResult);
+                var updateItem = new UpdateItem(targetPath, info, isProbablyFinished, CustomMoveResult);
                 remoteFiles.Add(updateItem);
             }
 
