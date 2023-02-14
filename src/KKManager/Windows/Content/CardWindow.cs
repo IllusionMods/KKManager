@@ -46,7 +46,7 @@ namespace KKManager.Windows.Content
 
             Details(this, EventArgs.Empty);
 
-            ((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
+            //((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
 
             _typedListView = new TypedObjectListView<Card>(listView);
 
@@ -65,6 +65,15 @@ namespace KKManager.Windows.Content
             };
 
             olvColumnRelativeFilename.AspectGetter = rowObject => rowObject is Card card ? card.Location.FullName.Substring(_currentDirectory.FullName.Length).TrimStart('/', '\\') : rowObject;
+            olvColumnMissingMods.AspectGetter = rowObject => rowObject is Card card ? card.MissingPlugins?.Length ?? 0 + card.MissingZipmods?.Length ?? 0 : 0;
+
+#if DEBUG
+            foreach (var column in listView.AllColumns)
+            {
+                if (string.IsNullOrEmpty(column.ToolTipText))
+                    Debug.Fail(column.ToolTipText);
+            }
+#endif
 
             ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
         }
