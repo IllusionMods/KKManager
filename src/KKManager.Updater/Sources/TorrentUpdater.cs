@@ -73,7 +73,6 @@ namespace KKManager.Updater.Sources
 #endif
         }
 
-        private static ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>> _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
         private static ClientEngine _client;
 
         private static async Task<ClientEngine> GetClient()
@@ -145,13 +144,14 @@ namespace KKManager.Updater.Sources
             if (updateInfo == null) throw new ArgumentNullException(nameof(updateInfo));
             if (!KKManager.Properties.Settings.Default.P2P_Enabled) throw new InvalidOperationException("P2P is disabled");
 
-            var client = await GetClient();
+            var client = await GetClient().ConfigureAwait(false);
 
             var existing = client.Torrents.FirstOrDefault(x => torrent.Equals(x.Torrent));
             if (existing != null)
             {
-                await existing.StopAsync();
-                await client.RemoveAsync(existing, RemoveMode.KeepAllData);
+                throw new InvalidOperationException(torrent.Name + " was already added to the client!");
+                //await existing.StopAsync().ConfigureAwait(false);
+                //await client.RemoveAsync(existing, RemoveMode.KeepAllData).ConfigureAwait(false);
             }
 
             var targetDir = updateInfo.ClientPathInfo;
@@ -169,12 +169,12 @@ namespace KKManager.Updater.Sources
                 AllowPeerExchange = true,
                 MaximumConnections = 120,
                 UploadSlots = 20
-            }.ToSettings());
+            }.ToSettings()).ConfigureAwait(false);
 
             torrentManager.AddDebugLogging();
 
             // Doesn't do anything on torrent files?
-            await torrentManager.WaitForMetadataAsync(cancellationToken);
+            await torrentManager.WaitForMetadataAsync(cancellationToken).ConfigureAwait(false);
 
             var origin = $"{updateInfo.Source.Origin}->{updateInfo.TorrentFileName}";
 
@@ -184,7 +184,7 @@ namespace KKManager.Updater.Sources
             {
                 Console.WriteLine($"[P2P] Hash checking {origin}, this can take a while!");
                 //todo fast resume?
-                await torrentManager.HashCheckAsync(false);
+                await torrentManager.HashCheckAsync(false).ConfigureAwait(false);
                 Console.WriteLine($"[P2P] Hash checking {origin} finished in {sw.ElapsedMilliseconds}ms");
             }
 
@@ -199,26 +199,30 @@ namespace KKManager.Updater.Sources
 
                 // Seed finished files, but do not download unfinished yet
                 var isFinished = file.BitField.PercentComplete >= 100d;
+
+                if (!isFinished)
+                    Debug.WriteLine($"Unfinished file: {file.FullPath} ({file.BitField.PercentComplete}) Size of existing file: {(targetPath.Exists ? targetPath.Length : -1)} / {file.Length} ({(targetPath.Exists ? targetPath.Length : 0) / (float)file.Length}%)");
+
                 // The file is most likely downloaded entirely, but a different file that shares a chunk with this file is missing
                 // which causes the chunk to be lost after the torrent starts downloading
-                var isProbablyFinished = isFinished || (targetPath.Exists && targetPath.Length == file.Length);
+                var isProbablyFinished = isFinished || (targetPath.Exists && targetPath.Length == file.Length && file.BitField.PercentComplete > 60);
 
                 var info = new TorrentFileInfo(file, torrentManager, updateInfo.ClientPathInfo.FullName, newSource);
 
-                await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : isProbablyFinished ? Priority.Highest : Priority.DoNotDownload);
+                await torrentManager.SetFilePriorityAsync(file, isFinished ? Priority.Low : isProbablyFinished ? Priority.Highest : Priority.DoNotDownload).ConfigureAwait(false);
                 // If files don't exist, a 0 byte placeholder is created by HashCheckAsync, which messes things up later
                 // Partially downloaded files aren't changed until the torrent is started
                 // If a file is missing, other fully downloaded files can show as partially downloaded if they share chunks, so don't move those until we start
                 if (!isProbablyFinished && targetPath.Exists && targetPath.Length == 0)
                 {
                     Debug.WriteLine($"IncompletePath={file.DownloadIncompleteFullPath}  ->  CompletePath={file.DownloadCompleteFullPath}");
-                    await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
+                    await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename().ConfigureAwait(false)).FullName).ConfigureAwait(false);
 
                     if (torrentManager.State == TorrentState.Error)
                     {
-                        await torrentManager.StopAsync();
-                        await Task.Delay(200, cancellationToken);
-                        await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
+                        await torrentManager.StopAsync().ConfigureAwait(false);
+                        await Task.Delay(200, cancellationToken).ConfigureAwait(false);
+                        await torrentManager.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename().ConfigureAwait(false)).FullName).ConfigureAwait(false);
                         if (torrentManager.State == TorrentState.Error)
                             throw new IOException("Failed to move file " + file.FullPath, torrentManager.Error?.Exception);
                     }
@@ -235,12 +239,9 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            //foreach (var torrentTracker in torrentManager.TrackerManager.Tiers.SelectMany(x => x.Trackers))
-            //    await torrentManager.TrackerManager.RemoveTrackerAsync(torrentTracker);
-
             var trackerUri = new Uri(torrent.AnnounceUrls.First().First());
             var seedUri = new Uri($"ipv4://{trackerUri.Host}:{15847}");
-            await torrentManager.AddPeerAsync(new PeerInfo(seedUri, BEncodedString.Empty, true));
+            await torrentManager.AddPeerAsync(new PeerInfo(seedUri, BEncodedString.Empty, true)).ConfigureAwait(false);
 
             if (updateInfo.RemoveExtraClientFiles && updateInfo.ClientPathInfo.Exists)
             {
@@ -263,8 +264,8 @@ namespace KKManager.Updater.Sources
 
         private static bool CustomMoveResult(FileInfo currentpath, FileInfo targetpath, UpdateItem item)
         {
-            //((TorrentFileInfo)item.RemoteFile).Move(targetpath);
-            _filesToMove.Add(new KeyValuePair<TorrentFileInfo, FileInfo>((TorrentFileInfo)item.RemoteFile, targetpath));
+            var tfi = (TorrentFileInfo)item.RemoteFile;
+            tfi.Move(targetpath);
             return true;
         }
 
@@ -342,68 +343,49 @@ namespace KKManager.Updater.Sources
 
             public async Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                await _torrent.SetFilePriorityAsync(_info, Priority.High);
+                await _torrent.MoveFileAsync(_info, downloadTarget.FullName).ConfigureAwait(false);
+                await _torrent.SetFilePriorityAsync(_info, Priority.High).ConfigureAwait(false);
                 while (PercentComplete < 100d)
                 {
-                    await Task.Delay(1000, CancellationToken.None);
+                    await Task.Delay(1000, CancellationToken.None).ConfigureAwait(false);
                     if (cancellationToken.IsCancellationRequested)
                     {
                         // Managed to finish in time
                         if (PercentComplete >= 100d) break;
 
-                        await _torrent.SetFilePriorityAsync(_info, Priority.DoNotDownload);
+                        await _torrent.SetFilePriorityAsync(_info, Priority.DoNotDownload).ConfigureAwait(false);
                         throw new OperationCanceledException();
                     }
 
                     ((IProgress<double>)progressCallback).Report(PercentComplete);
                 }
 
-                await _torrent.SetFilePriorityAsync(_info, Priority.Normal);
+                await _torrent.SetFilePriorityAsync(_info, Priority.Normal).ConfigureAwait(false);
                 ((IProgress<double>)progressCallback).Report(100d);
             }
 
             public void Move(FileInfo targetpath)
             {
-                //todo do this in a cleaner way
-                if (PercentComplete >= 100 && !PathTools.PathsEqual(_info.DownloadCompleteFullPath, targetpath.FullName))
-                {
-                    Console.WriteLine($"[P2P] Moving finished torrent download [{_info.FullPath}] to [{targetpath.FullName}]{(targetpath.Exists ? " (overwrite existing)" : "")}");
-
-                    //if (File.Exists(_info.FullPath)) 
-                    File.Move(_info.FullPath, targetpath.FullName);
-                }
+                _torrent.MoveFileAsync(_info, targetpath.FullName);
             }
         }
 
         public static async Task Stop()
         {
-            await DisposeClient();
-
-            foreach (var pair in _filesToMove)
-            {
-                try
-                {
-                    pair.Key.Move(pair.Value);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
-            }
-
-            _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
+            await DisposeClient().ConfigureAwait(false);
         }
 
         public static async Task Start()
         {
             // If null, there's nothing to seed
-            if (_client == null || _client.IsRunning)
+            if (_client == null)
                 return;
+
+            if (_client.IsRunning)
+                throw new InvalidOperationException("Client is already started");
 
             if (_client.Disposed)
                 throw new InvalidOperationException("Client is disposed");
-
-            _filesToMove = new ConcurrentBag<KeyValuePair<TorrentFileInfo, FileInfo>>();
 
             var unfinishedCount = _client.Torrents.Count(x => !x.Complete);
 
@@ -425,12 +407,12 @@ namespace KKManager.Updater.Sources
                         if (!isFinished && targetPath.Exists && targetPath.Length > 0)
                         {
                             Debug.WriteLine($"IncompletePath={file.DownloadIncompleteFullPath}  ->  CompletePath={file.DownloadCompleteFullPath}");
-                            await torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName);
+                            await torrent.MoveFileAsync(file, UpdateItem.GetTempDownloadFilename().Result.FullName).ConfigureAwait(false);
                             if (torrent.State == TorrentState.Error)
                             {
-                                await torrent.StopAsync();
-                                await Task.Delay(200, CancellationToken.None);
-                                await torrent.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename()).FullName);
+                                await torrent.StopAsync().ConfigureAwait(false);
+                                await Task.Delay(200, CancellationToken.None).ConfigureAwait(false);
+                                await torrent.MoveFileAsync(file, (await UpdateItem.GetTempDownloadFilename().ConfigureAwait(false)).FullName).ConfigureAwait(false);
                                 if (torrent.State == TorrentState.Error)
                                     throw new IOException("Failed to move file " + file.FullPath, torrent.Error?.Exception);
                             }
@@ -439,7 +421,7 @@ namespace KKManager.Updater.Sources
                 }
             }
 
-            await _client.StartAllAsync();
+            await _client.StartAllAsync().ConfigureAwait(false);
         }
 
         public static long? GetCurrentUpload()
