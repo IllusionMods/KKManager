@@ -53,7 +53,7 @@ namespace KKManager.Updater.Sources
         {
             if (_childNodesLookup != null) return;
 
-            var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken);
+            var allNodes = await _client.GetListingAsync("/", FtpListOption.Recursive | FtpListOption.Size, cancellationToken).ConfigureAwait(false);
 
             // Deal with case-insensitive servers having duplicate files with different cases
             var groups = allNodes.GroupBy(x => x.FullName, StringComparer.InvariantCultureIgnoreCase);
@@ -145,7 +145,7 @@ namespace KKManager.Updater.Sources
 
             cancellationToken.ThrowIfCancellationRequested();
             var str = new MemoryStream();
-            if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken))
+            if (await _client.DownloadAsync(str, updateFileName, 0, null, cancellationToken).ConfigureAwait(false))
             {
                 str.Seek(0, SeekOrigin.Begin);
                 return str;
@@ -163,7 +163,7 @@ namespace KKManager.Updater.Sources
         {
             if (serverPath == null) throw new ArgumentNullException(nameof(serverPath));
 
-            await PopulateNodeLookups(cancellationToken);
+            await PopulateNodeLookups(cancellationToken).ConfigureAwait(false);
 
             if (!AllNodesLookup.TryGetValue(GetNormalizedNodeName(serverPath), out var remote) || remote == null)
             {
@@ -182,8 +182,8 @@ namespace KKManager.Updater.Sources
                 // Need to wrap the connect into a new task because it can block main thread when failing to connect
                 await Task.Run(async () =>
                 {
-                    await _client.AutoConnectAsync(cancellationToken);
-                }, cancellationToken);
+                    await _client.AutoConnectAsync(cancellationToken).ConfigureAwait(false);
+                }, cancellationToken).ConfigureAwait(false);
 
                 // todo hack, some servers don't announce the capability, needed for proper functionality
                 _client.RecursiveList = true;
@@ -210,13 +210,13 @@ namespace KKManager.Updater.Sources
             // Delete old file if any exists so the download doesn't try to append to it. Append mode is needed for retrying downloads to resume instead of restarting
             targetPath.Delete();
 
-            await Connect(cancellationToken);
+            await Connect(cancellationToken).ConfigureAwait(false);
 
             await _client.DownloadFileAsync(
                 targetPath.FullName, sourceItem.FullName,
                 FtpLocalExists.Resume, FtpVerify.Retry | FtpVerify.Delete | FtpVerify.Throw,
                 new Progress<FtpProgress>(progress => progressCallback.Report(progress.Progress)),
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
         }
 
         private sealed class FtpRemoteItem : IRemoteItem
@@ -259,7 +259,7 @@ namespace KKManager.Updater.Sources
 
             public async Task Download(FileInfo downloadTarget, Progress<double> progressCallback, CancellationToken cancellationToken)
             {
-                await Source.UpdateItem(SourceItem, downloadTarget, progressCallback, cancellationToken);
+                await Source.UpdateItem(SourceItem, downloadTarget, progressCallback, cancellationToken).ConfigureAwait(false);
             }
         }
     }

@@ -40,11 +40,6 @@ namespace KKManager.Updater
         public static async Task<List<UpdateTask>> GetUpdates(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover, IProgress<float> progressCallback)
         {
             Console.WriteLine("Starting update search...");
-            return await Task.Run(async () => await GetUpdatesInt(cancellationToken, updateSources, filterByGuids, onlyDiscover, progressCallback), cancellationToken);
-        }
-
-        private static async Task<List<UpdateTask>> GetUpdatesInt(CancellationToken cancellationToken, UpdateSourceBase[] updateSources, string[] filterByGuids, bool onlyDiscover, IProgress<float> progressCallback)
-        {
             progressCallback.Report(0);
 
             var results = new ConcurrentBag<UpdateTask>();
@@ -69,11 +64,11 @@ namespace KKManager.Updater
                     progressCallback.Report(progressArr.Sum(pr => pr / progressArr.Length));
                 });
 
-                void DoUpdate()
+                async Task DoUpdate()
                 {
                     try
                     {
-                        foreach (var task in source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).Result)
+                        foreach (var task in await source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).ConfigureAwait(false))
                         {
                             anySuccessful = true;
 
@@ -108,7 +103,7 @@ namespace KKManager.Updater
             {
                 try
                 {
-                    await task.task;
+                    await task.task.ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception e)

@@ -51,7 +51,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir().ConfigureAwait(false) != true)
                     throw new IOException($"Failed to create file in directory {tempPath} because of an IO issue - {ex.Message}", ex);
 
                 goto retryCreate;
@@ -75,18 +75,18 @@ namespace KKManager.Updater.Data
         {
             var inPlace = PathTools.PathsEqual(RemoteFile?.ClientRelativeFileName, TargetPath.FullName);
 
-            var downloadTarget = inPlace ? TargetPath : await GetTempDownloadFilename();
+            var downloadTarget = inPlace ? TargetPath : await GetTempDownloadFilename().ConfigureAwait(false);
             // Need to store the filename because MoveTo changes it to the new filename
             var downloadFilename = downloadTarget.FullName;
 
             if (RemoteFile != null)
             {
                 Console.WriteLine($"Attempting download of [{TargetPath.Name}] ({GetDownloadSize()}) from source {RemoteFile.Source.Origin}");
-                async Task DoDownload() => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken);
+                async Task DoDownload() => await RemoteFile.Download(downloadTarget, progressCallback, cancellationToken).ConfigureAwait(false);
                 if (RemoteFile.Source.HandlesRetry)
-                    await DoDownload();
+                    await DoDownload().ConfigureAwait(false);
                 else
-                    await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken);
+                    await RetryHelper.RetryOnExceptionAsync(DoDownload, 2, TimeSpan.FromSeconds(10), cancellationToken).ConfigureAwait(false);
 
                 downloadTarget.Refresh();
                 if (CustomMoveResult == null && (!downloadTarget.Exists || downloadTarget.Length != RemoteFile.ItemSize)) //bug a better way than CustomMoveResult is needed 
@@ -114,7 +114,7 @@ namespace KKManager.Updater.Data
                             TargetPath.Attributes = FileAttributes.Normal;
                             TargetPath.Delete();
                             // Make sure the file gets deleted before continuing
-                            await Task.Delay(200, cancellationToken);
+                            await Task.Delay(200, cancellationToken).ConfigureAwait(false);
                         }
 
                         if (RemoteFile != null)
@@ -127,11 +127,11 @@ namespace KKManager.Updater.Data
                 {
                     if (RemoteFile != null)
                     {
-                        await Task.Delay(1000, cancellationToken);
+                        await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
                         if (CustomMoveResult == null || !CustomMoveResult(downloadTarget, TargetPath, this))
                         {
                             downloadTarget.Replace(TargetPath.FullName, TargetPath.FullName + ".old", true);
-                            await Task.Delay(1000, cancellationToken);
+                            await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
                             File.Delete(TargetPath.FullName + ".old");
                         }
                     }
@@ -143,7 +143,7 @@ namespace KKManager.Updater.Data
             }
             catch (IOException ex)
             {
-                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() != true)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir().ConfigureAwait(false) != true)
                     throw new IOException($"Failed to apply update {TargetPath.FullName} because of an IO issue - {ex.Message}", ex);
 
                 goto retryDelete;

@@ -114,7 +114,7 @@ namespace KKManager.Updater.Downloader
 
                 while (runningTasks.Any(x => x.Item1.IsAlive))
                 {
-                    await Task.Delay(1000, CancellationToken.None);
+                    await Task.Delay(1000, CancellationToken.None).ConfigureAwait(false);
                 }
 
                 _cancellationToken.ThrowIfCancellationRequested();

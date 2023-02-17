@@ -181,7 +181,7 @@ namespace KKManager.Updater.Windows
                 #endregion
 
                 SetStatus("Preparing...");
-                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() == false)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir().ConfigureAwait(false) == false)
                     throw new OperationCanceledException();
 
                 #region Find and select updates
@@ -194,9 +194,9 @@ namespace KKManager.Updater.Windows
                 progressBar1.Maximum = 1000;
                 progressBar1.Style = ProgressBarStyle.Blocks;
 
-                var progress = new Progress<float>(p => progressBar1.Value = (int)Math.Round(p * 1000));
+                var progress = new Progress<float>(p => this.SafeInvoke(() => progressBar1.Value = (int)Math.Round(p * 1000)));
 
-                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress);
+                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress).ConfigureAwait(false);
 
                 progressBar1.Value = 0;
 
@@ -433,7 +433,7 @@ namespace KKManager.Updater.Windows
             _cancelToken.Cancel();
 
             await TorrentUpdater.Stop();
-            await Task.Delay(200);
+            await Task.Delay(200).ConfigureAwait(false);
 
             await RemoveTempDownloadDirectory();
         }
@@ -448,7 +448,7 @@ namespace KKManager.Updater.Windows
             }
             catch
             {
-                await Task.Delay(500);
+                await Task.Delay(500).ConfigureAwait(false);
                 try
                 {
                     if (Directory.Exists(downloadDirectory))
