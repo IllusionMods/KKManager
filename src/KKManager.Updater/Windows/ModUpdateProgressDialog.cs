@@ -353,9 +353,9 @@ namespace KKManager.Updater.Windows
                 {
                     updateTimer.Tick += (o, args) =>
                     {
-                        labelPercent.Text = topText;
                         var uploadSpeed = TorrentUpdater.GetCurrentUpload();
-                        if (uploadSpeed.HasValue) labelPercent.Text += $"\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)";
+                        if (uploadSpeed.HasValue) labelPercent.Text += $"{topText}\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)";
+                        else labelPercent.Text = topText;
                     };
                     updateTimer.Start();
                 }
