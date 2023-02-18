@@ -117,130 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>Файл</value>
+  <data name="olvColumnName.Text" xml:space="preserve">
+    <value>Название</value>
   </data>
-  <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>Выберите папку с игрой...</value>
+  <data name="olvColumnVersion.Text" xml:space="preserve">
+    <value>Версия</value>
   </data>
-  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
-    <value>Выйти</value>
+  <data name="olvColumnAuthor.Text" xml:space="preserve">
+    <value>Автор</value>
   </data>
-  <data name="openFemaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть папку с женскими картами</value>
+  <data name="olvColumnFilename.Text" xml:space="preserve">
+    <value>Имя файла</value>
   </data>
-  <data name="openMaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть папку с мужскими картами</value>
+  <data name="olvColumnPath.Text" xml:space="preserve">
+    <value>Путь к файлу</value>
   </data>
-  <data name="otherToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть другую папку...</value>
+  <data name="olvColumnWebsite.Text" xml:space="preserve">
+    <value>Сайт</value>
   </data>
-  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть менеджер карт</value>
+  <data name="toolStripButton1.Text" xml:space="preserve">
+    <value>Обновить</value>
   </data>
-  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть менеджер модов</value>
+  <data name="toolStripButtonEnable.Text" xml:space="preserve">
+    <value>Включить</value>
   </data>
-  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть менеджер плагинов</value>
+  <data name="toolStripButtonDisable.Text" xml:space="preserve">
+    <value>Выключить</value>
   </data>
-  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть настройки</value>
+  <data name="toolStripButtonDelete.Text" xml:space="preserve">
+    <value>Удалить</value>
   </data>
-  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть журнал</value>
+  <data name="toolStripButtonOpenModsDir.Text" xml:space="preserve">
+    <value>Папка с модами</value>
   </data>
-  <data name="viewToolStripMenuItem.Text" xml:space="preserve">
-    <value>Просмотр</value>
+  <data name="toolStripButtonSameGuid.Text" xml:space="preserve">
+    <value>Только дубликаты</value>
   </data>
-  <data name="startTheGameToolStripMenuItem.Text" xml:space="preserve">
-    <value>Запуск</value>
-  </data>
-  <data name="installDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>Каталог установки игры</value>
-  </data>
-  <data name="screenshotsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Скриншоты</value>
-  </data>
-  <data name="charactersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Персонажи</value>
-  </data>
-  <data name="scenesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Сцены</value>
-  </data>
-  <data name="openToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть папку</value>
-  </data>
-  <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
-    <value>Установить новый мод...</value>
-  </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Проверить обновления модов</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть сайт с модами</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
-    <value>Проверять обновления модов при запуске</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Использовать системные настройки прокси для FTP</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Настройки P2P передачи...</value>
-  </data>
-  <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
-    <value>Обновление модов</value>
-  </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Фикс разрешений папок и файлов</value>
-  </data>
-  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Сжать игровые данные</value>
-  </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Очистить дубликаты модов</value>
-  </data>
-  <data name="openModpackToolToolStripMenuItem.Text" xml:space="preserve">
-    <value>Открыть ModpackTool</value>
-  </data>
-  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Text" xml:space="preserve">
-    <value>Создать содержание Update.xml...</value>
-  </data>
-  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Сжать бандлы в папке...</value>
-  </data>
-  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Очистить дубликаты и поврежденные моды</value>
-  </data>
-  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Разработчики</value>
-  </data>
-  <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Инструменты</value>
-  </data>
-  <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Язык</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
-  <data name="checkForUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Проверить обновления KKManager...</value>
-  </data>
-  <data name="readmeAndSourceCodeToolStripMenuItem.Text" xml:space="preserve">
-    <value>Readme</value>
-  </data>
-  <data name="licenseToolStripMenuItem.Text" xml:space="preserve">
-    <value>Лицензия</value>
-  </data>
-  <data name="websiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>Сайт / Открытый код</value>
-  </data>
-  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
-    <value>О программе</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>Помощь</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Моды Sideloader</value>
   </data>
 </root>
