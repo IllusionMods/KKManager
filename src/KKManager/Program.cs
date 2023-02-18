@@ -23,7 +23,6 @@ namespace KKManager
         [STAThread]
         private static void Main()
         {
-            TorrentUpdater.Test().Wait();
             AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
             {
                 Console.WriteLine("UNHANDLED EXCEPTION: " + args.ExceptionObject);

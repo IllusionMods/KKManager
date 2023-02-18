@@ -117,7 +117,7 @@ namespace KKManager.Updater.Windows
                 var text = $"Overall: {totalPercent:F1}% done  ({_completedSize} out of {_overallSize})";
 
                 var uploadSpeed = TorrentUpdater.GetCurrentUpload();
-                if (uploadSpeed.HasValue) labelPercent.Text += $" / Seeding: {FileSize.FromBytes(uploadSpeed.Value)}/s";
+                if (uploadSpeed.HasValue) text += $" | Seeding: {FileSize.FromBytes(uploadSpeed.Value)}/s";
 
                 text += $"\r\nSpeed: {downloadedSinceLast}/s  (ETA: {eta})";
 
@@ -181,7 +181,7 @@ namespace KKManager.Updater.Windows
                 #endregion
 
                 SetStatus("Preparing...");
-                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir().ConfigureAwait(false) == false)
+                if (await ProcessWaiter.CheckForProcessesBlockingKoiDir() == false)
                     throw new OperationCanceledException();
 
                 #region Find and select updates
@@ -196,7 +196,7 @@ namespace KKManager.Updater.Windows
 
                 var progress = new Progress<float>(p => this.SafeInvoke(() => progressBar1.Value = (int)Math.Round(p * 1000)));
 
-                var updateTasks = await UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress).ConfigureAwait(false);
+                var updateTasks = await Task.Run(() => UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress));
 
                 progressBar1.Value = 0;
 
@@ -354,8 +354,9 @@ namespace KKManager.Updater.Windows
                     updateTimer.Tick += (o, args) =>
                     {
                         var uploadSpeed = TorrentUpdater.GetCurrentUpload();
-                        if (uploadSpeed.HasValue) labelPercent.Text += $"{topText}\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)";
-                        else labelPercent.Text = topText;
+                        labelPercent.Text = uploadSpeed.HasValue 
+                            ? $"{topText}\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)" 
+                            : topText;
                     };
                     updateTimer.Start();
                 }
@@ -433,7 +434,7 @@ namespace KKManager.Updater.Windows
             _cancelToken.Cancel();
 
             await TorrentUpdater.Stop();
-            await Task.Delay(200).ConfigureAwait(false);
+            await Task.Delay(200);
 
             await RemoveTempDownloadDirectory();
         }
@@ -448,7 +449,7 @@ namespace KKManager.Updater.Windows
             }
             catch
             {
-                await Task.Delay(500).ConfigureAwait(false);
+                await Task.Delay(500);
                 try
                 {
                     if (Directory.Exists(downloadDirectory))

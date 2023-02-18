@@ -98,7 +98,7 @@ namespace KKManager.ModpackTool
                     //    }
                     //    catch (Exception e)
                     //    {
-                    //        Console.WriteLine($"Failed to process file [{f}], the resulting zipmod might have issues. Error: {e}");
+                    //        Console.WriteLine($"Failed to process file [{f}], the resulting zipmod might have issues. Error: {e.ToStringDemystified()}");
                     //    }
                     //}));
 
@@ -110,7 +110,7 @@ namespace KKManager.ModpackTool
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Failed to process file [{s}], the resulting zipmod might have issues. Error: {e}");
+                            Console.WriteLine($"Failed to process file [{s}], the resulting zipmod might have issues. Error: {e.ToStringDemystified()}");
                         }
                     });
 
@@ -170,7 +170,7 @@ namespace KKManager.ModpackTool
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to process zipmod {zipmodEntry.OriginalFilename} with error: {e}");
+                    Console.WriteLine($"Failed to process zipmod {zipmodEntry.OriginalFilename} with error: {e.ToStringDemystified()}");
 
                     zipmodEntry.Status = ZipmodEntry.ZipmodEntryStatus.FAIL;
 

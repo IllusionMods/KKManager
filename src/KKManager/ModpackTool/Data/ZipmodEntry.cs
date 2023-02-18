@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -94,7 +95,7 @@ namespace KKManager.ModpackTool
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Failed to clean up manifest of {Info.FileNameWithoutExtension} because of error: {e}");
+                Console.WriteLine($"Failed to clean up manifest of {Info.FileNameWithoutExtension} because of error: {e.ToStringDemystified()}");
             }
 
             // Auto generate new filename but allow it to be overriden
