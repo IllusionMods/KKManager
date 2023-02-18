@@ -265,13 +265,25 @@
     <EmbeddedResource Include="Windows\ModUpdateProgressDialog.resx">
       <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateProgressDialog.ru.resx">
+      <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\ModUpdateSelectDialog.resx">
+      <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateSelectDialog.ru.resx">
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\P2PSettingsDialog.resx">
       <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\P2PSettingsDialog.ru.resx">
+      <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.resx">
+      <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.ru.resx">
       <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

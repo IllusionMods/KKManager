@@ -292,6 +292,9 @@
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\CardWindow.ru.resx">
+      <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hans.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -301,11 +304,17 @@
     <EmbeddedResource Include="ModpackTool\Windows\ModpackToolWindow.resx">
       <DependentUpon>ModpackToolWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\PluginsWindow.ru.resx">
+      <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hans.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hant.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.ru.resx">
+      <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.zh-Hans.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
@@ -348,6 +357,9 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\LogViewer.resx">
+      <DependentUpon>LogViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\LogViewer.ru.resx">
       <DependentUpon>LogViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.resx">
