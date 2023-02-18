@@ -18,6 +18,7 @@ namespace KKManager
             "en-GB",
             "zh-Hans",
             "zh-Hant",
+            "ru-RU",
         };
 
         private static IEnumerable<CultureInfo> _supportedLanguages;
