@@ -231,6 +231,16 @@ namespace KKManager.Data.Plugins
         {
             return extension.Equals(".dll", StringComparison.OrdinalIgnoreCase) || extension.Equals(".dl_", StringComparison.OrdinalIgnoreCase);
         }
+        public static bool IsDisabledPlugin(string extension, out string enabledExtension)
+        {
+            if (extension.Equals(".dl_", StringComparison.OrdinalIgnoreCase))
+            {
+                enabledExtension = ".dll";
+                return true;
+            }
+            enabledExtension = null;
+            return false;
+        }
 
         private static DefaultAssemblyResolver GetResolver(FileInfo location)
         {

@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using KKManager.Updater.Data;
 using KKManager.Updater.Downloader;
@@ -20,6 +22,7 @@ namespace KKManager.Updater.Windows
     public partial class ModUpdateProgressDialog : Form
     {
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
+        private readonly List<KeyValuePair<FileInfo, string>> _reEnabledMods = new List<KeyValuePair<FileInfo, string>>();
         private UpdateSourceBase[] _updaters;
         private string[] _autoInstallGuids;
         private FileSize _overallSize;
@@ -196,6 +199,18 @@ namespace KKManager.Updater.Windows
 
                 var progress = new Progress<float>(p => this.SafeInvoke(() => progressBar1.Value = (int)Math.Round(p * 1000)));
 
+                // Re-enable any disabled zipmods and plugins before searching for updates so that they don't get treated as missing
+                foreach (var fileInfo in InstallDirectoryHelper.PluginPath.GetFiles("*.*", SearchOption.AllDirectories))
+                {
+                    if (PluginLoader.IsDisabledPlugin(fileInfo.Extension, out var enabledExtension))
+                        AddReEnabledMod(fileInfo, enabledExtension);
+                }
+                foreach (var fileInfo in InstallDirectoryHelper.ModsPath.GetFiles("*.*", SearchOption.AllDirectories))
+                {
+                    if (SideloaderModLoader.IsDisabledZipmod(fileInfo.Extension, out var enabledExtension))
+                        AddReEnabledMod(fileInfo, enabledExtension);
+                }
+
                 var updateTasks = await Task.Run(() => UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress));
 
                 progressBar1.Value = 0;
@@ -354,8 +369,8 @@ namespace KKManager.Updater.Windows
                     updateTimer.Tick += (o, args) =>
                     {
                         var uploadSpeed = TorrentUpdater.GetCurrentUpload();
-                        labelPercent.Text = uploadSpeed.HasValue 
-                            ? $"{topText}\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)" 
+                        labelPercent.Text = uploadSpeed.HasValue
+                            ? $"{topText}\nSeeding {FileSize.FromBytes(uploadSpeed.Value)}/s to {TorrentUpdater.GetPeerCount()} peers (Close this to stop)"
                             : topText;
                     };
                     updateTimer.Start();
@@ -403,6 +418,44 @@ namespace KKManager.Updater.Windows
                 Console.WriteLine("[Updater] " + status);
         }
 
+        private void AddReEnabledMod(FileInfo fileInfo, string enabledExtension)
+        {
+            try
+            {
+                var enabledPath = fileInfo.GetFullNameWithDifferentExtension(enabledExtension);
+                if (File.Exists(enabledPath)) return;
+                var originalPath = fileInfo.FullName;
+                Console.WriteLine($"Temporarily re-enabling mod: {originalPath}");
+                fileInfo.MoveTo(enabledPath);
+                _reEnabledMods.Add(new KeyValuePair<FileInfo, string>(fileInfo, originalPath));
+            }
+            catch (Exception e)
+            {
+                // Safe to ignore the error since last line it can throw at is the MoveTo, so it doesnt get moved and doesn't get added to the list.
+                Console.WriteLine(e);
+            }
+        }
+        private void UndoReEnabledMods()
+        {
+            foreach (var disabledMod in _reEnabledMods)
+            {
+                try
+                {
+                    var fileInfo = disabledMod.Key;
+                    var originalPath = disabledMod.Value;
+                    if (File.Exists(originalPath)) continue;
+                    Console.WriteLine($"Re-disabling mod: {originalPath}");
+                    fileInfo.MoveTo(originalPath);
+                }
+                catch (Exception e)
+                {
+                    // This shouldn't happen
+                    Console.WriteLine(e);
+                }
+            }
+            _reEnabledMods.Clear();
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (_cancelToken.IsCancellationRequested)
@@ -422,7 +475,7 @@ namespace KKManager.Updater.Windows
 
         protected override void OnClosed(EventArgs e)
         {
-            Task.Run(Finish).Wait();
+            Task.Run(Finish).GetAwaiter().GetResult();
 
             UseWaitCursor = false;
 
@@ -437,6 +490,8 @@ namespace KKManager.Updater.Windows
             await Task.Delay(200);
 
             await RemoveTempDownloadDirectory();
+
+            UndoReEnabledMods();
         }
 
         private static async Task RemoveTempDownloadDirectory()
