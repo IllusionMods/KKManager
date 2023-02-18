@@ -77,10 +77,38 @@ namespace KKManager.Updater.Sources
 
         private static async Task<ClientEngine> GetClient()
         {
-#if DEBUG
+            // Only runs once the first time
             if (_client == null)
+            {
+                // When waking up from sleep restart all running torrents so they re-announce and such
+                // If sleep happened for a while then the torrent can be stuck for a long time otherwise
+                SystemEvents.PowerModeChanged += async (sender, args) =>
+                {
+                    if (_client == null || !_client.IsRunning) return;
+                    if (args.Mode == PowerModes.Resume)
+                    {
+                        foreach (var torrent in _client.Torrents)
+                        {
+                            if (torrent.State == TorrentState.Downloading || torrent.State == TorrentState.Seeding)
+                            {
+                                try
+                                {
+                                    await torrent.StopAsync();
+                                    await torrent.StartAsync();
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine($"Failed to restart torrent [{torrent.Name}] after waking up from sleep - {e.ToStringDemystified()}");
+                                }
+                            }
+                        }
+                    }
+                };
+#if DEBUG
                 LoggerFactory.Register(className => new TextLogger(Console.Out, className));
 #endif
+            }
+
             if (_client == null || _client.Disposed)
             {
                 _client = new ClientEngine(new EngineSettingsBuilder
