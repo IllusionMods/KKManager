@@ -109,6 +109,15 @@ namespace KKManager.Util
             return Path.GetFileNameWithoutExtension(fsi.Name);
         }
 
+        public static string GetFullNameWithDifferentExtension(this FileInfo fi, string newExtension)
+        {
+            if (fi == null) throw new ArgumentNullException(nameof(fi));
+            if (newExtension == null) throw new ArgumentNullException(nameof(newExtension));
+            
+            return Path.Combine(fi.DirectoryName ?? throw new InvalidOperationException("DirectoryName null for " + fi),
+                                fi.GetNameWithoutExtension() + newExtension);
+        }
+
         public static bool IsNullOrWhiteSpace(this string self)
         {
             return string.IsNullOrWhiteSpace(self);

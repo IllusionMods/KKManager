@@ -236,5 +236,20 @@ namespace KKManager.Data.Zipmods
 
             return exts.Any(x => x.Equals(extension, StringComparison.OrdinalIgnoreCase));
         }
+        public static bool IsDisabledZipmod(string extension, out string enabledExtension)
+        {
+            if (extension.Equals(".zi_", StringComparison.OrdinalIgnoreCase))
+            {
+                enabledExtension = ".zip";
+                return true;
+            }
+            if (extension.Equals(".zi_mod", StringComparison.OrdinalIgnoreCase))
+            {
+                enabledExtension = ".zipmod";
+                return true;
+            }
+            enabledExtension = null;
+            return false;
+        }
     }
 }
