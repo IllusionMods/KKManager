@@ -214,7 +214,7 @@
     <value>Очистить дубликаты и поврежденные моды</value>
   </data>
   <data name="developersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Разработчики</value>
+    <value>Для разработчиков</value>
   </data>
   <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
     <value>Инструменты</value>
