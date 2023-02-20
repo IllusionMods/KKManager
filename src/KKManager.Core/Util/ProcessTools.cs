@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management;
 using System.Security.Principal;
 using System.Windows.Forms;
+using KKManager.Properties;
 
 namespace KKManager.Util
 {
@@ -30,7 +31,7 @@ namespace KKManager.Util
             }
             catch (SystemException ex)
             {
-                MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, Resources.FailedToStartApplicationMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }

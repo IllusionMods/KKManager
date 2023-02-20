@@ -105,7 +105,7 @@ namespace KKManager.Data.Cards.EC
 
             if (personalityLookup.Length > personality) return personalityLookup[personality];
 
-            return "Unknown";
+            return KKManager.Properties.Resources.Unknown;
         }
     }
 }

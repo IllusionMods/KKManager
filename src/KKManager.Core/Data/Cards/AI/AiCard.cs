@@ -102,7 +102,7 @@ namespace KKManager.Data.Cards.AI
             if (personalityLookup.Length > personality)
                 return personalityLookup[personality];
 
-            return "Unknown";
+            return KKManager.Properties.Resources.Unknown;
         }
 
         public AiCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version loadVersion) : base(cardFile, type, extended, loadVersion)

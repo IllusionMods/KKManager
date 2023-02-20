@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using KKManager.Properties;
 
 namespace KKManager.Util
 {
@@ -14,10 +15,7 @@ namespace KKManager.Util
 
         public void ShowKkmanOutdatedMessage()
         {
-            if (MessageBox.Show(
-                "There's a newer version of KK Manager available. Mod updates will not work until you update." +
-                "\n\nDo you want to open the download page of the latest version of KKManager?",
-                "KK Manager is outdated", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+            if (MessageBox.Show(Resources.KKManagerOutdatedMessageBody, Resources.KKManagerOutdatedMessageTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
                 ProcessTools.SafeStartProcess(Constants.LatestReleaseLink);
             }
