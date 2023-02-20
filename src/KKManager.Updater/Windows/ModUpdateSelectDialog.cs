@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Functions;
 using KKManager.Updater.Data;
+using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
 using KKManager.Util;
 
@@ -21,24 +22,24 @@ namespace KKManager.Updater.Windows
         {
             InitializeComponent();
 
-            objectListView1.EmptyListMsg = "All mods are up to date!";
+            objectListView1.EmptyListMsg = Resources.ModUpdateSelect_AllUpToDate;
             olvColumnDate.AspectToStringConverter = value =>
             {
                 if (value is DateTime dt)
-                    return dt == DateTime.MinValue ? "Unknown" : dt.ToShortDateString();
+                    return dt == DateTime.MinValue ? KKManager.Properties.Resources.Unknown : dt.ToShortDateString();
                 if (value == null)
-                    return "Unknown";
+                    return KKManager.Properties.Resources.Unknown;
                 return value.ToString();
             };
 
-            objectListView2.EmptyListMsg = "Select a task to view its details.";
+            objectListView2.EmptyListMsg = Resources.ModUpdateSelect_SelectTaskToView;
             objectListView2.FormatRow += ObjectListView2_FormatRow;
             olvColumnFileName.AspectGetter = rowObject => ((UpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.GameDirectory.FullName.Length);
             olvColumnFileDate.AspectGetter = rowObject =>
             {
                 var date = ((UpdateItem) rowObject).RemoteFile?.ModifiedTime;
                 if (date == null || date == DateTime.MinValue)
-                    return "Will be removed";
+                    return Resources.ModUpdateSelect_WillBeRemoved;
                 return date.Value.ToShortDateString();
             };
             olvColumnFileSize.AspectGetter = rowObject => ((UpdateItem) rowObject).GetDownloadSize();
@@ -61,7 +62,7 @@ namespace KKManager.Updater.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToStringDemystified(), "Failed to get updates", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.ToStringDemystified(), Resources.ModUpdateSelect_FailedMessage_Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return null;
@@ -124,7 +125,7 @@ namespace KKManager.Updater.Windows
         private void objectListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<UpdateTask>().Select(x => x.TotalUpdateSize));
-            labelDownload.Text = (sumFileSizes == FileSize.Empty ? "Nothing" : sumFileSizes.ToString()) + " to download";
+            labelDownload.Text = sumFileSizes == FileSize.Empty ? Resources.ModUpdateSelect_SizeStatus_Nothing : string.Format(Resources.ModUpdateSelect_SizeStatus_BytesToDownload, sumFileSizes) ;
         }
 
         private void objectListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)

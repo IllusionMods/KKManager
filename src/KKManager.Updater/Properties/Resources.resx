@@ -127,4 +127,114 @@
   <data name="UpdateSourcesUrl" xml:space="preserve">
     <value>https://enj.tvguhohfrepbagrag.pbz/VyyhfvbaZbqf/XXZnantre/znfgre/fep/XXZnantre.Hcqngre/fbheprf.config</value>
   </data>
+  <data name="SecurityExceptionRetry_Message" xml:space="preserve">
+	  <value>Failed to create file in directory {0} because of a security issue - {1}
+
+Do you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.</value>
+  </data>
+  <data name="SecurityExceptionRetry_Title" xml:space="preserve">
+	  <value>Could not apply update</value>
+  </data>
+  <data name="ModUpdateProgress_PleaseWait" xml:space="preserve">
+	  <value>Please wait, this might take a few minutes.</value>
+  </data>
+  <data name="ModUpdateProgress_PleaseWait_P2P" xml:space="preserve">
+	  <value>It can take over 10 minutes when P2P is enabled.</value>
+  </data>
+  <data name="ModUpdateProgress_Preparing" xml:space="preserve">
+	  <value>Preparing...</value>
+  </data>
+  <data name="ModUpdateProgress_Searching" xml:space="preserve">
+	  <value>Searching for mod updates...</value>
+  </data>
+  <data name="ModUpdateProgress_AllUpToDate" xml:space="preserve">
+	  <value>Everything is up to date!</value>
+  </data>
+  <data name="ModUpdateProgress_UpdatesFoundConfirmation" xml:space="preserve">
+	  <value>Found {0} update tasks ({1} were already up-to-date), waiting for user confirmation.</value>
+  </data>
+  <data name="ModUpdateProgress_Downloading" xml:space="preserve">
+	  <value>Downloading updates...</value>
+  </data>
+  <data name="ModUpdateProgress_Finished_Main" xml:space="preserve">
+	  <value>Successfully updated/removed {0} files from {1} tasks.</value>
+	  <comment>Message box shown when updating finishes</comment>
+  </data>
+  <data name="ModUpdateProgress_Finished_Fails" xml:space="preserve">
+	  <value>Failed to update {0} files because some sources crashed. Check log for details.</value>
+	  <comment>Message box after finishing the update, this is only shown if any items failed to update</comment>
+  </data>
+  <data name="ModUpdateProgress_Finished_FailReasons" xml:space="preserve">
+	  <value>Reason(s) for failing:</value>
+	  <comment>Message box at end of update, shown only if any updates failed and reasons are available</comment>
+  </data>
+  <data name="ModUpdateProgress_Finished_Title" xml:space="preserve">
+	  <value>Finished updating</value>
+	  <comment>Title of the message box</comment>
+  </data>
+  <data name="ModUpdateProgress_Failed_Outdated" xml:space="preserve">
+	  <value>KK Manager needs to be updated to get updates.</value>
+  </data>
+  <data name="ModUpdateProgress_Failed_CancelledByUser" xml:space="preserve">
+	  <value>Update was cancelled by the user.</value>
+  </data>
+  <data name="ModUpdateProgress_Failed_Unexpected" xml:space="preserve">
+	  <value>Unexpected crash while updating mods, aborting.</value>
+  </data>
+  <data name="ModUpdateProgress_Failed_Unexpected_Message" xml:space="preserve">
+	  <value>Something unexpected happened and the update could not be completed. Make sure that your internet connection is stable, and that you did not hit your download limits, then try again.
+
+Error message (check log for more):
+{0}</value>
+	  <comment>Message box shown if update fails because of unexpected error</comment>
+  </data>
+  <data name="ModUpdateProgress_Failed_Unexpected_Title" xml:space="preserve">
+	  <value>Update failed</value>
+	  <comment>Title of the message box</comment>
+  </data>
+  <data name="ModUpdateProgress_NothingWasDownloaded" xml:space="preserve">
+	  <value>Nothing was downloaded</value>
+  </data>
+  <data name="ModUpdateProgress_DownloadFinishedStats" xml:space="preserve">
+	  <value>Downloaded {0} out of {1} in {2}</value>
+	  <comment>0 is size with unit (e.g. 10MB) 1 is total size with unit (e.g. 2.1GB) 2 is time in culture dependant format (e.g. 14 seconds)</comment>
+  </data>
+  <data name="ModUpdateProgress_DownloadFinished_Seeding" xml:space="preserve">
+	  <value>Seeding {0}/s to {1} peers (Click OK to stop)</value>
+	  <comment>0 is size with unit, 1 is a number</comment>
+  </data>
+  <data name="ModUpdateProgress_DownloadFinished_Average" xml:space="preserve">
+	  <value>Average download speed: {0}/s)</value>
+  </data>
+  <data name="ModUpdateProgress_OKbutton" xml:space="preserve">
+	  <value>OK</value>
+	  <comment>Text on the bottom right button shown after updating finishes or is otherwise stopped</comment>
+  </data>
+  <data name="ModUpdateProgress_Finishing" xml:space="preserve">
+	  <value>Finishing the update process, please wait...</value>
+  </data>
+  <data name="ModUpdateProgress_ThisCouldTakeAMinute" xml:space="preserve">
+	  <value>This could take a minute.</value>
+  </data>
+  <data name="ModUpdateSelect_AllUpToDate" xml:space="preserve">
+	  <value>All mods are up to date!</value>
+  </data>
+  <data name="ModUpdateSelect_SelectTaskToView" xml:space="preserve">
+	  <value>Select a task to view its details.</value>
+  </data>
+  <data name="ModUpdateSelect_WillBeRemoved" xml:space="preserve">
+	  <value>Will be removed</value>
+	  <comment>Shown in update select list in the size column if the file will be removed</comment>
+  </data>
+  <data name="ModUpdateSelect_FailedMessage_Title" xml:space="preserve">
+	  <value>Failed to get updates</value>
+  </data>
+  <data name="ModUpdateSelect_SizeStatus_Nothing" xml:space="preserve">
+	  <value>Nothing to download</value>
+	  <comment>Shown at bottom of the window if no updates are selected or the updates only remove files</comment>
+  </data>
+  <data name="ModUpdateSelect_SizeStatus_BytesToDownload" xml:space="preserve">
+	  <value>{0} to download</value>
+	  <comment>Shown at bottom of the window, 0 is size of all updates to be downloaded (with unit included)</comment>
+  </data>
 </root>

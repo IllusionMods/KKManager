@@ -29,10 +29,18 @@ namespace KKManager.Updater.Windows
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModUpdateSelectDialog));
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.label1 = new System.Windows.Forms.Label();
+            this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumnFileName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnFileDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.label2 = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -40,17 +48,6 @@ namespace KKManager.Updater.Windows
             this.buttonNone = new System.Windows.Forms.Button();
             this.buttonAll = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
-            this.objectListView2 = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumnFileName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnFileDate = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -58,11 +55,48 @@ namespace KKManager.Updater.Windows
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            resources.ApplyResources(this.splitContainer1.Panel1, "splitContainer1.Panel1");
+            this.splitContainer1.Panel1Collapsed = true;
+            // 
+            // splitContainer1.Panel2
+            // 
+            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
+            // 
+            // splitContainer2
+            // 
+            resources.ApplyResources(this.splitContainer2, "splitContainer2");
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            resources.ApplyResources(this.splitContainer2.Panel1, "splitContainer2.Panel1");
+            this.splitContainer2.Panel1.Controls.Add(this.objectListView1);
+            this.splitContainer2.Panel1.Controls.Add(this.label1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            resources.ApplyResources(this.splitContainer2.Panel2, "splitContainer2.Panel2");
+            this.splitContainer2.Panel2.Controls.Add(this.objectListView2);
+            this.splitContainer2.Panel2.Controls.Add(this.label2);
             // 
             // objectListView1
             // 
+            resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnDate);
             this.objectListView1.AllColumns.Add(this.olvColumnSize);
@@ -73,12 +107,12 @@ namespace KKManager.Updater.Windows
             this.olvColumnDate,
             this.olvColumnSize});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
-            resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
+            this.objectListView1.OverlayText.Text = resources.GetString("resource.Text");
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowItemToolTips = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
@@ -90,23 +124,77 @@ namespace KKManager.Updater.Windows
             // 
             this.olvColumnName.AspectName = "TaskName";
             this.olvColumnName.FillsFreeSpace = true;
+            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.Hideable = false;
             this.olvColumnName.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             // 
             // olvColumnDate
             // 
             this.olvColumnDate.AspectName = "ModifiedTime";
+            resources.ApplyResources(this.olvColumnDate, "olvColumnDate");
             this.olvColumnDate.Hideable = false;
             this.olvColumnDate.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnDate, "olvColumnDate");
             // 
             // olvColumnSize
             // 
             this.olvColumnSize.AspectName = "TotalUpdateSize";
+            resources.ApplyResources(this.olvColumnSize, "olvColumnSize");
             this.olvColumnSize.Hideable = false;
             this.olvColumnSize.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnSize, "olvColumnSize");
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // objectListView2
+            // 
+            resources.ApplyResources(this.objectListView2, "objectListView2");
+            this.objectListView2.AllColumns.Add(this.olvColumnFileName);
+            this.objectListView2.AllColumns.Add(this.olvColumnFileDate);
+            this.objectListView2.AllColumns.Add(this.olvColumnFileSize);
+            this.objectListView2.CellEditUseWholeCell = false;
+            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumnFileName,
+            this.olvColumnFileDate,
+            this.olvColumnFileSize});
+            this.objectListView2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView2.FullRowSelect = true;
+            this.objectListView2.GridLines = true;
+            this.objectListView2.HideSelection = false;
+            this.objectListView2.MultiSelect = false;
+            this.objectListView2.Name = "objectListView2";
+            this.objectListView2.OverlayText.Text = resources.GetString("resource.Text1");
+            this.objectListView2.ShowGroups = false;
+            this.objectListView2.ShowItemToolTips = true;
+            this.objectListView2.UseCompatibleStateImageBehavior = false;
+            this.objectListView2.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumnFileName
+            // 
+            this.olvColumnFileName.AspectName = "";
+            this.olvColumnFileName.FillsFreeSpace = true;
+            resources.ApplyResources(this.olvColumnFileName, "olvColumnFileName");
+            this.olvColumnFileName.Hideable = false;
+            // 
+            // olvColumnFileDate
+            // 
+            this.olvColumnFileDate.AspectName = "";
+            resources.ApplyResources(this.olvColumnFileDate, "olvColumnFileDate");
+            this.olvColumnFileDate.Hideable = false;
+            this.olvColumnFileDate.MinimumWidth = 60;
+            // 
+            // olvColumnFileSize
+            // 
+            this.olvColumnFileSize.AspectName = "";
+            resources.ApplyResources(this.olvColumnFileSize, "olvColumnFileSize");
+            this.olvColumnFileSize.Hideable = false;
+            this.olvColumnFileSize.MinimumWidth = 60;
+            // 
+            // label2
+            // 
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
             // 
             // buttonCancel
             // 
@@ -124,12 +212,12 @@ namespace KKManager.Updater.Windows
             // 
             // panel1
             // 
+            resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.labelDownload);
             this.panel1.Controls.Add(this.buttonNone);
             this.panel1.Controls.Add(this.buttonAll);
             this.panel1.Controls.Add(this.buttonAccept);
             this.panel1.Controls.Add(this.buttonCancel);
-            resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
             // labelDownload
@@ -153,88 +241,9 @@ namespace KKManager.Updater.Windows
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.splitContainer1);
             resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Controls.Add(this.splitContainer1);
             this.panel2.Name = "panel2";
-            // 
-            // splitContainer1
-            // 
-            resources.ApplyResources(this.splitContainer1, "splitContainer1");
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Panel1Collapsed = true;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            // 
-            // splitContainer2
-            // 
-            resources.ApplyResources(this.splitContainer2, "splitContainer2");
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.objectListView1);
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.objectListView2);
-            this.splitContainer2.Panel2.Controls.Add(this.label2);
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // objectListView2
-            // 
-            this.objectListView2.AllColumns.Add(this.olvColumnFileName);
-            this.objectListView2.AllColumns.Add(this.olvColumnFileDate);
-            this.objectListView2.AllColumns.Add(this.olvColumnFileSize);
-            this.objectListView2.CellEditUseWholeCell = false;
-            this.objectListView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumnFileName,
-            this.olvColumnFileDate,
-            this.olvColumnFileSize});
-            this.objectListView2.Cursor = System.Windows.Forms.Cursors.Default;
-            resources.ApplyResources(this.objectListView2, "objectListView2");
-            this.objectListView2.FullRowSelect = true;
-            this.objectListView2.GridLines = true;
-            this.objectListView2.HideSelection = false;
-            this.objectListView2.MultiSelect = false;
-            this.objectListView2.Name = "objectListView2";
-            this.objectListView2.ShowGroups = false;
-            this.objectListView2.ShowItemToolTips = true;
-            this.objectListView2.UseCompatibleStateImageBehavior = false;
-            this.objectListView2.View = System.Windows.Forms.View.Details;
-            // 
-            // olvColumnFileName
-            // 
-            this.olvColumnFileName.AspectName = "";
-            this.olvColumnFileName.FillsFreeSpace = true;
-            this.olvColumnFileName.Hideable = false;
-            resources.ApplyResources(this.olvColumnFileName, "olvColumnFileName");
-            // 
-            // olvColumnFileDate
-            // 
-            this.olvColumnFileDate.AspectName = "";
-            this.olvColumnFileDate.Hideable = false;
-            this.olvColumnFileDate.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnFileDate, "olvColumnFileDate");
-            // 
-            // olvColumnFileSize
-            // 
-            this.olvColumnFileSize.AspectName = "";
-            this.olvColumnFileSize.Hideable = false;
-            this.olvColumnFileSize.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnFileSize, "olvColumnFileSize");
-            // 
-            // label2
-            // 
-            resources.ApplyResources(this.label2, "label2");
-            this.label2.Name = "label2";
             // 
             // ModUpdateSelectDialog
             // 
@@ -246,10 +255,6 @@ namespace KKManager.Updater.Windows
             this.Controls.Add(this.panel1);
             this.Name = "ModUpdateSelectDialog";
             this.ShowIcon = false;
-            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -259,7 +264,11 @@ namespace KKManager.Updater.Windows
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView2)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}

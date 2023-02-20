@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Properties;
 using KKManager.Util;
 
 namespace KKManager.Functions
@@ -53,7 +54,7 @@ namespace KKManager.Functions
             var isUpdateAvailable = await IsUpdateAvailable();
             if (isUpdateAvailable != true) return null;
 
-            if (MessageBox.Show("A new version of KKManager is available. Do you want to go to the download page?", "New version is available",
+            if (MessageBox.Show(Resources.SelfUpdater_NewVersionMessage, Resources.SelfUpdater_NewVersionTitle,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 return ProcessTools.SafeStartProcess(_LatestReleaseUrl) != null;
             else

@@ -119,7 +119,7 @@ namespace KKManager.Data.Cards.RG
             {
                 if (attribute > 15) traits.Add("Invalid");
                 else if (traitLookup.Length > attribute) traits.Add(traitLookup[attribute]);
-                else traits.Add("Unknown");
+                else traits.Add(KKManager.Properties.Resources.Unknown);
             }
             return traits;
         }
@@ -146,7 +146,7 @@ namespace KKManager.Data.Cards.RG
             {
                 if (kink > 12) fetishes.Add("Invalid");
                 else if (fetishLookup.Length > kink) fetishes.Add(fetishLookup[kink]);
-                else fetishes.Add("Unknown");
+                else fetishes.Add(KKManager.Properties.Resources.Unknown);
             }
             return fetishes;
         }
@@ -172,7 +172,7 @@ namespace KKManager.Data.Cards.RG
 
             if (profession < 0 || profession > 12) return "Invalid";
             else if (professionLookup.Length > profession) return professionLookup[profession];
-            else return "Unknown";
+            else return KKManager.Properties.Resources.Unknown;
         }
 
         public static string GetBirthMonth(int birthMonth)
@@ -196,7 +196,7 @@ namespace KKManager.Data.Cards.RG
 
             if (birthMonth < 1 || birthMonth > 12) return "Invalid";
             else if (birthMonthLookup.Length > birthMonth) return birthMonthLookup[birthMonth];
-            else return "Unknown";
+            else return KKManager.Properties.Resources.Unknown;
         }
     }
 }

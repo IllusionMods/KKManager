@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
+using KKManager.Updater.Properties;
 using KKManager.Updater.Sources;
 using KKManager.Updater.Utils;
 using KKManager.Util;
@@ -58,8 +59,8 @@ namespace KKManager.Updater.Data
             }
             catch (SecurityException ex)
             {
-                if (MessageBox.Show($"Failed to create file in directory {tempPath} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.",
-                        "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+                if (MessageBox.Show(string.Format(Resources.SecurityExceptionRetry_Message, tempPath, ex.Message),
+                        Resources.SecurityExceptionRetry_Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
                 {
                     var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);
                     if (fixPermissions == null) throw new IOException($"Failed to create file in directory {tempPath} because of a security issue - {ex.Message}", ex);
@@ -150,7 +151,8 @@ namespace KKManager.Updater.Data
             }
             catch (SecurityException ex)
             {
-                if (MessageBox.Show($"Failed to apply update {TargetPath.FullName} because of a security issue - {ex.Message}\n\nDo you want KK Manager to attempt to fix the issue? Click cancel if you want to abort.", "Could not apply update", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
+                if (MessageBox.Show(string.Format(Resources.SecurityExceptionRetry_Message, TargetPath.FullName, ex.Message),
+                                    Resources.SecurityExceptionRetry_Title, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) != DialogResult.OK)
                     throw;
 
                 var fixPermissions = ProcessTools.FixPermissions(InstallDirectoryHelper.GameDirectory.FullName);

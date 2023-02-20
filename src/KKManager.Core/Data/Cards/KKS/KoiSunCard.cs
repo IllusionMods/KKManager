@@ -144,7 +144,7 @@ namespace KKManager.Data.Cards.KKS
 
             if (personality >= 80 && personality <= 86) return "Story-only " + personality;
 
-            return "Unknown";
+            return KKManager.Properties.Resources.Unknown;
         }
     }
 }

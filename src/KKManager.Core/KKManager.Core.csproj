@@ -186,6 +186,11 @@
     <Compile Include="Functions\SelfUpdater.cs" />
     <Compile Include="Functions\ZipmodTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <DependentUpon>Settings.settings</DependentUpon>
@@ -238,6 +243,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
+    <EmbeddedResource Include="Properties\Resources.zh-Hant.resx" />
     <EmbeddedResource Include="Util\LoadingDialog\LoadingDialog.resx">
       <DependentUpon>LoadingDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -247,10 +258,22 @@
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.ru.resx">
       <DependentUpon>ProcessWaiter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.zh-Hans.resx">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.zh-Hant.resx">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.resx">
       <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.ru.resx">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.zh-Hans.resx">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.zh-Hant.resx">
       <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

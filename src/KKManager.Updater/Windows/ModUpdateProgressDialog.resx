@@ -361,13 +361,13 @@
     <value>Progress</value>
   </data>
   <data name="olvColumnProgress.Width" type="System.Int32, mscorlib">
-    <value>66</value>
+    <value>70</value>
   </data>
   <data name="olvColumnStatus.Text" xml:space="preserve">
     <value>Status</value>
   </data>
   <data name="olvColumnStatus.Width" type="System.Int32, mscorlib">
-    <value>77</value>
+    <value>90</value>
   </data>
   <data name="fastObjectListView1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
