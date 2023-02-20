@@ -117,41 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Подождите, пока выбранные обновления загружаются и устанавливаются. Не взаимодействуйте с файлами игры до завершения процесса.</value>
+  <data name="SelfUpdater_NewVersionMessage" xml:space="preserve">
+    <value>Доступна новая версия KKManager. Хотите перейти на страницу загрузки?</value>
   </data>
-  <data name="checkBoxSleep.Text" xml:space="preserve">
-    <value>Спящий режим по завершении</value>
+  <data name="SelfUpdater_NewVersionTitle" xml:space="preserve">
+    <value>Доступна новая версия</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="KKManagerOutdatedMessageBody" xml:space="preserve">
+    <value>Доступна более новая версия KKManager. Обновление модов не будет работать, пока вы не обновите его.
+
+Вы хотите открыть страницу загрузки последней версии KKManager?</value>
   </data>
-  <data name="olvColumnName.Text" xml:space="preserve">
-    <value>Название</value>
+  <data name="KKManagerOutdatedMessageTitle" xml:space="preserve">
+    <value>KKManager устарел</value>
   </data>
-  <data name="olvColumnSize.Text" xml:space="preserve">
-    <value>Размер</value>
+  <data name="FailedToStartApplicationMessageTitle" xml:space="preserve">
+    <value>Не удалось запустить приложение</value>
   </data>
-  <data name="olvColumnProgress.Text" xml:space="preserve">
-    <value>Прогресс</value>
+  <data name="GetTempDownloadFilename_SecurityException_Message" xml:space="preserve">
+    <value>Не удалось создать файл в каталоге {0} из-за проблемы - {1}
+
+Хотите, чтобы KKManager попытался устранить проблему? Нажмите отмена, если хотите прервать процесс.</value>
   </data>
-  <data name="olvColumnStatus.Text" xml:space="preserve">
-    <value>Статус</value>
-  </data>
-  <data name="fastObjectListView1.EmptyListMsg" xml:space="preserve">
-    <value>Ожидание загрузки файлов...</value>
-  </data>
-  <data name="labelPercent.Text" xml:space="preserve">
-    <value>Прогресс: 50% завершено  (111MB из 2.2 GB)
-Скорость: 1234KB/s  (Осталось: 40 Минут 20 Секунд)</value>
-  </data>
-  <data name="labelStatus.Text" xml:space="preserve">
-    <value>Статус загрузки</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Обновление модов</value>
-  </data>
-  <data name="olvColumnNo.Text" xml:space="preserve">
-    <value>#</value>
+  <data name="Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+    <comment>Shown in lists when the value is unknown (e.g. unknown date, unknown file size)</comment>
   </data>
 </root>

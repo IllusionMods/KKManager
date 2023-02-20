@@ -117,41 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Подождите, пока выбранные обновления загружаются и устанавливаются. Не взаимодействуйте с файлами игры до завершения процесса.</value>
-  </data>
-  <data name="checkBoxSleep.Text" xml:space="preserve">
-    <value>Спящий режим по завершении</value>
-  </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>Отмена</value>
-  </data>
-  <data name="olvColumnName.Text" xml:space="preserve">
-    <value>Название</value>
-  </data>
-  <data name="olvColumnSize.Text" xml:space="preserve">
-    <value>Размер</value>
-  </data>
-  <data name="olvColumnProgress.Text" xml:space="preserve">
-    <value>Прогресс</value>
-  </data>
-  <data name="olvColumnStatus.Text" xml:space="preserve">
-    <value>Статус</value>
-  </data>
-  <data name="fastObjectListView1.EmptyListMsg" xml:space="preserve">
-    <value>Ожидание загрузки файлов...</value>
-  </data>
-  <data name="labelPercent.Text" xml:space="preserve">
-    <value>Прогресс: 50% завершено  (111MB из 2.2 GB)
-Скорость: 1234KB/s  (Осталось: 40 Минут 20 Секунд)</value>
-  </data>
-  <data name="labelStatus.Text" xml:space="preserve">
-    <value>Статус загрузки</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Обновление модов</value>
-  </data>
-  <data name="olvColumnNo.Text" xml:space="preserve">
-    <value>#</value>
-  </data>
 </root>
