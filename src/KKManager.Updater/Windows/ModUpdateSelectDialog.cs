@@ -37,12 +37,12 @@ namespace KKManager.Updater.Windows
             olvColumnFileName.AspectGetter = rowObject => ((UpdateItem)rowObject).TargetPath.FullName.Substring(InstallDirectoryHelper.GameDirectory.FullName.Length);
             olvColumnFileDate.AspectGetter = rowObject =>
             {
-                var date = ((UpdateItem) rowObject).RemoteFile?.ModifiedTime;
+                var date = ((UpdateItem)rowObject).RemoteFile?.ModifiedTime;
                 if (date == null || date == DateTime.MinValue)
                     return Resources.ModUpdateSelect_WillBeRemoved;
                 return date.Value.ToShortDateString();
             };
-            olvColumnFileSize.AspectGetter = rowObject => ((UpdateItem) rowObject).GetDownloadSize();
+            olvColumnFileSize.AspectGetter = rowObject => ((UpdateItem)rowObject).GetDownloadSize();
         }
 
         public static List<UpdateTask> ShowWindow(ModUpdateProgressDialog owner, List<UpdateTask> updateTasks)
@@ -77,6 +77,8 @@ namespace KKManager.Updater.Windows
             objectListView1.CheckObjects(_updateTasks.Where(x => !x.UpToDate && x.EnableByDefault));
 
             objectListView1.AutoResizeColumns();
+
+            UpdateDownloadSizeLabel();
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)
@@ -124,8 +126,7 @@ namespace KKManager.Updater.Windows
 
         private void objectListView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<UpdateTask>().Select(x => x.TotalUpdateSize));
-            labelDownload.Text = sumFileSizes == FileSize.Empty ? Resources.ModUpdateSelect_SizeStatus_Nothing : string.Format(Resources.ModUpdateSelect_SizeStatus_BytesToDownload, sumFileSizes) ;
+            UpdateDownloadSizeLabel();
         }
 
         private void objectListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -134,6 +135,12 @@ namespace KKManager.Updater.Windows
             objectListView2.SetObjects(selection?.Items);
             if (objectListView2.GetItemCount() > 0)
                 objectListView2.AutoResizeColumns();
+        }
+
+        private void UpdateDownloadSizeLabel()
+        {
+            var sumFileSizes = FileSize.SumFileSizes(objectListView1.CheckedObjects.Cast<UpdateTask>().Select(x => x.TotalUpdateSize));
+            labelDownload.Text = sumFileSizes == FileSize.Empty ? Resources.ModUpdateSelect_SizeStatus_Nothing : string.Format(Resources.ModUpdateSelect_SizeStatus_BytesToDownload, sumFileSizes);
         }
     }
 }
