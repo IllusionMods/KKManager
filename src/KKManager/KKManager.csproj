@@ -292,10 +292,16 @@
     <EmbeddedResource Include="Windows\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\AboutBox.ru.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\AboutBox.zh-Hans.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
+      <DependentUpon>CardWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\CardWindow.ru.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.zh-Hans.resx">
@@ -307,11 +313,17 @@
     <EmbeddedResource Include="ModpackTool\Windows\ModpackToolWindow.resx">
       <DependentUpon>ModpackToolWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\PluginsWindow.ru.resx">
+      <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hans.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hant.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.ru.resx">
+      <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.zh-Hans.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
@@ -322,10 +334,16 @@
     <EmbeddedResource Include="Windows\Dialogs\PathSelectPopup.resx">
       <DependentUpon>PathSelectPopup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Dialogs\PathSelectPopup.ru.resx">
+      <DependentUpon>PathSelectPopup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\PathSelectPopup.zh-Hans.resx">
       <DependentUpon>PathSelectPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\RenameCards.resx">
+      <DependentUpon>RenameCards.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Dialogs\RenameCards.ru.resx">
       <DependentUpon>RenameCards.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Dialogs\RenameCards.zh-Hans.resx">
@@ -369,10 +387,22 @@
     <EmbeddedResource Include="Windows\ToolWindows\Properties\PropertiesToolWindow.zh-Hans.resx">
       <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.ru.resx">
+      <DependentUpon>CardInfoViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.zh-Hans.resx">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\GenericViewer.zh-Hans.resx">
+      <DependentUpon>GenericViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\LogViewer.ru.resx">
+      <DependentUpon>LogViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\PropertiesToolWindow.ru.resx">
+      <DependentUpon>PropertiesToolWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\GenericViewer.ru.resx">
       <DependentUpon>GenericViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.resx">
@@ -387,10 +417,16 @@
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.resx">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.ru.resx">
+      <DependentUpon>PluginViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.zh-Hans.resx">
       <DependentUpon>PluginViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.resx">
+      <DependentUpon>SideloaderViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.ru.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.zh-Hans.resx">

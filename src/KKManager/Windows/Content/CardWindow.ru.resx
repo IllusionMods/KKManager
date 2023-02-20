@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="olvColumnName.Text" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="olvColumnName.ToolTipText" xml:space="preserve">
+    <value>Полное имя персонажа.</value>
+  </data>
+  <data name="olvColumnSex.Text" xml:space="preserve">
+    <value>Пол</value>
+  </data>
+  <data name="olvColumnSex.ToolTipText" xml:space="preserve">
+    <value>Пол персонажа.</value>
+  </data>
+  <data name="olvColumnPersonality.Text" xml:space="preserve">
+    <value>Характер</value>
+  </data>
+  <data name="olvColumnPersonality.ToolTipText" xml:space="preserve">
+    <value>Название характера персонажа (назначается в редакторе).</value>
+  </data>
+  <data name="olvColumnExtended.Text" xml:space="preserve">
+    <value>Количество расширенных данных</value>
+  </data>
+  <data name="olvColumnExtended.ToolTipText" xml:space="preserve">
+    <value>Количество дополнительных данных, используемых плагинами.</value>
+  </data>
+  <data name="olvColumnModDate.Text" xml:space="preserve">
+    <value>Изменено</value>
+  </data>
+  <data name="olvColumnModDate.ToolTipText" xml:space="preserve">
+    <value>Дата последнего изменения файла этого персонажа. Может быть потеряна при передаче карты.</value>
+  </data>
+  <data name="olvColumnFileSize.Text" xml:space="preserve">
+    <value>Размер файла</value>
+  </data>
+  <data name="olvColumnFileSize.ToolTipText" xml:space="preserve">
+    <value>Размер файла персонажа на диске.</value>
+  </data>
+  <data name="olvColumnRelativeFilename.Text" xml:space="preserve">
+    <value>Название файла</value>
+  </data>
+  <data name="olvColumnRelativeFilename.ToolTipText" xml:space="preserve">
+    <value>Название файла персонажа вместе с путем к папке (относительно текущего каталога, полезно только при включенной функции "Подкаталоги").</value>
+  </data>
+  <data name="olvColumnFilename.Text" xml:space="preserve">
+    <value>Имя файла</value>
+  </data>
+  <data name="olvColumnFilename.ToolTipText" xml:space="preserve">
+    <value>Имя файла персонажа без расширения</value>
+  </data>
+  <data name="olvColumnCardType.Text" xml:space="preserve">
+    <value>Тип карты</value>
+  </data>
+  <data name="olvColumnCardType.ToolTipText" xml:space="preserve">
+    <value>Формат файла карты персонажа. Некоторые игры могут иметь несколько форматов в зависимости от версии.</value>
+  </data>
+  <data name="olvColumnUserID.ToolTipText" xml:space="preserve">
+    <value>Уникальный идентификатор пользователя, создавшего данную карту. Используется официальным загрузчиком для управления загруженными картами. Не все типы карт поддерживают это поле.</value>
+  </data>
+  <data name="olvColumnDataID.ToolTipText" xml:space="preserve">
+    <value>Уникальный идентификатор данных карты. Не зависит от UserID. Не все типы карт поддерживают это поле.</value>
+  </data>
+  <data name="olvColumnMissingMods.Text" xml:space="preserve">
+    <value>Отсутствующие zipmod/плагины</value>
+  </data>
+  <data name="olvColumnMissingMods.ToolTipText" xml:space="preserve">
+    <value>Количество отсутствующих zipmod'ов и плагинов (отображаются вместе).</value>
+  </data>
+  <data name="olvColumnVersion.Text" xml:space="preserve">
+    <value>Версия данных</value>
+  </data>
+  <data name="olvColumnVersion.ToolTipText" xml:space="preserve">
+    <value>Версия формата данных карты. Более старая версия означает, что карта была последний раз сохранена с более старой версией игры.</value>
+  </data>
+  <data name="toolStripButtonGo.Text" xml:space="preserve">
+    <value>Перейти</value>
+  </data>
+  <data name="toolStripButtonRefresh.Text" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="toolStripButtonSubdirs.Text" xml:space="preserve">
+    <value>Подкаталоги</value>
+  </data>
+  <data name="toolStripButtonSubdirs.ToolTipText" xml:space="preserve">
+    <value>Показать карточки из всех подкаталогов внутри этого каталога.
+Если выключить, будут показаны только карточки текущей директории.</value>
+  </data>
+  <data name="toolStripOpenDropdown.Text" xml:space="preserve">
+    <value>Открыть...</value>
+  </data>
+  <data name="femaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Папка с женскими персонажами</value>
+  </data>
+  <data name="maleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Папка с мужскими персонажами</value>
+  </data>
+  <data name="toolStripButtonDelete.Text" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="toolStripViewSelect.Text" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Малые иконки</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Большие иконки</value>
+  </data>
+  <data name="toolStripDropDownButtonTools.Text" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="toolStripDropDownButtonTools.ToolTipText" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
+    <value>Разделить выбранные карты по полу</value>
+  </data>
+  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Переименовать выбранные карты</value>
+  </data>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Экспортировать список отсутствующих модов</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Карты</value>
+  </data>
+</root>

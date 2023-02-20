@@ -19,6 +19,7 @@ namespace KKManager.Windows
 Special credits:
 Avocado Kai - AIS/HS2 update banner (AI ver. of Chika)
 Kaldeqca - Chinese translations
+LimsDes - Russian translations
 ";
         }
 
