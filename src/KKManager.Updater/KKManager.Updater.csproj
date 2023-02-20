@@ -260,19 +260,45 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
+    <EmbeddedResource Include="Properties\Resources.zh-Hant.resx" />
     <EmbeddedResource Include="Windows\MegaLoginWindow.resx">
+      <DependentUpon>MegaLoginWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\MegaLoginWindow.zh-Hans.resx">
       <DependentUpon>MegaLoginWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ModUpdateProgressDialog.resx">
       <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateProgressDialog.zh-Hans.resx">
+      <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateProgressDialog.zh-Hant.resx">
+      <DependentUpon>ModUpdateProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\ModUpdateSelectDialog.resx">
+      <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateSelectDialog.zh-Hans.resx">
+      <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ModUpdateSelectDialog.zh-Hant.resx">
       <DependentUpon>ModUpdateSelectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\P2PSettingsDialog.resx">
       <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\P2PSettingsDialog.zh-Hans.resx">
+      <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\P2PSettingsDialog.zh-Hant.resx">
+      <DependentUpon>P2PSettingsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.resx">
+      <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.zh-Hans.resx">
       <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
