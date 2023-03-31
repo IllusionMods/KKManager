@@ -336,10 +336,10 @@ namespace KKManager.Updater.Windows
                 SetStatus(string.Join("\n---\n", exceptions), false, true);
 
                 await TorrentUpdater.Stop();
-                
+
                 if (!exceptions.Any(x => x is OperationCanceledException))
                     SleepIfNecessary();
-                
+
                 WindowUtils.FlashWindow(Handle);
 
                 MessageBox.Show(string.Format(Resources.ModUpdateProgress_Failed_Unexpected_Message, string.Join("\n", exceptions.Select(x => x.Message))),
@@ -389,8 +389,8 @@ namespace KKManager.Updater.Windows
                 labelPercent.Text = topText;
 
                 progressBar1.Style = ProgressBarStyle.Blocks;
-                button1.Enabled = true;
-                button1.Text = Resources.ModUpdateProgress_OKbutton;
+                buttonCancelClose.Enabled = true;
+                buttonCancelClose.Text = Resources.ModUpdateProgress_OKbutton;
 
                 downloader?.Dispose();
 
@@ -472,7 +472,7 @@ namespace KKManager.Updater.Windows
             }
             else
             {
-                button1.Enabled = false;
+                buttonCancelClose.Enabled = false;
                 _cancelToken.Cancel();
             }
         }
@@ -482,6 +482,8 @@ namespace KKManager.Updater.Windows
             Task.Run(Finish).GetAwaiter().GetResult();
 
             UseWaitCursor = false;
+
+            _logPopup?.Dispose();
 
             base.OnClosed(e);
         }
@@ -519,6 +521,31 @@ namespace KKManager.Updater.Windows
                     Console.WriteLine(ex);
                 }
             }
+        }
+
+        private void buttonMinimize_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private LogPopup _logPopup;
+        private void buttonViewLog_Click(object sender, EventArgs e)
+        {
+            if (_logPopup != null && _logPopup.Visible)
+            {
+                if (_logPopup.WindowState == FormWindowState.Minimized)
+                    _logPopup.WindowState = FormWindowState.Normal;
+
+                _logPopup.BringToFront();
+                _logPopup.Focus();
+                return;
+            }
+
+            _logPopup?.Dispose();
+
+            _logPopup = new LogPopup();
+            _logPopup.Icon = Icon;
+            _logPopup.Show();
         }
     }
 }

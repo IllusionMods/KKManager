@@ -1,6 +1,6 @@
-﻿namespace KKManager.Windows.ToolWindows
+﻿namespace KKManager.Updater.Windows
 {
-    partial class LogViewer
+    partial class LogPopup
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogViewer));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogPopup));
             this.logControl1 = new KKManager.Controls.LogControl();
             this.SuspendLayout();
             // 
@@ -37,13 +37,12 @@
             resources.ApplyResources(this.logControl1, "logControl1");
             this.logControl1.Name = "logControl1";
             // 
-            // LogViewer
+            // LogPopup
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.logControl1);
-            this.Name = "LogViewer";
-            this.ShowIcon = false;
+            this.Name = "LogPopup";
             this.ResumeLayout(false);
 
         }

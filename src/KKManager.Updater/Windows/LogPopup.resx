@@ -154,12 +154,12 @@
     <value>800, 450</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>LogViewer</value>
+    <value>Log Viewer</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>LogViewer</value>
+    <value>LogPopup</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

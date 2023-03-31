@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KKManager;
+using KKManager.Controls;
 using KKManager.Functions;
 using KKManager.Updater;
 using KKManager.Updater.Sources;
@@ -30,8 +31,10 @@ namespace StandaloneUpdater
                 NBug.Handler.UnhandledException(sender, arg);
             };
 
-            using (LogWriter.StartLogging())
+            using (var logger = LogWriter.StartLogging())
             {
+                LogControl.Log = logger;
+
                 var currentCulture = LanguageManager.CurrentCulture;
                 CultureInfo.CurrentCulture = currentCulture;
                 CultureInfo.CurrentUICulture = currentCulture;

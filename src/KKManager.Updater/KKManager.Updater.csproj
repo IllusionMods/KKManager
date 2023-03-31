@@ -219,6 +219,12 @@
     <Compile Include="Data\UpdateInfo.cs" />
     <Compile Include="UpdateSourceManager.cs" />
     <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Windows\LogPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\LogPopup.Designer.cs">
+      <DependentUpon>LogPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MegaLoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,9 @@
     <EmbeddedResource Include="Properties\Resources.ru.resx" />
     <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
     <EmbeddedResource Include="Properties\Resources.zh-Hant.resx" />
+    <EmbeddedResource Include="Windows\LogPopup.resx">
+      <DependentUpon>LogPopup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\MegaLoginWindow.resx">
       <DependentUpon>MegaLoginWindow.cs</DependentUpon>
     </EmbeddedResource>

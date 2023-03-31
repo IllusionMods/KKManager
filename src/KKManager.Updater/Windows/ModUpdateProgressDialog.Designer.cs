@@ -35,8 +35,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxSleep = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.buttonLog = new System.Windows.Forms.Button();
+            this.buttonMinimize = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonCancelClose = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.fastObjectListView1 = new BrightIdeasSoftware.FastObjectListView();
@@ -83,22 +86,46 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.progressBar1);
+            this.panel2.Controls.Add(this.panel6);
+            this.panel2.Controls.Add(this.buttonLog);
+            this.panel2.Controls.Add(this.buttonMinimize);
+            this.panel2.Controls.Add(this.checkBoxSleep);
             this.panel2.Controls.Add(this.panel3);
-            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.buttonCancelClose);
             resources.ApplyResources(this.panel2, "panel2");
             this.panel2.Name = "panel2";
+            // 
+            // panel6
+            // 
+            resources.ApplyResources(this.panel6, "panel6");
+            this.panel6.Name = "panel6";
+            // 
+            // buttonLog
+            // 
+            resources.ApplyResources(this.buttonLog, "buttonLog");
+            this.buttonLog.Name = "buttonLog";
+            this.buttonLog.UseVisualStyleBackColor = true;
+            this.buttonLog.Click += new System.EventHandler(this.buttonViewLog_Click);
+            // 
+            // buttonMinimize
+            // 
+            resources.ApplyResources(this.buttonMinimize, "buttonMinimize");
+            this.buttonMinimize.Name = "buttonMinimize";
+            this.buttonMinimize.UseVisualStyleBackColor = true;
+            this.buttonMinimize.Click += new System.EventHandler(this.buttonMinimize_Click);
             // 
             // panel3
             // 
             resources.ApplyResources(this.panel3, "panel3");
             this.panel3.Name = "panel3";
             // 
-            // button1
+            // buttonCancelClose
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonCancelClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            resources.ApplyResources(this.buttonCancelClose, "buttonCancelClose");
+            this.buttonCancelClose.Name = "buttonCancelClose";
+            this.buttonCancelClose.UseVisualStyleBackColor = true;
+            this.buttonCancelClose.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBox1
             // 
@@ -168,7 +195,6 @@
             // panel5
             // 
             resources.ApplyResources(this.panel5, "panel5");
-            this.panel5.Controls.Add(this.checkBoxSleep);
             this.panel5.Controls.Add(this.labelPercent);
             this.panel5.Controls.Add(this.labelStatus);
             this.panel5.Name = "panel5";
@@ -189,6 +215,7 @@
             // 
             // ModUpdateProgressDialog
             // 
+            this.AcceptButton = this.buttonCancelClose;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ControlBox = false;
@@ -197,7 +224,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.pictureBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ModUpdateProgressDialog";
@@ -205,6 +232,7 @@
             this.Shown += new System.EventHandler(this.ModUpdateProgress_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fastObjectListView1)).EndInit();
@@ -222,7 +250,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonCancelClose;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox checkBoxSleep;
         private System.Windows.Forms.Panel panel4;
@@ -236,5 +264,8 @@
         private BrightIdeasSoftware.OLVColumn olvColumnStatus;
         private System.Windows.Forms.Timer updateTimer;
         private BrightIdeasSoftware.OLVColumn olvColumnNo;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button buttonLog;
+        private System.Windows.Forms.Button buttonMinimize;
     }
 }
