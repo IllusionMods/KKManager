@@ -233,6 +233,7 @@
     <Compile Include="Util\TypeConverters\ListTypeConverter.cs" />
     <Compile Include="Util\UniversalDragAndDrop.cs" />
     <Compile Include="LanguageManager.cs" />
+    <Compile Include="Util\WindowUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

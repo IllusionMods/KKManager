@@ -79,6 +79,8 @@ namespace KKManager.Updater.Windows
             objectListView1.AutoResizeColumns();
 
             UpdateDownloadSizeLabel();
+
+            WindowUtils.FlashWindow(Handle);
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)

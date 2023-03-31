@@ -308,6 +308,8 @@ namespace KKManager.Updater.Windows
                 // Sleep before showing a messagebox since the box will block until user clicks ok
                 SleepIfNecessary();
 
+                WindowUtils.FlashWindow(Handle);
+
                 MessageBox.Show(s, Resources.ModUpdateProgress_Finished_Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 #endregion
@@ -315,7 +317,11 @@ namespace KKManager.Updater.Windows
             catch (OutdatedVersionException ex)
             {
                 SetStatus(Resources.ModUpdateProgress_Failed_Outdated, true, true);
+
                 await TorrentUpdater.Stop();
+
+                WindowUtils.FlashWindow(Handle);
+
                 ex.ShowKkmanOutdatedMessage();
             }
             catch (OperationCanceledException)
@@ -326,14 +332,18 @@ namespace KKManager.Updater.Windows
             {
                 var exceptions = ex is AggregateException aex ? aex.Flatten().InnerExceptions : (ICollection<Exception>)new[] { ex };
 
-                if (!exceptions.Any(x => x is OperationCanceledException))
-                    SleepIfNecessary();
-
                 SetStatus(Resources.ModUpdateProgress_Failed_Unexpected, true, true);
                 SetStatus(string.Join("\n---\n", exceptions), false, true);
+
+                await TorrentUpdater.Stop();
+                
+                if (!exceptions.Any(x => x is OperationCanceledException))
+                    SleepIfNecessary();
+                
+                WindowUtils.FlashWindow(Handle);
+
                 MessageBox.Show(string.Format(Resources.ModUpdateProgress_Failed_Unexpected_Message, string.Join("\n", exceptions.Select(x => x.Message))),
                                 Resources.ModUpdateProgress_Failed_Unexpected_Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                await TorrentUpdater.Stop();
             }
             finally
             {
