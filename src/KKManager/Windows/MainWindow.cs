@@ -511,7 +511,13 @@ namespace KKManager.Windows
 
                     var updateSources = GetUpdateSources();
                     if (!updateSources.Any()) throw new IOException("No update sources are available");
+
+                    Visible = false;
+
                     ModUpdateProgressDialog.StartUpdateDialog(this, updateSources);
+
+                    Visible = true;
+                    Application.DoEvents();
                 }
                 catch (Exception ex)
                 {
@@ -532,6 +538,7 @@ namespace KKManager.Windows
             finally
             {
                 Enabled = true;
+                Visible = true;
             }
         }
 
