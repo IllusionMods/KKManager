@@ -51,7 +51,7 @@ namespace KKManager.Updater.Sources
                     }
                 };
 #if DEBUG
-                LoggerFactory.Register(className => new TextLogger(Console.Out, className));
+                MonoTorrent.Logging.LoggerFactory.Register(className => new MonoTorrent.Logging.TextLogger(Console.Out, className));
 #endif
             }
 
