@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,6 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,6 +60,18 @@
     </Reference>
     <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="Hjg.Pngcs, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hjg.Pngcs.1.1.4\lib\netstandard2.0\Hjg.Pngcs.dll</HintPath>
+    </Reference>
+    <Reference Include="Hst.Imaging, Version=0.4.48.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hst.Imaging.0.4.48\lib\netstandard2.0\Hst.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Hst.Imaging.Pngcs, Version=0.4.48.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hst.Imaging.Pngcs.0.4.48\lib\netstandard2.0\Hst.Imaging.Pngcs.dll</HintPath>
+    </Reference>
+    <Reference Include="libpng-sharp, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\libpng-sharp.0.1.18\lib\netstandard2.0\libpng-sharp.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack, Version=2.4.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>..\packages\MessagePack.2.4.59\lib\netstandard2.0\MessagePack.dll</HintPath>
@@ -147,29 +162,24 @@
     <Compile Include="Controls\LogControl.Designer.cs">
       <DependentUpon>LogControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Cards\AI\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\EC\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileAbout.cs" />
-    <Compile Include="Data\Cards\RG\BlockHeader.cs" />
+    <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\RG\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\RG\ChaFileParameter.cs" />
-    <Compile Include="Data\Cards\KKS\BlockHeader.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\KKS\KoiSunCard.cs" />
-    <Compile Include="Data\Cards\KK\BlockHeader.cs" />
     <Compile Include="Data\Cards\KK\ChaFileExtended.cs" />
-    <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\KK\KoiCard.cs" />
     <Compile Include="Data\Cards\PluginData.cs" />
     <Compile Include="Data\Cards\Card.cs" />
     <Compile Include="Data\Cards\CardLoader.cs" />
     <Compile Include="Data\Cards\CardType.cs" />
     <Compile Include="Data\Cards\CharaSex.cs" />
-    <Compile Include="Data\Cards\EC\BlockHeader.cs" />
     <Compile Include="Data\Cards\EC\ChaFileExtended.cs" />
-    <Compile Include="Data\Cards\EC\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\AI\AiCard.cs" />
     <Compile Include="Data\Cards\EC\EmoCard.cs" />
     <Compile Include="Data\Cards\RG\RoomGirlCard.cs" />
@@ -177,6 +187,10 @@
     <Compile Include="Data\ExtData\ExtDataParser.cs" />
     <Compile Include="Data\ExtData\Deserializers\SideloaderExtDataDeserializer.cs" />
     <Compile Include="Data\ExtData\IExtDataDeserializer.cs" />
+    <Compile Include="Data\Game\BlockHeader.cs" />
+    <Compile Include="Data\Game\Consts.cs" />
+    <Compile Include="Data\Game\Names.cs" />
+    <Compile Include="Data\Game\Assets.cs" />
     <Compile Include="Data\IFileInfoBase.cs" />
     <Compile Include="Data\ModInfoBase.cs" />
     <Compile Include="Data\Plugins\PluginInfo.cs" />
@@ -309,4 +323,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.4.4.2\build\net462\NUnit3TestAdapter.props'))" />
+  </Target>
 </Project>

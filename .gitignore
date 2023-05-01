@@ -331,3 +331,9 @@ ASALocalRun/
 *.DotSettings
 */UpdateSources
 
+# Ignore unzipped vendor source files, they aren't large but there are thousands of files if you extracted all the deps.
+src/vendor/src/unzipped/
+
+# Ignore vscode config
+.vscode/
+src/.vcode/

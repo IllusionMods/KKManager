@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using MessagePack;
+using KKManager.Data.Game;
 
 namespace KKManager.Data.Cards.KK
 {

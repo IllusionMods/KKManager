@@ -8,6 +8,7 @@ using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
 using System.Reflection;
 using System.Runtime;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,11 +19,17 @@ using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
+using KKManager.Data.Game;
+using MessagePack;
+using libpngsharp;
+using Hjg.Pngcs;
+using Hjg.Pngcs.Chunks;
 
 namespace KKManager.Data.Cards
 {
     public static class CardLoader
     {
+        
         public static IObservable<Card> ReadCards(DirectoryInfo path, SearchOption searchOption, CancellationToken cancellationToken)
         {
             var s = new ReplaySubject<Card>();
@@ -45,7 +52,7 @@ namespace KKManager.Data.Cards
                 {
                     try
                     {
-                        foreach (var file in path.EnumerateFiles("*.png", searchOption))
+                        foreach (FileInfo file in path.EnumerateFiles("*.png", searchOption))
                         {
                             if (cancellationToken.IsCancellationRequested) break;
                             if (TryParseCard(file, out var card)) s.OnNext(card);
@@ -120,12 +127,45 @@ namespace KKManager.Data.Cards
             {
                 card = ParseCard(file);
                 return card != null;
+                /*(IllusionObject, CardErrorCode) result = LoadCard(file);
+                card = result.Item1;
+                if(result.Item2 < 0)
+                {
+                    Console.WriteLine($"Error parsing card [{file}] with code {result.Item2}");
+                }
+                return card != null;*/
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to parse card [{file}] with an error: {ex.Message}");
                 card = null;
                 return false;
+            }
+        }
+
+        private static CardType GetGameType(string marker)
+        {
+            switch (marker)
+            {
+                case "【KoiKatuChara】":
+                    return CardType.Koikatu;
+                case "【KoiKatuCharaS】":
+                    return CardType.KoikatsuParty;
+                case "【KoiKatuCharaSP】":
+                    return CardType.KoikatsuPartySpecialPatch;
+                case "【EroMakeChara】":
+                    return CardType.EmotionCreators;
+                case "【AIS_Chara】":
+                    return CardType.AiSyoujyo;
+                case "【KoiKatuCharaSun】":
+                    return CardType.KoikatsuSunshine;
+                case "【RG_Chara】":
+                    return CardType.RoomGirl;
+                // todo differnt format, saved at very end of data
+                //case "【KStudio】":
+                //    return CardType.KoikatuStudio;
+                default:
+                    return CardType.Unknown;
             }
         }
 
@@ -187,6 +227,7 @@ namespace KKManager.Data.Cards
                     if (card.Extended != null)
                         ExtData.ExtDataParser.DeserializeInPlace(card.Extended);
 
+                    LoadCard(file, card);
                     return card;
                 }
                 catch (EndOfStreamException e)
@@ -195,31 +236,199 @@ namespace KKManager.Data.Cards
                 }
             }
         }
-
-        private static CardType GetGameType(string marker)
+        
+        public enum CardErrorCode
         {
-            switch (marker)
+            NotFound = -12,
+            NoDataFound,
+            InvalidProductNumber,
+            UnknownGame,
+            UnknownVersion,
+            CustomVersionMismatch,
+            CoordinateVersionMismatch,
+            ParameterVersionMismatch,
+            GameInfoVersionMismatch,
+            Parameter2VersionMismatch,
+            GameInfo2VersionMismatch,
+            EndOfStreamError,
+            ValidCard
+        }
+
+        public static string PeekString(BinaryReader reader)
+        {
+            if (reader == null)
             {
-                case "【KoiKatuChara】":
-                    return CardType.Koikatu;
-                case "【KoiKatuCharaS】":
-                    return CardType.KoikatsuParty;
-                case "【KoiKatuCharaSP】":
-                    return CardType.KoikatsuPartySpecialPatch;
-                case "【EroMakeChara】":
-                    return CardType.EmotionCreators;
-                case "【AIS_Chara】":
-                    return CardType.AiSyoujyo;
-                case "【KoiKatuCharaSun】":
-                    return CardType.KoikatsuSunshine;
-                case "【RG_Chara】":
-                    return CardType.RoomGirl;
-                // todo differnt format, saved at very end of data
-                //case "【KStudio】":
-                //    return CardType.KoikatuStudio;
-                default:
-                    return CardType.Unknown;
+                throw new ArgumentNullException(nameof(reader));
             }
+            var startPosition = reader.BaseStream.Position;
+            var result = reader.ReadString();
+            reader.BaseStream.Seek(startPosition, SeekOrigin.Begin);
+            return result;
+        }
+
+        public static string PeekString(BinaryReader reader, int length)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (length <= 0)
+            {
+                return string.Empty;
+            }
+
+            byte[] bytes = reader.ReadBytes(length);
+            string result = Encoding.UTF8.GetString(bytes);
+            reader.BaseStream.Seek(-length, SeekOrigin.Current);
+            return result;
+        }
+
+        // created for test purposes to basically cast ChaFile as Card.
+        public static void CopyProperties(object source, object destination)
+        {
+            Type sourceType = source.GetType();
+            Type destinationType = destination.GetType();
+
+            foreach (var sourceProperty in sourceType.GetProperties())
+            {
+                var destinationProperty = destinationType.GetProperty(sourceProperty.Name);
+                if (destinationProperty != null && destinationProperty.CanWrite && destinationProperty.PropertyType == sourceProperty.PropertyType)
+                {
+                    object value = sourceProperty.GetValue(source, null);
+                    destinationProperty.SetValue(destination, value, null);
+                }
+            }
+        }
+
+
+        public static (IllusionObject, CardErrorCode) LoadCard(FileInfo pngFile, Card card)
+        {
+            if (!pngFile.Exists)
+            {
+                return (null, CardErrorCode.NotFound);
+            }
+
+            var gameObject = new IllusionObject();
+            GameName gameName;
+
+            using (var stream = pngFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                // Create a PNG reader
+                PngReader reader = new PngReader(stream);
+
+                // Get the chunks list
+                ChunksList chunksList = reader.GetChunksList();
+
+                // Find the IEND chunk
+                PngChunk iendChunk = chunksList.GetById1("IEND", true);
+                if (iendChunk == null)
+                {
+                    return (null, CardErrorCode.NoDataFound);
+                }
+                // Calculate the offset for the custom chunk
+                int customChunkOffset = (int)iendChunk.Offset + 12;
+
+                // Seek to the custom chunk offset in the stream
+                stream.Seek(customChunkOffset, SeekOrigin.Begin);
+
+                // Read the custom chunk data using a new binary reader
+                using (BinaryReader br = new BinaryReader(stream))
+                {
+                    // long illusionChunkLength = br.ReadInt32(); // apparently illusion doesn't follow the png header format?
+                    try
+                    {
+                        string chunkType = PeekString(br);
+                        if (!Consts.gameNameByChunkDict.ContainsKey(chunkType))
+                        {
+                            // do honey select 1 stuff.
+                        }
+                        long loadProductNo = br.ReadInt32();
+                        if (loadProductNo > 100)
+                        {
+                            return (null, CardErrorCode.InvalidProductNumber);
+                        }
+
+                        Version loadVersion = new Version(br.ReadString());
+                        Version chaFileVersion = gameObject.Get<IllusionObject>("ChaFileDefine").Get<Version>("ChaFileVersion");
+                        if (chaFileVersion != null && loadVersion > chaFileVersion)
+                        {
+                            return (null, CardErrorCode.UnknownVersion);
+                        }
+
+                        chunkType = br.ReadString();
+                        if(!Consts.gameNameByChunkDict.ContainsKey(chunkType))
+                        {
+                            return (null, CardErrorCode.UnknownGame);
+                        }
+
+                        gameName = Consts.gameNameByChunkDict[chunkType];
+                        if (gameName.Equals("HS2") || gameName.Equals("EC"))
+                        {
+                            long language = br.ReadInt32();
+                            string userID = br.ReadString();
+                            string dataID = br.ReadString();
+                        }
+                        else if(gameName.Equals("KK") || gameName.Equals("KKS"))
+                        {
+                            int facePngLength = br.ReadInt32();
+                            if (facePngLength > 0)
+                            {
+                                //this.facePngData = reader.ReadBytes(num);
+                                br.ReadBytes(facePngLength);
+                            }
+                        }
+                        if (gameName.Equals("EC"))
+                        {
+                            int someECLen = br.ReadInt32();
+                            var hsPackage = new HashSet<int>();
+                            for (int i = 0; i < someECLen; i++)
+                            {
+                                hsPackage.Add(br.ReadInt32());
+                            }
+                        }
+
+                        int blockHeaderSize = br.ReadInt32();
+                        BlockHeader blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(br.ReadBytes(blockHeaderSize));
+                        long seekNum = br.ReadInt64();
+                        long position = br.BaseStream.Position;
+
+                        gameObject.Acquire(gameName); // Load our IllusionObject with game-specific data.
+                        SortedDictionary<string, object> blocks = BlockHelper.GetValidBlockNames(gameName);
+                        int blockErrCode = -7;
+                        foreach (var blockName in blocks)
+                        {
+                            BlockHeader.Info info = blockHeader.SearchInfo(blockName.Key);
+                            if (info != null)
+                            {
+                                Version version = new Version(info.version);
+                                string blockShortName = BlockHelper.blockShortNames[blockName.Key];
+                                string blockVersionMethod = BlockHelper.blockVersionMethodName(blockName.Key);
+                                Version blockVersion = (Version)gameObject.Get<IllusionObject>("ChaFileDefine").Call(blockVersionMethod);
+                                if (blockVersion > version)
+                                {
+                                    return (null, (CardErrorCode)(blockErrCode));
+                                }
+
+                                br.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
+                                byte[] data = br.ReadBytes((int)info.size);
+                                card[BlockHelper.blockShortNames[blockName.Key]] = data;
+                                string blockMethodName = BlockHelper.blockMethods[blockName.Key];
+                                gameObject.Get<IllusionObject>("ChaFile").Call(blockMethodName, data, version);
+                            }
+                            blockErrCode++;
+                        }
+
+                        br.BaseStream.Seek(position + seekNum, SeekOrigin.Begin);
+                    }
+                    catch (EndOfStreamException)
+                    {
+                        return (null, CardErrorCode.EndOfStreamError);
+                    }
+                }
+            }
+
+            return (gameObject, CardErrorCode.ValidCard);
         }
     }
 }
