@@ -13,8 +13,8 @@ namespace KKManager.Data.Cards.RG
         public override CharaSex Sex => Parameter == null ? CharaSex.Unknown : Parameter.sex == 0 ? CharaSex.Male : CharaSex.Female;
         public override string PersonalityName => GetProfession(Parameter?.personality ?? -1);
         public string Birthday => $"{GetBirthMonth(Parameter.birthMonth)} {Parameter.birthDay}";
-        public string Fetishes => String.Join(", ", GetFetishes(Parameter.propensity));
-        public string Traits => String.Join(", ", GetTraits(Parameter.features));
+        public string Fetishes => string.Join(", ", GetFetishes(Parameter.propensity));
+        public string Traits => string.Join(", ", GetTraits(Parameter.features));
         [ReadOnly(true)] public ChaFileParameter Parameter { get; }
 
         private RoomGirlCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, Version version) : base(cardFile, type, extended, version)
@@ -31,7 +31,7 @@ namespace KKManager.Data.Cards.RG
                 //return null;
             }
 
-            var language = reader.ReadInt32();
+            int language = reader.ReadInt32();
 
             // two GUIDs, one is a meme, the other is unique to the card
             string userID = reader.ReadString(); // this is always 'illusion-2022-0825-xxxx-roomgirlocha'
@@ -39,7 +39,7 @@ namespace KKManager.Data.Cards.RG
 
             // the next int32 contains a byte-offset value from the beginning of the file
             // to the end of the 2nd PNG file, which is where the juicy metadata is
-            var faceLength = reader.ReadInt32();
+            int faceLength = reader.ReadInt32();
             if (faceLength > 0)
             {
                 //this.facePngData = reader.ReadBytes(num);
@@ -48,26 +48,26 @@ namespace KKManager.Data.Cards.RG
             }
 
             // ingest the next chunk of data as raw bytes
-            var count = reader.ReadInt32();
-            var bytes = reader.ReadBytes(count);
+            int count = reader.ReadInt32();
+            byte[] bytes = reader.ReadBytes(count);
 
-            var deserializeOptions = MessagePackSerializerOptions.Standard.WithSecurity(MessagePackSecurity.UntrustedData);
+            MessagePackSerializerOptions deserializeOptions = MessagePackSerializerOptions.Standard.WithSecurity(MessagePackSecurity.UntrustedData);
 
             // deserialize messagepack json value array defined in RG/BlockHeader.cs
-            var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes, deserializeOptions);
+            BlockHeader blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes, deserializeOptions);
 
             reader.ReadInt64();
-            var position = reader.BaseStream.Position;
+            long position = reader.BaseStream.Position;
 
             ChaFileParameter parameter = null;
-            var info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
+            BlockHeader.Info info = blockHeader.SearchInfo(ChaFileParameter.BlockName);
             if (info != null)
             {
                 var value = new Version(info.version);
                 if (0 <= ChaFileParameter.CurrentVersion.CompareTo(value))
                 {
                     reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-                    var parameterBytes = reader.ReadBytes((int)info.size);
+                    byte[] parameterBytes = reader.ReadBytes((int)info.size);
                     parameter = MessagePackSerializer.Deserialize<ChaFileParameter>(parameterBytes, deserializeOptions);
                 }
             }
@@ -77,7 +77,7 @@ namespace KKManager.Data.Cards.RG
             if (info != null)
             {
                 reader.BaseStream.Seek(position + info.pos, SeekOrigin.Begin);
-                var parameterBytes = reader.ReadBytes((int)info.size);
+                byte[] parameterBytes = reader.ReadBytes((int)info.size);
 
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
@@ -116,7 +116,7 @@ namespace KKManager.Data.Cards.RG
                 "Friendliness"
             };
 
-            foreach (var attribute in features)
+            foreach (byte attribute in features)
             {
                 if (attribute > 15) traits.Add("Invalid");
                 else if (traitLookup.Length > attribute) traits.Add(traitLookup[attribute]);
@@ -143,7 +143,7 @@ namespace KKManager.Data.Cards.RG
                 "Bukkake"
             };
 
-            foreach (var kink in propensity)
+            foreach (byte kink in propensity)
             {
                 if (kink > 12) fetishes.Add("Invalid");
                 else if (fetishLookup.Length > kink) fetishes.Add(fetishLookup[kink]);

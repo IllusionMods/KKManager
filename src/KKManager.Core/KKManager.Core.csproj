@@ -218,6 +218,8 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Util\AssemblyLoader.cs" />
+    <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\ModMatchFilter.cs" />
     <Compile Include="Util\TimeSpanUtils.cs" />
     <Compile Include="Util\Extensions.cs" />

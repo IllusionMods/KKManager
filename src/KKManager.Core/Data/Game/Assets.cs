@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
 using System.Dynamic;
-using Microsoft.Win32;
-using MessagePack;
-using System.Collections.Specialized;
+//using Mono.Cecil;
 
 
 namespace KKManager.Data.Game
@@ -35,37 +31,72 @@ namespace KKManager.Data.Game
         public GameName gameName;
         public void GetAssemblies(GameName gameName, string gameInstallPath = "")
         {
-            if (gameInstallPath.Equals(""))
+            if (string.IsNullOrEmpty(gameInstallPath))
             {
                 gameInstallPath = Consts.GetInstallPath(gameName);
             }
             string assemblyPath = Path.Combine(gameInstallPath, $"{gameName}_Data", "Managed", "Assembly-CSharp.dll");
+            OrderedDictionary gameBlocks = BlockHelper.GetValidBlockNames(gameName);
+            // using mono is always an option too.
+            // AssemblyLoader loader = new AssemblyLoader();
+            // loader.LoadAssemblies(new string[] { assemblyPath });
+            /*foreach (TypeDefinition type in loader.GetTypesByAssemblyName("Assembly-CSharp"))
+            {
+                if (gameBlocks.ContainsKey(type.Name) || type.Name.Equals("ChaFile") || type.Name.Equals("ChaFileDefine"))
+                {
+                    Console.WriteLine($"Found {gameName} {type.Name}: {type}");
+                    this._instance[type.Name] = type;
+                }
+            }*/
+
+            // luckily reflection does. I did not want to create an entire AppDomain.
             try
             {
                 Assembly assembly = Assembly.LoadFrom(assemblyPath);
-                SortedDictionary<string, object> gameBlocks = BlockHelper.GetValidBlockNames(gameName);
-                foreach (Type t in assembly.GetTypes())
+                foreach (Type type in assembly.GetTypes())
                 {
-                    if (gameBlocks.ContainsKey(t.Name) || t.Name.Equals("ChaFile") || t.Name.Equals("ChaFileDefine"))
+                    if (!type.IsClass)
                     {
-                        Console.WriteLine($"Found {gameName} {t.Name}: {t}");
-                        this._instance[t.Name] = t;
+                        continue;
+                    }
+                    if (
+                        gameBlocks.Contains(type.Name)
+                        || type.Name == "ChaFileDefine"
+                        || type.Name == "ChaFile"
+                    )
+                    {
+                        Console.WriteLine($"Found {gameName} {type.Name}: {type}");
+                        if (type.IsAbstract && type.IsSealed)
+                        {
+                            _instance[type.Name] = type;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                _instance[type.Name] = Activator.CreateInstance(type);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Failed to create instance of type {type.Name}: {ex}");
+                            }
+                        }
                     }
                 }
+                GC.Collect();
                 Console.WriteLine($"{gameName} modules successfully loaded!");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Error loading {gameName} modules: {e}");
+                throw new InvalidOperationException($"Failed to load assembly {assemblyPath}: {ex}");
             }
         }
+
         public void Acquire(GameName gameName)
         {
             this.gameName = gameName;
-            string installPath = Consts.GetInstallPath(gameName);
             GetAssemblies(gameName);
         }
-
 
         private readonly Dictionary<string, object> _instance;
         public IllusionObject(GameName gameName)
@@ -73,125 +104,324 @@ namespace KKManager.Data.Game
             _instance = new Dictionary<string, object>();
             Acquire(gameName);
         }
-        public IllusionObject()
-        {
-            _instance = new Dictionary<string, object>();
-        }
-
+        public IllusionObject() => _instance = new Dictionary<string, object>();
         public object this[string key]
         {
-            get
-            {
-                if (_instance.TryGetValue(key, out object value))
-                {
-                    return value;
-                }
-                else
-                {
-                    return new IllusionObject();
-                }
-            }
-            set
-            {
-                _instance[key] = value;
-            }
+            get => _instance.TryGetValue(key, out object value) ? value : throw new KeyNotFoundException($"The key {key} was not found.");
+            set => _instance[key] = value;
         }
-
-        public T Get<T>(string key) where T : class
-        {
-            if (_instance.TryGetValue(key, out object value))
-            {
-                if (value is T tValue)
-                {
-                    return tValue;
-                }
-                else if (value is IllusionObject childObject)
-                {
-                    return childObject.Get<T>();
-                }
-            }
-            return null;
-        }
-
-        /*
         public T Get<T>(string key)
         {
-            if (_instance.TryGetValue(key, out object value))
+            if (!_instance.TryGetValue(key, out object obj))
             {
-                if (value is T tValue)
-                {
-                    return tValue;
-                }
-                else if (value is IllusionObject childObject)
-                {
-                    return childObject.Get<T>();
-                }
+                throw new KeyNotFoundException($"The key {key} was not found.");
             }
-            return default(T);
-        }*/
 
+            switch (obj)
+            {
+                case T result:
+                    return result;
 
-        public T Get<T>()
+                case Type type when typeof(T) != typeof(Type):
+                    if (type.IsAbstract && type.IsSealed)
+                    {
+                        Console.WriteLine($"Getting static class {key} of type {type}");
+                        return (T)(object)type;
+                    }
+                    else
+                    {
+                        throw new InvalidCastException($"The value associated with key {key} cannot be cast to type {typeof(T)}");
+                    }
+
+                case Type instanceType:
+                    Console.WriteLine($"Getting instance of class {key} of type {instanceType}");
+                    try
+                    {
+                        return (T)Activator.CreateInstance(instanceType);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"An error occurred while creating instance of class {key} of type {instanceType}.", ex);
+                    }
+
+                default:
+                    if (typeof(T).IsAssignableFrom(obj.GetType()))
+                    {
+                        Console.WriteLine($"Getting instance of field/property {key} with type {typeof(T)}");
+                        return (T)obj;
+                    }
+                    else
+                    {
+                        throw new InvalidCastException($"The value associated with key {key} cannot be cast to type {typeof(T)}");
+                    }
+            }
+        }
+
+        public T GetField<T>(string className, string fieldName)
         {
-            if (typeof(T) == typeof(IllusionObject))
+            if (!_instance.TryGetValue(className, out object obj))
             {
-                return (T)(object)this;
+                throw new KeyNotFoundException($"The key {className} was not found or is not a valid class, field, or property.");
             }
-            else if (typeof(T) == typeof(Dictionary<string, object>))
+
+            try
             {
-                return (T)(object)_instance;
+                switch (obj)
+                {
+                    case Type type:
+                        FieldInfo field = type.GetField(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        if (field != null)
+                        {
+                            object value = field.GetValue(null);
+                            if (value is T result2)
+                            {
+                                return result2;
+                            }
+                            else
+                            {
+                                throw new InvalidCastException($"The value of field {fieldName} in class {className} cannot be cast to type {typeof(T)}.");
+                            }
+                        }
+
+                        PropertyInfo prop = type.GetProperty(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        if (prop != null && prop.CanRead)
+                        {
+                            object value = prop.GetValue(null);
+                            if (value is T result3)
+                            {
+                                return result3;
+                            }
+                            else
+                            {
+                                throw new InvalidCastException($"The value of property {fieldName} in class {className} cannot be cast to type {typeof(T)}.");
+                            }
+                        }
+
+                        throw new KeyNotFoundException($"The field or property {fieldName} was not found in class {className}.");
+
+                    case PropertyInfo property:
+                        if (property.CanRead)
+                        {
+                            object value = property.GetValue(null);
+                            if (value is T result4)
+                            {
+                                return result4;
+                            }
+                            else
+                            {
+                                throw new InvalidCastException($"The value of property {fieldName} in class {className} cannot be cast to type {typeof(T)}.");
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"The property {fieldName} in class {className} is write-only.");
+                        }
+
+                    case FieldInfo field2:
+                        object fieldValue = field2.GetValue(null);
+                        if (fieldValue is T result)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            throw new InvalidCastException($"The value of field {fieldName} in class {className} cannot be cast to type {typeof(T)}.");
+                        }
+
+                    default:
+                        throw new System.Exception($"Unknown value type: {obj}");
+                }
             }
-            else if (typeof(T) == typeof(object))
+            catch (Exception ex)
             {
-                return (T)(object)_instance;
+                throw new Exception($"An error occurred while getting the value of field or property {fieldName} in class {className}.", ex);
             }
-            else if (typeof(T).IsClass)
+        }
+
+
+        public void SetField(string className, string fieldName, object value)
+        {
+            if (_instance.TryGetValue(className, out object obj))
             {
-                var instance = Activator.CreateInstance(typeof(T));
-                foreach (var property in typeof(T).GetProperties())
+                if (obj is Type type)
+                {
+                    FieldInfo field = type.GetField(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (field != null)
+                    {
+                        field.SetValue(null, value);
+                        return;
+                    }
+
+                    PropertyInfo prop = type.GetProperty(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(null, value);
+                        return;
+                    }
+
+                    throw new KeyNotFoundException($"The field or property {fieldName} was not found in class {className}.");
+                }
+                else if (obj is PropertyInfo property)
                 {
                     if (property.CanWrite)
                     {
-                        var value = Get<object>(property.Name);
-                        if (value != null)
-                        {
-                            property.SetValue(instance, value);
-                        }
+                        property.SetValue(null, value);
                     }
                 }
-                return (T)instance;
+                else if (obj is FieldInfo field)
+                {
+                    field.SetValue(null, value);
+                }
+                else
+                {
+                    throw new System.Exception($"Unknown value type: {value}");
+                }
+            }
+            throw new KeyNotFoundException($"The key {className} was not found or is not a valid class, field, or property.");
+        }
+        public object Call(string className, string methodName, object[] parameters)
+        {
+            if (!_instance.TryGetValue(className, out object target))
+            {
+                throw new KeyNotFoundException($"The key {className} was not found.");
+            }
+
+            Type targetType = target.GetType();
+
+            if (!targetType.IsClass)
+            {
+                throw new ArgumentException($"The key {className} does not correspond to a class.");
+            }
+
+            MethodInfo method = targetType.GetMethod(methodName);
+            if (method == null)
+            {
+                throw new ArgumentException($"The method {methodName} does not exist in class {className}.");
+            }
+
+            if (method.GetParameters().Length > 0 && (parameters == null || parameters.Length == 0))
+            {
+                throw new ArgumentException($"The method {methodName} requires parameters but none were provided.");
+            }
+
+            try
+            {
+                return method.Invoke(target, parameters);
+            }
+            catch (TargetInvocationException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    throw new Exception($"An error occurred while invoking method {methodName} on class {className}: {ex.InnerException.Message}", ex.InnerException);
+                }
+                else
+                {
+                    throw new Exception($"An error occurred while invoking method {methodName} on class {className}.", ex);
+                }
+            }
+        }
+
+
+
+        public object Call(Type classType, string methodName, object[] parameters)
+        {
+            if (classType is null)
+            {
+                throw new ArgumentNullException(nameof(classType), "The class type cannot be null.");
+            }
+
+            if (!classType.IsClass)
+            {
+                throw new ArgumentException($"The {nameof(classType)} argument does not correspond to a class.");
+            }
+
+            MethodInfo method = classType.GetMethod(methodName);
+            if (method is null)
+            {
+                throw new ArgumentException($"The method {methodName} does not exist in class {classType.Name}.");
+            }
+
+            if (method.GetParameters().Length > 0 && (parameters is null || parameters.Length == 0))
+            {
+                throw new ArgumentException($"The method {methodName} requires parameters but none were provided.");
+            }
+
+            object target = null;
+            if (!method.IsStatic)
+            {
+                if (classType.IsAbstract && classType.IsSealed)
+                {
+                    throw new ArgumentException($"The class {classType.Name} is static and cannot be instantiated.");
+                }
+
+                if (classType.GetConstructor(Type.EmptyTypes) != null)
+                {
+                    target = Activator.CreateInstance(classType);
+                }
+                else
+                {
+                    throw new ArgumentException($"The class {classType.Name} does not have a public parameterless constructor and cannot be instantiated.");
+                }
+            }
+
+            try
+            {
+                return method.Invoke(target, parameters);
+            }
+            catch (TargetInvocationException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    throw new Exception($"An error occurred while invoking method {methodName} on class {classType.Name}: {ex.InnerException.Message}", ex.InnerException);
+                }
+                else
+                {
+                    throw new Exception($"An error occurred while invoking method {methodName} on class {classType.Name}.", ex);
+                }
+            }
+        }
+
+
+
+        public bool Contains(string className, string memberName, bool isStatic = false)
+        {
+            if (!_instance.TryGetValue(className, out object obj))
+            {
+                return false;
+            }
+
+            BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic;
+            if (isStatic)
+            {
+                flags |= BindingFlags.Static;
             }
             else
             {
-                return default(T);
+                flags |= BindingFlags.Instance;
             }
-        }
-        public void Add<T>(string key, T value) where T : class
-        {
-            this._instance[key] = value;
-        }
-        public object Call(string key, params object[] args)
-        {
-            if (_instance.TryGetValue(key, out object value) && value is Delegate del)
-            {
-                return del.DynamicInvoke(args);
-            }
-            return null;
-        }
 
-        public object GetPropertyValue(string objectName, string propertyName)
-        {
-            if (this._instance.TryGetValue(objectName, out object obj))
+
+            Type type = obj.GetType();
+            if (type.GetField(memberName, flags) != null)
             {
-                Type type = obj.GetType();
-                PropertyInfo property = type.GetProperty(propertyName);
-                if (property != null)
+                return true;
+            }
+
+            PropertyInfo property = type.GetProperty(memberName, flags);
+            if (property != null)
+            {
+                if ((isStatic ? property.GetGetMethod(true) : property.GetGetMethod()) != null && (isStatic ? property.GetGetMethod(true) : property.GetGetMethod()).IsStatic == isStatic)
                 {
-                    return property.GetValue(obj);
+                    return true;
                 }
             }
 
-            return null;
+            return false;
+        }
+
+        public void Add<T>(string key, T value) where T : class
+        {
+            _instance[key] = value;
         }
     }
 }

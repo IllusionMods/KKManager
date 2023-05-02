@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +37,7 @@ namespace KKManager.Data.Game
     public static class BlockHelper
     {
         // chara blocks.
-        public static SortedDictionary<string, object> blockNames = new SortedDictionary<string, object>
+        public static OrderedDictionary blockNames = new OrderedDictionary
         {
             // HS2/AI/KK/KKS/EC possibly RG
             { "ChaFileCustom", null },
@@ -43,13 +45,13 @@ namespace KKManager.Data.Game
             { "ChaFileParameter", null },
             { "ChaFileStatus", null }
         };
-        public static SortedDictionary<string, object> HS2_AI_blockNames = new SortedDictionary<string, object>
+        public static OrderedDictionary HS2_AI_blockNames = new OrderedDictionary
         {
             { "ChaFileGameInfo", null },
             { "ChaFileParameter2", null },
             { "ChaFileGameInfo2", null }
         };
-        public static SortedDictionary<string, object> KKS_blockNames = new SortedDictionary<string, object>
+        public static OrderedDictionary KKS_blockNames = new OrderedDictionary
         {
             { "ChaFileAbout", null }
         };
@@ -69,6 +71,12 @@ namespace KKManager.Data.Game
             { "Parameter2", "SetParameter2Bytes" },
             { "GameInfo2", "SetGameInfo2Bytes" },
             { "About", "SetAboutBytes" }
+        };
+
+        public static Dictionary<string, string> blockMethodsNeedVersion = new Dictionary<string, string>
+        {
+            { "Custom", "SetCustomBytes" },
+            { "Coordinate", "SetCoordinateBytes" },
         };
 
         public static Dictionary<string, string> blockShortNames = new Dictionary<string, string>
@@ -110,28 +118,28 @@ namespace KKManager.Data.Game
 
         public static string blockVersionMethodName(string blockName)
         {
-            return blockLongNames[blockName] + "Version";
+            return blockName + "Version";
         }
 
-        public static SortedDictionary<string, object> GetValidBlockNames(GameName gameName)
+        public static OrderedDictionary GetValidBlockNames(GameName gameName)
         {
-            SortedDictionary<string, object> combinedDict = new SortedDictionary<string, object>();
-            foreach (var item in blockNames)
+            OrderedDictionary combinedDict = new OrderedDictionary();
+            foreach (DictionaryEntry item in blockNames)
             {
-                combinedDict.Add(item.Key, item.Value);
+                combinedDict.Add(item.Key, (object)item.Value);
             }
             if (gameName.Equals("HoneySelect2") || gameName.Equals(new GameName("AI")))
             {
-                foreach (var item in HS2_AI_blockNames)
+                foreach (DictionaryEntry item in HS2_AI_blockNames)
                 {
-                    combinedDict.Add(item.Key, item.Value);
+                    combinedDict.Add(item.Key, (object)item.Value);
                 }
             }
             else if (gameName.Equals(new GameName("KKS")))
             {
-                foreach (var item in KKS_blockNames)
+                foreach (DictionaryEntry item in KKS_blockNames)
                 {
-                    combinedDict.Add(item.Key, item.Value);
+                    combinedDict.Add(item.Key, (object)item.Value);
                 }
             }
             return combinedDict;

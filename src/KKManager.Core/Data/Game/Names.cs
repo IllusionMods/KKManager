@@ -32,7 +32,32 @@ namespace KKManager.Data.Game
         public static readonly Dictionary<string, string> GameNamesDictionary = GameNamesList
             .GroupBy(kvp => kvp.Key)
             .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+        private static string NormalizeName(string name)
+        {
+            name = name.Trim();
+            name = Regex.Replace(name, @"^AISyoujo$", "AI-Syoujyo");
+            return name;
+        }
+        public override string ToString() => LongName;
+        public override bool Equals(object obj)
+        {
+            switch (obj)
+            {
+                case null:
+                    return false;
+                case string _:
+                    return Equals(new GameName((string)obj));
+            }
 
+            if (GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            GameName other = (GameName)obj;
+            return LongName == other.LongName
+                   && ShortName == other.ShortName;
+        }
         public GameName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -62,43 +87,9 @@ namespace KKManager.Data.Game
                 ShortName = shortName;
             }
         }
-
         public static implicit operator GameName(string name) => new GameName(name);
-
         public static explicit operator string(GameName gameName) => gameName.LongName;
-
         public override int GetHashCode() => LongName.GetHashCode() ^ ShortName.GetHashCode();
-
-        private static string NormalizeName(string name)
-        {
-            name = name.Trim();
-            name = Regex.Replace(name, @"^AISyoujo$", "AI-Syoujyo");
-            return name;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (obj is string)
-            {
-                return this.Equals(new GameName((string)obj));
-            }
-
-            if (GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            GameName other = (GameName)obj;
-            return LongName == other.LongName && ShortName == other.ShortName;
-        }
-
-
-        public override string ToString() => LongName;
     }
 
 }

@@ -19,13 +19,13 @@ namespace KKManager.Data.Game
     {
         public static Dictionary<string, string> registryPathMapping = new Dictionary<string, string>()
         {
-            { "HoneySelect2", @"HKEY_CURRENT_USER\SOFTWARE\illusion\HoneySelect2\HoneySelect2" },
-            { "AI-Syoujyo", @"HKEY_CURRENT_USER\SOFTWARE\illusion\AI-Syoujyo\AI-Syoujyo" },
-            { "Koikatu", @"HKEY_CURRENT_USER\SOFTWARE\illusion\Koikatu\koikatu" },
-            { "KoikatsuSunshine", @"HKEY_CURRENT_USER\SOFTWARE\illusion\KoikatsuSunshine\KoikatsuSunshine" },
-            { "EmotionCreations", @"HKEY_CURRENT_USER\SOFTWARE\illusion\TBD\TBD" },
-            { "RoomGirl", @"HKEY_CURRENT_USER\SOFTWARE\illusion\TBD\TBD" },
-            { "PlayHome", @"HKEY_CURRENT_USER\SOFTWARE\illusion\TBD\TBD" }
+            { "HoneySelect2", @"SOFTWARE\illusion\HoneySelect2\HoneySelect2" },
+            { "AI-Syoujyo", @"SOFTWARE\illusion\AI-Syoujyo\AI-Syoujyo" },
+            { "Koikatu", @"SOFTWARE\illusion\Koikatu\koikatu" },
+            { "KoikatsuSunshine", @"SOFTWARE\illusion\KoikatsuSunshine\KoikatsuSunshine" },
+            { "EmotionCreations", @"SOFTWARE\illusion\TBD\TBD" }, // todo
+            { "RoomGirl", @"SOFTWARE\illusion\TBD\TBD" }, // todo
+            { "PlayHome", @"SOFTWARE\illusion\TBD\TBD" } // todo
         };
 
         public static Dictionary<string, GameName> gameNameByChunkDict = new Dictionary<string, GameName>
@@ -36,29 +36,25 @@ namespace KKManager.Data.Game
             { "\u3010KoiKatuCharaS\u3011", new GameName("KK") },
             { "\u3010KoiKatuCharaSP\u3011", new GameName("KK") },
             { "\u3010KoiKatuCharaSun\u3011", new GameName("KKS") },
-            { "\u3010KStudio\u3011", new GameName("KK") },
-            { "\u3010KoiKatuCharaS\u3011", new GameName("KK") },
+            { "\u3010KStudio\u3011", new GameName("KK") }, // todo
             { "\u3010EroMakeChara\u3011", new GameName("EC") },
-            { "\u3010RG_Chara\u3011", new GameName("RG") }, // todo
-            { "\u3010KStudio\u3011", new GameName("EC") }, // todo
+            { "\u3010RG_Chara\u3011", new GameName("RG") } // todo
         };
 
         public static string GetInstallPath(GameName gameName)
         {
-            string gameInstallPath = "";
-            foreach (var thisGameReg in registryPathMapping)
+            if (registryPathMapping.TryGetValue(gameName.LongName, out string registryPath))
             {
-                if (gameName.Equals(thisGameReg))
+                using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default).OpenSubKey(registryPath))
                 {
-                    gameInstallPath = thisGameReg.Value;
-
-                    if (Directory.Exists(gameInstallPath))
+                    if (key != null && key.GetValue("INSTALLDIR") is string installPath && Directory.Exists(installPath))
                     {
-                        return gameInstallPath;
+                        return installPath;
                     }
                 }
             }
-            return gameInstallPath;
+            return "";
         }
+
     }
 }
