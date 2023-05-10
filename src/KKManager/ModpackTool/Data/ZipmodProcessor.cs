@@ -21,7 +21,7 @@ namespace KKManager.ModpackTool
     {
         private static ModpackToolConfiguration Configuration => ModpackToolConfiguration.Instance;
 
-        private static readonly ConcurrentQueue<ZipmodEntry> _ProcessingQueue = new();
+        private static readonly ConcurrentQueue<ZipmodEntry> _ProcessingQueue = new ConcurrentQueue<ZipmodEntry>();
 
         private static volatile int _tasksRunning;
 
@@ -305,7 +305,7 @@ namespace KKManager.ModpackTool
                 // compress
                 var process = BuildPngCrushProcess(originalFilename, crushedFilename);
 
-                process.Exited += (_, _) =>
+                process.Exited += (sender, args) =>
                 {
                     if (process.ExitCode != 0)
                     {

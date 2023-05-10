@@ -157,11 +157,11 @@ namespace KKManager.ModpackTool
 
         private static string CleanUpManifestEntry(string original, string fileName, string filenameRegex)
         {
-            var author = original?.Trim() ?? string.Empty;
+            string author = original?.Trim() ?? string.Empty;
             if (author.Length == 0)
             {
                 // Try extracting from filename
-                var m = Regex.Match(fileName, filenameRegex);
+                Match m = Regex.Match(fileName, filenameRegex);
                 if (m.Success)
                     author = m.Groups[1].Value.Trim();
             }
@@ -178,7 +178,7 @@ namespace KKManager.ModpackTool
             }
 
             // Try extracting version from filename
-            var m = Regex.Match(fileName, @" [vr]?(\d+([\.,]\d+)+)", RegexOptions.IgnoreCase);
+            Match m = Regex.Match(fileName, @" [vr]?(\d+([\.,]\d+)+)", RegexOptions.IgnoreCase);
             if (m.Success)
                 return m.Groups[1].Value.Replace(',', '.').TrimEmptyVersionParts();
 
@@ -195,14 +195,14 @@ namespace KKManager.ModpackTool
 
         internal static List<string> GameNamesStrToList(string s) => s.Split(',').Select(x => x.Trim()).ToList();
         internal static bool GameNamesVerifierLoose(string s) => s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' '));
-        private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ') && ModpackToolConfiguration.Instance.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
+        private static bool GameNamesVerifier(string s) => s == "" || s.Split(',').All(x => x.All(c => char.IsLetterOrDigit(c) || c == ' ') && ModpackToolConfiguration.AllAcceptableGameLongNames.Contains(x.Trim(), StringComparer.OrdinalIgnoreCase));
 
         private static bool CanRecompress(SideloaderModInfo sideloaderModInfo)
         {
             if (sideloaderModInfo.ContentsKind == SideloaderModInfo.ZipmodContentsKind.Unknown)
                 return ModpackToolConfiguration.Instance.ContentsHandlingPolicies.Single(x => x.ContentsKind == SideloaderModInfo.ZipmodContentsKind.Unknown).CanCompress;
 
-            var canCompress = true;
+            bool canCompress = true;
             foreach (var policy in ModpackToolConfiguration.Instance.ContentsHandlingPolicies)
             {
                 if ((policy.ContentsKind & sideloaderModInfo.ContentsKind) != 0)
@@ -276,7 +276,7 @@ namespace KKManager.ModpackTool
             if (Status == ZipmodEntry.ZipmodEntryStatus.PASS)
             {
                 var outputDirectory = Path.Combine(ModpackToolConfiguration.Instance.OutputFolder.Value, OutputSubdirectory.Value);
-                var outputPath = Path.Combine(outputDirectory, Newfilename.Value);
+                string outputPath = Path.Combine(outputDirectory, Newfilename.Value);
                 var finishedFile = new FileInfo(GetTempOutputFilePath());
                 if (!finishedFile.Exists)
                 {
@@ -394,6 +394,6 @@ namespace KKManager.ModpackTool
                 stringWrapper.Value = bestInExisting;
         }
 
-        public List<SideloaderModInfo> ExistingInOutput { get; } = new();
+        public List<SideloaderModInfo> ExistingInOutput { get; } = new List<SideloaderModInfo>();
     }
 }

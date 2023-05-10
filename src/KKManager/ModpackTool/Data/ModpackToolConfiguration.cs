@@ -15,32 +15,44 @@ namespace KKManager.ModpackTool
 {
     public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
     {
-        private static ModpackToolConfiguration _instance;
+        private static ModpackToolConfiguration s_instance;
         private bool _compressPNGs = true;
         private bool _randomizeCABs = true;
 
-        public static ModpackToolConfiguration Instance => _instance ??= new ModpackToolConfiguration();
+        public static ModpackToolConfiguration Instance
+        {
+            get
+            {
+                if (s_instance == null)
+                {
+                    s_instance = new ModpackToolConfiguration();
+                }
+                return s_instance;
+            }
+        }
 
-        public ValidatedString IngestFolder { get; } = new(Directory.Exists);
-        public ValidatedString OutputFolder { get; } = new(Directory.Exists);
-        public ValidatedString TestGameFolder { get; } = new(s => Directory.Exists(s) && Directory.Exists(Path.Combine(s, "mods")));
-        public ValidatedString FailFolder { get; } = new(Directory.Exists);
-        public ValidatedString BackupFolder { get; } = new(Directory.Exists);
-        public ValidatedString LooseFilesFolder { get; } = new(Directory.Exists);
 
-        public ValidatedString Game1Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
-        public ValidatedStringWrapper Game1Longs { get; } = new(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifierLoose);
+        public ValidatedString IngestFolder { get; } = new ValidatedString(Directory.Exists);
+
+        public ValidatedString OutputFolder { get; } = new ValidatedString(Directory.Exists);
+        public ValidatedString TestGameFolder { get; } = new ValidatedString(s => Directory.Exists(s) && Directory.Exists(Path.Combine(s, "mods")));
+        public ValidatedString FailFolder { get; } = new ValidatedString(Directory.Exists);
+        public ValidatedString BackupFolder { get; } = new ValidatedString(Directory.Exists);
+        public ValidatedString LooseFilesFolder { get; } = new ValidatedString(Directory.Exists);
+
+        public ValidatedString Game1Short { get; } = new ValidatedString(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
+        public ValidatedStringWrapper Game1Longs { get; } = new ValidatedStringWrapper(s => Game1LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game1LongsList), ZipmodEntry.GameNamesVerifierLoose);
         public static IReadOnlyCollection<string> Game1LongsList { get; private set; } = Array.Empty<string>();
 
-        public ValidatedString Game2Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
-        public ValidatedStringWrapper Game2Longs { get; } = new(s => Game2LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game2LongsList), ZipmodEntry.GameNamesVerifierLoose);
+        public ValidatedString Game2Short { get; } = new ValidatedString(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
+        public ValidatedStringWrapper Game2Longs { get; } = new ValidatedStringWrapper(s => Game2LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game2LongsList), ZipmodEntry.GameNamesVerifierLoose);
         public static IReadOnlyCollection<string> Game2LongsList { get; private set; } = Array.Empty<string>();
 
-        public ValidatedString Game3Short { get; } = new(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
-        public ValidatedStringWrapper Game3Longs { get; } = new(s => Game3LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game3LongsList), ZipmodEntry.GameNamesVerifierLoose);
+        public ValidatedString Game3Short { get; } = new ValidatedString(s => s.All(x => char.IsUpper(x) || char.IsDigit(x)));
+        public ValidatedStringWrapper Game3Longs { get; } = new ValidatedStringWrapper(s => Game3LongsList = ZipmodEntry.GameNamesStrToList(s), () => ZipmodEntry.GameNamesListToStr(Game3LongsList), ZipmodEntry.GameNamesVerifierLoose);
         public static IReadOnlyCollection<string> Game3LongsList { get; private set; } = Array.Empty<string>();
 
-        public IEnumerable<string> AllAcceptableGameLongNames => Game1LongsList.Concat(Game2LongsList).Concat(Game3LongsList);
+        public static IEnumerable<string> AllAcceptableGameLongNames => Game1LongsList.Concat(Game2LongsList).Concat(Game3LongsList);
         public IEnumerable<string> AllAcceptableGameShortNames => new[] { Game1Short.Value, Game2Short.Value, Game3Short.Value }.Where(x => !string.IsNullOrEmpty(x));
         public string GameLongNameToShortName(string longGameName)
         {
@@ -57,10 +69,10 @@ namespace KKManager.ModpackTool
             return null;
         }
 
-        public ValidatedString GameOutputSubfolder { get; } = new("Sideloader Modpack - Exclusive", VerifySubfolderName);
+        public ValidatedString GameOutputSubfolder { get; } = new ValidatedString("Sideloader Modpack - Exclusive", VerifySubfolderName);
         private static bool VerifySubfolderName(string s)
         {
-            var invalidFileNameChars = Path.GetInvalidFileNameChars();
+            char[] invalidFileNameChars = Path.GetInvalidFileNameChars();
             return !string.IsNullOrWhiteSpace(s) && !s.StartsWith(" ") && !s.EndsWith(" ") && s.All(c => !invalidFileNameChars.Contains(c));
         }
 
@@ -99,7 +111,7 @@ namespace KKManager.ModpackTool
                 OutputSubfolder.Value = outputSubfolder;
             }
             public SideloaderModInfo.ZipmodContentsKind ContentsKind { get; }
-            public ValidatedString OutputSubfolder { get; } = new(VerifySubfolderName);
+            public ValidatedString OutputSubfolder { get; } = new ValidatedString(VerifySubfolderName);
 
             public bool CanCompress
             {
@@ -144,14 +156,36 @@ namespace KKManager.ModpackTool
 
         public void Serialize(string path)
         {
-            using var fileStream = new FileStream(path, FileMode.Create);
-            new XmlSerializer(typeof(ModpackToolConfiguration)).Serialize(fileStream, this);
+            FileStream fileStream = null;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Create);
+                new XmlSerializer(typeof(ModpackToolConfiguration)).Serialize(fileStream, this);
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Dispose();
+                }
+            }
         }
 
         public static ModpackToolConfiguration FromFile(string path)
         {
-            using var fileStream = new FileStream(path, FileMode.Open);
-            return (ModpackToolConfiguration)new XmlSerializer(typeof(ModpackToolConfiguration)).Deserialize(fileStream);
+            FileStream fileStream = null;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Open);
+                return (ModpackToolConfiguration)new XmlSerializer(typeof(ModpackToolConfiguration)).Deserialize(fileStream);
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Dispose();
+                }
+            }
         }
         public void Deserialize(string path)
         {
@@ -194,7 +228,7 @@ namespace KKManager.ModpackTool
 
             while (reader.NodeType == XmlNodeType.Element)
             {
-                var f = allFields.FirstOrDefault(x => x.Name == reader.Name);
+                PropertyInfo f = allFields.FirstOrDefault(x => x.Name == reader.Name);
                 if (f != null)
                 {
                     if (typeof(ValidatedStringWrapper).IsAssignableFrom(f.PropertyType))
@@ -213,12 +247,12 @@ namespace KKManager.ModpackTool
                         {
                             do
                             {
-                                var kind = reader.GetAttribute("Kind");
-                                var subf = reader.GetAttribute("OutputSubfolder");
-                                var canCompr = reader.GetAttribute("CanCompress");
-                                var neverSpecific = reader.GetAttribute("NeverPutInsideGameSpecific");
+                                string kind = reader.GetAttribute("Kind");
+                                string subf = reader.GetAttribute("OutputSubfolder");
+                                string canCompr = reader.GetAttribute("CanCompress");
+                                string neverSpecific = reader.GetAttribute("NeverPutInsideGameSpecific");
 
-                                var policy = ContentsHandlingPolicies.Find(policy => policy.ContentsKind.ToString() == kind);
+                                ModContentsHandlingPolicy policy = ContentsHandlingPolicies.Find(p => p.ContentsKind.ToString() == kind);
                                 policy.OutputSubfolder.Value = subf;
                                 policy.CanCompress = string.Equals(canCompr, "True", StringComparison.OrdinalIgnoreCase);
                                 policy.NeverPutInsideGameSpecific = string.Equals(neverSpecific, "True", StringComparison.OrdinalIgnoreCase);

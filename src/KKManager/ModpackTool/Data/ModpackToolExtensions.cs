@@ -32,7 +32,7 @@ namespace KKManager.ModpackTool
 
         public static bool AllValidatedStringsAreValid(this object obj)
         {
-            var type = obj.GetType();
+            Type type = obj.GetType();
             return type.GetFields(BindingFlags.Public | BindingFlags.Instance)
                        .Where(x => typeof(ValidatedStringWrapper).IsAssignableFrom(x.FieldType))
                        .Select(x => x.GetValue(obj))
@@ -44,7 +44,7 @@ namespace KKManager.ModpackTool
         }
         public static void SubscribeToAllINotifyPropertyChangedMembers(this object obj, PropertyChangedEventHandler handler)
         {
-            var type = obj.GetType();
+            Type type = obj.GetType();
             var objs = type.GetFields(BindingFlags.Public | BindingFlags.Instance)
                            .Where(x => typeof(INotifyPropertyChanged).IsAssignableFrom(x.FieldType))
                            .Select(x => x.GetValue(obj))
@@ -52,7 +52,7 @@ namespace KKManager.ModpackTool
                                        .Where(x => typeof(INotifyPropertyChanged).IsAssignableFrom(x.PropertyType))
                                        .Select(x => x.GetValue(obj, null)))
                            .Cast<INotifyPropertyChanged>();
-            foreach (var x in objs) x.PropertyChanged += handler;
+            foreach (INotifyPropertyChanged x in objs) x.PropertyChanged += handler;
         }
 
         public static void Bind(this ValidatedStringWrapper bindTarget, TextBox inputTextbox, Label passfailLabel)
@@ -79,7 +79,7 @@ namespace KKManager.ModpackTool
         public static int IndexOf<T>(this IEnumerable<T> source, T value)
         {
             int index = 0;
-            var comparer = EqualityComparer<T>.Default; // or pass in as a parameter
+            EqualityComparer<T> comparer = EqualityComparer<T>.Default; // or pass in as a parameter
             foreach (T item in source)
             {
                 if (comparer.Equals(item, value)) return index;
@@ -95,7 +95,7 @@ namespace KKManager.ModpackTool
         /// <param name="cancellationToken">A cancellation token. If invoked, the task will return 
         /// immediately as canceled.</param>
         /// <returns>A Task representing waiting for the process to end.</returns>
-        public static Task WaitForExitAsync(this Process process, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task WaitForExitAsync(this Process process, CancellationToken cancellationToken = default)
         {
             if (process.HasExited) return Task.CompletedTask;
 
@@ -155,19 +155,43 @@ namespace KKManager.ModpackTool
                 if (e.Column == columnStatus)
                 {
                     var m = (ZipmodEntry)e.Model;
-                    e.SubItem.BackColor = m.Status switch
+                    Color backColor;
+                    switch (m.Status)
                     {
-                        ZipmodEntry.ZipmodEntryStatus.Ingested => Color.DimGray,
-                        ZipmodEntry.ZipmodEntryStatus.ManifestIssue => Color.DarkMagenta,
-                        ZipmodEntry.ZipmodEntryStatus.NeedsProcessing => Color.DarkBlue,
-                        ZipmodEntry.ZipmodEntryStatus.Processing => Color.DarkSlateBlue,
-                        ZipmodEntry.ZipmodEntryStatus.NeedsVerify => Color.DarkCyan,
-                        ZipmodEntry.ZipmodEntryStatus.Verifying => Color.DarkTurquoise,
-                        ZipmodEntry.ZipmodEntryStatus.PASS => Color.DarkGreen,
-                        ZipmodEntry.ZipmodEntryStatus.FAIL => Color.DarkRed,
-                        ZipmodEntry.ZipmodEntryStatus.Outputted => Color.DarkSeaGreen,
-                        _ => Color.DimGray
-                    };
+                        case ZipmodEntry.ZipmodEntryStatus.Ingested:
+                            backColor = Color.DimGray;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.ManifestIssue:
+                            backColor = Color.DarkMagenta;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.NeedsProcessing:
+                            backColor = Color.DarkBlue;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.Processing:
+                            backColor = Color.DarkSlateBlue;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.NeedsVerify:
+                            backColor = Color.DarkCyan;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.Verifying:
+                            backColor = Color.DarkTurquoise;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.PASS:
+                            backColor = Color.DarkGreen;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.FAIL:
+                            backColor = Color.DarkRed;
+                            break;
+                        case ZipmodEntry.ZipmodEntryStatus.Outputted:
+                            backColor = Color.DarkSeaGreen;
+                            break;
+                        default:
+                            backColor = Color.DimGray;
+                            break;
+                    }
+
+                    e.SubItem.BackColor = backColor;
+
                     e.SubItem.ForeColor = Color.White;
                 }
             }

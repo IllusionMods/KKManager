@@ -54,12 +54,12 @@ namespace KKManager.Windows
             Task.Run(PopulateStartMenu);
 
 #if DEBUG
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
 #else
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
 #endif
-            var gameName = InstallDirectoryHelper.GameType.GetFancyGameName();
-            var installDir = InstallDirectoryHelper.GameDirectory.FullName;
+            string gameName = InstallDirectoryHelper.GameType.GetFancyGameName();
+            string installDir = InstallDirectoryHelper.GameDirectory.FullName;
             Text = $"KK Manager {version} (P2P downloader edition) - [{gameName}] in {installDir}";
             Console.WriteLine($"Game: {gameName}   Path: {installDir}");
 
@@ -80,7 +80,7 @@ namespace KKManager.Windows
 
         private static DirectoryInfo GetGameDirectory()
         {
-            var path = Settings.Default.GamePath;
+            string path = Settings.Default.GamePath;
             if (!InstallDirectoryHelper.IsValidGamePath(path))
             {
                 for (var dir = new DirectoryInfo(Program.ProgramLocation); dir.Exists && dir.Parent != null; dir = dir.Parent)
@@ -162,7 +162,7 @@ namespace KKManager.Windows
             retryFolderSelect:
                 if (fb.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    var path = fb.FileName;
+                    string path = fb.FileName;
                     if (!InstallDirectoryHelper.IsValidGamePath(path))
                     {
                         if (MessageBox.Show(
@@ -192,28 +192,29 @@ namespace KKManager.Windows
 
         private void PopulateStartMenu()
         {
-            var toAdd = new List<ToolStripItem>();
-            var pluginPath = InstallDirectoryHelper.PluginPath.FullName;
-            var allExes = InstallDirectoryHelper.GameDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
-            var exeBlacklist = new[] { "UnityCrashHandler64.exe", "bepinex.patcher.exe", "Unity3DCompressor.exe", "KKManager.exe", "StandaloneUpdater.exe" };
-            var filteredExes = allExes.Where(x => !exeBlacklist.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
+            List<ToolStripItem> toAdd = new List<ToolStripItem>();
+            string pluginPath = InstallDirectoryHelper.PluginPath.FullName;
+            FileInfo[] allExes = InstallDirectoryHelper.GameDirectory.GetFiles("*.exe", SearchOption.AllDirectories);
+            string[] exeBlacklist = new[] { "UnityCrashHandler64.exe", "bepinex.patcher.exe", "Unity3DCompressor.exe", "KKManager.exe", "StandaloneUpdater.exe" };
+            IEnumerable<FileInfo> filteredExes = allExes.Where(x => !exeBlacklist.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !x.FullName.StartsWith(pluginPath, StringComparison.OrdinalIgnoreCase));
 
-            var first = true;
-            foreach (var folder in filteredExes.GroupBy(x => x.DirectoryName, StringComparer.OrdinalIgnoreCase).OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
+            bool first = true;
+            foreach (IGrouping<string, FileInfo> folder in filteredExes.GroupBy(x => x.DirectoryName, StringComparer.OrdinalIgnoreCase).OrderBy(x => x.Key, StringComparer.OrdinalIgnoreCase))
             {
                 if (!first) toAdd.Add(new ToolStripSeparator());
                 first = false;
 
-                foreach (var file in folder.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase))
+                foreach (FileInfo file in folder.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase))
                 {
                     // Trim .exe but leave other extensions
-                    var trimmedName = file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? file.Name.Substring(0, file.Name.Length - 4) : file.Name;
-                    var item = new ToolStripMenuItem(trimmedName);
+                    string trimmedName = file.Name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? file.Name.Substring(0, file.Name.Length - 4) : file.Name;
+                    ToolStripMenuItem item = new ToolStripMenuItem(trimmedName)
+                    {
+                        AutoToolTip = false,
+                        ToolTipText = file.FullName
+                    };
 
-                    item.AutoToolTip = false;
-                    item.ToolTipText = file.FullName;
-
-                    item.Click += (_, _) => { ProcessTools.SafeStartProcess(file.FullName); };
+                    item.Click += (ret1, ret2) => { ProcessTools.SafeStartProcess(file.FullName); };
 
                     try { item.Image = Icon.ExtractAssociatedIcon(file.FullName)?.ToBitmap(); }
                     catch { item.Image = null; }
@@ -224,7 +225,7 @@ namespace KKManager.Windows
 
             this.SafeInvoke(() =>
             {
-                foreach (var item in toAdd)
+                foreach (ToolStripItem item in toAdd)
                     startTheGameToolStripMenuItem.DropDownItems.Add(item);
             });
         }
@@ -238,7 +239,7 @@ namespace KKManager.Windows
 
         public PropertyViewerBase DisplayInPropertyViewer(object obj, DockContent source, bool forceOpen = false)
         {
-            var viewer = GetOrCreateWindow<PropertiesToolWindow>(forceOpen);
+            PropertiesToolWindow viewer = GetOrCreateWindow<PropertiesToolWindow>(forceOpen);
             return viewer?.ShowProperties(obj, source);
         }
 
@@ -249,7 +250,7 @@ namespace KKManager.Windows
         /// <param name="createNew">Create new instance if none are present?</param>
         public T GetOrCreateWindow<T>(bool createNew = true) where T : DockContent, new()
         {
-            var w = GetWindows<T>().FirstOrDefault();
+            T w = GetWindows<T>().FirstOrDefault();
 
             if (w == null && createNew)
             {
@@ -272,7 +273,7 @@ namespace KKManager.Windows
 
         private CardWindow OpenOrGetCardWindow(string targetDir)
         {
-            var existing = GetWindows<CardWindow>()
+            CardWindow existing = GetWindows<CardWindow>()
                 .FirstOrDefault(x => string.Equals(
                     targetDir, x.CurrentDirectory?.FullName, StringComparison.InvariantCultureIgnoreCase));
 
@@ -305,7 +306,7 @@ namespace KKManager.Windows
             catch (Exception ex)
             {
                 Console.WriteLine("Failed to read opened tabs from config: " + ex.ToStringDemystified());
-                foreach (var content in dockPanel.Contents.ToList()) content.DockHandler.Close();
+                foreach (IDockContent content in dockPanel.Contents.ToList()) content.DockHandler.Close();
                 dockPanel.ResumeLayout(true, true);
             }
 
@@ -324,7 +325,7 @@ namespace KKManager.Windows
 
         private static IDockContent DeserializeTab(string persistString)
         {
-            var parts = persistString.Split(new[] { "|||" }, 2, StringSplitOptions.None);
+            string[] parts = persistString.Split(new[] { "|||" }, 2, StringSplitOptions.None);
 
             var t = Type.GetType(parts[0], false, true);
 
@@ -353,7 +354,7 @@ namespace KKManager.Windows
 
             if (WindowState is FormWindowState.Normal)
                 Settings.Default.WindowSize = Size;
-            if (WindowState is FormWindowState.Normal or FormWindowState.Maximized)
+            if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
                 Settings.Default.WindowLocation = Location;
         }
 
@@ -379,7 +380,7 @@ namespace KKManager.Windows
 
         private void otherToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dir = CardWindow.ShowCardFolderBrowseDialog(this);
+            string dir = CardWindow.ShowCardFolderBrowseDialog(this);
             if (dir != null)
             {
                 var w = new CardWindow();
@@ -400,7 +401,7 @@ namespace KKManager.Windows
 
         private void readmeAndSourceCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var readmePath = Path.Combine(Program.ProgramLocation, "README.md");
+            string readmePath = Path.Combine(Program.ProgramLocation, "README.md");
             if (File.Exists(readmePath))
                 Process.Start("notepad.exe", readmePath);
             else
@@ -441,7 +442,7 @@ namespace KKManager.Windows
             if (plugins) PluginLoader.StartReload();
             if (sideloader) SideloaderModLoader.StartReload();
 
-            foreach (var window in GetWindows<DockContent>().OfType<IContentWindow>())
+            foreach (IContentWindow window in GetWindows<DockContent>().OfType<IContentWindow>())
             {
                 switch (window)
                 {
@@ -510,7 +511,7 @@ namespace KKManager.Windows
                     await PluginLoader.Plugins.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
                     await SideloaderModLoader.Zipmods.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
 
-                    var updateSources = GetUpdateSources();
+                    UpdateSourceBase[] updateSources = GetUpdateSources();
                     if (!updateSources.Any()) throw new IOException("No update sources are available");
 
                     Visible = false;
@@ -522,7 +523,7 @@ namespace KKManager.Windows
                 }
                 catch (Exception ex)
                 {
-                    var errorMsg = "Failed to start update - " + ex.ToStringDemystified();
+                    string errorMsg = "Failed to start update - " + ex.ToStringDemystified();
                     Console.WriteLine(errorMsg);
                     MessageBox.Show(errorMsg, "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -531,7 +532,7 @@ namespace KKManager.Windows
                 _ = PluginLoader.StartReload();
 
                 var contentWindows = GetWindows<DockContent>().OfType<IContentWindow>().ToList();
-                foreach (var window in contentWindows) window.RefreshList();
+                foreach (IContentWindow window in contentWindows) window.RefreshList();
 
                 updateSideloaderModpackToolStripMenuItem.BackColor = DefaultBackColor;
                 updateSideloaderModpackToolStripMenuItem.ForeColor = DefaultForeColor;
@@ -543,7 +544,7 @@ namespace KKManager.Windows
             }
         }
 
-        private readonly CancellationTokenSource _checkForUpdatesCancel = new();
+        private readonly CancellationTokenSource _checkForUpdatesCancel = new CancellationTokenSource();
 
         private async void MainWindow_Shown(object sender, EventArgs e)
         {
@@ -555,13 +556,13 @@ namespace KKManager.Windows
         {
             try
             {
-                var _ = SelfUpdater.CheckForUpdatesAndShowDialog();
+                Task<bool?> _ = SelfUpdater.CheckForUpdatesAndShowDialog();
 
-                var updateSources = GetUpdateSources();
+                UpdateSourceBase[] updateSources = GetUpdateSources();
                 if (updateSources.Any())
                 {
-                    var results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources, null, true, new Progress<float>());
-                    var updates = results.Count(item => !item.UpToDate);
+                    List<Updater.Data.UpdateTask> results = await UpdateSourceManager.GetUpdates(_checkForUpdatesCancel.Token, updateSources, null, true, new Progress<float>());
+                    int updates = results.Count(item => !item.UpToDate);
 
                     _checkForUpdatesCancel.Token.ThrowIfCancellationRequested();
 
@@ -597,7 +598,7 @@ namespace KKManager.Windows
 
         private void changeGameInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var folder = ShowInstallDirectoryDialog(Settings.Default.GamePath);
+            string folder = ShowInstallDirectoryDialog(Settings.Default.GamePath);
             if (folder == null) return;
 
             Settings.Default.GamePath = folder;
@@ -619,14 +620,14 @@ namespace KKManager.Windows
                     "This will compress all of your game files in order to greatly reduce their size on disk and potentially slightly improve the loading times.\n\nThis process can take a very long time depending on your CPU and drive speeds. If some or all game files are already compressed then the size reduction might be low.\n\nWARNING: Backup your abdata folder before using this feature, especially in KoikatsuSunshine! Compressing some files might break them! If you encounter a file that breaks because of compression, please report this on KKManager github or on the Koikatsu discord server in the #mod-programming channel.",
                     "Compress files", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
             {
-                var rootDirectory = InstallDirectoryHelper.GameDirectory;
-                var directories = rootDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                DirectoryInfo rootDirectory = InstallDirectoryHelper.GameDirectory;
+                List<DirectoryInfo> directories = rootDirectory.GetDirectories("*", SearchOption.TopDirectoryOnly)
                     .Where(directory => directory.Name.EndsWith("_Data", StringComparison.OrdinalIgnoreCase) ||
                                         directory.Name.Equals("abdata", StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
 
-                var files = directories.SelectMany(dir => dir.GetFiles("*", SearchOption.AllDirectories))
+                List<FileInfo> files = directories.SelectMany(dir => dir.GetFiles("*", SearchOption.AllDirectories))
                     .Where(file => FileCanBeCompressed(file, rootDirectory))
                     .ToList();
 
@@ -634,12 +635,12 @@ namespace KKManager.Windows
             }
         }
 
-        private bool FileCanBeCompressed(FileInfo x, DirectoryInfo rootDirectory)
+        private static bool FileCanBeCompressed(FileInfo x, DirectoryInfo rootDirectory)
         {
             if (!SB3UGS_Utils.FileIsAssetBundle(x)) return false;
 
             // Files inside StreamingAssets are hash-checked so they can't be changed
-            var isStreamingAsset = x.FullName.Substring(rootDirectory.FullName.Length)
+            bool isStreamingAsset = x.FullName.Substring(rootDirectory.FullName.Length)
                 .Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 .Contains("StreamingAssets", StringComparer.OrdinalIgnoreCase);
             if (isStreamingAsset)
@@ -667,7 +668,7 @@ namespace KKManager.Windows
 
                 var excs = new ConcurrentBag<Exception>();
                 long totalSizeSaved = 0;
-                var count = 0;
+                int count = 0;
 
                 Parallel.ForEach(files, file =>
                 {
@@ -675,7 +676,7 @@ namespace KKManager.Windows
 
                     try
                     {
-                        var origSize = file.Length;
+                        long origSize = file.Length;
                         SB3UGS_Utils.CompressBundle(file.FullName, randomizeCab);
                         file.Refresh();
                         totalSizeSaved += origSize - file.Length;
@@ -710,7 +711,7 @@ namespace KKManager.Windows
                         .Where(file => FileCanBeCompressed(file, rootDirectory))
                         .ToList();
 
-                    var randomize = MessageBox.Show("Do you want to randomize CABs of the compressed files? Click No to keep the original CAB strings.",
+                    bool randomize = MessageBox.Show("Do you want to randomize CABs of the compressed files? Click No to keep the original CAB strings.",
                                         "Compress bundles in a folder...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                                     DialogResult.Yes;
 
@@ -736,10 +737,10 @@ namespace KKManager.Windows
             // Populate language dropdown during first run
             if (languagesToolStripMenuItem.DropDownItems.Count == 0)
             {
-                var spaceWidth = TextRenderer.MeasureText(" ", Font, Size).Width;
+                int spaceWidth = TextRenderer.MeasureText(" ", Font, Size).Width;
                 ToolStripItem CreateLanguageToggle(CultureInfo x)
                 {
-                    var textWidth = TextRenderer.MeasureText(x.NativeName, Font, Size).Width;
+                    int textWidth = TextRenderer.MeasureText(x.NativeName, Font, Size).Width;
                     return new ToolStripMenuItem(
                             $"{x.NativeName.PadRight(50 - textWidth / spaceWidth)} {x.EnglishName}",
                             null,
@@ -758,17 +759,17 @@ namespace KKManager.Windows
             }
 
             // Select current language in the language dropdown
-            var currentLang = LanguageManager.CurrentCulture;
+            CultureInfo currentLang = LanguageManager.CurrentCulture;
             foreach (ToolStripMenuItem langItem in languagesToolStripMenuItem.DropDownItems)
             {
-                var lang = (CultureInfo)langItem.Tag;
+                CultureInfo lang = (CultureInfo)langItem.Tag;
                 langItem.Checked = lang.Equals(currentLang);
             }
         }
 
         private void licenseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var licensePath = Path.Combine(Program.ProgramLocation, "LICENSE");
+            string licensePath = Path.Combine(Program.ProgramLocation, "LICENSE");
             if (File.Exists(licensePath))
                 Process.Start("notepad.exe", licensePath);
             else
@@ -797,7 +798,7 @@ namespace KKManager.Windows
                 if (d.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     var rootDirectory = new DirectoryInfo(d.FileName);
-                    var simulate = MessageBox.Show("Do you want to actually remove files? Click No to only log which files would be removed but not actually remove anything.", "Cleanup zipmods", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No;
+                    bool simulate = MessageBox.Show("Do you want to actually remove files? Click No to only log which files would be removed but not actually remove anything.", "Cleanup zipmods", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No;
                     ZipmodTools.RemoveDuplicateZipmodsInDir(rootDirectory, simulate);
                 }
             }

@@ -39,7 +39,7 @@ namespace KKManager.ModpackTool.Windows
 
         public void SetObjects(IEnumerable<ZipmodEntry> entries)
         {
-            var zipmodEntries = entries == null ? new List<ZipmodEntry>() : entries.Where(x => x.Status is >= ZipmodEntry.ZipmodEntryStatus.NeedsVerify and < ZipmodEntry.ZipmodEntryStatus.Outputted).ToList();
+            var zipmodEntries = entries == null ? new List<ZipmodEntry>() : entries.Where(x => x.Status >= ZipmodEntry.ZipmodEntryStatus.NeedsVerify && x.Status < ZipmodEntry.ZipmodEntryStatus.Outputted).ToList();
 
             // Avoid firing events if the entries didn't actually change
             if (entries == null || objectListView.Objects == null || !zipmodEntries.OrderBy(x => x.Index).SequenceEqual(objectListView.Objects.Cast<ZipmodEntry>().OrderBy(x => x.Index)))
