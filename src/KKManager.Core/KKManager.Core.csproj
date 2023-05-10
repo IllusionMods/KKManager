@@ -193,11 +193,16 @@
     <Compile Include="Controls\LogControl.Designer.cs">
       <DependentUpon>LogControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Cards\AI\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\EC\BlockHeader.cs" />
     <Compile Include="Data\Cards\EC\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\KKS\BlockHeader.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileAbout.cs" />
+    <Compile Include="Data\Cards\KK\BlockHeader.cs" />
     <Compile Include="Data\Cards\KK\ChaFileParameter.cs" />
+    <Compile Include="Data\Cards\RG\BlockHeader.cs" />
     <Compile Include="Data\Cards\RG\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\RG\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileExtended.cs" />
@@ -218,10 +223,6 @@
     <Compile Include="Data\ExtData\ExtDataParser.cs" />
     <Compile Include="Data\ExtData\Deserializers\SideloaderExtDataDeserializer.cs" />
     <Compile Include="Data\ExtData\IExtDataDeserializer.cs" />
-    <Compile Include="Data\Game\BlockHeader.cs" />
-    <Compile Include="Data\Game\Consts.cs" />
-    <Compile Include="Data\Game\Names.cs" />
-    <Compile Include="Data\Game\Assets.cs" />
     <Compile Include="Data\IFileInfoBase.cs" />
     <Compile Include="Data\ModInfoBase.cs" />
     <Compile Include="Data\Plugins\PluginInfo.cs" />
