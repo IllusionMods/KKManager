@@ -94,7 +94,6 @@ namespace KKManager.Windows
 
                 if (!InstallDirectoryHelper.IsValidGamePath(path))
                 {
-                    // todo: use install paths defined in KKManager.Data.Game.Consts.cs
                     MessageBox.Show(
                         "Your game's install directory could not be detected or is inaccessible.\n\nYou will have to select the game directory manually.",
                         "Failed to find game install directory", MessageBoxButtons.OK, MessageBoxIcon.Error);

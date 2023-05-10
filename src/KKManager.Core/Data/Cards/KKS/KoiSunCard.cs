@@ -43,7 +43,7 @@ namespace KKManager.Data.Cards.KKS
 
             var count = reader.ReadInt32();
             var bytes = reader.ReadBytes(count);
-            var blockHeader = MessagePackSerializer.Deserialize<Game.BlockHeader>(bytes);
+            var blockHeader = MessagePackSerializer.Deserialize<BlockHeader>(bytes);
             var num2 = reader.ReadInt64();
             var position = reader.BaseStream.Position;
 

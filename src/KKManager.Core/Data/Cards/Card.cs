@@ -65,27 +65,5 @@ namespace KKManager.Data.Cards
 
             FileSize = Util.FileSize.FromBytes(cardFile.Length).ToString();
         }
-
-        // to be replaced after testing is done.
-        private Dictionary<string, object> properties = new Dictionary<string, object>();
-        public object this[string propertyName]
-        {
-            get
-            {
-                object result;
-                if (properties.TryGetValue(propertyName, out result))
-                {
-                    return result;
-                }
-                else
-                {
-                    throw new ArgumentException($"Property {propertyName} not found");
-                }
-            }
-            set
-            {
-                properties[propertyName] = value;
-            }
-        }
     }
 }

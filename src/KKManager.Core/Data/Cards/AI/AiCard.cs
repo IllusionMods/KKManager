@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using MessagePack;
-using KKManager.Data.Game;
 
 namespace KKManager.Data.Cards.AI
 {
