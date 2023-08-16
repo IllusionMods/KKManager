@@ -117,55 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="logControl1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="logControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="logControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="logControl1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;logControl1.Name" xml:space="preserve">
-    <value>logControl1</value>
-  </data>
-  <data name="&gt;&gt;logControl1.Type" xml:space="preserve">
-    <value>KKManager.Controls.LogControl, KKManager.Core, Version=0.21.4.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;logControl1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;logControl1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>未実装</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>LogViewer</value>
+    <value>カード名変更</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>LogViewer</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
-  </data>
-  <data name="toolStripButtonRead.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="toolStripButtonClear.Text" xml:space="preserve">
-    <value />
-  </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>

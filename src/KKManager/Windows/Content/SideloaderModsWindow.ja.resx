@@ -117,142 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>ファイル</value>
+  <data name="olvColumnName.Text" xml:space="preserve">
+    <value>名前</value>
   </data>
-  <data name="startTheGameToolStripMenuItem.Text" xml:space="preserve">
-    <value>起動</value>
+  <data name="olvColumnVersion.Text" xml:space="preserve">
+    <value>バージョン</value>
   </data>
-  <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
-    <value>ツール</value>
+  <data name="olvColumnAuthor.Text" xml:space="preserve">
+    <value>作者名</value>
   </data>
-  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
-    <value>終了</value>
+  <data name="olvColumnGuid.Text" xml:space="preserve">
+    <value>ガイド</value>
   </data>
-  <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>ゲームディレクトリを選択...</value>
+  <data name="olvColumnFilename.Text" xml:space="preserve">
+    <value>ファイル名</value>
   </data>
-  <data name="openFemaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>女性カードフォルダを開く</value>
+  <data name="olvColumnPath.Text" xml:space="preserve">
+    <value>ファイルパス</value>
   </data>
-  <data name="openMaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>男性カードフォルダを開く</value>
+  <data name="olvColumnWebsite.Text" xml:space="preserve">
+    <value>ウェブサイト</value>
   </data>
-  <data name="otherToolStripMenuItem.Text" xml:space="preserve">
-    <value>他のフォルダを開く</value>
+  <data name="toolStripButton1.Text" xml:space="preserve">
+    <value>リフレッシュ</value>
   </data>
-  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>カードブラウザを開く</value>
+  <data name="toolStripButtonEnable.Text" xml:space="preserve">
+    <value>有効</value>
   </data>
-  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>サイドローダーMODブラウザを開く</value>
+  <data name="toolStripButtonDisable.Text" xml:space="preserve">
+    <value>無効にする</value>
   </data>
-  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>プラグインブラウザを開く</value>
+  <data name="toolStripButtonDelete.Text" xml:space="preserve">
+    <value>削除</value>
   </data>
-  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
-    <value>プロパティを開く</value>
+  <data name="toolStripButtonOpenModsDir.Text" xml:space="preserve">
+    <value>MODディレクトリを開く</value>
   </data>
-  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
-    <value>ログビューアを開く</value>
+  <data name="toolStripButtonSameGuid.Text" xml:space="preserve">
+    <value>同じGuidを表示</value>
   </data>
-  <data name="viewToolStripMenuItem.Text" xml:space="preserve">
-    <value>ビュー</value>
-  </data>
-  <data name="installDirectoryToolStripMenuItem.Text" xml:space="preserve">
-    <value>インストールディレクトリ</value>
-  </data>
-  <data name="screenshotsToolStripMenuItem.Text" xml:space="preserve">
-    <value>スクリーンショット</value>
-  </data>
-  <data name="charactersToolStripMenuItem.Text" xml:space="preserve">
-    <value>キャラクター</value>
-  </data>
-  <data name="scenesToolStripMenuItem.Text" xml:space="preserve">
-    <value>シーン</value>
-  </data>
-  <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
-    <value>KKマネージャー</value>
-  </data>
-  <data name="openToolStripMenuItem.Text" xml:space="preserve">
-    <value>ディレクトリを開く</value>
-  </data>
-  <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
-    <value>新しいMODをインストールする</value>
-  </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>MODのアップデートを探す</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>単一MODダウンロードサイトを開く</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
-    <value>起動時にMODのアップデートをチェック</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
-    <value>FTPにシステムのプロキシサーバーを使う（再起動が必要）</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>P2Pアップデート転送設定</value>
-  </data>
-  <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
-    <value>MODアップデータ</value>
-  </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>ファイルとフォルダのパーミッションを修正</value>
-  </data>
-  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
-    <value>ゲームファイルの圧縮</value>
-  </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>重複zipmodをクリーンアップ</value>
-  </data>
-  <data name="openModpackToolToolStripMenuItem.Text" xml:space="preserve">
-    <value>ModpackToolを開く</value>
-  </data>
-  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Text" xml:space="preserve">
-    <value>Update.xmlの内容を生成...</value>
-  </data>
-  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Text" xml:space="preserve">
-    <value>フォルダ内のバンドルを圧縮...</value>
-  </data>
-  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>重複や無効なzipmodをクリーンアップ...</value>
-  </data>
-  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
-    <value>開発者</value>
-  </data>
-  <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
-    <value>言語</value>
-  </data>
-  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>設定</value>
-  </data>
-  <data name="checkForUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>KKManagerの新しいバージョンをチェック...</value>
-  </data>
-  <data name="readmeAndSourceCodeToolStripMenuItem.Text" xml:space="preserve">
-    <value>Readme</value>
-  </data>
-  <data name="licenseToolStripMenuItem.Text" xml:space="preserve">
-    <value>ライセンス</value>
-  </data>
-  <data name="websiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>ウェブサイト/ソースコード</value>
-  </data>
-  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
-    <value>KKManagerについて</value>
-  </data>
-  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
-    <value>ヘルプ</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>メニューストリップ</value>
-  </data>
-  <data name="statusStrip1.Text" xml:space="preserve">
-    <value>ステータスストリップ</value>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>ツールストリップ</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>KKマネージャー</value>
+    <value>サイドローダーMOD</value>
   </data>
 </root>
