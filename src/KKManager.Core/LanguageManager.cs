@@ -19,6 +19,7 @@ namespace KKManager
             "zh-Hans",
             "zh-Hant",
             "ru-RU",
+            "ja-JP"
         };
 
         private static IEnumerable<CultureInfo> _supportedLanguages;

@@ -117,55 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="logControl1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="SelfUpdater_NewVersionMessage" xml:space="preserve">
+    <value>KKManagerの新しいバージョンが利用可能です。ダウンロードページに行きますか？</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="logControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="SelfUpdater_NewVersionTitle" xml:space="preserve">
+    <value>新しいバージョンがあります。</value>
   </data>
-  <data name="logControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
+  <data name="KKManagerOutdatedMessageBody" xml:space="preserve">
+    <value>KKManagerの新しいバージョンが利用可能です。
+アップデートするまで、MODのアップデートは機能しません。
+KKManagerの最新バージョンのダウンロードページを開きますか？</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="logControl1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="KKManagerOutdatedMessageTitle" xml:space="preserve">
+    <value>KK Managerが最新ではありません。</value>
   </data>
-  <data name="&gt;&gt;logControl1.Name" xml:space="preserve">
-    <value>logControl1</value>
+  <data name="FailedToStartApplicationMessageTitle" xml:space="preserve">
+    <value>アプリケーションの起動に失敗しました。</value>
   </data>
-  <data name="&gt;&gt;logControl1.Type" xml:space="preserve">
-    <value>KKManager.Controls.LogControl, KKManager.Core, Version=0.21.4.0, Culture=neutral, PublicKeyToken=null</value>
+  <data name="GetTempDownloadFilename_SecurityException_Message" xml:space="preserve">
+    <value>ディレクトリ {0} のファイル作成に失敗しました。
+
+KK Manager に問題の修正を試みさせますか？中止する場合はキャンセルをクリックします。</value>
   </data>
-  <data name="&gt;&gt;logControl1.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="Unknown" xml:space="preserve">
+    <value>不明</value>
+    <comment>Shown in lists when the value is unknown (e.g. unknown date, unknown file size)</comment>
   </data>
-  <data name="&gt;&gt;logControl1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>LogViewer</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>LogViewer</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
-  </data>
-  <data name="toolStripButtonRead.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="toolStripButtonClear.Text" xml:space="preserve">
-    <value />
-  </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>
