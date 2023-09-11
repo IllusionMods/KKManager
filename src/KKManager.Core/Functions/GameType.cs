@@ -11,6 +11,8 @@
         AiShoujoSteam,
         HoneySelect2,
         KoikatsuSunshine,
-        RoomGirl
+        RoomGirl,
+        HoneyCome,
+        HoneyComeSteam
     }
 }

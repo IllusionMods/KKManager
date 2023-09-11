@@ -24,7 +24,7 @@ namespace KKManager.Data.Cards.AI
 
 		public float voiceRate { get; set; } = 0.5f;
 
-		[TypeConverter(typeof(CollectionConverter))]
+		[TypeConverter(typeof(CollectionConverter))] //todo doesn't work
         public HashSet<int> hsWish { get; set; } = new HashSet<int>();
 
 		public bool futanari { get; set; }

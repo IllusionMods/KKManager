@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
+using KKManager.Data.Cards.HC;
 using KKManager.Data.Cards.KK;
 using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
@@ -178,6 +179,10 @@ namespace KKManager.Data.Cards
                         case CardType.RoomGirl:
                             card = RoomGirlCard.ParseRGChara(file, reader, gameType);
                             break;
+                        case CardType.HoneyCome:
+                        case CardType.HoneyComeccp:
+                            card = HoneyCoomCard.ParseHCPChara(file, reader, gameType);
+                            break;
 
                         case CardType.Unknown:
                         default:
@@ -214,6 +219,10 @@ namespace KKManager.Data.Cards
                     return CardType.KoikatsuSunshine;
                 case "【RG_Chara】":
                     return CardType.RoomGirl;
+                case "【HCChara】":
+                    return CardType.HoneyCome;
+                case "【HCPChara】":
+                    return CardType.HoneyComeccp;
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;
