@@ -148,6 +148,7 @@
       <DependentUpon>LogControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Cards\AI\BlockHeader.cs" />
+    <Compile Include="Data\Cards\AI\ChaFileDefine.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
     <Compile Include="Data\Cards\AI\ChaFileParameter.cs" />
     <Compile Include="Data\Cards\HC\BlockHeader.cs" />
