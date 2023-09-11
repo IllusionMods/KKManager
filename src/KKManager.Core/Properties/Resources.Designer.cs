@@ -101,6 +101,28 @@ namespace KKManager.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not open the log file: {0}
+        ///
+        ///If the game doesn&apos;t seem to generate a log file, it might be generated somewhere inside appdata.
+        ///
+        ///Try setting &apos;redirectOutputLog=true&apos; in doorstop_config.ini, and if that doesn&apos;t result in a log file being created inside game root directory, enable disk log in BepInEx.cfg..
+        /// </summary>
+        public static string OpenGameLogFailedMessage {
+            get {
+                return ResourceManager.GetString("OpenGameLogFailedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open log file.
+        /// </summary>
+        public static string OpenGameLogMessageTitle {
+            get {
+                return ResourceManager.GetString("OpenGameLogMessageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A new version of KKManager is available. Do you want to go to the download page?.
         /// </summary>
         public static string SelfUpdater_NewVersionMessage {

@@ -817,5 +817,10 @@ namespace KKManager.Windows
         {
             ProcessTools.SafeStartProcess(@"https://sideload.betterrepack.com");
         }
+
+        private void openGameLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InstallDirectoryHelper.OpenLog();
+        }
     }
 }

@@ -143,4 +143,14 @@ Do you want KK Manager to attempt to fix the issue? Click cancel if you want to 
     <value>Unknown</value>
     <comment>Shown in lists when the value is unknown (e.g. unknown date, unknown file size)</comment>
   </data>
+  <data name="OpenGameLogFailedMessage" xml:space="preserve">
+    <value>Could not open the log file: {0}
+
+If the game doesn't seem to generate a log file, it might be generated somewhere inside appdata.
+
+Try setting 'redirectOutputLog=true' in doorstop_config.ini, and if that doesn't result in a log file being created inside game root directory, enable disk log in BepInEx.cfg.</value>
+  </data>
+  <data name="OpenGameLogMessageTitle" xml:space="preserve">
+    <value>Open log file</value>
+  </data>
 </root>

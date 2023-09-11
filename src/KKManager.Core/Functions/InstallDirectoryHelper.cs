@@ -1,6 +1,10 @@
-﻿using System;
+﻿using KKManager.Properties;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace KKManager.Functions
 {
@@ -164,6 +168,47 @@ namespace KKManager.Functions
                 case GameType.HoneyCome: return "HoneyCome";
                 case GameType.HoneyComeSteam: return "HoneyCome come come party";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
+            }
+        }
+        
+        /// <summary>
+        /// Figure out where the log file is written to and open it.
+        /// </summary>
+        public static void OpenLog()
+        {
+            try
+            {
+                bool TryOpen(string path)
+                {
+                    if (path == null) return false;
+                    try
+                    {
+                        Process.Start(path);
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+
+                var rootDir = GameDirectory.FullName;
+                var candidates = new List<string>();
+
+                // BepInEx 5.x log file, can be "LogOutput.log.1" or higher if multiple game instances run.
+                candidates.AddRange(Directory.GetFiles(rootDir, "LogOutput.log*", SearchOption.AllDirectories));
+                // Unity built-in log file, by default inside _Data dir, disabled, or somewhere in appdata. Can be moved to game root by BepInEx preloader if configured.
+                candidates.AddRange(Directory.GetFiles(rootDir, "output_log.txt", SearchOption.AllDirectories));
+
+                var latestLog = candidates.Where(File.Exists).OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
+                if (TryOpen(latestLog)) return;
+
+                throw new FileNotFoundException("No log files were found");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                MessageBox.Show(string.Format(Resources.OpenGameLogFailedMessage, exception.Message), Resources.OpenGameLogMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
