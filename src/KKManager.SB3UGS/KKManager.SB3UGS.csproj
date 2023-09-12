@@ -126,7 +126,6 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy /E /Q /R /Y /D "$(SolutionDir)libs\SB3UGS\*" "$(TargetDir)SB3UGS\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

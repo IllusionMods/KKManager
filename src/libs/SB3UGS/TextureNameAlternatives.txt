@@ -1,0 +1,3 @@
+// old texture slot: [{shader: new texture slot},]* [new texture slot]*
+_MainTex: "_Main_texture", "_BaseMap", {"lif_main_skin_body": "_Create_main_texture"}, {"lif_main_skin_head": "_Create_jm_main_skin_head"}, {"lif_main_eye": "_Pipil_texture"}, {"lif_main_eye": "_Eye_mask"}, {"lif_main_eyebrow": "_eyebrow_texture"}, {"lif_main_eyelid": "_Eyelid_texture"}, {"lif_main_eyelash_up": "_Eyelash_up_texture"}, {"lif_main_cloth": "_Create_main_texture"}
+_NormalMap: "_BumpMap", "_Normal", "_Normal_map"

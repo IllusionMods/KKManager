@@ -1,0 +1,2437 @@
+﻿[23.3.1]
+  - Added support for sound related HoneyCome TextAsset formats
+
+[23.3]
+  - Fixed compression for Unity 2021.3+
+  - Fixed display of shader names in Unity 2021.3+ Files. Animator Editors showed them correctly.
+  - Fixed crash when saving SceneABs after editing any asset alphabetically smaller than "Assets/..."
+  - Added texture slot alternatives for "_MainTex" and "_NormalMap"/"_BumpMap" in renderer and replacements
+  - Added support for HoneyCome shapeAnim and customShape TextAsset
+  - Added copy and paste through clipboard for more older TextAssets
+
+Known issues:
+  - Adding a texture to a SceneAB causes "Uncommitted external Texture2D cant be selected"
+             when it gets assigned to a Material.
+    Workarond: Save the SceneAB after adding the texture(s). No need to reload the SceneAB afterwards.
+  - Deleting assets then loading assets referencing the deleted assets leads to logical corruption of the AB
+    No workaround except not deleting shared assets. Can be seen with "View Data".
+  - Imported morphs get invalid when their mesh gets split by material
+
+[23.2.1]
+  - Added parsing HC pose list TextAssets
+  - Add parsing of HC MotionIK, but editing is not possible yet
+
+[23.2]
+  - Added support for HoneyComeTrial
+    Known issue: MainTex and Normalmap/Bumpmap have different names which are not supported.
+                 Workaround: use the MainTex preview introduced in 23.1.1
+
+[23.1.1]
+  - Changed renderer now using Material's NormalMap offset and scaling separated from MainTex's
+  - Added Texture editor options to preview the selected UV map with offsets and scalings in texture and mesh
+
+[23.1]
+  - Fixed crash replacing unskinned ImportedMeshes with a position >= number of destination submeshes of a 
+    SkinnedMeshRenderer which crashed saving Unity 2018.2+ files
+  - Fixed crash in ConvertRenderer for several submeshes
+  - Fixed shared vertices information in Mesh editor
+  - Added RemoveUnusedBones() in Bone editor
+  - Fixed invisible skinned meshes with 256 or more bones. Vertices with bone indices >= 256 appear unskinned.
+  - Fixed wrong influences in export of meshes with 256 or more joints. The limit of 256 joints still applies.
+
+[23.0.3]
+  - Added root folder choices for export dialogs
+
+[23.0.2]
+  - Fixed drag 'n drop of morphs from Workspace did not always bring the Morph tab and view to front
+  - Changed drag 'n drop of anything else from Workspace or other Animator to bring the Object Tree to front
+  - Added to open files from previous sessions
+  - Added to close all files
+
+[23.0.1]
+  - Fixed imported submeshes with different number of UV maps crashed replacement
+  - Fixed merging submeshes with less UV maps droppped exceeding UV maps in the destination mesh
+  - Fixed merging submeshes with more UV maps skipped exceeding UV maps of the imported submeshes
+
+[23.0]
+  - Added "Reopen with Editors" in File menu of Unity files
+  - Changed copying shaders in place instead of using an existing shader (does not affect CopyInPlace)
+    (Fixes not copying shaders with the same name but with different variants.)
+  - Fixed crash using Enable, Sorting Layer ID and Sorting Order in Mesh editor (introduced in 22.3.6)
+
+[22.4.3]
+  - Added support for appended AssetBundle headers
+
+[22.4.2]
+  - Changed name of exported UV maps to begin with "map1" instead of "map0" (Maya default)
+  - Fixed missing shader in Material editor combobox after pasting into Scene-AssetBundles
+  - Fixed crash in Refresh of the Object Tree when the selected Material got removed from the Animator Editor
+
+[22.4.1]
+  - Added insert, remove and export for elements of Texture2DArrays. Format change for single element arrays.
+    Supported but untested formats for arrays: RGB24, RGBA32, DXT1, DXT5, BC7
+  - Fixed core function Operations.FindFrame used in
+    - Copying of references in SkinnedMeshRenderer, MonoBehaviour and LoadedByTypeDefinition
+    - Hierarchy operations adding and merging tree parts
+    - Replacing meshes (skinned and unskinned)
+    - Animation preview
+  - Added support for FBX texture wrap modes: repeat and clamp
+
+[22.4]
+  - Added Texture2DArray attribute editing and element replacement
+  - Added support for typeless AssetBundle files
+  - Never documented in here, but present since 1.15.1 and fixed in 20.3.4:
+    Fake blendshapes for Blender are exported in FBX with the first position morphed by X - 1E-6.
+    This difference is ignored when imported.
+  - Fixed FBX import of blendshapes for meshes with non-Identity transformation
+
+[22.3.8]
+  - Fixed TextAsset format for RG Studio info lists
+
+[22.3.7]
+  - Added new TextAsset format for RG Studio info lists
+
+Known issue: Texture2DArrays show their first texture in the preview; DXT1 only
+
+[22.3.6]
+  - Added Enabled renderer attribute to Attributes dialog
+  - Added partial support for Texture2DArray assets. They are forced to be non-streamed after loading.
+
+[22.3.5]
+  - Fixed "Paste All Marked" losing external references (e.i. Mesh references in ParticleSystemRenderer)
+  - Fixed invalid filename characters from SkinnedMeshRenderers when exporting morphs
+  - Fixed missing animation tracks in FBX exports for morphs of submeshes after the first
+  - Fixed bad FBX import morph track names. Use the first submesh's morph tracks when animating. *1)
+  - Fixed mesh replacement to copy several attributes (e.i. m_RenderingLayerMask)
+  - Added editing Renderer's ray tracing attributes
+  - Added Unity meshes get their bounding box updated / "Center View" works for animated meshes
+  - Fixed crash for NULL values in RG list files (TextAssets with MessagePack contents)
+
+Known issues:
+  1) FbxAnimCurveNodes connected to the same FbxAnimCurve (for morphs of submeshes after the first) produce
+     duplicated independend FbxAnimCurves when imported from Maya. FbxSDK export file had the connections
+     correct and contained only one FbxAnimCurve. Maya duplexes on export in the same situation.
+  2) Meshes change colour when a bone of another mesh with the same Material is selected
+
+[22.3.4]
+  - Fixed TextAsset handling for HS2
+  - Fixed MotionIKData TextAsset handling for HS2
+
+[22.3.3]
+  - Fixed data corruption of VideoClip data from internal resource files
+  - Fixed Ctrl-S in TypeDefinitionEditors
+
+[22.3.2]
+  - Fixed TextAsset handling (introduced in 22.3)
+
+[22.3.1]
+  - Fixed Shader format in Unity 2020.3.22+
+  - Fixed MotionIKData TextAsset handling, support of one new format for RoomGirl
+
+Known issue: a second MotionIKData format in RoomGirl can not be shown/edited
+
+[22.3]
+  - Added support for RoomGirl
+  - Changed Shader, Mesh, Material, Texture2D, MeshRenderer. No editing of new members!
+
+[22.2]
+  - Fixed attribute checkbox position in Material editor in "Thin" mode
+  - Fixed refresh of external references in MonoBehaviours after editing hierarchy of the Animator
+  - Added GetMaterialShaderZBuffer() and SetMaterialShaderZBuffer() in AnimatorEditor
+
+[22.1.1]
+  - Changed Remove and "Copy->New" button positions to the top of the Material editor
+
+[22.1]
+  - Fixed FBX materials not imported in Unity
+  - Changed to FbxSDK 2020.3.1
+
+[22.0.2]
+  - Fixed Quaternion flip handling (introduced in 22.0)
+  - Changed export of Stream curves considers extrema
+
+[22.0.1]
+  - Added rotation conversion to Euler angles in curve preview
+  - Changed internal transport of Unity Euler rotation curves
+  - Added handling of fractional streamed keyframes in interpolation (resampled animations?)
+  - Fixed crash when Stream curves had no keyframe at 0. Using values from -Infinity.
+  - Fixed crash in FBX import for missing component curves
+  - Added FBX import track normalization by forcing a key at start and end
+  - Added support for FBX animation clip's local time span. Stop defines minimum length for normalization.
+  - Added constant curves are exported with only one key. Speeds up animation preview.
+  - Fixed missing meshes in renderer preview after showing meshes from old engine
+  - Fixed crashes in MB/LoadedByTypeDefinition editor when pressing Edit button
+  - Changed curve preview to handle continuity and tangent breaks
+
+Not implemented as planned
+  - Import of dense curves could skip the tangent part
+    Those tracks could be stored as high quality streamed.
+
+Known issues
+  - Export of Stream curves doesn't consider extrema
+
+[22.0]
+  - Fixed crash in MB and LoadedByTypeDefinition editors for external references inside of SceneABs
+  - Added handling of tangents in animations in FBX exports and imports
+    Support for continuous tangents only. Tangents are still lost during resampling when replacing.
+  - Fixed exporting clips with different rates by forcing one clip per file option
+  - Fixed frame rate handling in FBX import and FBX export (formerly strict 24 fps)
+  - Fixed crash when exporting without one clip per file option
+  - Removed selection of interpolation method for resampling - always using cubic now
+  - Added curve preview in Animation editor
+  - Added Euler filter and unroll quality tolerance to export options in Animation editor
+  - Changed Quaternion flip negation in FBX import
+  - Fixed Light for Unity 2019.4+, LightmapSettings for Unity 2018.4+
+
+Not in this release:
+  - Planned: Constant curves could be exported with only one key
+  - Planned: Import of dense curves could skip the tangent part
+  - Maybe: Resampling using tangents and computing new ones. This would be the prerequisite for
+           merging animations with different sampling rates.
+  - Maybe: Export could Euler filter each track separately
+
+Workaround for import and replacement of animations in older versions:
+1) Animations were imported disregarding tangents and computed Hermite coefficients for fixed 24fps
+2) The clip to be replaced had to get a rate of 24 before replacement
+3) A Speed of 1.25 would make it 30 fps (before or after replacement)
+
+[21.3.3]
+  - Fixed crash exporting meshes without uv map
+
+[21.3.2]
+  - Added support for BumpScale material attribute in the renderer
+  - Fixed texture assigment in Material editor getting ignorant after setting offset or scale
+  - Fixed missing external normalmaps in renderer
+  - Fixed crash when copying assets with empty names
+  - Changed display width of float values in Material editor to adapt when mouse is above
+  - Fixed AssetBundle m_Container sort order to OrdinalIgnoreCase
+  - Fixed writing Unity 2019.4+ files crashing the game with file being "not built with the right version"
+  - Fixed overflow exception when drawing UV maps with extreme coordinates
+
+[21.3.1]
+  - Fixed crash opening Unity game files (introduced in 21.3)
+  - Fixed Camera in Unity 2019.4+
+
+[21.3]
+  - Fixed streaming of new textures in Scene-AssetBundles
+  - Fixed missing textures in selection located in sharedAssets file in Scene-AssetBundles
+  - Fixed bounding box of absent meshes in renderer
+  - Added MonoBehaviour m_Enabled to the MB editor and SetAttributes(string name, bool enabled)
+  - Fixed FormStringTable to throw "Sum of the columns' FillWeight values cannot exceed 65535."
+  - Fixed AssetBundle asset name handling in Unity 2019.4+
+
+[21.2.2]
+  - Fixed Reference path handling for Unity 2019.4+
+
+[21.2.1]
+  - Changed AnimatorEditor.AddTexture() to check and acquire type definitions
+  - Fixed lowest used Unity version in KKS
+  - Added support for texture format BC6H (BC6_UFloat16)
+  - Fixed wasting space in files when non-streamed textures were replaced. They remain non-streamed now
+  - Fixed exception after actions which required switching the Cabinet (Scene-AssetBundles)
+  - Fixed script function names in AnimatorEditor: ComputeCenterExtent, DestroyCenterExtent
+
+[21.2]
+  - Changed renderer to use gamma correction. Textures are shown according to their ColorSpace attribute
+  - Added function to set a skeleton to the bind pose of a mesh
+  - Fixed Mesh assets in Unity 2017.4.3+ using m_IndexFormat=1
+  - Fixed Mesh vertex colours not recognized in Unity versions < 5
+  - Fixed "Render Transform" causing exceptions when renaming and removing Transforms
+  - Added corruption warning when saving and the source file had been changed
+  - Fixed a crash closing Sb3UGS when opening of an Animator had failed
+  - Fixed renderer's depth precision problem in mid range by reversing clip planes + conservative depth approach
+    Requirement for Sb3UGS raised to shader model 5
+  - Changed background colour used in Object Tree and Material editor for disabled elements
+
+[21.1.3]
+  - Fixed light direction in the renderer which nearly suppressed specular
+  - Added the use of normalmaps in the renderer
+  - Fixed external resource handling in Unity 2019+
+
+[21.1.2]
+  - Added float AnimatorEditor.GetMaterialShaderCulling(int id, int subShaderIdx, int passIdx)
+  - Changed AnimatorEditor.SetMaterialShaderCulling(int id, int subShaderIdx, int passIdx, double value)
+  - Added Unity3dEditor.DumpShader(string shaderName)
+  - Added DDS as export format for uncompressed textures
+  - Added conversions for normalmap
+  - Fixed crash of Attribute dialog in Mesh editor in files with Unity versions before 5.0
+
+[21.1.1]
+  - Fixed xxReplace for skinned meshes producing invalid bones
+
+[21.1]
+  - Fixed ConvertRenderer() to clear new Mesh members
+  - Fixed crash in all bone functions for optimized meshes with less than four influences
+  - Added support for Mesh m_BonesAABB when replacing or editing meshes
+  - Fixed QualitySettings and GraphicsSettings for Unity 2017.4+
+  - Added ignoreMasterTextureLimit and isPreProcessed in Texture editor
+  - Added Shader Keyword details in Material ShaderKeyword combobox
+  - Fixed DDS RGBA32 format swapping channels and converting to ARGB32
+  - Changed BMP RGBA32 format to work with more common channel order
+
+[21.0.7]
+  - Fixed Texture2D's hidden members
+  - Fixed crash of Unity because of file corruption
+
+[21.0.6]
+  - Fixed Renderer's hidden member m_RayTracingMode
+  - Fixed Shader cloning missed new members
+
+[21.0.5]
+  - Fixed wrong message for meshes without UV maps
+  - Added support for Koikatsu Sunshine Trial
+    - Shader Keywords split into global and local, ProgRayTracing added
+    - Mesh new m_BonesAABB and VariableBoneCountWeights,
+           skin optimized but optimization is lost when mesh is replaced or modified (normals or tangents e.i.)
+    - Avatar new HumanDescription, cloned but never changed
+
+[21.0.4]
+  - Changed AlignSMR works on all selected SkinnedMeshRenderers
+  - Fixed crash when FbxExportAnimationFilterPrecision was out of GUI range
+  - Fixed crash importing flat in-between blendshapes when a predecessor was missing
+  - Added SetMaterialShaderCulling() to AnimatorEditor
+
+[21.0.3]
+  - Added DeleteEmptyArrayReferences() to MonoBehaviourEditor and LoadedByTypeDefinitionEditor
+
+[21.0.2]
+  - Fixed crash in scripts using Array functions
+
+[21.0.1]
+  - Changed setting a scripting variable to null disposes the object
+    Workaround for opening a compressed file twice without calling SaveUnity3d in-between
+  - Added support for NIF files with a x64 version of NIFLIB
+
+[21.0]
+  - Changed platform to x64
+  - Changed FBXSdk to version 2020.1
+  - Changed FMOD to version 1.8.20
+  - Fixed BC7unflipped option being stored in userSettings instead of applicationSettings
+  - Removed support for NIF files
+
+[20.6.7]
+  - Fixed QualitySettings in Unity 2018.4+
+  - Fixed display and export of UV map for wrap mode REPEAT with U=1 or V=1 and CLAMP with outside UVs
+  - Added display and export of UV winding order which also allows to see overlapping UVs
+  - Changed tooltip of "Convert to MeshRenderer" to explain automatic settings (1.16.3)
+
+[20.6.6]
+  - Fixed UV map warning borders when UVs are out of the unit square (introduced in 20.6)
+  - Fixed pasting an AudioClip didn't create the entry in the AssetBundle asset required for directly loading
+
+[20.6.5]
+  - Fixed missing mirroring V in Morph preview (introduced in 20.6)
+
+[20.6.4]
+  - Fixed "Render Transform" not showing selected Transform and crashing for selected bone Transforms
+  - Changed "Automatic Renaming" of CAB-Strings to align with Unity5+
+
+[20.6.3]
+  - Fixed "Goto Frame" in the Bone editor not switching to the Frame editor
+  - Fixed MuscleClipSize for AnimationClip in Unity 2018.4+
+  - Added SetStateAttributes() in AnimatorController editor
+  - Added warning before ReplaceMeshRenderer() for unaligned SkinnedMeshrenderers to prevent crash when saving
+  - Fixed AlignMesh() doesn't make the editor dirty
+  - Fixed Virtual Avatar getting lost when reopening the Virtual Animator
+  - Fixed SetFrameName() crashing for unaligned SkinnedMeshRenderers
+  - Fixed RemoveBone() crashing for SkinnedMeshRenderers without influences
+
+[20.6.2]
+  - Fixed memory leaks for displayed normals, tangents and bone lines, resizing renderer, 
+    highlighting bone, morph preview, image preview
+  - Fixed internal crash in DockRenderer_DockStateChanged() when exiting
+
+Known issues / upcoming changes:
+  - Dont RecreateRenderObjects for Material texture slots other than MainTex, other mat attributes as well
+
+Informational:
+  InfoQueue q = new InfoQueue(device);
+  Neither q.AddStorageFilters() nor any other member function was ever implemented in SlimDX
+
+[20.6.1]
+  - Fixed parsing TextAssets for MotionIKData having only 0 values
+  - Fixed display of high UV sets which caused an exception upon selection (see Known Issues 20.5.2)
+
+[20.6]
+  - Fixed UV coordinate space conversion problem revealed by supporting CLAMP in the last version
+    - morroring V requires shifting - done for old engine and DirectX, removed all mirroring for Unity
+    - UVNB computation and CopyUV fixed
+    - Tangent computation fixed, because flipping V flips the binormal.
+  - Fixed crash when saving after replacing streamed textures in regular game files (introduced in 20.5)
+  - Fixed TextAsset format check not detecting KoikatsuPoses with empty State's Targets
+
+[20.5.3]
+  - Fixed MeshCollider in Unity 2018.4+
+  - Fixed MergeTexture not updating the texture in the renderer
+  - Added offset and scaling of Material's MainTex texture in the renderer
+  - Added wrap modes (REPEAT, CLAMP, MIRROR and MIRRORONCE) of MainTex texture in the renderer
+  - Fixed memory leaks in renderer (DepthStencilState, RasterizerState)
+  - Changed Emissive for the renderer halving the value in addition to still clamping at 0.5
+  - Added error message for "Replace Files..." for unsupported extensions
+  - Added editing support for MotionIKData TextAssets
+
+[20.5.2]
+  - Fixed FBX import crashing for meshes with unused vertices having morphs
+
+Known issues:
+  - Selecting several meshes with Shift key can lock UV selection and cause "Index was outside the bounds..."
+
+[20.5.1]
+  - Fixed ConvertRenderer crash for SkinnedMeshRenderers with several submeshes
+  - Fixed crash of the game (Unity 2018.4+) when streaming a Mesh for a SkinnedMeshRenderer
+  - Fixed Renaming CABinet to load Meshes in Unity 2018.4+
+  - Added streamed choice to Mesh Attributes dialog
+  - Fixed Start-Stop number format in Animation editor
+  - Added Material attribute SpecularPower and specular to renderer again
+
+[20.5]
+  - Added support for streamed Mesh assets:
+    - Streamed meshes remain streamed after replacement
+    - Streamed meshes are stored regular after pasting
+    - Streaming information and data layout in Mesh Attributes dialog
+  - Removed detailed entertainment for saving files
+  - Fixed gui problems in file editors after cancelling save
+
+[20.4.2]
+  - Fixed FBX import of meshes to consider subsequent uv maps for splitting vertices
+
+[20.4.1]
+  - Fixed Mesh with normals in half precision floating point format
+  - Fixed AudioClip stream data location
+
+[20.4]
+  - Fixed LZMA compression to run out of memory. Reduced flush threshold for LZ4; all use 12MB.
+  - Changed display of joints when selecting Transforms and AnimationTracks
+  - Changed mass selection and deselection of meshes to speed up a little
+  - Added support for Unity 2018.4 (HS2), Mesh asset without streaming support yet
+
+[20.3.6]
+  - Fixed out of memory when compressing big Unity files with LZ4 and LZ4High. LZMA not fixed yet.
+  - Fixed unchecking of animation tracks missing childs (20.3.5)
+
+[20.3.5]
+  - Added partial support for BC7_UNORM_SRGB (unflipped and DXT5 options)
+  - Added unchecking of animation tracks in a workspace inside the animation replacement dialog
+
+[20.3.4]
+  - Added Ctrl-F key looks at the selected joint / animation track in Object Tree and Animation editor
+    Known issue: non-joints are looked at non-animated positions although the animation is shown
+  - Changed Escape key in Animation editor pauses instead of unselecting all clips
+  - Fixed ConvertRenderer in Unity2018.2 which didn't adapt the Mesh channels and left it skinned
+  - Added generation of Stream curves for morph tracks (see also 1.15.10)
+    Curves for flat in-between blend-shapes still require to be unsimplified (DENSE)
+  - Fixed morph replacement for non-Identity transformed meshes imported from FbxSDK
+    (changed internal morph positions to relative values)
+  - Fixed animation import of morph tracks for Blender. Requires to keep the mesh Transform!
+  - Fixed FBX fake morphs for Blender (1.15.1)
+  - Fixed Transform path adaption for animation replacements
+  - Changed "Replace" and "Add" in Texture editor to use GUItexture (partially reverted 20.1.4)
+
+Known issues:
+  - Mesh replacement in combined hierarchies requires to open the root Animator (PC, PH, VRK)
+  - The last keyframe seems to be missing in exports of Stream curves - general or morph only?
+
+[20.3.3]
+  - Fixed "No Avatar" error by creating one in childless hierarchies
+  - Changed searching in the "Blue Area" to default to the root instead of replacing the hierarchy
+  - Fixed replacing the hierarchy with MergeFrame
+  - Added display bone size to renderer
+  - Changed FBX export bone sizing to allow automatic sizing for Animation and Mesh exports
+  - Fixed parent side plane orientation, changed joint and bone display
+  - Added all editors support Ctrl-S and F12 for focusing their file for saving
+
+[20.3.2]
+  - Fixed missing refresh of Unity file after deletion of MBs, LinkedByGameObjects, materials and textures
+    (Deleted MBs were edited instead of new created ones).
+  - Fixed error showing a file unfiltered with a RenderTexture inside
+  - Fixed MB and LoadedByTypeDefinition editors still dirty after saving
+  - Fixed FBX imported normals and tangents for meshes with non-Identity transformation (20.1.1)
+  - Fixed mesh replacement creating wrong normals and tangents with WorldCoordinate option
+
+[20.3.1]
+  - Fixed Shader replacement with CopyInPlace. Similar errors using CopyInPlace for other types are possible!
+
+[20.3]
+  - Fixed crash playing AudioClips in compressed files
+  - Fixed missing entries in preload table of AssetBundle asset for virtual Animators (since 20.2.1)
+  - Added Workspace context menu for the ImportedMesh and mesh nodes to set options for selected submeshes
+  - Added flipping binormals and tangents of both colours simultaneously
+    API changed: AnimatorEditor.FlipTangents()
+  - Fixed double tooltips in Animator editor
+  - Changed Texture editor doesn't require keyboard focus to reach UVmaps 4-7
+  - Changed mouse wheel no longer zooms in the renderer when the mouse is outside
+  - Fixed "Go to" in MB editor to jump only to the originally referenced asset
+  - Fixed "Go to" and "Edit" in MB editor not working after assigning new asset
+  - Added reference change to GameObject in MB and LoadedByTypeDefinition editors
+  - Fixed storing LZ4 High compression type even when compressing with LZ4
+  - Fixed slow selection of meshes, materials and textures (since 1.19.8)
+  - Fixed flickering from rendering assertion when selecting meshes (since 0.4.42.22)
+  - Changed image preview moving to front when refreshing Unity asset lists
+
+[20.2.2]
+  - Added indicator in the UV preview for UVs being not in the unit square
+  - Changed temporary name for writing files. The extension is no longer changed.
+
+[20.2.1]
+  - Fixed deleting various assets or creating virtual Avatars and Animators
+    to cause "Uncommitted asset ..." error when saving the file (since 20.1.5)
+  - Changed assigning the already assigned Shader to a Material throws out unused attributes
+  - Changed Animator editor handling of cross-references and "Refresh" in Object Tree in hope to fix:
+    "The given key was not present in the dictionary." and although not selected a mesh is rendered 
+    and changing the mesh selection doesn't change anything in the renderer.
+    Workaround: close and reopen Animator editor
+  - Fixed duplication in "Used" lists after "Refresh" and "Remove Material"
+  - Added class name to references in LoadedByTypeDefinition and MB editors
+  - Fixed crashes after operations in which skinned meshes were removed (Bone editor)
+
+[20.2]
+  - Fixed crash in mesh replacement when vertex colours were not existant in all submeshes
+  - Fixed additional compression method for file chunks in parsing (Unity 2018.3+ ?)
+  - Fixed freezing in MoveFrame with visible meshes
+  - Fixed crash when enabling Editors in the main menu if any editor had been opened before
+  - Fixed vanishing windows when double clicked after dragging (Dockpanel Suite updated)
+  - Fixed Files and Editor panes to remain visible when childs float or get closed
+  - Fixed SpriteRenderer for Unity 2018.2+
+  - Fixed FBX import and export to support non-ASCII characters in names and paths
+  - Removed FBX Namespace from imported objects
+  - Fixed bold text font in wrong EditTextBox by removing ObjectTree refresh in
+    SetGameObjectLayer, SetGameObjectTag, SetGameObjectIsActive, SetMeshName
+  - Changed replacement dialog accepts Enter for confirmation
+
+Known issue: RecreateFrames -> InitFrames cant handle duplicate frame names
+
+[20.1.5]
+  - Fixed crashes after opening an "empty" MonoBehaviour
+  - Fixed display of PathID=0 in MB editor after saving the file and opening the MB again
+  - Fixed inability to reference new assets in MB and LoadedByTypeDefinition editors
+  - Fixed drag 'n drop of Renderers without Material being ignored
+  - Fixed lost "[category]" extension in editor title after saving
+Known Issues:
+ - MB editor not showing external asset name although external file has been opened
+ - Floating windows can vanish and get inaccessible
+ - Imported submeshes mixed with vertex colours and without crash replacement
+
+[20.1.4]
+  - Fixed crash when AnimatorController editor was used after Animation editor was closed
+  - Fixed crash in "Replace" in Texture editor when no image was selected from the Image window
+  - Fixed remaining .resS file when saving is aborted because of wrong path
+  - Added Unity3dEditor.CopyInPlace script function
+
+[20.1.3]
+  - Fixed crash in FBX animation import which aborted the import completely for negative keyframe times
+  - Added support for importing compressed TGAs, fixed flipping TGAs
+  - Fixed a possible crash when "Docking" is changed
+  - Fixed copying a MonoBehaviour (ChaClothesComponent) with a different structure using the wrong MonoScript
+
+[20.1.2]
+  - Changed loading external assets in AnimatorEditor() to reduce number of opening files
+  - Fixed AnimationClip replacement creating wrong length for m_IndexArray in Unity 2017.4+
+  - Fixed crash when opening empty files (since 20.1)
+  - Removed registering and removing AnimationClip names in AnimatorController
+  - Fixed crash opening Material & Texture Animators (since 20.1.1)
+  - Fixed AnimatorControllerEditor.MoveSlot() to correct BlendTreeConstant.m_ClipID also
+  - Fixed crash when sorting Mesh list (since 1.19.8)
+
+[20.1.1]
+  - Fixed crash in CopyMaterial of external Materials used by "Copy->New" in Material editor
+  - Fixed Shader selection containing other external assets than Shaders
+  - Changed opening Animator editor blindly loading external assets from AssetBundle asset
+  - Fixed applying non-Identity transformed mesh's local coordinate correction to normals and tangents
+
+[20.1]
+  - Added virtual Animators in regular game files and Scene-AssetBundle files
+  - Fixed Keyframe<T> in AnimationClip, AudioSource, ParticleSystem, LineRenderer for Unity 2018.2+
+  - Added Workspace objects originated from Animators can be dropped into LoadedByTypeDefinition and
+    MonoBehaviour editors for referencing
+  - Fixed missing default format in Animation export
+  - Added support for half precision floating point Mesh channels
+
+[20.0]
+  - Changed platform: VS2017 for development, VC++2017 redist, WindowsSDK 10.0.17763.0, FbxSDK 2020.0.1
+  - Fixed crash dragging a mesh into the Blue Area without hierarchy in the imported workspace
+  - Fixed crashes in AnimatorEditor and Unity3dEditor when called from a script exe
+  - Changed signature of Unity3dEditor.ComponentIndex() by adding clsIDname,
+    AddMaterialToEditor returns Material
+
+[1.19.8]
+  - Added multi selections in Object Tree for renderers, materials and textures with CTRL key
+  - Fixed crash in export of morphs of meshes without shared vertices (see 1.19.5)
+
+[1.19.7]
+  - Added support for GraphicsSettings asset
+  - Added support for AudioClips to be copied & pasted
+  - Fixed AudioClip replacement sets the channels, frequency, bits, length of a clip
+  - Fixed several SetRendererAttributes calls (missing layerMask parameter)
+  - Fixed pasing error when exporting to a root folder
+  - Changed AnimatorController editor showing relation between layer and state machine
+  - Fixed crash in NIF import of unskinned meshes
+
+[1.19.6]
+  - Changed LODGroup, Cloth definitions for Unity 2017.4+
+  - Changed display format of float and double to compact in editors for MB and LoadedByTypeDefinition
+  - Fixed unloaded streamed textures become invalid when the file is saved
+
+Known issue: streamed Texture3D assets are not handled
+
+[1.19.5]
+  - Fixed empty RootBone combobox for unusual root bones
+  - Fixed automatic detection of "MessagePack" formatted TextAssets
+  - Changed logical filesize maximum to unsigned 32bit integer, FullTypeDefinitions member in CABinets,
+    AssetBundle file archive for all game files (each without FullTypeDefinitions and AssetBundle asset)
+  - Fixed Mesh DataSize and number of UV sets in Unity 4 files
+  - Fixed Unity's vertex reuse in subsequent submeshes aka "shared vertices"
+
+[1.19.4]
+  - Added Renderer's RenderingLayerMask, Mesh's Metrics, SMR's AABB to Mesh Attributes dialog
+  - Added default values for Renderer's RenderingLayerMask and Mesh's Metrics upon creation
+  - Added partial support for Texture3D. Export/Replacement via file menu "Assets" only.
+  - Fixed normals length in preview of NML and UVNB MonoBehaviours
+  - Added support for BC7 format in export and replacement
+  - Fixed DDS header of BC7 textures converted to DXT5 on export
+  - Fixed missing conversion of Texture2D into Cubemap and vice versa
+  - Fixed mesh inplace replacement changing from skinned to unskinned or vice versa in Unity 2018.2+
+  - Fixed computation of "New Skin" to freeze and crash Sb3UGS. Added increasing weights by position.
+  - Changed defaults of "Copy Nearest" options are chosen from selected submeshes of the ImportedMesh only
+  - Fixed SetTextureAttributes for Unity 2017.4+ when changing WrapUVW
+
+[1.19.3]
+  - Added streaming texture attributes and support for eight UV maps in Texture editor
+  - Fixed streaming texture corruption when saving or compressing a compressed file
+
+[1.19.2]
+  - Fixed wasted space after deleting streamed textures
+  - Added normals and tangents length option to the renderer
+  - Added warning when pasting from regular game files into AssetBundle files
+  - Added full support for Project I / AIGirl (Unity2018.2.21)
+    Done: QualitySettings, LightmapSettings (Unity2017.4+)
+
+[1.19.1]
+  - Added full support for Project I / AIGirl (Unity2018.2.21)
+    Done: Light, Camera, ParticleSystem
+  - Fixed crash in ConvertRenderer in Unity 2018.2 files
+
+[1.19]
+  - Added partial support for Project I / AIGirl (Unity2018.2.21)
+    Done: Shader, Texture2D, MonoScript, Avatar, Mesh, all Renderers, Sprite,
+          CanvasRenderer, ParticleSystemRenderer, PreloadData
+    Todo: SpriteRenderer, TrailRenderer, Camera, Light,
+          ParticleSystem, LightmapSettings, QualitySettings, Texture3D
+  - Fixed general layout to retain FileEditors size after minimize
+
+[1.18.3]
+  - Changed general layout to retain FileEditors size
+  - Fixed crash when ParticleSystemRenderers were pasted
+  - Fixed freezing when (LoadedByTypeDefinition) renderers got a Mesh set
+  - Fixed (LoadedByTypeDefinition) renderer's Materials could not be changed and persisted
+  - Added preview of AnimatorController editor. No editing yet, inspecting only.
+
+[1.18.2]
+  - Fixed crash in RenameCabinet for Unity4 files
+  - Fixed data corruption when saving Unity4 files
+  - Changed drag 'n drop of script onto SB3UtilityScript.exe from Explorer forces confirmation of errors
+  - Fixed InsertSlot and RemoveSlot in AnimatorController editor to correct BlendTreeNode's m_ClipIDs
+
+[1.18.1]
+  - Added support for TagManager, RenderTexture asset
+  - Changed Camera into LoadedByTypeDefinition and deleted modal Camera editor
+  - Fixed index exception when opening a LoadedByTypeDefinition or MonoBehaviour in Animator
+  - Fixed MeshCollider definition in Unity 2017.4.3+
+  - Fixed game crash after removing clip slot or animation state referenced from another state's transition
+  - Known issues: non-functional behaviour in Animation gui because of misuse of StateConstant.m_NameID
+  - Fixed animation replacement for shifted hierarchies (artificial nodes like Blender's Armature)
+  - Fixed crash when opening Unity files with long CABinet names
+
+[1.18]
+  - Added new concept for loading and editing assets of game and AssetBundle files:
+    Canvas, CanvasGroup, CanvasRenderer, CharacterJoint, EllipsoidParticleEmitter, FlareLayer, GUILayer,
+    LODGroup, ParticleAnimator, ParticleRenderer, ParticleSystem, ParticleSystemRenderer, PhysicMaterial,
+    Projector, RigidBody, Sprite, Tree
+  - Fixed m_Convex in MeshColliders in Unity versions >= 5.0 and < 5.5
+  - Fixed conceptional problem with member alignment of assets (MonoBehaviour and LoadedByTypeDefintion)
+  - Added to LoadedByTypeDefinition and MonoBehaviour editors
+    - gui protection for assets with more than 2000 lines
+    - input of hex values
+    - "Go to" and "Edit" of referenced assets
+  - Fixed crash when replacing an animation with StreamedCurves with frames for -Infinity and 0
+
+[1.17.2]
+  - Fixed missing separator in ShaderKeywords, added ShaderKeyword differences in Property tooltip
+  - Added new concept for loading and editing assets of game files:
+    AudioListener, AudioMixer, AudioMixerGroup, AudioMixerSnapshot, AudioSource
+  - Fixed mesh replacement to retain all morph channels. Blendshapes are still cleared.
+    This compensates wrong import order of "Flat In-Between Blend-Shapes".
+
+[1.17.1]
+  - Added unused shader keywords to selection in Material editor
+  - Added shifting keyboard focus from Animator editor to the edited file with Ctrl-S and F12
+
+[1.17]
+  - Fixed tooltips of editors after "Save as..."
+  - Fixed missing tooltips in Animator editor
+  - Fixed array operation InsertBelow in LoadedByTypeDefinition editor for LinkedByGameObjects
+  - Added new concept for loading and editing assets of game files:
+    AudioReverbZone, BoxCollider, CapsuleCollider, Cloth, LightmapSettings, MeshCollider, PreloadData,
+    QualitySettings, SphereCollider, SpriteRenderer
+  - Fixed ParticleSystemRenderer for Unity 2017.4.3+
+
+Known issues:
+  - References in MonoBehaviour and LoadedByTypeDefinition editors cant be set to sharedAssets cabinet
+
+[1.16.6]
+  - Fixed crash in HS TextAssets for customization sliders
+
+[1.16.5]
+  - Added context menu with insert, append and delete of fields in textual MonoBehaviours and TextAssets
+  - Added editing of TextAssets with MessagePack contents
+  - Fixed editing TextAssets used for customization sliders, e.g. cf_anmShape_head*, cf_anmShape_body
+
+[1.16.4]
+  - Fixed crash when importing NIF files.
+    Compiled Niflib for VS2015 - https://github.com/enimaroah/3D-Misc/tree/master/NifLib
+  - Added movement of Transforms inside Animators via drag 'n drop - use Replace method
+
+[1.16.3]
+  - Fixed crash in ViewAssetData for Textures
+  - Added defaults for "Convert to MeshRenderer" in mesh replacement dialog for obvious cases
+  - Changed "Blue Area" search for "Destination Transform" when a mesh name is not found in its workspace
+  - Added AlignMeshWithSkinnedMeshRenderer to compute bone hashes and bind pose
+  - Fixed image preview being not always cleared when the file was closed
+  - Changed ShowAlways for all Unity related tooltips
+
+[1.16.2]
+  - Fixed reading streamed textures in compressed AssetBundle files
+
+[1.16.1]
+  - Fixed Camera, AnimationClip, MeshRenderer and derived assets for Unity 2017.4.3+
+  - Fixed replacing the last streamed texture makes the others crash after saving (no file corruption)
+  - Fixed a crash in AnimationClip conversion of streamed curves
+  - Fixed crash when Animator editor was closed with morphs being shown
+  - Changed MeshRenderer's Lightmap attribute into two (index and dynamic) as in Unity5+
+  - Changed MeshRenderer's defaults for LightProbeUsage and ReflectionProbeUsage to 1
+  - Changed FBX exported Normalmap texture to Bumpmap when no Bumpmap texture is exported
+
+[1.16]
+  - Added support for Emotion Creators (Unity 2017.4.3+)
+  - Added editing of Material's replacement tags, e.g. RenderType
+  - Added texture attribute WrapUVW editing
+
+[1.15.12]
+  - Fixed missing entry in AssetBundle asset for Nml MonoBehaviour after pasting and opening
+
+[1.15.11]
+  - Fixed loading MonoBehaviours in game files of Unity before 5.5
+
+[1.15.10]
+  - Changed defaults for Texture2D attributes m_isReadable and m_ReadAllowed to false
+  - Changed file tabs refresh to keep the visible part more constant
+  - Fixed FBX import of animations with keyframes on fractional seconds
+  - Added Stream tracks for simplified tracks in animation replacement for "Replace" and "ReplacePresent"
+    Not implemented yet:
+    - Constrain track generation
+    - Tracks for Flat In-between Blendshapes
+    - Replace methods Merge, Insert, Append
+    Known issues:
+    - A simplified track(!) with constant values but tangents != 0 is considered constant
+    - AnimationClips with Stream curves cant have their Rate (FPS) changed properly
+    - Exporting animation clips WITHOUT "Stream Interp." alienate curves of Stream tracks
+  - Removed 256 bones limit from export
+
+[1.15.9]
+  - Added warning for non-standard number of mipmaps
+  - Added "Paste Into" dialog to view and control what is to be pasted
+
+[1.15.8]
+  - Fixed drag 'n drop of external assets into MonoBehaviour and LoadedByTypeDefinition editors
+  - Fixed missing focus on first control of replacement dialog (Frame, Mesh, Morph, Material, Type)
+  - Fixed crash when MeshRenderers had no Mesh assigned (introduced in v1.15.7)
+  - Added m_Enabled of MeshRenderers to be editable
+  - Changed CapsuleCollider, Cloth, MeshCollider and SphereCollider into LoadedByTypeDefinition
+  - Fixed crash when pasting LoadedByTypeDefinitions of regular game files
+  - Fixed loading transparency background images in Texture editor when Sb3UGS was started via association
+  - Changed pasting AnimationClip no longer overwrites an existing original
+  - Fixed crash opening MonoBehaviour editor with a MonoScript with set isEditorScript
+
+[1.15.7]
+  - Fixed crash on export of meshes in Animators with identical morph channel names in the whole hierarchy
+  - Fixed crash when saving all Unity4 files
+  - Removed type check for regular Unity4 game files
+  - Added shared mesh warning when meshes are used multiple times
+  - Fixed two crashes when applying patches (since v1.14)
+  - Fixed crash when loading LoadedByTypeDefinition assets in regular game files
+  - Fixed lock of export folder when export crashed
+
+[1.15.6]
+  - Fixed missing entry in AssetBundle asset for pasted AnimatorController
+
+[1.15.5]
+  - Fixed memory leak when the Images window was closed or images were closed from menu
+  - Fixed FBX export of unskinned meshes getting non-Identity mesh transformation from DAG pose
+
+[1.15.4]
+  - Fixed refusal of assignment of a newly imported texture
+
+[1.15.3]
+  - Added PreferedAngle and BindPose to FBX export. This prevents Maya's import warning
+    and allows to "Assume Preferred Angle" and "Go to Bind Pose".
+  - Fixed InvalidCastException in files with RenderTexture when opening Camera and Animator editor,
+    RenderTexture and LightProbe are shown by name instead of PathID in "MonoB & Other"
+  - Added copy & paste of Camera
+  - Fixed crash when closing file with (external) texture being shown as UV map
+
+Known issue:
+  Loading external resource files before geometry files shows the resources in the renderer 
+  immediately. Loading files in reverse order requires manual selection to show resources.
+
+[1.15.2]
+  - Fixed FBX compatibility issues with Maya 2019. Morph keyframe names are prefixed if they would clash.
+  - Fixed crash when Editor panel was floating. Added floating Editor and File panels to accept files.
+
+[1.15.1]
+  - Changed multi-selection of Textures, Materials, Meshes to increase gui speed and descrease memory usage
+  - Fixed FBX import by ignoring morph mask
+  - Fixed FBX export of morph mask for meshes with more than one UV map
+  - Changed morph keyframe names in FBX export to use group name as namespace to prevent name clashes
+  - Added FBX fake morphs for Blender when no vertex is morphed - use "Flat In-Between Blendshape" option
+
+[1.15]
+  - Fixed mesh replacement, merging Materials & Textures into Scene-AssetBundle files
+  - Fixed AcquireTypeDefintion to switch the current UnityParser's Cabinet for Scene-AssetBundle files
+  - Fixed copy & paste of Animators and other assets into Scene-AssetBundle files
+  - Fixed opening wrong virtual Animators(uncommitted after pasting)
+  - Added loading of assets using TypeDefinitions in opened AssetsBundle files
+  - Fixed crash opening virtual Animator after creating an already existing virtual Animator
+  - Fixed crash with clearing mesh of MeshRenderer
+  - Fixed bad chunk flags in file header (introduced in v1.14)
+  - Fixed out of memory exception when saving files (introduced in v1.14)
+  - Fixed "An entry with the same key already exists." when saving files
+  - Changed LoadAndSetXXX script command to use asset references
+
+Known issues:
+  Scene-AssetBundle files with multiple scenes are not handled correctly
+  Morph mask not present in FBX export, import of such a file takes very long time
+
+[1.14.7]
+  - Fixed replacing meshes using "Replace" method with "CopyNear" or "CopyOrder" option
+    See issues in 1.14.3
+
+[1.14.6]
+  - Fixed crash in files using mixed compressed methods
+
+[1.14.5]
+  - Added regular game file as valid target for external references
+  - Added external references in MonoBehaviour and LoadedByTypeDefinition editors
+  - Fixed crash when exporting a texture from Assets menu
+
+[1.14.4]
+  - Fixed memory leak when saving files
+
+[1.14.3]
+  - Fixed time of StreamedClip keyframes in animations
+  - Added use of cubic Hermite spline coefficients for interpolation in StreamedClip parts
+  - Fixed crash when dragging a SkinnedMeshRenderer without Material
+  - Changed when hiding Image preview the graphical resource is released from memory
+  Known issues:
+  - Unity requires a bone high enough in the hierarchy to reach the others.
+    "Bone influences do not match bones."
+  - Selecting an animation can cause:
+ArgumentOutOfRangeException: Argument is out of range.
+Parameter name: index
+	at System.Collections.Generic.List`1[DynamicBone+Particle].get_Item (Int32 index) [0x00000] in <filename unknown>:0 
+
+[1.14.2]
+  - Fixed "An entry with the same key already exists." in FBX import for vertex with two equal weight values
+    (introduced with v1.9.6)
+
+[1.14.1]
+  - Fixed importing morphs now creating "unknown_blendshape" groups for each mesh again
+  - Fixed crashes in several script commands when executed from SB3UtilityScript.exe
+    The following functions dont consider other opened files (unlike in SB3UtilityGUI.exe):
+    - destructor of ImportedEditor
+    - Unity3dEditor.BeginTransfer
+    - AnimatorEditor - all functions changing anything
+
+[1.14]
+  - Added saving compressed files with LZ4, LZ4 high and LZMA
+
+[1.13.4]
+  - Changed file length check to allow trailing unused bytes
+
+[1.13.3]
+  - Fixed crash when exporting or replacing meshes created with older versions of Sb3UGS
+  - Fixed crash when saving non-AssetBundle Unity files (introduced in 1.13.2)
+
+[1.13.2]
+  - Fixed FBX import of morphs whose mesh has a non-Identity transformation
+  - Fixed invisible crash in FBX import for blendshapes without channel
+  - Fixed FBX import that made morphs invalid when vertices got split (several UVs or normals per vertex)
+  - Fixed crash (e.g. after ReplaceMeshRenderer) after a mesh showing morphs had been removed
+  - Changed writing unity files (preparation for writing compressed unity files)
+
+[1.13.1]
+  - Fixed out of memory crash when opening compressed files using a swap file on disk
+
+[1.13]
+  - Fixed crash when opening MonoBehaviour editor for MBs without MonoScript
+  - Added implementation for KoikatsuListTextAssets using MessagePack library
+  - Fixed bone selection from animation tracks
+  - Removed LoadIrrKlang from config
+  - Fixed MeshRenderers getting influences, e.g. by calculating normals
+  - Fixed deleting rows in TextAssets and textual MBs wasn't recognized as a change
+  - Added Constraints animation track computation (parent constraints only)
+  - Added tangent computation using MikkTSpace
+
+[1.12.12]
+  - Fixed non-critical index error when a Material had been selected before deleting or replacing meshes
+  - Fixed crash when closing Workspace with duplicated (by drag 'n drop) imported contents
+  - Added "Search For" in Workspace
+
+[1.12.11]
+  - Added unsharp search for morph animation tracks to compensate frame indices of in-between blendshapes
+  - Added patterns for filenames of animation exports with name of AnimationClip, slot and Animator
+  - Fixed sorting order of animation clips after replacement, added unsorted state
+  - Fixed editing TextAssets and textual MonoBehaviours didn't change the file's status
+  - Fixed initial animation export format being empty
+
+[1.12.10]
+  - Changed in FormStringTable "Join / Separate" commits changes, fixed status when closing editor
+
+[1.12.9]
+  - Recompiled PPD_Preview_Clothes plugin
+
+[1.12.9]
+  - Added Nml MonoBehaviour copying of normals sets into mesh or reverse
+  - Added animation separation through Isolator in Animator editor
+  - Added animation separation when exporting with the "One Clip per File" option
+  - Fixed full crash some time after Fbx export because of FbxSdk being not thread-safe
+  - Added auto commit of changes in TextAsset / textual MB editors when saving the file or closing the editor
+
+[1.12.8]
+  - Added drag 'n drop of assets between Animators and
+    into MonoBehaviours and LoadedByTypeDefinition onto PPtr<> nodes
+  - Issue: renaming a Transform with a sibling having the same name removes entry in Avatar
+
+[1.12.7]
+  - Added application signature in FBX export and writing the signature on import
+  - Fixed a crash in FBX import when a mesh had no UVs
+  - Fixed "Update Bones" and "Update Bones & Frame" not considering mesh transformation
+  - Fixed "Neither m_Name nor m_GameObject member XXX Mesh UnityPlugin.NotLoaded" when
+    pasting Meshes into files with a Mesh not loaded before (introduced in v1.12.1)
+  - Fix for unexpected selection in the ObjectTree after replacements
+  - Fix for deleting a Transform with a sibling having the same name removes entry in Avatar
+
+[1.12.6]
+  - Fixed "The process cannot access the file because it is being used by another process." when saving
+
+[1.12.5]
+  - Fixed UVNB MonoBehaviour computation to work on world coordinates
+  - Fixed crash in loading compressed Unity files with negative compression ratio
+  - Changed compressed Unity files are shown with an equivalent sign at the beginning
+  - Fixed showing old Transform name after renaming in mesh replacement dialog
+  - Fixed non-critical index error after ReplaceMeshRenderer
+  - Fixed silent crash in FBX import of (even empty) animations for meshes in the root
+  - Fixed FBX averaging of normals and added option for import of split normals
+
+[1.12.4]
+  - Fixed Nml MonoBehaviour computation to work on world coordinates
+
+[1.12.3]
+  - Added transfer of assets linked in GameObjects using the Workspace, e.g. MeshCollider
+  - Changed Shift-Delete in ObjectTree deletes every asset, e.g. MeshColliders
+  - Changed MergeFrame to retain all formerly present assets
+  - Changed added/merged ImportedFrames get their GameObject attributes from DestinationParent
+  - Changed AquireTypeDefinition to retrieve types of close Unity versions
+  - Fixed wrong selection of assets after double click in one of the lists of a file
+  - Fixed pasting LoadedByTypeDefinition causing wrong references (logical corruption)
+  - Fixed internal state after ConvertToSceneAssetBundle producing invalid references later
+  - Fixed RemoveBone didn't set the editor to changed state
+  - Fixed crash in "Save .unity3d As..." for AssetBundle files
+  - Fixed crash when loading AssetBundle file with short CAB-String
+  - Added editing of "every" LoadedByTypeDefinition like MBs (not implemented types only)
+
+[1.12.2]
+  - Fixed RemoveBone crash when deleting the first bone
+  - Fixed crash in ConvertToSceneAssetBundle in Cabinets with several MBs of the same type
+  - Known issue: copy and paste of an Animator loses external Meshes
+  - Added support for AnimatorController and AnimationClip in ConvertToSceneAssetBundle
+  - Fixed order of types in sharedAssets Cabinet in ConvertToSceneAssetBundle
+  - Fixed automatic renaming of Cabinets cutting names to 36 characters
+  - Added unsharp search in copy and paste for global assets like RenderSettings
+  - Fixed crash in export for misaligned m_CurrentChannels without although present VertexColours
+
+[1.12.1]
+  - Fixed CompareType, RenameAsset, RemoveAsset, ViewAssetData, OpenAudioClip, 
+    RenameCabinet, MainAsset definition, MarkAsset, UnmarkAsset acting on random cabinets
+  - Identified classes needing support: AudioReverbZone, Font, LightmapSettings, NavMeshData,
+    NavMeshSettings, NavMeshObstacle, OcclusionArea, RenderSettings, VideoPlayer
+    Instead of implementing all those classes there is now only one: LoadedByTypeDefinition
+  - Removed BoxCollider, SpriteRenderer support; now falling back to LoadedByTypeDefinition
+  - Fixed memory leak when objects in the renderer remained although the mesh was unselected
+  - Fixed crash clicking Refresh in AnimatorEditors with MonoBehaviours in regular game files
+  - Added conversion of AssetBundle files into Scene-AssetBundle files
+  - Changed copy and paste for Mesh assets to be reused if they have the same:
+    1. m_Name
+    2. number of m_SubMeshes
+    3. number of vertices and faces
+    4. center and extend
+  - Fixed copy and paste of MeshColliders producing additional copies of Meshes
+  - Added attempt to find GameObjects by their Transform's hierarchy path in "Paste All Marked"
+
+[1.12]
+  - Fixed SetMaterialShader producing invalid references for external Materials
+  - Fixed MergeFrame and AddFrame to do AlignSkinnedMeshRenderer again (removed in 1.11)
+  - Added support for AssetBundle files with multiple AssetCabinets and non-AssetCabinets
+  - Added adapting AssetCabinet.Reference.assetPath in RenameCabinet in Multi-Cabinet files
+  - Added support for PreloadData and Light(5.6.2) assets
+
+Open issues:
+  - GetOrCreateFileID doesn't produce correct Reference.assetPath for multiple AssetCabinet files
+  - Cabinet switch between BeginTransfer and EndTransfer would be fatal
+    -> Cabinet.SourceStream should be UnityParser.SourceStream
+
+[1.11.4]
+  - Added showing and saving uv maps in the Texture editor
+  - Fixed bounding box of rendered meshes. SkinnedMeshRenderers can be "Center View"ed again.
+  - Fixed unknown animation tracks were merged into one single track without name in Track list and exports
+  - Fixed tooltip of combo-boxes for Avatar and AnimatorController after change
+  - Fixed crash when opening MonoBehaviour after change in Animator
+
+[1.11.3]
+  - Added: tooltips from all menus, editors and dialogs are also shown in the status line and its tooltip
+  - Fix for computing wrong bone path for Avatar, especially in MergeFrame, AddFrame. Related to 1.11
+    This also caused "Avatar misses bone(s)..." in ReplaceMeshRenderer
+  - Changed unselecting meshes to keep a remainder in the editor
+  - Fixed RemoveAsset to produce "Invalid container entry for" and DumpAssetBundle to crash
+
+[1.11.2]
+  - Fix for undocking Animator editor freezing Sb3UGS
+    No mesh selection in the Object Tree until making the Mesh list visible
+  - Added Mesh channels: Normals and Tangents in the Attribute editor
+
+[1.11.1]
+  - Changed Koikatsu TextAsset list editing, added view of poses
+  - Added copy and paste of Koikatsu TextAssets into/from clipboard
+  - Fixed not closing editors when "Replace Files..."
+  - Fixed m_Dependencies entry of AssetBundle not using the file's path
+  - Fixed AssetBundleManifest editor not showing changed state
+  - Fixed "Copy to Clipboard" and "Paste from Clipboard" no longer require the internal editor
+  - Changed MonoBehaviour editor from modal to non-modal
+      1) can be opened directly from the Unity file's "MonoB. & Other" or from within an Animator
+      2) every change is immediately performed on the MonoBehaviour: No Cancel, but Revert!
+      3) unlimited Undo and Redo for the contents
+      4) scripting commands moved from AnimatorEditor to MonoBehaviourEditor
+  - Removed scipting commands in AnimatorEditor:
+      SetMonoBehaviourAttributes, SetMonoBehaviourExtendedAttributes,
+      MonoBehaviourArrayInsertBelow, MonoBehaviourArrayDelete, 
+      MonoBehaviourArrayCopy, MonoBehaviourArrayPasteBelow, SetMonoScriptAttributes
+  - Issue found: expanding/collapsing TreeView nodes with childs not always working
+  - Issue found: undocking Animator(others too?) editors can freeze Sb3UGS any time later
+
+[1.11]
+  - Fix for crash in LoadAndSetAvatar of virtual Animators
+  - Changed LoadAndSetMesh by removing AlignSkinnedMeshRendererWithMesh functionality
+  - Changed priority when searching for Transforms in SkinnedMeshRenderer's bones to
+    m_Bones before Mesh's m_BoneNameHashes
+    Additionally affected: Cloth, MonoBehaviour, MQO exporter using world coordinates
+  - Changed all handling of Bone and AnimationTrack names to use their full path instead
+  - Fixed crash when a Mesh had a smaller number of m_BoneNameHashes than the
+    SkinnedMeshRenderer had m_Bones
+  - Issue found: Meshes without tangents are exported with zero vectors as tangents
+  - Fixed number of uv sets for Unity versions before 5.0
+  - Fixed crash in export animations of tracks unrelated to exported meshes
+  - Fixed and changed computation of virtual Avatars. Now the root must be selected, not a branch.
+  - Added support for Sprite assets in Unity 5.6.2 (and 5.5.0)
+
+[1.10.2]
+  - Fix for ShaderKeywords and DisabledPasses not shown properly when they should be empty
+  - Changed selected material is assigned to all material slots of all selected (Skinned)MeshRenderers
+
+[1.10.1]
+  - Fix in Fbx importer not considering the combined mesh matrix of skinned meshes
+  - Noticed issue in FBX with imported leaf bones matrices for asymetrically scaled bone frames
+  - Fixed tangent computation (bug introduced in 1.10.0)
+
+[1.10.0]
+  - Fixed loss of vertex colours when a mesh was reused and the number of vertices changed
+  - Fixed new Meshes never got vertex colour channel masked in Mesh m_CurrentChannels
+  - Added support for up to four UV sets in Unity5+
+  - Identified problem in FBX 2018.1.1 for single colour vertex and single tangent elements
+    when several uv sets are created before them. Maya drops vertex colours in this case.
+
+[1.9.14]
+  - Added support for Koikatsu TextAsset format
+
+[1.9.13]
+  - Added copying normals/uvs from UVNB into the mesh
+  - Fixed version break for Unity 5.6.2 / support for KoikatuTrial
+  - Fixed Avatar corruption when new Transforms were merged in Unity 5.4.2+
+  - Fixed Mesh channel 5 in Unity 5+ seems to be another UV
+    (crashed when reading a Tangent in the last stream)
+  - Added display of unsupported channels in Mesh editor Attributes dialog
+
+[1.9.12]
+  - Changed UVNB computation to use the mesh's normals for unchanged areas
+  - Added copying normals/uvs from the mesh into the UVNB as base or blend normals/uvs
+
+[1.9.11]
+  - Fix for destroying references to Material textures not being Texture2D or Cubemap when loading Animator
+  - Added awareness of RenderTexture in texture selection of Material editor
+
+[1.9.10]
+ - Added limited support for StateConstant in AnimatorController
+
+[1.9.9]
+ - Fix for merging MonoBehaviour from root frame into another Animator in the same file
+ - Added keeping references to MeshRenderer and SkinnedMeshRenderer in MonoBehaviours in MergeMonoBehaviour
+
+[1.9.8]
+ - Fix for RemoveBone which made the skin invalid for Unity
+ - Added SHIFT-Clicking a node in the ObjectTree expands/collapses childs
+ - Changed MonoScripts are reused by Name/Classname instead of duplicated
+ - Fix for Unity 5.5.0+ invalid AssetRefIndex in AssetCabinet.TypeDefinition when transporting MonoBehaviours
+
+[1.9.7]
+ - Fix for missing morphs from Blender FBX exports (bug introduced in 1.9.6)
+
+[1.9.6]
+ - Changed FBX import to prune exceeding vertex weights
+ - Added support for mesh node transform in FBX imports
+ - Fix for Unity 5.5.x files below 5.5.4
+ - Fix for blank export format selection after format change in XX
+ - Fix for imported morphs getting invalid because of mesh split by material
+ - Fix for replacement of Morph Clips with channels/keyframes having 0 vertices
+ - Fix for crash and wrong operation in DeleteMorphChannel of In-Between Blend-Shapes
+
+[1.9.5]
+  - Fixed memory leak when selecting bones
+  - Added UVNB MonoBehaviour normal and uv visualization
+  - Added Nml MonoBehaviour normal visualization
+
+[1.9.4]
+  - Added automatic simple skinning of meshes
+
+[1.9.3]
+  - Changed MonoScript entries in the inventory (AssetRefs) are removed when removing a MonoScript
+  - Fixed Animator assets are shown in the Filtered tab and get removable that way
+  - Fixed missing shader names in Material editor's "Shader Used" combobox (Unity 5.5.4+)
+  - Added using internal Shaders when pasting. This allows making Shader dependencies local.
+  - Fixed differences for transfering Materials between "Mark for Copying"/"Paste all Marked" and Workspace
+  - Changed Shader name priority in Unity 5.5.4+ to m_ParsedForm.m_Name
+  - Fixed missing type definition warning of textures when merging textures through the Workspace
+
+[1.9.2]
+  - Added automatic triangulation and splitting by materials from FbxSDK
+
+[1.9.1]
+  - Fixed slow refresh when selecting several meshes
+  - Added version check before making destination file unsavable
+  - Changed FbxSDK to 2018.1
+
+[1.9.0]
+  - Added support for Unity 5.6.4 (Material, AnimationClip, MeshRenderer, ParticleSystem, ParticleSystemRenderer, Canvas)
+  - Internal critical change of cabinet version handling, especially PPtr
+
+[1.8.1]
+  - Fixed classID2 in Unity 5.0 - 5.3.5 files of MonoBehaviours and MonoScripts
+  - Fixed crashes when DirectX is incomplete on the system
+
+[1.8.0]
+  - Switched to VS2015 and .NET Framework 4.5
+
+[1.7.14]
+  - Added partial support for texture format BC7
+  - Fixed copying Shaders in Unity 5.5.x using m_ParsedForm.m_Name for comparison
+  - Fixed saving files with missing Type Definition by aborting
+  - Added AcquireTypeDefinitions for all actions in AnimatorEditor
+
+[1.7.13]
+  - Fixed animation editor not showing all keyfames in the renderer
+  - Added AnimatorOverrideController functionality to Animation editor
+  - Added animations are applied to all meshes with same hierarchy - the name of the root may differ
+  - Fixed wrong Emissive in renderer after returning to normal from highlighting bone
+
+[1.7.12]
+  - Fixed slow refresh of "Search For"
+  - Fixed corrupting ParticleSystem assets in files before Unity 5.5 (bug introduced with v1.7.0)
+
+[1.7.11]
+  - Fixed crash in "View Data" and "View Used Ptr<> Only" for references to unsupported assets
+  - Fixed and changed SB3UtilityScript.exe running several scripts to use the same environment
+  - Added scripting function AnimatorEditor.GetAssetByType
+  - Added "Search For" in ObjectTree
+
+[1.7.10]
+  - Fixed crash in scripting when an AnimatorEditor was opened and MeshRenderers were using external Materials
+    New known issue: Scripts created in the gui may not compatible to scripts run with SB3UtilityScript.exe!
+    Workaround: reload resource files and select the asset which uses external resources of that file
+  - Fixed navigation in ObjectTree when a SpriteRenderer was selected
+  - Added Log function for output in scripts, "Defined Variables" shows types
+  - Added scripting AnimatorEditor function GetFrameIdByPath, exposed GetTransformPath
+
+[1.7.9]
+  - Fixed memory leak related to UVNormalBlend MBs
+  - Fixed synchronization problem between MonoBehaviour editor and UVNormalBlend editor
+  - Fixed crash when sorting "MonoB. & Other" for Size column
+  - Fixed crash when pasting a MonoBehaviour without hosting Animator
+  - Added support for Copy & Paste of single MonoScripts
+
+[1.7.8]
+  - Fixed selecting the first file when closing an editor and other editors were present
+  - Fixed deleting Transforms crashed when unloaded MonoBehaviours were present in childs
+  - Fixed crashes in CreateMod and ApplyMod for Unity5+ files
+  - Fixed two crashes after ReplaceMeshRenderer when Transforms had been moved before
+  - Added support for LineRenderer and TrailRenderer assets - AssetBundle entries unchecked!
+
+[1.7.7]
+  - Fixed Copy & Paste for Cloth: wrong name for SphereCollider2, single SphereCollider
+  - Fixed crash when opening a file with external references to globalgamemanager.assets
+  - Fixed crash loading AnimatorControllers with pointer curves
+  - Added support for AnimatorController and AnimationClip in Unity 5.5.x
+
+[1.7.6]
+  - Fixed Copy & Paste for Cloth not using the root of the hierarchy
+
+[1.7.5]
+  - Removed InventoryOffset for PlayHomeTrial
+  - Changed TypeDefinition flags by introducing class TypeDefintionFlags
+  - Changed PhysicMaterial tries to find a former copy when cloned
+  - Added Copy & Paste support for Cloth
+
+[1.7.4]
+  - Fixed casting error when a MonoBehaviour was clicked for editing
+  - Added Copy & "Paste Below" of array elements in MonoBehaviour editor
+
+[1.7.3]
+  - Added UVNormalBlend MonoBehaviour computation
+  - Fixed Nml MonoBehaviour computation for unwelded meshes
+  - Known issue: wrong usage of 'new' in Clone() methods of derived types
+
+[1.7.2]
+  - Added editing of MonoBehaviours in regular game files
+
+[1.7.1]
+  - Restored Material editor background coloring of attributes according to shader properties
+  - Fixed "Goto Frame" in Mesh editor and Bone editor sometimes not switching to Transform editor
+
+[1.7.0]
+  - Added support for PlayHomeTrial / Unity 5.5.3 and Unity 5.5.4
+
+[1.6.13]
+  - Fix crash for nameless colour-value attributes in Materials
+
+[1.6.12]
+  - Added duplication of NotLoaded:MonoBehaviours (in non-AssetBundle files) through Workspace
+
+[1.6.11]
+  - Fixed showing wrong newly created internal Shaders for Materials. External unknown Shaders were not shown.
+    Materials may still show external newly created Shaders incorrectly.
+  - Added Thin Object Tree mode to get rid of the horizontal scrollbar in the Material editor
+
+[1.6.10]
+  - Added Copy & Paste support for modules in ParticleSystem up to Unity version 5.3.x
+  - Fixed crash when multiple Animators were opened simultaneously
+
+[1.6.9]
+  - Fixed crash in saving a Unity 5 file after Copy & Paste of Sprite
+  - Added Copy & Paste support for CanvasRenderer, RectTransform
+  - Fixed registery for MonoScripts in AssetCabinet
+  - Fixed AssetBundle prefab collection to not contain duplicates of Texture2Ds from Sprites
+
+[1.6.8]
+  - Fixed removing Shader Keyword
+
+[1.6.7]
+  - Added adding and removing Shader Keywords in Material editor
+
+[1.6.6]
+  - Fix for FBX imports cutting morph clip names after last underscore '_'
+
+[1.6.5]
+  - Added changeable texture mapping in imported materials when merging
+  - Fixed "Blue Area" remained blue after error, "Ok & Continue" remained active
+
+[1.6.4]
+  - Added support for binary TextAssets - export and replacement
+  - Fixed missing attributes of (Skinned)MeshRenderers in replacement
+  - Fixed crash in "MonoB & Other" tab for names which included " / "
+  - Fixed "Dump Type" for types which included unsigned 16 bit integers
+
+[1.6.3]
+  - Changed DumpCabinet into a plugin function and included the CAB-String
+
+[1.6.2]
+  - Fixed replacement of animations containing tracks for morphs
+  - Changed messages in import and export for missing weights of morphs (Blender)
+
+[1.6.1]
+  - Changed Flat In-Between Blend-Shapes. Weights are stored in Custom Properties of the mesh
+       instead of in an additional animation keyframe. Requires fbx plugin of Blender 2.78c to be fixed.
+       Workaround for animations removed.
+
+[1.6.0]
+  - Changed Flat In-Between Blend-Shapes are converted into relatives on export and are made absolute on import.
+       Animations for them get an additional keyframe at the end with the Keyframe Weight on export, which is
+       removed on import.
+       Blender's FBX exporter "forgets" to export this extra keyframe and prevents correct backward computation.
+       Implemented workaround: Adds a keyframe for the first child of the root frame.
+
+[1.5.28]
+  - Fixed MQO import and corrected MQO export to support in-between blendshapes
+       Known issue: no support in MQO format for morphs of meshes with multiple submeshes
+  - Added "Flat In-Between Blend-Shape" option for FBX format to morph export and animation export
+  - Changed FBX import to use blendshape names
+  - Fixed crash in FBX exports when no mesh was selected
+  - Changed Texture editor background images to external files
+
+[1.5.27]
+  - Fix for crash in MQO export for in-between blendshapes [import/replacement of MQO not tested]
+  - Added sorting of Mesh list in Mesh editor for: Name, Type, Extend dimensions
+
+[1.5.26]
+  - Fix for missing bones in renderer and "Cannot seek beyond the end of the stream" when selecting a Bone
+  - Fixed crash in MonoBehaviour editor after copying
+  - Added clip speed in AnimatorController to Animation editor
+
+[1.5.25]
+  - Added export of morph tracks in FBX export
+  - Fixed crash in AnimatorEditor MergeTexture, MergeMaterial from Workspace in compressed files
+
+[1.5.24]
+  - Fixed PluginTool shortcut "Ctrl" fails on German Win8.1
+  - Fixed replacement of animations to create more constant curves
+  - Added support for morph tracks in animation replacements
+  - Changed virtual Avatar creation to add siblings
+
+[1.5.23]
+  - Fixed settings for EulerFilter, NegateQuaternionFlips and ForceTypeSampled were not read on startup
+  - Changed replacement of animations to create more constant curves, resampling optionally uses EulerFilter
+
+[1.5.22]
+  - Changed setting the root bone for a SkinnedMeshRenderer to update the bounding box
+  - Changed FBX importing meshes with morphs now imports the meshes and their resources as well
+  - Fixed replacing several morphs with "OK & Continue Automatically"
+
+[1.5.21]
+  - Added destruction and recomputation of bounding box in Mesh Attribute editor
+
+[1.5.20] - title still showing 1.5.19
+  - Fix for merging materials losing their textures [caused by a change in v1.5.13]
+
+[1.5.19]
+  - Fix for cancelled renaming of ImportedMesh. Subsequent replacement using "Create Mesh Transform"
+       created empty name of mesh Transform and Mesh and saving the file or another replacement crashed.
+  - Fix for leaving Submesh Material -, Material Texture - and AnimationClip selection with TAB or SHIFT-TAB
+  - Fix for Center and Extend computation for Mesh, MeshRenderer and SkinnedMeshRenderer in replacement
+
+[1.5.18]
+  - Removed first Quaternion flipping during resampling animations (InterpolateTrack)
+  - Changed morph replacement to use the Morph Target Name as new group name
+  - Fixed crash in morph replacement when new keyframes had to be renamed
+  - Added renaming Morph Clip
+
+[1.5.17]
+  - Fix for accidental Nml mesh renaming
+  - Change for centering SkinnedMeshRenderers no longer considers their combined transformation matrix
+  - Fix for Texture not deleted from file's Assets menu
+  - Fix for crash when an AnimatorController was opened and a Material & Texture Animator was open
+  - Fix for AnimationClip Stop time and Rate after replacement of animation
+  - Change for editing Rate of AnimationClips adapts Start and Stop times
+  - Fix for crash in Nml computation for virtual Animators [caused by a change in v1.5.12]
+
+[1.5.16]
+  - Changed version comparison functions
+  - Fixed pasting of BoxCollider, CapsuleCollider, MeshCollider, SphereCollider
+  - Fixed wrong bonepath in Avatar for creating a new child Transform of the root
+  - Fixed some bonepaths in an Avatar were not removed when Transforms were deleted
+  - Aligned AnimationClip's m_MuscleClipSize for Unity5 and higher
+  - Fixed AnimatorController's m_Loop and m_Speed by setting it to 1
+  - Fixed Camera editor to show RenderTexture references instead of texture references
+  - Fixed crash when selecting a Texture for a slot in a Material
+       which had been loaded after the Animator had been opened
+  - Added warning for duplicate CAB-Strings when a Unity file is opened
+  - Added Copy & Paste support for Animation assets
+  - Changed Animation replacement to flip Quaternions for Euler flips
+
+[1.5.15]
+  - Fixed Type corruption in game files when pasted new types from AssetBundle files
+  - Fixed crash when pasting MonoBehaviours into game files. (They are filtered now)
+  - Added auto-expand in MonoBehaviour editor's additional members treeview for less than 15 lines
+  - Fixed RectTransforms can be Mesh Transforms
+  - Fixed Mesh asset with vertex colours in Unity4
+
+[1.5.14]
+  - Fixed Type corruption after pasting assets from game files
+  - Fixed deleting multiple assets (depending from each other) simultaneously
+
+[1.5.13]
+  - Fixes for different problems when pasting ParticleSystem assets from game files
+  - Fix for pasting virtual Animator into a game file
+  - Known issue when pasting a virtial Animator:
+    The warning {virtual Animator} + "will lose attached MonoBehaviours." also means that SB3UGS 
+    doesn't create an entry in the AssetBundle's m_Container table. So the virtual Animator may get lost.
+
+[1.5.12]
+  - Added support for AssetBundle main asset handling
+
+[1.5.11]
+  - Added "UnityRaw" header completion for converted UnityWeb files without header
+
+[1.5.10]
+  - Added support for Sprite assets in Unity 5.4.2
+  - Fix for Cubemap previews
+
+[1.5.9]
+  - Fix for replacement of non-Cubemap textures being flipped
+
+[1.5.8]
+  - Changed RectTransform class to be derived from Transform, extended Frame editor
+  - Fix for crash in MonoBehaviour editor for references to not loaded assets
+  - Fix for crash when Pasting an Animator with a virtual Avatar
+
+[1.5.7]
+  - Fix for replacement of Cubemap
+  - Fix for refusal to open a second Virtual Animator with the same name
+  - Fix for AudioListener in Unity5 not writing alignment
+  - Changed sorting in file's Animation, Img, Snd, Material, Filtered tab:
+       when sorting for Type it also sorts for Names and vice versa
+
+[1.5.6]
+  - Fix for setting of Animator attributes
+  - Changed Virtual Animators are created for the root Transform when a GameObject is double clicked
+
+[1.5.5]
+  - Added creating Virtual Animator when double clicking a GameObject
+
+[1.5.4]
+  - Cubemap test export/import/replace
+
+[1.5.3]
+  - Changed MonoBehaviour editor to use a TreeView for additional members
+    (Fix for big MBs which ran out of window handles, and the TreeView is much faster)
+  - Added array insert and delete operations in MB editor
+  - Changed dump of AssetBundle to abbreviate PreloadTable
+
+[1.5.2]
+  - Changed FBX export and import of in-between blendshapes
+  - Added in-between blendshapes support in Morph editor, removed "One Blendshape" option
+  - Fixed deleting morph keyframe not deleting morph vertices
+  - Fixed crash when pasting Animator from non-AssetBundle file
+  - Added information in Animation editor for morphs
+  - Changed loading of compressed AnimationClips which was formerly aborted
+
+[1.5.1]
+  - Added "Copy & Paste" support for: AnimatorController
+  - Fixed crash when opening an "Material & Texture Animator"
+  - Added Tangent flipping functions in Mesh editor
+
+[1.5.0]
+  - Added support for Unity 5.4.2 files
+       changed assets: Avatar, MeshRenderer, SkinnedMeshRenderer, ParticleSystem,
+       AnimationClip, AnimatorController, AudioMixer, Light
+  - Added more attributes to dialog for MeshRenderer and SkinnedMeshRenderer
+  - Added Animator editor tab and moved related attributes from Frame editor into it
+  - Added selection of AnimatorControllers in Animator editor tab
+  - Fixed missing AssetBundle asset entries of Animator.m_Controller
+  - Changed Material attribute Emission influence halved in renderer
+  - Changed asset names LinkToGameObject222 -> CanvasRenderer, LinkToGameObject223 -> Canvas,
+       LinkToGameObject225 -> CanvasGroup, MultiLink -> RectTransform
+  - Added support for In-Between Blend Shapes by conversion to normal blend shapes
+  - Note for me: order of UnknownChilds in Transforms, high bits of ClassID2,
+       AnimationClip Euler curves sign of Y and Z
+
+[1.4.4]
+  - Added support for texture formats RGBAHalf and RGBAFloat, DDS import / export
+  - Changed PNG import to convert to RGBAHalf and RGBAFloat when the filename ends with the format name
+
+[1.4.3]
+  - Fixed missing material in mtl file for OBJ exports
+  - Added experimental import of TIFF files
+  - Added experimental import and export of BMP subformat RGBAHalf and RGBAFloat
+
+[1.4.2]
+  - Fixed crash when clicking "Refresh" in an Material & Texture editor's Object Tree
+  - Changed Texture attributes are set for all selected textures at once
+
+[1.4.1]
+  - Fixed switching off the Image preview didn't prevent texture to image conversions
+  - Extended switching off the Image preview to also suppress the preview in the Material & Texture editor
+  - Added downscaling of Texture2D asset previews and rendering and image file preview of DDS files
+  - Fixed DDS textures having at least one dimension being not a power of two
+  - Fixed a crash when saving Unity game files (not AssetBundle files) after replacing a texture
+
+[1.4.0]
+  - Fixed crash for unknown animation binding.attribute values (SBPR swimsuits)
+  - Flipping of DDS textures always converted to uncompressed.
+  - Fixed imported PNG produced wrong data length when replaced unflipped
+  - Removed all "flip" arguments from scripting functions in
+    AnimatorEditor: AddTexture(), ReplaceTexture(), ExportTexture()
+
+[1.3.0]
+  - Added support for chunk compressed asset bundles / fix for invalid Unity5 headers
+  - Prevent crash during saving when sound was playing
+  - Fix for crash (DXGI_ERROR_INVALID_CALL) during ExportTexture() with SB3UtilityScript.exe
+
+[1.2.20]
+  - Changed Unity3dEditor scripting functions ExportTextAssets() and ReplaceTextAssets() to be case insensitive
+
+[1.2.19]
+  - Changed default of Lightmap[Index] when replacing meshes to -1 in Unity5 files
+  - Added Unity3dEditor scripting functions ExportTextAssets() and ReplaceTextAssets()
+
+[1.2.18]
+  - Fixed when an external texture was removed the texture slots of materials had not been cleared
+  - Fixed replacing and deleting textures didn't update the texture cache and renderer
+  - Fixed RGB24 with mipmaps was shown flipped in the renderer
+
+[1.2.17]
+  - Added support for AudioMixer, AudioMixerGroup, AudioMixerSnapshot assets
+  - Changed "Remove" in Frame editor to remove selected asset, and no longer to produce orphans
+  - Changed selecting a non-Transform in the Object Tree loads the parent Transform in the Frame editor
+  - Changed/completed AudioClip editor
+
+[1.2.16]
+  - Fixed crash when opening Animators with MonoBehaviours using type UInt16, fixed alignment
+  - Fixed crash in Object Tree when double clicked with no selected node
+  - Changed script precision for float(double) arguments,
+    immunity against precision-loss for Transform and Bone matrices
+
+[1.2.15]
+  - Fixed saving external asset references with PathID=0. Added a warning for setting an uncommitted resource.
+  - Added update of AnimatorEditor when using "Refresh". This also updates rendered meshes to show material changes.
+  - Fixed index error in Animation editor when an unmatching Animator was selected.
+  - Enabled copy to clipboard in editor for TextAssets and textual MonoBehaviours
+  - Removed scaling from image previews: file and Texture editor
+  - Fixed index error in TextAsset and textual MonoBehaviour editor when clicking "Last Value" in the last column
+  - Added Texture and Material cache
+
+[1.2.14]
+  - Fixed deleting of lines in AssetBundleManifest editor
+  - Fixed error in file's Texture preview for RGB24 with mipmaps in Unity4 files
+  - Fixed invalid BMP exports for RGBA32 format, added support for importing BMP in RGBA32 format
+  - Changed filename ending ignored for TGA
+  - Added pixelformat to all Animator's Texture list
+
+[1.2.13]
+  - Changed AssetBundleManifest editor to support a variable number of dependencies
+  - Fixed crash when showing p_cf_hair_33_back in cf_hair_b_00.unity3d
+
+[1.2.12]
+  - Added support for older Illusion games
+
+[1.2.11]
+  - Added AssetBundleManifest editor
+  - Fixed AssetBundle Dependencies when adding external references
+  - Reverted order of external assets in AssetBundle's Preload table
+  Known issue:
+  - DumpCabinet lists the classes of AssetRefs which always seem to be MonoScripts
+    When Sb3UGS copies MonoScripts it doesn't add them to the Cabinet's AssetRefs yet
+
+[1.2.10]
+  - Fixed missing external assets in AssetBundle's Preload table, but it doesn't allow external materials still.
+  - Changed order of external assets in AssetBundle's Preload table to Unity5 style
+  - Changed creation of virtual Animators. GetAssetNames() removes virtual Animators of Animator assets.
+
+[1.2.9]
+  - Fixed file header changes from 1.2.5. "list" files got an incorrect header.
+  - Fixed missing change propagation for edited TextAsset and textual MonoBehaviour assets
+
+[1.2.8]
+  - Fixed vanished shader selection in Material editor after "Refresh" in the Object Tree
+  - Fixed export and preview of textures in RGB24 format with mipmaps
+  - Fix for showing wrong external material being selected for a submesh
+  - Added "(none)" and "(external)" material/texture in Mesh/Material editor
+
+[1.2.7]
+  - Fix for DDS in RGB24 format and DDS doesn't need to end with "-RGB24" any longer.
+  - Fixed "Inventory Offset" in Unity files and removed Menu item
+  - Added "External References"
+  - Fixed XX preview of textures
+
+[1.2.6]
+  - Fix for flipping DDS textures dropping mipmaps
+
+[1.2.5]
+  - Fix for D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS crash in renderer
+  - Fix for files with "Bad mode LB4=x52" (HS cf_top_05.unity3d, cm_hair_00.unity3d)
+
+[1.2.4]
+  - Fix for external textures of external materials wheren't exported
+  - Added preferred uncompressed file format for export
+  - Changed TGA export to cut anything behind regular data
+  - Fix for TGA being flipped when replaced (OriginY > 0)
+  - Added Camera editor
+
+[1.2.3]
+  - Added TGA support
+
+[1.2.2]
+  - Fix for external textures which were not available for selection although loaded
+
+[1.2.1]
+  - Fix for BMP export and import swapping G and B channels and uncompressed DDS with similar problem
+
+FormAnimator / matTexComboBoxCell_SelectionChangeCommitted / after SetMaterialTexture /
+why that texIdx==-1 part? refreshing Material, reselecting shader, refreshing Textures
+
+[1.1.1]
+  - Fix for texture offset and scaling which were (0, 0) in materials behind the first
+
+[1.1.0]
+  - All rendering and texture handling changed to DirectX11
+  - Removed all support for non-Unity based games
+  - Added PNG file support
+  - Known issues: TGA files are not correctly handled
+  - Added support for binary animation TextAssets of HS
+  - Added Fbx export option for display bone size
+  - Light has a fixed direction in renderer, but the direction can be aligned to the camera by pressing SHIFT.
+
+[1.0.54epsilon]
+  - Fixed crash when closing MaterialTextureAnimator without having a selected texture in global preview
+  - Fixed MaterialTextureAnimator trying to add items from other files
+  - Added Transform attributes can be applied recursively
+  - Added naturally sorted QuickAccess lists
+  - Fixed renderer not showing Color and EmissionColor material attributes (not EmisColor!)
+  - Added EmissionColor in material conversion (not EmisColor!)
+  - Added transparency from diffuse texture's alpha in FBX exports
+  - Changed BumpMap texture exported and imported as such in FBX material
+  - Added Material slot offset and scaling to FBX exports and imports
+  - Added tooltip for SrcBlend, DstBlend and Mode material attributes
+  - Fixed default specular light colour in the renderer
+  - Fixed differences and background colour of known external shader attributes in Material Editor
+  - Fixed Unity5 external references using different format in assetPath (CABStrings)
+  - Changed Merge and Add for Transforms to maintain links in MonoBehaviours and mesh bones
+  - Fixed setting 64 bit values and PathIDs in MonoBehaviours
+
+[1.0.53]
+  - Animator.StringToHash() integrated
+  - Added "Copy & Paste" support for: ParticleSystem, ParticleSystemRenderer, BoxCollider, MeshCollider, SphereCollider
+  - Fixed CharacterJoint and AudioClip asset for Unity4
+  - Added support for Unity5 AudioClip assets
+  - Reduced time needed to load texture assets from .resS files
+  - Fixed removing assets weren't considered a change of the unity file, small memory leak when marked
+  - Fixed Unity5 CAB-Strings containing binary data
+  - Fixed Unity5 files starting with an asset whose PathID begins or ends with a zero byte
+  - Added creation of virtual Avatars with selectable skeleton root
+  - Fixed textual MonoBehaviour in Unity5
+  - Fixed hard crash of Sb3UGS when corrupted or unsupported meshes were selected and shown in the renderer
+  - Fixed Unity5 game crashes because of wrong classID keys in GameObject components
+  - Added InventoryOffset option for Unity5 AssetBundle files
+  - Fixed AudioClip support in Unity5 AssetBundle files
+  - Prevent deletion of AssetBundle
+  - Added support for vertex colours
+
+[1.0.52]
+  - Added support for compressed Asset Bundle files
+  - Fixed crash after LoadAndSetMesh() for meshes unmatching current Avatar
+  - Added renaming AssetBundle assets
+  - Fixed CreateFrame() when replacing meshes if a Transform with the mesh's name already exists
+  - Fixed FlareLayer size
+  - Fixed creating Transform when Avatar had no entry for parent
+  - Removed requirement of Avatar when creating and renaming Transforms
+  - Fixed Log and Script window could vanish after being made floating and docking back
+  - Fixed crash in FBX export for renderers with external meshes or no mesh at all, e.g. ParticleSystemRenderers
+  - Added Bone path of Transform to PathID info
+  - Fixed SetRendererAttributes lightmap parameter
+  - Fixed missing dependencies of ParticleSystemRenderer assets in AssetBundle
+  Known Issues:
+  - Fbx exports of skinned meshes can have no weights on some vertices of submeshes behind the first.
+    This is caused by an optimization of Unity. FbxSdk reverts this optimization on import. Replace and export again.
+
+[1.0.51]
+  - Added support for RGB24 BMP format
+  - Added Material editor multi selection handling
+  - Added extra exception handling after saving file to prevent double deletion
+  - Added support for CharacterJoint assets
+  - Changes in saving Unity files to allow creating mods
+  - Fixed writing Mesh asset - mostly Unity5
+  - Fixed Unity5 handling for Sprite
+  - Fixed morph preview after replacing mesh
+  - Fixed AnimationClip list not showing changes for the same clip in other lines
+  - Added SetMaterialTextureAttributes() to set offset and scaling of textures
+  - Fixed ConvertRenderer() in *.assets files
+       [Pasting MeshRenderers into *.assets files drops Material references]
+  - Added persisting status of View menu: Image/Renderer, Log, Script
+  - Added locking gui layout
+  - Added sorting file tabs by type and name
+  - Added Materials to Texture Animator which is therefore now called MaterialTextureAnimator
+  - Added three background choices in Texture editor
+  - Changed "Select All Loaded" and "Unselect All" to include Material tab
+  - Added editing of TextAssets and textual MonoBehaviours
+
+[1.0.50]
+  - Fixed wrong alignment in Unity5 header (mostly AssetBundle files but not exclusively)
+  - Fixed: SetMaterialShaderToExternal(), SetMonoScriptAttributes(), ExportAsset(), RemoveAsset()
+  - Fixed crash when opening a Texture Animator
+  - Fixed crash when renaming a texture in a Texture Animator
+  - Added long value type to scripting: use hex representation and add 'L' like 0x12L
+
+[1.0.50epsilon]
+  - Added support for Unity5
+  - Fixed morph duplication in the gui after replacing morphs
+  - Fixed order of MipBias and AnIso in Texture2D
+  - Added support for uncompressed DDS textures with mipmaps including Alpha8 format
+  - Fixed crash for replacing textures with unsupported formats
+  - Fixed structure of MeshCollider
+  - Added changing position of submeshes
+  - Changed setting attributes for all selected (Skinned)MeshRenderers
+  Known issues:
+  - forgotten: SetMaterialShaderToExternal(), SetMonoScriptAttributes(), ExportAsset(), RemoveAsset()
+
+[1.0.25beta]
+  - Changed replacement of meshes to use all loaded Materials in the file
+  - Fixed merging textures from the workspace with existing names weren't shown in the Object Tree
+  - Fixed crash when replacing ImportedSubmeshes without Material
+  - Fixed wrong value of ReceiveShadow attribute of replaced MeshRenderer
+  - Fixed error in Cubemap handling
+  - Added "View Data" of AnimatorOverrideController
+  - Changed hyper-sensitive camera rotation in Renderer
+
+[1.0.24]
+  - Fixed missing entry in AssetBundle of MonoBehaviours not linked to a GameObject (e.g. those ending with _Nml)
+  - Default vertex scaling of MQO imports changable in the main menu
+  - Fixed replacing meshes for (virtual) Animators without Avatar to not create Mesh and SkinnedMeshRenderer assets
+  - Fixed unhandled m_isReadable member of Texture2D assets
+  - Fixed changing case when renaming assets
+  - Fixed merging and pasting of MonoBehaviours linked to GameObjects
+  - Fixed address alignment in type parser and crash when loading Uuint32 arrays
+  - Fixed creating new Transform and AnimationClip asset using "new Quaternion()" instead of Quaternion.Identity
+  - Fixed lost alignment of last asset
+  - Added automatic computation of the RootBone when replacing a mesh into a Transform without SkinnedMeshRenderer
+  - Added option to convert new SkinnedMeshRenderers into MeshRenderers when replacing meshes
+  - Fixed Clipboard functions crashed SB3UtilityScript.exe
+  - Tested FbxSdk 2016.1 but reverted to FbxSdk 2015.1 because of Blender
+  - Changed FBX exports of morphs to be limited to manual selection of keyframes
+  - Added support for all attributes in the MonoBehaviour editor
+  - Fixed TGA handling to consider ID length (not fixed in AiDroid Plugin and ODF Plugin)
+  - Added timestamp option to Log Window and Script Window. Added Log entries can be saved.
+
+[1.0.23]
+  - Fixed missing ParticleRenderer entries in AssetBundle ("Mini Beach" issue)
+  - Fixed PreloadTable entry order and dependencies of MonoBehaviours in AssetBundle
+  - Added setting Materials of ParticleRenderers and ParticleSystemRenderers
+  - Fixed selection of Shaders with non-unique names
+  - Added view of Animator attributes in Frame editor
+  - Fixed deletion of assets from file menu not removing themselves from hosting GameObject
+  - Fixed CABinet, References (assetpath, filepath) and Type (name, identifier) are UTF-8 encoded
+  - Fixed Type order in AssetCabinet, unknown field in UnityParser
+  - Fixed two fields in unity file header causing
+    "Failed to parsed asset bundle header in file ... (Filename:  Line: 701)" in output.log
+
+[1.0.22]
+  - Fixed AssetBundle for Materials with several external Shaders
+  - Fixed "Copy & Paste" for Materials with several external Shaders
+  - Fixed new assets couldn't be removed with File/Assets/Remove until the file was saved
+  - Fixed saving unity files leaving new assets undiscoverable
+  - Added new Materials are created when merged from ImportedMaterials
+  - Fixed export of unflipped DDS textures
+  - Changed FBX import to import meshes in frameless files, new submesh grouping
+  - Fixed replacement of imported Materials losing texture assignments
+  - Fixed preview of textures from the file's Img tab didn't release memory
+  - Added Copy/Paste into/from clipboard for Shaders, adding/stripping dependencies also on export/import
+  - Added creating mesh Transform when replacing meshes / creating new child Transforms in Transform editor
+  - Fixed crash when converting SkinnedMeshRenderers in newly created Transforms
+  - Added sorting of imported submeshes in frameless files (Fbx)
+  - Fixed cast exception when draggin imported submeshes into the Object Tree
+  - Support for LODGroup and Tree assets
+  - Added removing and renaming assets in Filtered tab
+  - Fixed renaming assets in unity3d files (AssetBundle not reflecting the name change)
+  - Fixed MeshFilter assets weren't removed when the MeshRenderer was removed or replaced
+  - Added warnings for Meshes with more than 65534 vertices
+  - Changed "Convert" considers all selected (Skinned)MeshRenderers
+  - Added selectable Shaders in Material editor
+
+[1.0.21]
+  - Fixed Nml-MonoBehaviour with several meshes
+  - Added Nml-MonoBehaviour copying normals to adjacent meshes
+  - Added "Texture Animator" for animator-less unity files, Flip Y option in Texture editor
+  - Fixed Nml-MonoBehaviour not handling extended Animator names
+  - Fixed Nml-MonoBehaviour not consindering destination mesh normals
+  - Added Nml-MonoBehaviour arbitrary source mesh options
+  - Fixed Nml-MonoBehaviour to be "Copy & Paste"ed
+  - Added MonoBehaviours can be dragged into and from the Workspace for copying
+  - Fixed SaveAs unity file when the new filename already existed
+  - Fixed creating mods with assets from Animation tab, incomplete AssetBundle in mod files
+  - Fixed selecting an imported image stops automatic display
+  - Fixed internal texture handling not removing the placeholder when loading the texture
+  - Fixed virtual Animators not openable after loading "MonoB. & Other" assets
+
+[1.0.20]
+  - Added conversion of SkinnedMeshRenderer into MeshRenderer
+  - Fixed multiple unneeded texture conversions in MQO exports, especially in morphs
+  - Fixed animation clip gui for multiple selection of clips
+  - Fixed animation replacement (bindings unsorted, sample rate not synchronized)
+  - Fixed import of TextAsset and textual MonoBehaviours by stripping BOM
+  - Added support for Nml-MonoBehaviours
+  - Changed order of AnimationClips when exported (aligned with order in gui)
+  - Added export and import of AnimationClip names
+  - Added automatic CABinet renaming
+  - Fixed crash in renderer for textures with width=0 or height=0
+  - Fixed crash when changing texture of material after "Refresh" in ObjectTree
+  - Fixed denial to accept a material (when the material was loaded by another Animator)
+  - Fixed assets couldn't be renamed or deleted from the Animations tab
+  - Fixed "Copy & Paste" of Materials with external Shaders (with internal and external dependencies)
+  - Changed dragging morphs from the workspace shows Morph tab and editor
+  - Fixed renaming of Transforms corrupted Avatar
+  - Added support for RigidBody and ParticleRenderer in "Copy & Paste"
+  - Added Copy & Paste for TextAssets and textual MonoBehaviours into/from Clipboard
+  - Fixed "Mismatched serialization" of SkinnedMeshRenderer
+  - Added in "Merge" and "Add" of Transforms to try to resolve invalid bones
+  - Fixed AssetBundle missing entry for pasted TextAssets
+  - Added dump of MonoBehaviours' values (in unity3d files only) and unity file's external references
+
+[1.0.19]
+  - Fixed removal of assets with negative PathID
+  - Fixed forgotten removal of replacement mesh
+  - Fixed escaped characters in textual MonoBehaviours
+  - Fixed crash when merging textures in *.assets files,
+       additional script command: ReplaceTextures(parser, folder)
+  - Added animation support for Unity AnimationClips
+  - Removed "Copy MonoB." and "MirrorV" and FBX export options for animations from mesh editor
+
+[1.0.18]
+  - Fixed textures including regular expression's metacharacters were not replaceable
+  - Fixed new texture names (1.0.16) made textures irreplaceable
+  - Fixed crash when exporting SkinnedMeshRenderer with less Materials than Submeshes
+  - Added support for files with pathID gaps called "PathID Protection".
+  - Fixed (last) asset size of SkinnedMeshRenderer, FlareLayer, AudioListener
+  - Fixed material selection and texture selection which could become unresponsive.
+  - Fixed Transform registration in Avatar. AddBone created duplicates.
+  - Changed how Avatars are searched for virtual Animators. GUI opens Avatar selection.
+  - Added support for standalone pasting of MonoBehaviours
+  - Added editing attributes of MonoBehaviour's MonoScript
+  - Added tangents display in the renderer
+  - Added check for bad normals when replacing morphs
+  - Added computing the Rest Pose
+  - Fixed crash when unselecting a bone for a mesh with insufficient materials.
+  - Fixed opening several Animators stopped when an Animator included another
+  - Fixed texture related memory problem
+  - Added warning for unity web archives. They are still not supported.
+  - Fixed corrupted ParticleSystem and MonoBehaviours with type UInt8
+  - Fixed "negative" colours in Camera, Light, SpriteRenderer
+  - Changed when Images list or Unity file closes which showed a Texture the preview is cleared
+  - Changed renaming regular Animators also renames Avatar
+  - Fixed Cubemap export and replacement. Cubemaps are handled as Textures. TGAs only.
+  - Added support for Animation, AnimatorOverrideController assets
+  - Fixed "Copy & Paste" into *.assets files
+  - Changed Fbx export succeeds even when bones are not found in the current Avatar
+  - Fixed "Copy & Paste" of AnimationClips
+  - Added option for exporting the skin to morph exports
+  - Added support for incomplete tracks in animation import
+  - Added gui for AnimationClip hosting assets with replacement of animations
+  - Changed central way to find Components by pathID because of slow speed
+  - Changed empty unity file tabs are hidden, new Animation tab
+  - Fixed crash in MQO exports for meshes without materials and materials without textures
+  - Changed MQO scaling coordinates by 1000
+  - Fixed morph MQO export not mirroring X delta
+
+[1.0.17]
+  - Change in Fbx export allows to edit morphs in Blender
+  - Fix in Fbx export for tangent's W component
+  - Fix in Avatar for renaming of Transforms
+  - Fix for "Copy MonoBehaviour", AssetBundle didn't include new MB
+  - Changed that AssetBundles' PreloadTable is ordered like its original
+  - Added GameObject's attributes to Transform editor
+  - Fixed crash when switching to Mesh with Morph
+  - Added creating morphs on meshes having no morphs
+  - Changed how Bones are displayed: limited size, bones with strange parent positions
+  - Added Sorting Layer ID and Sorting Order in Mesh Editor
+  - Fixed dialog's double refresh when opening
+    (MeshRenderer attributes, Normals & Tangents, Mesh/Transform/Morph Replacement)
+
+[1.0.16]
+  - Changed Texture naming to include original format name
+  - Changed Texture preview to use less memory and show Alpha layer
+  - Fixed missing Tangent mirroring. Tangent are still not like originals.
+  - Fixed bone matrices in transformed hierarchies
+  - Fix for boneless mesh replacement
+  - Fix for RGBA32 texture format in SBPR
+  - Fixed Texture replacement for XP
+  - Fixed renaming of assets in Unity3d files
+  - Added support for AnimationClips to be copied & pasted
+  - Changed Transform Matrix "Copy & Paste" in Animator editor to work between Animators
+
+[1.0.15]
+  - Added support for Blender's FBX files
+  - Changed mirroring of the skeleton in UnityPlugin for FBX output and replacement
+  - Added AnimatorEditor.GetTransformHash() and Unity3dEditor.ViewAssetData() in UnityPlugin
+
+[1.0.14]
+  - Limited selection of Transforms for the Root Bone to the skeleton of the SkinnedMeshRenderer
+  - Creating Virtual Animators at any Transform
+  - Fbx export doesn't export 0 weights
+  - Support for undocumented Assets 222, 223, 224, 225
+  - Fixed crash in Shader dependencies
+  - Fixed inversion of meshes when replacing unskinned meshes (e.g. from MQO or OBJ)
+  - Added mod creation, patching and removal
+
+[1.0.13]
+  - Fixed texture corruption when textures were replaced from file menu
+  - Added mass deletion with Shift-Delete at various places
+  - Added DeleteMorphKeyframe()
+  - Support for additional assets: AudioSource, AudioListener, BoxCollider, Camera, CapsuleCollider,
+       FlareLayer, MeshCollider, Projector, RigidBody, SphereCollider, SpriteRenderer
+  - Fixed crash when selecting a bone when morph was shown
+  - Changed orientation of X coordinate in renderer and all export/replace functions
+  - Added mirror V coordinate in Mesh Editor
+  - Fixed memory leak in Texture Editor's picture box
+
+[1.0.12]
+  - UnityPlugin Update Only
+  - Fixed error when renderer was hidden and several meshes were selected
+  - Added export/replace/display for morphs with meshes having more than one submesh
+  - Fixed export for morphs in *.assets files
+  - Added Copy/Paste for Mesh, Avatar, TextAsset. Copy/Paste in *.assets files
+  - Fix for references to invalid assets
+  - Added add & delete Multi-Pass materials
+  - Changed that deleting the last submesh only deletes the Mesh, the Renderer remains
+  - Changed Material Editor Layout to show all material Textures, Colours and Values
+  - Fix for *.assets files: presence of AssetBundle is optional
+  - Added "View Data" which allows to search for MonoBehaviour and MonoScript information
+  - Changed default of Texture attribute: Wrap
+  - Changed default of replace mesh method: Merge
+
+[1.0.11]
+  - UnityPlugin Update Only
+  - Added support for *.assets files and files without extension
+  - Added "Rename" for (loadable) Assets
+  - Fix for virtual Animators being unopenable
+  - Files without extension are treated like *.assets, all three backup extensions are editable
+  - Meshes (and their morphs) are exported by reference to allow duplicate names
+  - Fix for morphs from MQOs always adding morph keyframes
+  - Avatars for (virtual) Animators
+  - Fix for meshes with non-unique Transforms in the skeleton
+  - Fix for TextAssets: replace retains original line end, export with CR-LF always
+  - Fix for external assets: Meshes, Shaders
+  - Partial fix in AssetBundle for virtual Animators: dependencies of MonoBehaviours aren't put into PreloadTable
+  - Fix for all names: encoding set to UTF-8
+  - Fix for unknown childs of Transforms
+  - Fix for setting a Material's texture slot to "none"
+
+[1.0.10]
+  - UnityPlugin Update Only
+  - All MonoBehaviours are handled according to their type definition
+  - Removed static script functions: ExportMonoBehaviour, ReplaceMonoBehaviour, added both to Unity3dEditor class
+  - Missing Materials are added with a warning when (LoadAnd)SetSubmeshMaterial
+  - Avatar is optional in Animator
+  - Fix for unnecessary additional entries in AssetBundle (Light's Texture, AnimatorEditor: Shader and Texture)
+  - Fix for duplicates of Materials in the Object Tree and Unity3d editor's Materials list after "Copy -> New"
+  - Added Copy/Paste for MonoBehaviour
+  - Fix for multiple copies of the same MonoScripts
+  - Fix for MergeMaterial not copying attributes from Materials of other Animators
+  - Fix for "Goto Frame" in Bone Editor and Mesh Editor
+
+[1.0.9]
+  - UnityPlugin Update Only
+  - Asset Type Definitions
+  - AssetBundle handling
+  - Copy/Paste of Animator, Material, Shader, Sprite, Texture
+  - Support for new types: Light, MonoBehaviour (partially), MonoScript, ParticleSystem, ParticleSystemRenderer
+  - New Assets are appended at the end to compensate for unsupported MonoBehaviours
+  - MeshRenderers can be replaced with SkinnedMeshRenderers
+  - Fixed computation of extents of MeshRenderers/SkinnedMeshRenderes
+  - Fixed boneweights in additional submeshes beyond the first
+  - Fixed Cubemap handling
+  - Fixed referencial integrity check for appended assets
+  - Relaxed texture names check, e.g. *_Ramp-offset(X0Y0)-scale(X1Y1)
+  - Animator.StringToHash() exposed
+  - TextAssets export/import with Windows-style line breaks
+  - Renaming Animators
+  - All Assets linked in GameObject are visible in ObjectTree
+  - Virtual Animators
+
+[1.0.8]
+  - Fix in UnityPlugin: crash when a mesh with an invalid material was selected
+  - Fix in UnityPlugin: crash upon selecting an unloaded material
+  - Fix in UnityPlugin: clearing mesh assignment
+  - Change in UnityPlugin: replacing meshes defaults to "Merge", except when the imported mesh has bones
+
+[1.0.7]
+  - Fix: FBX import drops invisible root node and creates separate animations for childs
+  - Added: FBX import generates Tangents if not already present
+  - Fixed creating new keyframe behind last in XA units
+  - Fixed XA parser dropping items in Type4 (SB3Format)
+  - Mouse input scaling
+  - Debut of UnityPlugin
+
+[1.0.6]
+  - Fixed saving pp files of AA2 with original version
+
+[1.0.5]
+  - Fixed renaming a mesh frame; didn't update the Mesh Editor's Name textbox
+  - Fixed selecting unused materials and textures; didn't unselect beforehand
+  - Fixed animation wasn't shown when no clip was selected after "XX Lock & Map" or replacing animation
+
+[1.0.4]
+  - Added Preview for Multi-Renaming pp subfiles
+
+[1.0.3]
+  - Added Multi-Renaming pp subfiles
+  - Fixed error message when reopening a pp file with changed content
+
+[1.0.2]
+  - Fixed crash after meshes were selected while the XX editor was being undocked
+  - Fixed crash when a not existing animation clip was selected (Sync Play)
+  - Added hiding default docks "Files" and "Editors" upon docking another DockContent
+
+[1.0.1]
+  - Added script commands for editing keyframes
+
+[1.0.0]
+  - Updated to Fbx SDK 2015.1
+  - Deleted Fbx Import Euler Filter usage
+  - Added Fbx Import Negate Quaternion Flips
+  - Added Fbx Export Euler Filter usage
+  - Fixed texture dimensions display
+  - Added that Renderer's background colour is persistent
+  - Changed export meshes to include only the locked XA or all unlocked XAs
+  - Added "XX Lock & Map" in XA editor
+  - Added keyframe editor, sync play, bone highlighting and track compare in XA editor
+  - Added "Renaming of Bones & Animation Tracks" in XX editor
+  - Fixed crash in "Delete Unreferenced" when a material or texture was selected
+  - Changed logging of script commands based on Settings
+  - Changed order of calls for recreation of the GUI after Merge/Append/Replace of xxFrames
+  - Fixed crash when a mesh had only invalid bones
+  - Changed renaming mesh frames, materials and textures re-sorts their list views and cross reference views.
+    This fixes the different selection of meshes after "SVI[EX] Juggler"'s "Copy to Meshes".
+
+[0.8.2]
+  - Fixed update of the unit name in the pp file's Other tab after SVIEX replacements.
+  - Fix for external tools integration. Already edited (SVIEX) units couldn't be opened.
+  - Fixed missing update of VertexListDuplicate in SVIEX Juggler's CopyToSubmesh
+  - Added "Snap Borders" in Mesh Editor
+
+[0.8.1]
+  - Added SVI adding, removing and select/check mesh functions to the "SVI[EX] Juggler"
+
+[0.8.0]
+  - Added NIF Importer
+  - Fix for external tools of pp units not closing when the pp file is closed
+  - Fix in XX format conversion. Submesh Unknown5 in formats 5 to 7 must not be converted to 8.
+  - Fix for unrecognized changes by scripting leading to loss of work when a form was closed.
+  - Changed keeping FormXX editor panel constant
+  - Fix for error in the GUI after CopyMaterial
+  - Added closing open editors when adding or removing subfiles
+  - Fix for crashes because of invalid bones or duplicate frames in the skeleton
+  - Fix for not finding frames "behind" meshes with "Goto Frame" in the Bone Editor,
+       dragging a Bone into a workspace, reselecting a node after many operations
+  - Fix for pp subfile names being displayed elliptical
+  - Added first non-empty pp subfiles tab gets selected upon opening a pp file
+  - Support for Characolle Lump Of Sugar & Characolle Whirlpool
+
+[0.6.12]
+  - Fix for crash when meshes with invalid bones were selected
+  - Fix for crash when deleting unreferenced objects without having at least one workspace with an object of that xx in it
+  - Added customizable font sizes for TreeViews and ListViews, resizable Dialogs with scaling Controls and Fonts
+  - Added creating a new bone in the Frame Editor
+  - Fixed crash when an XX file was opened after an XA unit or file
+  - Added invalid Bones are marked red in the ObjectTree
+  - Added editable Morph Mask
+  - Fixed exporting the same morph keyframe several times in FBX
+
+[0.6.11]
+  - Fix for display of Bones
+
+[0.6.10]
+  - Fix for unskinned meshes which caused a hanging when selected
+
+[0.6.9]
+  - Fix for bone selection after "Min Bones"
+  - Fix for display of Bones, added visible full skeleton
+  - Added deleting unused materials and textures with preview
+  - Added workspace "Automatic Material Translation" and "Append Missing Materials And Textures"
+  - Added synchronization of Workspaces
+  - Added frame and bone matrix correction after transformation changes
+
+[0.6.8]
+  - Fixed all SVI/SVIEX functions (PPD_Clothes_Preview Plugin)
+
+[0.6.7]
+  - Added SVI support in SVIEX functions (PPD_Clothes_Preview Plugin)
+
+[0.6.6]
+  - Added automatic "Update Bones & Frame" upon changes in a bone
+
+[0.6.5]
+  - Added automatic "Update Bones" upon changes in the skeleton
+
+[0.6.4]
+  - Fixed and improved SVIEX functions for AA2 Trial
+
+[0.6.3]
+  - PPD_Clothes_Preview Plugin got SVIEX functions added for AA2 Trial
+  - Added support for SVIEX units in pp file format detection
+
+[0.6.2]
+  - Added support for AA2 Trial
+
+[0.6.1]
+  - Added support for REAL PLAY
+
+[0.6.0]
+  - Added support for REAL PLAY Trial
+  - Added check for invalid bones
+  - Fixed invisible errors at initialization
+  - Added confirmation of closing pp files with added, edited, deleted and renamed subfiles
+  - Added swapfiles and throw out functionality for opened xx, xa and lst editors (even parsers for external tools)
+  - Fixed renaming subfiles
+  - Added restoring selection of subfiles after modification of pp structure
+  - Added XA animation track list sorting
+  - Fixed handling of pp files bigger than 2GB
+  - Added recomputation of bone matrices
+  - Added visual support for dropping into an empty area of the Object Tree
+  - Scripting variables getting null are removed. Reading a non-existing variable returns null.
+
+[0.5.6]
+  - Fixes editing unknowns of submeshes
+  - Fixes automatic pp format detection (LST units)
+  - Added support for IW
+
+[0.5.5]
+  - Removed useless .3DS format options in mesh exports
+  - Changed dropping bones into a Workspace drops the frame instead
+  - Added textures and images show depth (bytes per pixel)
+  - Added script language allows variables as indices
+
+[0.5.4]
+  - Added a new field in the animation clips for repeating.
+
+[0.5.2]
+  - Added uv splitting of cylindrical projected faces to FBX imports
+
+[0.5.1]
+  - Fixed storing negated attribute values of materials in xa units
+  - Updated support for Fbx 2014.1 (new dependency to VC++ 2012)
+  - Replacing meshes throws an error when a VertexDuplicateList would exceed 64k vertices
+  - MQO exports can optionally sort meshes
+  - Fixed crash in the renderer for submeshes with more than 64k vertices (skipping their rendering)
+  - Fixed memory leak when imported images are previewed
+  - Renderer stability fixes (CTRL-Alt-Del and full screen applications forcing SB3Utility's window to shrink)
+
+[0.4.43]
+  - Added reopening pp files with selected format: "New Source Format" menu option
+  - Added ppEditor method SetFormat(int sourceId, int destinationId)
+  - Fixed SB3UtilityScript crash in ppEditor constructor
+  - Added support for Musumakeup
+  - PPD_Clothes_Preview Plugin fixed and added options for SVIEX Normals Approximation
+  - PPD_Clothes_Preview Plugin SVIEX Normals preview
+
+[0.4.42.53]
+  - Fixed syntax error: Extensions. Skript language affected in SavePP parameter
+  - Added dropping meshes from the Object Tree into a workspace.
+  - Added a filter which ignores every second instance of any object in that workspace.
+  - Added Shift-Delete deletes all selected objects in the XX editor and in the views of pp files.
+  - Fixed: files can be droppped into the new lst editor.
+  - Support for external tools
+  - Fixed after reordering submeshes wrong submeshes were highlighted.
+  - Fixed SyntaxhighlightingTextBox crashed for certain characters at the end of file.
+
+[0.4.42.52]
+  - Fixed closing empty workspaces
+  - Fixed crash of "Add Image" when no image was selected
+  - Changed Hex Editor got more selected fields, new button for starting the Hex Editor with a selected submesh,
+    frozen first column, cell background colour changed for READ ONLY mode, pasting into all selected cells
+  - Added all command line arguments are opened as files in *ONE* instance. Except when started with "/OpenWithGUI"
+
+[0.4.42.51]
+  - Fix XX Bone Remove and Copy To New corrupted bone indices
+  - Added creation of skins for XX meshes
+  - Added automatic reopening workspaces when external files are changed or deleted and renamed back.
+  - Added editing of LST units
+  - Fixed XX saving external files which weren't readable afterwards.
+  - Fixed memory leak of editor for imported files.
+  - Added saving last used export format for XX meshes.
+  - Fixed Hex Edit reopening as read only at the center.
+
+[0.4.42.50]
+  - Fixed XX Frame calculation of combined transform
+  - Added log window entries for dropping-into and automatic removals from workspace. Must be enabled in workspace menu.
+  - Added scripted dropping of nodes from object trees. Must be enabled in workspace menu.
+  - Fixed multiple binding of event handler for automatic removals from workspaces
+  - Added all selected images are added with one click
+  - Added all selected textures, materials and meshes are removed with one click
+  - Added EditHex can be reopened read only but non-modal
+  - Fixed crash when XA animations had two tracks with the same name.
+  - Default texture filter set to anisotropic. MaxAnisotropy=4
+  - Added XX bones can be zero weighted
+  - Fixed XX removing bones produced illegal bone indices
+  - Added XX removing bones normalizes weights of effected vertices
+
+[0.4.42.49]
+  - Fixed a crash when dropping a second imported mesh from the workspace into an XX Object Tree.
+
+[0.4.42.48]
+  - Added: extention for backups of pp files can be edited
+
+[0.4.42.47]
+  - Fix: some XX meshes in the object tree weren't found (e.g. by "Goto Frame")
+  - Added: XX selected and expanded nodes in the Object Tree are selected/expanded after being changed from editor/workspace
+  - Fix: newly copied xxFrames from the workspace were no valid drop targets
+  - Added: references to objects from XX units are removed from workspaces if the editor for that XX is closed.
+
+[0.4.42.46]
+  - Fix: SB3Utility can be opened several times.
+  - Fix: Files can be dropped into the Log and Script windows.
+
+[0.4.42.45]
+  - Fix: FBX frame rate set to 24.0 1/s
+  - Added: FBX export option to export no mesh (but animations)
+
+[0.4.42.44]
+  - VC++ 2010 Redistributables replaced with versions for x86
+
+[0.4.42.43]
+  - PPD_Clothes_Preview Plugin generates SVIEX units
+
+[0.4.42.42a]
+  - XX : when no mesh was displayed the EditHex button in Material threw exceptions
+  - SlimDX.DLL and VC++ 2010 Redistributables integrated
+  - SB3UtilityScript returns 0 on success and -1 on errors.
+  - Fbx export exported textures to root folder for relative export paths
+
+[0.4.42.41]
+  - Added script command for ppEditor: AddSubfiles(path="{path with wildcards}", replace={true|false})
+
+[0.4.42.40]
+  - Extended normals calulation for several XX meshes
+  - Added single click drag 'n drop for *multiple* xxFrames, ImportedFrames and ImportedMeshes (WorkspaceMeshes)
+  - Added permission to load plugins from UNC paths
+
+[0.4.42.39]
+  - XX Submeshes can be reordered
+  - Added application exception handler : displays an error when missing SlimDX
+
+[0.4.42.38]
+  - XX imported meshes can be easier placed into destination frames
+  - XX all materials or all textures can be dropped together into a workspace by dragging their parent
+  - Meshes in the workspace can be renamed
+
+[0.4.42.37]
+  - Save/restore location and size of main window
+  - XX Reordering submeshes
+
+[0.4.42.35]
+  - Added "Edit Hex" buttons for materials and textures in XX units
+
+[0.4.42.34]
+  - Added external XA files can be saved and reopened.
+  - Added clicking animation tracks highlights the corresponding bone.
+
+[0.4.42.33]
+  - Show bone weights with different modes in the renderer.
+
+[0.4.42.32]
+  - Added support for PPD
+  - Added display XA Materials
+  - Added renaming of tracks
+  - Added Quick Access Window
+  - prepared to deploy used VC++ 2010 redist DLLs
+  - Fbx can import incomplete animation keyframes (containing only scaling or rotation or translation)
+  - Fix for regional digit symbol
+  - Fbx import crashed when missing a texture
+  - Added Fbx export format compatible with Fbx 2006
+  - Added Fbx import of .dxf, .3ds,.obj
+  - Changed Plugin Fbx resampling to use Quaternions instead of Vectors (still not used for XAs)
+    (avoids Euler flips, but required Quaternion flip handling)
+
+[0.4.42.31]
+  - XX: fixed removal of bones - removing any other bone than the last shifted the weights
+    and corrupted the mesh if the last bone had weights for that bone
+  - Added check to prevent several bones targetting the same frame
+  - Fixed Fbx importer producing wrong names for textures located in other directories, like "file 18"
+
+[0.4.42.30]
+  - XA morph clip name and mesh can be edited
+  - XX: Added option to search the whole mesh for nearest vertices
+
+[0.4.42.29]
+  - XX mesh FBX exports allow to embed media. Fbx imports try to read textures from {filename}.fbm.
+  - XX mesh export supports non-FBX Collada DAE format. The GUI always uses the FBX SDK for importing DAE files.
+    Fixed bone matrices and extended nodes with "sid" (required by Maya).
+    The script function ImportDAE(path) can be used by Plugin Writers only.
+  - Keyframe interpolation fixed for variably set keyframes in tracks of XAs. Interpolation is optional now.
+  - DirectX import animation keyframe rotation fixed and imports keyframe indices.
+  - Added animation "Replace Present" method which doesn't delete tracks not present in the workspace.
+  - Fixed animation "Merge" and "Insert" method : animationNormalizeTracks() produced constant keyframe indices.
+  - Added "Animation Clip Editor" by making all elements of clips editable.
+  - Added appending keyframes to tracks with variably set keyframes.
+
+[0.4.42.28]
+  - XA Morphs preview
+  - Scrolling to newly added morph keyframes after import of morphs. Also scrolling to imported morph clip.
+  - DirectX export/import integrated and fixed
+  - DAE Collada (FBX SDK) export/import integrated
+
+[0.4.42.27]
+  - Saving a pp file caused crashes on subsequent openings of subfiles (XX and XA). (No data corruption in the pp file.)
+  - XX ReplaceMesh corrupted XX unit when replacing a mesh with NumVector2PerVertex==0 or when inserting a new mesh.
+  - PP saving failed in the same session after deletion of last backup file.
+  - XX deleting last bone crashed (hightlighting).
+
+  - FBX morph export can apply keyframes as channels of only one blendshape.
+  - FBX import reads old and newly organized files, but not mixed.
+  - New keyframes can be imported.
+  - Added calculation of normals for morphs in XAs.
+  - Added editing of xaMorphKeyframeRef components and names of xaMorphKeyframes.
+  - Change: "fixed" size of the renderer's cursor
+  - Added fine grained zoom in renderer. Activated by ALT-RMB
+  - Both zoom functions are taking Sensitivity into account.
+
+[0.4.42.26]
+  - FBX morph imports didn't show the morph names. Export fixed, but the files cant be imported by the old SB3U.
+  - MQO morph export set wrong material index.
+
+[0.4.42.25]
+  - XX format conversion fixed
+
+[0.4.42.24]
+  - changing defaults to "Copy Nearest" for normals/bones for imported meshes without normals/bones (XX, ODF, REM)
+  - Fbx got a second set of functions for keyframe interpolation, export and import which works with Imported structures.
+  - HET DTL support
+
+[0.4.42.22]
+  - prevented loosing keyboard focus in image lists (pp subfiles, image file lists, fpk subfiles)
+  - nearly all GUI elements can be tabbed
+  - assert visibility of the Renderer when selecting a mesh
+  - Light colours and menu options for Renderer, Script, XX and PP stored SB3UtilityGUI.exe.config
+  - Center View corrected and adjusted
+  - useless editor.Set{Frame|Bone|Material|Texture}Name() no longer invoked
+  - extended script language to allow hex int32, e.i. '0x1F'
+
+[0.4.42.21]
+  - Export of morphs as fbx and mqo with the GUI
+
+[0.4.42.20]
+  - FBX InterpolationHelper class aligns tracks for exporting compressed animations
+  - Issue: FbxProperties for SRT have to be created outside of the class as they seem to be put on the stack.
+
+[0.4.42.19]
+  - GUI : removing the last (and also used) material caused an error in DataGridViewMesh
+  - GUI : removed explicit activation of the renderer upon mesh selection change
+  - GUI : added automatic centering of the renderer view after mesh selection change
+
+[0.4.42.18]
+  - tab stops in frame, bone, mesh, material and texture editors didn't work
+  - added keyframe range for fbx export of animations
+
+[0.4.42.17]
+  - Some scripting variables weren't released and prevented GC to tidy up.
+  - Added help for GC in FormXX. Memory is faster released for external XX files.
+  - Opening/dropping the same XX/XA files again closes the previously opened editor.
+  - Sound handling moved into it's own class
+
+[0.4.42.16]
+  - sound tab wasn't considered by menu actions
+
+[0.4.42.15]
+  - format of pp files entirely made up of sounds wasn't correctly detected
+  - playing sounds via irrKlang library
+
+[0.4.42.14]
+  - Copy->New bones crashed the Renderer.
+
+[0.4.42.13a]
+  - reopening image didn't update internal variable (GUItexture).
+
+[0.4.42.12]
+  - JCH animation files for AA couldn't be opened
+  - saving pp files after opening an XA (having morphs or animations) corrupted the XA
+  - script commands only executable in the GUI are marked with a comment
+
+[0.4.42.11]
+  - added more hotkeys and shortcuts
+  - texture display was not refreshed after ReplaceTexture
+  - added quick save script / run quick saved
+  - ppEdtitor.SavePP() deleted the pp file in the current directory
+  - ExportPP() couldn't work in the current directory
+  - added shortcut key to attribute PluginTool
+  known issues:
+  - drag 'n drop doesn't work in the script window and log window
+  - shortcut keys dont work in the script window and log window
+
+[0.4.42.10]
+  Fixes:
+  - replacing/adding compressed tga images
+  - CTRL-V pasted twice in hex editor (COPY-C did the same)
+  Change:
+  - added menu to xx editor for reopening, saving, closing
+  - added menu to image files for reopening and closing
+  - pp menu got hotkeys
+
+[0.4.42.9]
+  Fixes:
+  - Frame and bone matrices can be edited on SRT and Matrix; updating the corresponding matrix after each input of a cell
+  - CopyNormalsNear, CopyBonesNear didn't find Normals/Bones for destination vertices exceeding source vertices
+  - Replace mesh couldn't compute matrix transform for world coordinates option
+  - Changes in frame's and bone's SRTs not applied : dataGridViews for SRT and Matrix update each other after CellValueChanged
+  - Names in cross references abbreviated after renaming (ended with '...')
+  - Removing a material didn't clear the editor
+
+[0.4.42.8] - showing 0.4.42.7 in the title
+  Fix:
+  - replacing xa morphs: new name of morph clip assigned only when destination was unchanged
+  Change:
+  - added HF logo
+
+[0.4.42.7]
+  Fixes:
+  - fbx import: missing texture file raised uncaught exception
+  - pp format: autodection for .LST files
+  - workspace: creation of empty workspace from menu
+  - xa files: failed when opened (casted to xxParser)
+  - invalid material indices couldn't be set to valid indices
+  - export of textures landed in parent folder with wrong name
+  Changes:
+  - pp files: created an AddSubfile with replace argument. Works now like in the old SB3U.
+  - external textures are not fixed by setting material's references to null. A button in the material view allow editing external texuture names. Added by request.
+  - pp files: dialog for exporting of subfiles starts folder of pp file
+  - Interface IRenderer exposes ResetPose - required for ODF/ODA animation, since rewinding time to 0.0 doesn't lead to the rest pose
+
+[SB3Ur442p133]
+  - fix for exporting Textures
+
+[SB3Ur442p131]
+  - fix for Happy End Trigger Trial.
+
+[SB3Ur442p128]
+  - support for Happy End Trigger Trial
+
+[rev]
+SB3Utility:
+  - Removed Utility.Convert() for a single object since it's just a cast. The array version is kept
+
+[rev405]
+SB3Utility:
+  - xx.CreateTexture() now removes the footer for .tga files. This is for OS2
+  - Added .ema support
+  - Added Extensions.ReadToEnd() and changed xaParser to use it
+  - Added xx.ImportedTexture()
+  - ScriptExecutor.RunScript() and related wrappers now return the results of root expressions
+SB3UtilityGUI:
+  - Initial release
+SB3UtilityScript:
+  - Fixed displaying inner exceptions
+
+[rev404]
+SB3Utility:
+  - Fixed ppFormat.TryFile() for ppFormat auto-detection
+SB3UtilityPlugins:
+  - Fixed changing the output path to the plugins directory
+  - Fixed texture paths in .mqo files
+  - Updated FBX SDK to 2012.2. ImportMorph() & ExportMorph() are still using depreciated methods
+  - OpenPP() throws an exception if ppFormat auto-detection fails
+  - Added an OpenPP() overload with a format parameter
+Help File:
+  - Fixed the Function Overloading section. The Default Variable is matched before named parameters
+
+[rev403]
+SB3Utility:
+  - Added ScriptMain.LoadPlugin()
+  - Added ChangeLog.txt
+SB3UtilityScript:
+  - Fixed loading SB3UtilityPlugins.dll when the current directory isn't the same as the executable's
+  - Can now load multiple scripts
+  - Now shows inner exception messages
+SB3UtilityPlugins:
+  - Moved fbxsdk_20113.dll to the plugins directory
+
+[rev398]
+- Initial release
