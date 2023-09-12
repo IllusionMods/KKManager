@@ -260,6 +260,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\LogControl.ja.resx">
+      <DependentUpon>LogControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\LogControl.resx">
       <DependentUpon>LogControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -275,6 +278,7 @@
     <EmbeddedResource Include="Controls\LogControl.zh.resx">
       <DependentUpon>LogControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ja.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -285,6 +289,9 @@
     <EmbeddedResource Include="Properties\Resources.zh-Hant.resx" />
     <EmbeddedResource Include="Util\LoadingDialog\LoadingDialog.resx">
       <DependentUpon>LoadingDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.ja.resx">
+      <DependentUpon>ProcessWaiter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.resx">
       <DependentUpon>ProcessWaiter.cs</DependentUpon>
@@ -297,6 +304,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiter.zh-Hant.resx">
       <DependentUpon>ProcessWaiter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.ja.resx">
+      <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.resx">
       <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
