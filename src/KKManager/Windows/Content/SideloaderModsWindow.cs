@@ -129,7 +129,7 @@ namespace KKManager.Windows.Content
             SetZipmodEnabled(false, _listView.SelectedObjects);
         }
 
-        private void toolStripButtonDelete_Click(object sender, EventArgs e)
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("This will permanently delete all selected zipmods, are you sure you want to continue?",
                     "Delete zipmods", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
@@ -139,7 +139,7 @@ namespace KKManager.Windows.Content
             {
                 try
                 {
-                    obj.Location.Delete();
+                    await obj.Location.SafeDelete();
                     objectListView1.RemoveObject(obj);
                 }
                 catch (SystemException ex)

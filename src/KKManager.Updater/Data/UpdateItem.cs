@@ -111,9 +111,7 @@ namespace KKManager.Updater.Data
                         if (TargetPath.Exists)
                         {
                             Console.WriteLine($"Deleting old file {TargetPath.FullName}");
-                            // Prevent issues removing readonly files
-                            TargetPath.Attributes = FileAttributes.Normal;
-                            TargetPath.Delete();
+                            await TargetPath.SafeDelete();
                             // Make sure the file gets deleted before continuing
                             await Task.Delay(200, cancellationToken).ConfigureAwait(false);
                         }

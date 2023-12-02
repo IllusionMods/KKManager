@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using BrightIdeasSoftware;
+using KKManager.Properties;
+using Microsoft.VisualBasic.FileIO;
 using SharpCompress.Archives;
 using SharpCompress.Readers;
 
@@ -113,7 +116,7 @@ namespace KKManager.Util
         {
             if (fi == null) throw new ArgumentNullException(nameof(fi));
             if (newExtension == null) throw new ArgumentNullException(nameof(newExtension));
-            
+
             return Path.Combine(fi.DirectoryName ?? throw new InvalidOperationException("DirectoryName null for " + fi),
                                 fi.GetNameWithoutExtension() + newExtension);
         }
@@ -141,5 +144,75 @@ namespace KKManager.Util
 
         public static void AddObjects<T>(this ObjectListView olv, IList<T> modelObjects) => olv.AddObjects((ICollection)modelObjects);
         public static void RefreshObjects<T>(this ObjectListView olv, IList<T> modelObjects) => olv.RefreshObjects((IList)modelObjects);
+
+        public static async Task SafeDelete(this FileSystemInfo info)
+        {
+            if (info == null) return;
+
+            var toRecycleBin = Settings.Default.DeleteToRecycleBin;
+
+            try
+            {
+                if (info.Exists)
+                {
+                    // Prevent issues removing readonly files
+                    info.Attributes = FileAttributes.Normal;
+
+                    if (info is DirectoryInfo dir)
+                    {
+                        try
+                        {
+                            if (toRecycleBin)
+                                FileSystem.DeleteDirectory(dir.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                            else
+                                dir.Delete(true);
+                        }
+                        catch
+                        {
+                            await Task.Delay(100);
+                            dir.Delete(true);
+                        }
+                    }
+                    else if (info is FileInfo file)
+                    {
+                        try
+                        {
+                            if (toRecycleBin)
+                                FileSystem.DeleteFile(file.FullName, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                            else
+                                file.Delete();
+                        }
+                        catch
+                        {
+                            await Task.Delay(100);
+                            file.Delete();
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("wtf is" + info.GetType().AssemblyQualifiedName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex is AggregateException ae && ae.InnerExceptions.Count == 1)
+                    ex = ae.InnerExceptions[0];
+
+                Console.WriteLine($"Failed to delete [{info.FullName}] because of error: {ex.ToStringDemystified()}");
+
+                throw;
+            }
+        }
+        
+        public static Task SafeDelete(this string filename)
+        {
+            if (File.Exists(filename))
+                return new FileInfo(filename).SafeDelete();
+            else if (Directory.Exists(filename))
+                return new DirectoryInfo(filename).SafeDelete();
+            else
+                return Task.CompletedTask;
+        }
     }
 }

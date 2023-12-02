@@ -560,7 +560,7 @@ namespace KKManager.Windows.Content
             RenameCards.ShowDialog(this, _typedListView.SelectedObjects.ToArray());
         }
 
-        private void toolStripButtonDelete_Click(object sender, EventArgs e)
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
             var selectedObjects = _typedListView.SelectedObjects;
             if (!selectedObjects.Any()) return;
@@ -571,7 +571,7 @@ namespace KKManager.Windows.Content
             {
                 try
                 {
-                    selectedObject.Location.Delete();
+                    await selectedObject.Location.SafeDelete();
                 }
                 catch (Exception exception)
                 {
