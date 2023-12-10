@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MonoTorrent.BEncoding</name>
+    </assembly>
+    <members>
+        <member name="T:MonoTorrent.BEncoding.BEncodedDictionary">
+            <summary>
+            Class representing a BEncoded Dictionary
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedDictionary.DecodeTorrent(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Special decoding method for torrent files. This mode will ensure the correct infohash is generated
+            for torrents which contain dictionaries with misordered keys.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedDictionary.DecodeTorrent(System.IO.Stream)">
+            <summary>
+            Special decoding method for torrent files. This mode will ensure the correct infohash is generated
+            for torrents which contain dictionaries with misordered keys.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedDictionary.#ctor">
+            <summary>
+            Create a new BEncodedDictionary
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedDictionary.Encode(System.Span{System.Byte})">
+            <summary>
+            Encodes the dictionary to a byte[]
+            </summary>
+            <param name="buffer">The buffer to encode the data to</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedDictionary.LengthInBytes">
+            <summary>
+            Returns the size of the dictionary in bytes using UTF8 encoding
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MonoTorrent.BEncoding.BEncodedList">
+            <summary>
+            Class representing a BEncoded list
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedList.#ctor">
+            <summary>
+            Create a new BEncoded List with default capacity
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedList.#ctor(System.Int32)">
+            <summary>
+            Create a new BEncoded List with the supplied capacity
+            </summary>
+            <param name="capacity">The initial capacity</param>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedList.Encode(System.Span{System.Byte})">
+            <summary>
+            Encodes the list to a byte[]
+            </summary>
+            <param name="buffer">The buffer to encode the list to</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedList.LengthInBytes">
+            <summary>
+            Returns the size of the list in bytes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MonoTorrent.BEncoding.BEncodedNumber">
+            <summary>
+            Class representing a BEncoded number
+            </summary>
+        </member>
+        <member name="P:MonoTorrent.BEncoding.BEncodedNumber.Number">
+            <summary>
+            The value of the BEncodedNumber
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.#ctor(System.Int64)">
+            <summary>
+            Create a new BEncoded number with the given value
+            </summary>
+            <param name="value">The value of the BEncodedNumber</param>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.Encode(System.Span{System.Byte})">
+            <summary>
+            Encodes this number to the supplied byte[] starting at the supplied offset
+            </summary>
+            <param name="buffer">The buffer to write the data to</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.LengthInBytes">
+            <summary>
+            Returns the length of the encoded string in bytes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.Equals(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.GetHashCode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedNumber.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MonoTorrent.BEncoding.BEncodedString">
+            <summary>
+            Class representing a BEncoded string
+            </summary>
+        </member>
+        <member name="P:MonoTorrent.BEncoding.BEncodedString.Text">
+            <summary>
+            The value of the BEncodedString interpreted as a UTF-8 string. If the underlying bytes
+            cannot be represented in UTF-8 then the invalid byte sequence is silently discarded.
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedString.#ctor(System.Char[])">
+            <summary>
+            Create a new BEncodedString using UTF8 encoding
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedString.#ctor(System.String)">
+            <summary>
+            Create a new BEncodedString using UTF8 encoding
+            </summary>
+            <param name="value">Initial value for the string</param>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedString.#ctor(System.Byte[])">
+            <summary>
+            Create a new BEncodedString using UTF8 encoding
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedString.AsMemory">
+            <summary>
+            Returns a readonly reference to the underlying data.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedString.Encode(System.Span{System.Byte})">
+            <summary>
+            Encodes the BEncodedString to a byte[] using the supplied Encoding
+            </summary>
+            <param name="buffer">The buffer to encode the string to</param>
+            <returns>The number of bytes encoded</returns>
+        </member>
+        <member name="T:MonoTorrent.BEncoding.BEncodedValue">
+            <summary>
+            Base class for all BEncoded values.
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Encode">
+            <summary>
+            Encodes the BEncodedValue into a byte array
+            </summary>
+            <returns>Byte array containing the BEncoded Data</returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Encode(System.Span{System.Byte})">
+            <summary>
+            Encodes the BEncodedValue into the supplied buffer
+            </summary>
+            <param name="buffer">The buffer to encode the information to</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="buffer">The byte array containing the BEncoded data</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode(System.ReadOnlySpan{System.Byte},System.Boolean)">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="buffer"></param>
+            <param name="strictDecoding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode(System.IO.Stream)">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="stream">The stream containing the BEncoded data</param>
+            <returns>BEncodedValue containing the data that was in the stream</returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode(System.IO.Stream,System.Boolean)">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="stream">The stream containing the BEncoded data</param>
+            <param name="strictDecoding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode``1(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Decode BEncoded data in the given byte array
+            </summary>
+            <param name="buffer">The byte array containing the BEncoded data</param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode``1(System.ReadOnlySpan{System.Byte},System.Boolean)">
+            <summary>
+            Decode BEncoded data in the given byte array
+            </summary>
+            <param name="buffer">The byte array containing the BEncoded data</param>
+            <param name="strictDecoding"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode``1(System.IO.Stream)">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="stream">The stream containing the BEncoded data</param>
+            <returns>BEncodedValue containing the data that was in the stream</returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.Decode``1(System.IO.Stream,System.Boolean)">
+            <summary>
+            Decode BEncoded data in the given stream 
+            </summary>
+            <param name="stream">The stream containing the BEncoded data</param>
+            <param name="strictDecoding"></param>
+            <returns>BEncodedValue containing the data that was in the stream</returns>
+        </member>
+        <member name="M:MonoTorrent.BEncoding.BEncodedValue.LengthInBytes">
+            <summary>
+            Returns the length of the BEncodedValue in bytes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MonoTorrent.GitInfoHelper.ClientVersion">
+            <summary>
+            The current version of the client in the form "MO1234", which represents a version triplet of '1.2.34'.
+            </summary>
+        </member>
+        <member name="F:MonoTorrent.GitInfoHelper.Version">
+            <summary>
+            The full version of this library in the form 'A.B.C'.
+            'A' and 'B' are guaranteed to be 1 digit each. 'C' can be one or two digits.
+            </summary>
+        </member>
+        <member name="M:MonoTorrent.Client.MainLoop.SwitchToThreadpool">
+            <summary>
+            When <see cref="T:MonoTorrent.ThreadSwitcher"/> is awaited the continuation will be executed
+            on the threadpool. If you are already on a threadpool thread the continuation
+            will execute synchronously.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MonoTorrent.Client.MainLoop.SwitchThread">
+            <summary>
+            When <see cref="T:MonoTorrent.ThreadSwitcher"/> is awaited the continuation will always be queued on
+            the ThreadPool for execution. It will never execute synchronously.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ThisAssembly">
+            <summary>Provides access to the current assembly information.</summary>
+        </member>
+        <member name="T:ThisAssembly.Git">
+            <summary>Provides access to the git information for the current assembly.</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.IsDirty">
+            <summary>IsDirty: true</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.IsDirtyString">
+            <summary>IsDirtyString: true</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.RepositoryUrl">
+            <summary>Repository URL: https://github.com/alanmcgovern/monotorrent</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.Branch">
+            <summary>Branch: master</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.Commit">
+            <summary>Commit: 18fa8189</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.Sha">
+            <summary>Sha: 18fa8189430e44b101148b0a3c64caaacab5929c</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.CommitDate">
+            <summary>Commit date: 2023-03-01T00:02:49+00:00</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.Commits">
+            <summary>Commits on top of base version: 173</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.Tag">
+            <summary>Tag: </summary>
+        </member>
+        <member name="F:ThisAssembly.Git.BaseTag">
+            <summary>Base tag: </summary>
+        </member>
+        <member name="T:ThisAssembly.Git.BaseVersion">
+            <summary>Provides access to the base version information used to determine the <see cref="T:ThisAssembly.Git.SemVer" />.</summary>      
+        </member>
+        <member name="F:ThisAssembly.Git.BaseVersion.Major">
+            <summary>Major: 3</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.BaseVersion.Minor">
+            <summary>Minor: 0</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.BaseVersion.Patch">
+            <summary>Patch: 0</summary>
+        </member>
+        <member name="T:ThisAssembly.Git.SemVer">
+            <summary>Provides access to SemVer information for the current assembly.</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.Major">
+            <summary>Major: 3</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.Minor">
+            <summary>Minor: 0</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.Patch">
+            <summary>Patch: 173</summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.Label">
+            <summary>Label: </summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.DashLabel">
+            <summary>Label with dash prefix: </summary>
+        </member>
+        <member name="F:ThisAssembly.Git.SemVer.Source">
+            <summary>Source: File</summary>
+        </member>
+    </members>
+</doc>

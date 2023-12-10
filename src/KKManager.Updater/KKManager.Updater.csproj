@@ -95,47 +95,47 @@
     </Reference>
     <Reference Include="MonoTorrent, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.BEncoding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.BEncoding.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.BEncoding.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Client, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Client.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Client.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Connections, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Connections.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Connections.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Dht, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Dht.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Dht.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Factories, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Factories.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Factories.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Messages, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Messages.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Messages.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PiecePicking, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PiecePicking.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PiecePicking.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PieceWriter, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PieceWriter.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PieceWriter.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PortForwarding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PortForwarding.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.PortForwarding.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Trackers, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\monotorrent\out\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Trackers.dll</HintPath>
+      <HintPath>..\libs\MonoTorrent.3.0.0-beta.rev0173\lib\netstandard2.0\MonoTorrent.Trackers.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
