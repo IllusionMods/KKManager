@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Zipmods;
 using KKManager.Functions;
+using KKManager.Util;
 using Mono.Cecil;
 
 namespace KKManager.Data.Plugins
@@ -31,12 +32,12 @@ namespace KKManager.Data.Plugins
                     _plugins = new ReplaySubject<PluginInfo>();
                     _cancelSource?.Dispose();
                     _cancelSource = new CancellationTokenSource();
-                    _currentTask =  TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName, _plugins);
+                    _currentTask = TryLoadPlugins(InstallDirectoryHelper.PluginPath.FullName, _plugins);
                 }
             }
             return _plugins;
         }
-        
+
         private static CancellationTokenSource _cancelSource;
         private static Task _currentTask;
 
@@ -150,10 +151,18 @@ namespace KKManager.Data.Plugins
             {
                 var classes = md.Types.Where(x => x.IsClass).ToList();
 
+                var guidFields = classes.SelectMany(x => x.Fields)
+                                        .Where(x => x.IsLiteral && x.IsStatic && x.HasConstant  // const
+                                                 && x.FieldType.FullName == "System.String"
+                                                 && x.Name.ContainsAny(StringComparison.OrdinalIgnoreCase, "GUID", "extdata", "extsave", "ExtID", "PluginName"))
+                                        .Select(f => f.Constant?.ToString())
+                                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                                        .ToList();
+
                 var pluginClasses = classes.Where(x => x.HasCustomAttributes).Select(c => new
                 {
                     c,
-                    bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin" || 
+                    bp = c.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == "BepInEx.BepInPlugin" ||
                                                                 x.AttributeType.FullName == "BepInEx.Preloader.Core.Patching.PatcherPluginInfoAttribute")
                 }).Where(x => x.bp != null).ToList();
 
@@ -185,6 +194,7 @@ namespace KKManager.Data.Plugins
                             url = fileUrl;
 
                         var guid = pc.bp.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString() ?? "Error while loading";
+                        guidFields.Add(guid);
 
                         var config = configFiles?.FirstOrDefault(x => string.Equals(x.Name.Substring(0, x.Name.Length - 4), guid, StringComparison.Ordinal));
 
@@ -192,6 +202,7 @@ namespace KKManager.Data.Plugins
                             pc.bp.ConstructorArguments.ElementAtOrDefault(1).Value?.ToString() ?? location.Name,
                             pc.bp.ConstructorArguments.ElementAtOrDefault(2).Value?.ToString() ?? "Error while loading",
                             guid,
+                            guidFields.Distinct().OrderBy(x => x),
                             location,
                             deps,
                             assRefs,
@@ -220,7 +231,7 @@ namespace KKManager.Data.Plugins
 
                         var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
 
-                        yield return new PluginInfo(Path.GetFileNameWithoutExtension(dllFile), string.IsNullOrWhiteSpace(f.FileVersion) ? f.ProductVersion : f.FileVersion, "< PATCHER PLUGIN >", location,
+                        yield return new PluginInfo(Path.GetFileNameWithoutExtension(dllFile), string.IsNullOrWhiteSpace(f.FileVersion) ? f.ProductVersion : f.FileVersion, "< PATCHER PLUGIN >", null, location,
                                                     Array.Empty<string>(), assRefs, author, description, fileUrl, null);
                     }
                 }

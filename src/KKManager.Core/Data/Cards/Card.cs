@@ -28,6 +28,7 @@ namespace KKManager.Data.Cards
 
         [ReadOnly(true)] public string[] MissingZipmods { get; set; }
         [ReadOnly(true)] public string[] MissingPlugins { get; set; }
+        [ReadOnly(true)] public string[] MissingPluginsMaybe { get; set; }
 
         public virtual Image GetCardImage()
         {

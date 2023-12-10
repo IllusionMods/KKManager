@@ -587,7 +587,7 @@ namespace KKManager.Windows.Content
             var selectedObjects = _typedListView.SelectedObjects;
             if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
 
-            var cardsWithMissingMods = selectedObjects.Where(x => x.MissingPlugins?.Length > 0 || x.MissingZipmods?.Length > 0).ToList();
+            var cardsWithMissingMods = selectedObjects.Where(x => (x.MissingPlugins?.Length ?? 0 + x.MissingPluginsMaybe?.Length ?? 0 + x.MissingZipmods?.Length ?? 0) > 0).ToList();
             if (cardsWithMissingMods.Count == 0)
             {
                 MessageBox.Show("None of the selected cards are using mods or plugins that are missing. Make sure that you selected the cards you want to export in the card list.",
@@ -620,6 +620,8 @@ namespace KKManager.Windows.Content
                             writer.WriteLine("# All missing plugins:");
                             foreach (var missingPlugin in cardsWithMissingMods.Where(x => x.MissingPlugins != null).SelectMany(x => x.MissingPlugins).Distinct().OrderBy(x => x))
                                 writer.WriteLine(missingPlugin);
+                            foreach (var missingPlugin in cardsWithMissingMods.Where(x => x.MissingPluginsMaybe != null).SelectMany(x => x.MissingPluginsMaybe).Distinct().OrderBy(x => x))
+                                writer.WriteLine(missingPlugin + " (maybe)");
 
                             writer.WriteLine();
 
@@ -641,6 +643,11 @@ namespace KKManager.Windows.Content
                                 {
                                     foreach (var missingPlugin in cardWithMissingMods.MissingPlugins)
                                         writer.WriteLine(missingPlugin);
+                                }
+                                if (cardWithMissingMods.MissingPluginsMaybe != null)
+                                {
+                                    foreach (var missingPlugin in cardWithMissingMods.MissingPluginsMaybe)
+                                        writer.WriteLine(missingPlugin + " (maybe)");
                                 }
 
                                 writer.WriteLine("# Missing zipmods:");

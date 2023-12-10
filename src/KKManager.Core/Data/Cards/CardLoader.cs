@@ -98,12 +98,21 @@ namespace KKManager.Data.Cards
             if (card.Extended == null) return;
 
             var cardExtDatas = card.Extended.Where(x => x.Value != null).ToList();
-            var pluginGuids = cardExtDatas.SelectMany(x => x.Value.RequiredPluginGUIDs);
-            var missingPlugs = pluginGuids.Where(x => allPlugins.All(p => x != p.Guid)).Distinct().ToArray();
+
+            var extGroups = cardExtDatas.ToLookup(x => x.Value.RequiredPluginGUIDs.Count > 0);
+
+            var missingPlugs = extGroups[true].SelectMany(x => x.Value.RequiredPluginGUIDs).Where(x => allPlugins.All(p => x != p.Guid)).Distinct().ToArray();
             if (missingPlugs.Length > 0)
             {
                 card.MissingPlugins = missingPlugs;
                 //Console.WriteLine(card.Location.Name + " requires plugins that are missing: " + string.Join("; ", missingPlugs));
+            }
+
+            var allExtCandidates = allPlugins.SelectMany(z => z.ExtDataGuidCandidates ?? Enumerable.Empty<string>()).ToHashSet();
+            var missingPlugsMaybe = extGroups[false].Where(x => !allExtCandidates.Contains(x.Key)).Select(x => x.Key).Distinct().ToArray();
+            if (missingPlugsMaybe.Length > 0)
+            {
+                card.MissingPluginsMaybe = missingPlugsMaybe;
             }
 
             var zipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs);

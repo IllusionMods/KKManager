@@ -214,5 +214,20 @@ namespace KKManager.Util
             else
                 return Task.CompletedTask;
         }
+
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source.IndexOf(toCheck, comp) >= 0;
+        }
+
+        public static bool ContainsAny(this string source, StringComparison comp, params string[] toCheck)
+        {
+            foreach (var s in toCheck)
+            {
+                if (source.Contains(s, comp))
+                    return true;
+            }
+            return false;
+        }
     }
 }
