@@ -42,6 +42,9 @@ namespace KKManager.Windows.Content
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnCardType = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnUserID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnDataID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnMissingMods = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.addressBar = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
@@ -52,7 +55,6 @@ namespace KKManager.Windows.Content
             this.femaleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.maleCardFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripViewSelect = new System.Windows.Forms.ToolStripDropDownButton();
@@ -64,9 +66,10 @@ namespace KKManager.Windows.Content
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAListOfMissingModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.olvColumnDataID = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnMissingMods = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.exportToCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.usedZipmodsAndPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zipmodUsageincludingUnusedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginUsageincludingUnusedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -174,17 +177,33 @@ namespace KKManager.Windows.Content
             this.olvColumnUserID.AspectName = "UserID";
             resources.ApplyResources(this.olvColumnUserID, "olvColumnUserID");
             // 
+            // olvColumnDataID
+            // 
+            this.olvColumnDataID.AspectName = "DataID";
+            resources.ApplyResources(this.olvColumnDataID, "olvColumnDataID");
+            this.olvColumnDataID.IsVisible = false;
+            // 
+            // olvColumnMissingMods
+            // 
+            resources.ApplyResources(this.olvColumnMissingMods, "olvColumnMissingMods");
+            this.olvColumnMissingMods.IsVisible = false;
+            // 
+            // olvColumnVersion
+            // 
+            this.olvColumnVersion.AspectName = "Version";
+            resources.ApplyResources(this.olvColumnVersion, "olvColumnVersion");
+            this.olvColumnVersion.IsVisible = false;
+            // 
             // toolStrip
             // 
             this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripOpenDropdown,
             this.addressBar,
             this.toolStripButtonGo,
             this.toolStripButtonRefresh,
             this.toolStripButtonSubdirs,
             this.toolStripSeparator3,
-            this.toolStripOpenDropdown,
-            this.toolStripSeparator1,
             this.toolStripButtonDelete,
             this.toolStripSeparator4,
             this.toolStripViewSelect,
@@ -257,11 +276,6 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
-            // 
             // toolStripButtonDelete
             // 
             this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -308,7 +322,8 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.segregateBySexToolStripMenuItem,
             this.renameCardsToolStripMenuItem,
-            this.exportAListOfMissingModsToolStripMenuItem});
+            this.exportAListOfMissingModsToolStripMenuItem,
+            this.exportToCsvToolStripMenuItem});
             resources.ApplyResources(this.toolStripDropDownButtonTools, "toolStripDropDownButtonTools");
             this.toolStripDropDownButtonTools.Name = "toolStripDropDownButtonTools";
             // 
@@ -337,22 +352,32 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
-            // olvColumnDataID
+            // exportToCsvToolStripMenuItem
             // 
-            this.olvColumnDataID.AspectName = "DataID";
-            resources.ApplyResources(this.olvColumnDataID, "olvColumnDataID");
-            this.olvColumnDataID.IsVisible = false;
+            this.exportToCsvToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.usedZipmodsAndPluginsToolStripMenuItem,
+            this.zipmodUsageincludingUnusedToolStripMenuItem,
+            this.pluginUsageincludingUnusedToolStripMenuItem});
+            this.exportToCsvToolStripMenuItem.Name = "exportToCsvToolStripMenuItem";
+            resources.ApplyResources(this.exportToCsvToolStripMenuItem, "exportToCsvToolStripMenuItem");
             // 
-            // olvColumnMissingMods
+            // usedZipmodsAndPluginsToolStripMenuItem
             // 
-            resources.ApplyResources(this.olvColumnMissingMods, "olvColumnMissingMods");
-            this.olvColumnMissingMods.IsVisible = false;
+            this.usedZipmodsAndPluginsToolStripMenuItem.Name = "usedZipmodsAndPluginsToolStripMenuItem";
+            resources.ApplyResources(this.usedZipmodsAndPluginsToolStripMenuItem, "usedZipmodsAndPluginsToolStripMenuItem");
+            this.usedZipmodsAndPluginsToolStripMenuItem.Click += new System.EventHandler(this.usedZipmodsAndPluginsToolStripMenuItem_Click);
             // 
-            // olvColumnVersion
+            // zipmodUsageincludingUnusedToolStripMenuItem
             // 
-            this.olvColumnVersion.AspectName = "Version";
-            resources.ApplyResources(this.olvColumnVersion, "olvColumnVersion");
-            this.olvColumnVersion.IsVisible = false;
+            this.zipmodUsageincludingUnusedToolStripMenuItem.Name = "zipmodUsageincludingUnusedToolStripMenuItem";
+            resources.ApplyResources(this.zipmodUsageincludingUnusedToolStripMenuItem, "zipmodUsageincludingUnusedToolStripMenuItem");
+            this.zipmodUsageincludingUnusedToolStripMenuItem.Click += new System.EventHandler(this.zipmodUsageincludingUnusedToolStripMenuItem_Click);
+            // 
+            // pluginUsageincludingUnusedToolStripMenuItem
+            // 
+            this.pluginUsageincludingUnusedToolStripMenuItem.Name = "pluginUsageincludingUnusedToolStripMenuItem";
+            resources.ApplyResources(this.pluginUsageincludingUnusedToolStripMenuItem, "pluginUsageincludingUnusedToolStripMenuItem");
+            this.pluginUsageincludingUnusedToolStripMenuItem.Click += new System.EventHandler(this.pluginUsageincludingUnusedToolStripMenuItem_Click);
             // 
             // CardWindow
             // 
@@ -387,7 +412,6 @@ namespace KKManager.Windows.Content
         private System.Windows.Forms.ToolStripMenuItem femaleCardFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem maleCardFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private ToolStripButton toolStripButtonGo;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator3;
@@ -409,6 +433,10 @@ namespace KKManager.Windows.Content
         private BrightIdeasSoftware.OLVColumn olvColumnDataID;
         private BrightIdeasSoftware.OLVColumn olvColumnMissingMods;
         private BrightIdeasSoftware.OLVColumn olvColumnVersion;
+        private ToolStripMenuItem exportToCsvToolStripMenuItem;
+        private ToolStripMenuItem usedZipmodsAndPluginsToolStripMenuItem;
+        private ToolStripMenuItem zipmodUsageincludingUnusedToolStripMenuItem;
+        private ToolStripMenuItem pluginUsageincludingUnusedToolStripMenuItem;
     }
 }
 

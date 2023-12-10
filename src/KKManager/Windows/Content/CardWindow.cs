@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -12,6 +13,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using KKManager.Data.Cards;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using KKManager.Util;
 using KKManager.Windows.Dialogs;
@@ -673,6 +676,109 @@ namespace KKManager.Windows.Content
         private void toolStripButtonSubdirs_CheckedChanged(object sender, EventArgs e)
         {
             RefreshList();
+        }
+
+        private void ExportModCsv(ICollection<Card> cards, bool includeUnused, bool plugins, bool zipmods)
+        {
+            using (var sfd = new SaveFileDialog
+            {
+                AddExtension = true,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                DefaultExt = "txt",
+                Filter = "csv file|*.csv",
+                OverwritePrompt = true,
+                ValidateNames = true,
+                Title = "Export...",
+                RestoreDirectory = true,
+                //InitialDirectory = InstallDirectoryHelper.GameDirectory.FullName,
+                DereferenceLinks = true,
+                FileName = "KKManager data export",
+            })
+            {
+                try
+                {
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
+                        {
+                            if (zipmods)
+                            {
+                                writer.WriteLine($"\"# Zipmods used by the cards\",\"{cards.Count} cards\"");
+                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
+
+                                var usedZipmods = cards.SelectMany(x => x.Extended.Values.SelectMany(y => y?.RequiredZipmodGUIDs ?? new List<string>(0)).Distinct())
+                                                                 .GroupBy(x => x)
+                                                                 .Select(x => new Tuple<string, int>(x.Key, x.Count()))
+                                                                 .ToList();
+                                if (includeUnused)
+                                    usedZipmods.AddRange(SideloaderModLoader.Zipmods.Select(x => x.Guid).ToEnumerable().Except(usedZipmods.Select(x => x.Item1)).Select(x => new Tuple<string, int>(x, 0)));
+
+                                foreach (var zipmodGuid in usedZipmods.OrderByDescending(x => x.Item2).ThenBy(x => x.Item1))
+                                {
+                                    var zipmodInstalled = zipmodGuid.Item2 == 0 || SideloaderModLoader.Zipmods.Any(x => x.Guid == zipmodGuid.Item1).Wait();
+                                    writer.WriteLine($"\"{zipmodGuid.Item1}\",\"{zipmodGuid.Item2}\",\"{(zipmodInstalled ? "Yes" : "No")}\"");
+                                }
+
+                                writer.WriteLine();
+                            }
+                            if (plugins) 
+                            {
+                                writer.WriteLine($"\"# Plugins used by the cards\",\"{cards.Count} cards\"");
+                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
+
+                                var usedPlugins = cards.SelectMany(x => x.Extended.SelectMany(y => y.Value?.RequiredPluginGUIDs?.Count > 0
+                                                                                                                  ? y.Value.RequiredPluginGUIDs.Select(z => new Tuple<string, bool>(z, true))
+                                                                                                                  : new List<Tuple<string, bool>> { new Tuple<string, bool>(y.Key, false) })
+                                                                                   .DistinctBy(c => c.Item1))
+                                                                       .GroupBy(x => x.Item1)
+                                                                       .Select(x => new Tuple<string, int, bool>(x.Key, x.Count(), x.First().Item2))
+                                                                       .ToList();
+
+                                if (includeUnused)
+                                    usedPlugins.AddRange(PluginLoader.Plugins.Select(x => x.Guid).ToEnumerable().Except(usedPlugins.Select(x => x.Item1)).Select(a => new Tuple<string, int, bool>(a, 0, true)));
+
+                                foreach (var pluginGuid in usedPlugins.OrderByDescending(x => x.Item2).ThenByDescending(x => x.Item3).ThenBy(x => x.Item1))
+                                {
+                                    var pluginInstalled = pluginGuid.Item2 == 0 || PluginLoader.Plugins.Any(p => p.Guid == pluginGuid.Item1).Wait() || PluginLoader.Plugins.SelectMany(x => x.ExtDataGuidCandidates).Any(p => p == pluginGuid.Item1).Wait();
+                                    writer.WriteLine($"\"{pluginGuid.Item1}\",\"{pluginGuid.Item2}\",\"{(pluginInstalled ? "Yes" : pluginGuid.Item3 ? "No" : "Maybe")}\"");
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+
+                    MessageBox.Show($"Failed to export: {exception.Message}\n\nTry saving to a different location. If the error persists, report it on GitHub together with the log file.",
+                                    "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void usedZipmodsAndPluginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedObjects = _typedListView.SelectedObjects;
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+
+            ExportModCsv(selectedObjects, false, true, true);
+        }
+
+        private void zipmodUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedObjects = _typedListView.SelectedObjects;
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+
+            ExportModCsv(selectedObjects, true, false, true);
+        }
+
+        private void pluginUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedObjects = _typedListView.SelectedObjects;
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+
+            ExportModCsv(selectedObjects, true, true, false);
         }
     }
 }

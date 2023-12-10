@@ -117,13 +117,39 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="listView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="listView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 27</value>
+  </data>
+  <data name="listView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>805, 486</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="listView.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;listView.Name" xml:space="preserve">
+    <value>listView</value>
+  </data>
+  <data name="&gt;&gt;listView.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.FastObjectListView, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;listView.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;listView.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="olvColumnName.Text" xml:space="preserve">
     <value>Name</value>
   </data>
   <data name="olvColumnName.ToolTipText" xml:space="preserve">
     <value>Full name of the card.</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="olvColumnName.Width" type="System.Int32, mscorlib">
     <value>200</value>
   </data>
@@ -220,55 +246,32 @@
   <data name="olvColumnVersion.ToolTipText" xml:space="preserve">
     <value>Version of the card's data format. Older version means the card was last saved with an older version of the game.</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="listView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <metadata name="toolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>556, 17</value>
+  </metadata>
+  <data name="toolStripOpenDropdown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
+        0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
+        bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
+        VzOOpHI7Jr376Hi9ogHqFIANO0/MmmmbmSmm9a8ze+I4MrNWAdjtoJgWcx+PSzg166yZZ8xM8XvXDix9
+        c4jIqFYAjoriBV9AhEPv1mH/sonogha0afbZMMZz+yreTGyhpusHwtNNCsA5U1zS4BLxzJIfg299qO32
+        Ir7UJtZfftyATqeT+8o2D8JSjQrAJblrncYL7ZJ2+bfaFnC/1S1NjL3diRat7qrO7wLRP3HjWsojBeCo
+        mDEo5mNjuweFGvjWg2EBhCbpkW78htSHHwRyNdmgAFzPEee2iFkzayy2OLXzT4gr6UdUnlXrullsxxQ+
+        kx0g8BTA3aZlButjSTyjODq/WcQcW/B/Je4OQhLvKQDnzN1mp0nnkvAhR8VuMzNrpm1mpjgkoVwB/v8D
+        TgDQASA1MVpwzwAAAABJRU5ErkJggg==
+</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="listView.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 27</value>
+  <data name="toolStripOpenDropdown.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
   </data>
-  <data name="listView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>805, 486</value>
+  <data name="toolStripOpenDropdown.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 24</value>
   </data>
-  <data name="listView.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;listView.Name" xml:space="preserve">
-    <value>listView</value>
-  </data>
-  <data name="&gt;&gt;listView.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.FastObjectListView, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
-  </data>
-  <data name="&gt;&gt;listView.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;listView.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="toolStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="toolStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>805, 27</value>
-  </data>
-  <data name="toolStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="toolStrip.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStrip.Name" xml:space="preserve">
-    <value>toolStrip</value>
-  </data>
-  <data name="&gt;&gt;toolStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;toolStrip.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="toolStripOpenDropdown.Text" xml:space="preserve">
+    <value>Open...</value>
   </data>
   <data name="addressBar.AutoSize" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -355,48 +358,6 @@ If off, only cards from the top directory are shown.</value>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 27</value>
   </data>
-  <data name="toolStripOpenDropdown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
-        YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
-        0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
-        bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
-        VzOOpHI7Jr376Hi9ogHqFIANO0/MmmmbmSmm9a8ze+I4MrNWAdjtoJgWcx+PSzg166yZZ8xM8XvXDix9
-        c4jIqFYAjoriBV9AhEPv1mH/sonogha0afbZMMZz+yreTGyhpusHwtNNCsA5U1zS4BLxzJIfg299qO32
-        Ir7UJtZfftyATqeT+8o2D8JSjQrAJblrncYL7ZJ2+bfaFnC/1S1NjL3diRat7qrO7wLRP3HjWsojBeCo
-        mDEo5mNjuweFGvjWg2EBhCbpkW78htSHHwRyNdmgAFzPEee2iFkzayy2OLXzT4gr6UdUnlXrullsxxQ+
-        kx0g8BTA3aZlButjSTyjODq/WcQcW/B/Je4OQhLvKQDnzN1mp0nnkvAhR8VuMzNrpm1mpjgkoVwB/v8D
-        TgDQASA1MVpwzwAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="toolStripOpenDropdown.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="toolStripOpenDropdown.Size" type="System.Drawing.Size, System.Drawing">
-    <value>61, 24</value>
-  </data>
-  <data name="toolStripOpenDropdown.Text" xml:space="preserve">
-    <value>Open...</value>
-  </data>
-  <data name="femaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
-  </data>
-  <data name="femaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Female card folder</value>
-  </data>
-  <data name="maleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
-  </data>
-  <data name="maleCardFolderToolStripMenuItem.Text" xml:space="preserve">
-    <value>Male card folder</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>169, 6</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>6, 27</value>
-  </data>
   <data name="toolStripButtonDelete.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACoAAAApCAYAAABDV7v1AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -448,26 +409,50 @@ If off, only cards from the top directory are shown.</value>
   <data name="toolStripViewSelect.Text" xml:space="preserve">
     <value>View</value>
   </data>
-  <data name="detailsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+  <data name="segregateBySexToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Details</value>
+  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
+    <value>Segregate selected by sex</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+  <data name="renameCardsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+  <data name="renameCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Small icons</value>
+  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Rename selected card files...</value>
   </data>
-  <data name="largeIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Large icons</value>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export a list of missing mods...</value>
+  </data>
+  <data name="usedZipmodsAndPluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="usedZipmodsAndPluginsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Used zipmods and plugins</value>
+  </data>
+  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>Zipmod usage (including unused)</value>
+  </data>
+  <data name="pluginUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="pluginUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>Plugin usage (including unused)</value>
+  </data>
+  <data name="exportToCsvToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
+  </data>
+  <data name="exportToCsvToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export to csv...</value>
   </data>
   <data name="toolStripDropDownButtonTools.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -496,33 +481,75 @@ If off, only cards from the top directory are shown.</value>
   <data name="toolStripDropDownButtonTools.ToolTipText" xml:space="preserve">
     <value>Tools</value>
   </data>
-  <data name="segregateBySexToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
-    <value>Segregate selected by sex</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Rename selected card files...</value>
-  </data>
-  <data name="exportAListOfMissingModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Export a list of missing mods...</value>
-  </data>
   <data name="toolStripTextBoxSearch.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 9pt</value>
   </data>
   <data name="toolStripTextBoxSearch.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 27</value>
   </data>
+  <data name="toolStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="toolStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>805, 27</value>
+  </data>
+  <data name="toolStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="toolStrip.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStrip.Name" xml:space="preserve">
+    <value>toolStrip</value>
+  </data>
+  <data name="&gt;&gt;toolStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;toolStrip.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="femaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="femaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Female card folder</value>
+  </data>
+  <data name="maleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="maleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Male card folder</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
+  </data>
+  <data name="detailsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Small icons</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 22</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Large icons</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
@@ -592,6 +619,24 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;olvColumnUserID.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
+  <data name="&gt;&gt;olvColumnDataID.Name" xml:space="preserve">
+    <value>olvColumnDataID</value>
+  </data>
+  <data name="&gt;&gt;olvColumnDataID.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnMissingMods.Name" xml:space="preserve">
+    <value>olvColumnMissingMods</value>
+  </data>
+  <data name="&gt;&gt;olvColumnMissingMods.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnVersion.Name" xml:space="preserve">
+    <value>olvColumnVersion</value>
+  </data>
+  <data name="&gt;&gt;olvColumnVersion.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
   <data name="&gt;&gt;addressBar.Name" xml:space="preserve">
     <value>addressBar</value>
   </data>
@@ -644,12 +689,6 @@ If off, only cards from the top directory are shown.</value>
     <value>toolStripSeparator2</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripButtonDelete.Name" xml:space="preserve">
@@ -718,23 +757,29 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;olvColumnDataID.Name" xml:space="preserve">
-    <value>olvColumnDataID</value>
+  <data name="&gt;&gt;exportToCsvToolStripMenuItem.Name" xml:space="preserve">
+    <value>exportToCsvToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;olvColumnDataID.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  <data name="&gt;&gt;exportToCsvToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;olvColumnMissingMods.Name" xml:space="preserve">
-    <value>olvColumnMissingMods</value>
+  <data name="&gt;&gt;usedZipmodsAndPluginsToolStripMenuItem.Name" xml:space="preserve">
+    <value>usedZipmodsAndPluginsToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;olvColumnMissingMods.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  <data name="&gt;&gt;usedZipmodsAndPluginsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;olvColumnVersion.Name" xml:space="preserve">
-    <value>olvColumnVersion</value>
+  <data name="&gt;&gt;zipmodUsageincludingUnusedToolStripMenuItem.Name" xml:space="preserve">
+    <value>zipmodUsageincludingUnusedToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;olvColumnVersion.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  <data name="&gt;&gt;zipmodUsageincludingUnusedToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pluginUsageincludingUnusedToolStripMenuItem.Name" xml:space="preserve">
+    <value>pluginUsageincludingUnusedToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;pluginUsageincludingUnusedToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>CardWindow</value>
@@ -742,10 +787,4 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
   </data>
-  <metadata name="toolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>556, 17</value>
-  </metadata>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>
