@@ -46,11 +46,12 @@ namespace KKManager.Data.Cards
                 {
                     try
                     {
-                        foreach (var file in path.EnumerateFiles("*.png", searchOption))
+                        Parallel.ForEach(path.EnumerateFiles("*.png", searchOption),
+                                         new ParallelOptions { CancellationToken = cancellationToken },
+                                         file =>
                         {
-                            if (cancellationToken.IsCancellationRequested) break;
                             if (TryParseCard(file, out var card)) s.OnNext(card);
-                        }
+                        });
                     }
                     catch (Exception ex)
                     {
