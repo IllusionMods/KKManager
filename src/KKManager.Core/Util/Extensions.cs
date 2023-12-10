@@ -229,5 +229,17 @@ namespace KKManager.Util
             }
             return false;
         }
+        
+        public static string Left(this string @this, int count)
+        {
+            if (@this.Length <= count)
+            {
+                return @this;
+            }
+            else
+            {
+                return @this.Substring(0, count);
+            }
+        }
     }
 }

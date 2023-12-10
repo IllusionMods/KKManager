@@ -19,6 +19,7 @@ using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
+using KKManager.Util;
 
 namespace KKManager.Data.Cards
 {
@@ -163,7 +164,7 @@ namespace KKManager.Data.Cards
                     //}
 
                     var marker = reader.ReadString();
-                    var gameType = GetGameType(marker);
+                    var gameType = GetGameType(marker, true);
 
                     Card card;
                     switch (gameType)
@@ -225,8 +226,9 @@ namespace KKManager.Data.Cards
             }
         }
 
-        private static CardType GetGameType(string marker)
+        private static CardType GetGameType(string marker, bool throwOnUnknown)
         {
+            if (marker == null) throw new ArgumentNullException(nameof(marker));
             switch (marker)
             {
                 case "【KoiKatuChara】":
@@ -251,7 +253,10 @@ namespace KKManager.Data.Cards
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;
                 default:
-                    return CardType.Unknown;
+                    if (throwOnUnknown)
+                        throw new ArgumentOutOfRangeException($"Unknown game tag: {PathTools.SanitizeFileName(marker.Left(20))}");
+                    else
+                        return CardType.Unknown;
             }
         }
     }
