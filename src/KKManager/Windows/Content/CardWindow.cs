@@ -33,7 +33,11 @@ namespace KKManager.Windows.Content
 
         private CancellationTokenSource _thumbnailCancellationTokenSource;
         private CharacterRange _previousLoadedItemRange;
-        private SearchOption DirectorySearchMode => toolStripButtonSubdirs.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+        private SearchOption DirectorySearchMode
+        {
+            get => toolStripButtonSubdirs.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            set => toolStripButtonSubdirs.Checked = value == SearchOption.AllDirectories;
+        }
 
         public CardWindow()
         {
@@ -131,14 +135,18 @@ namespace KKManager.Windows.Content
 
         public void DeserializeContent(string contentString)
         {
-            var parts = contentString.Split(new[] { "|||" }, 2, StringSplitOptions.None);
+            var parts = contentString.Split(new[] { "|||" }, 3, StringSplitOptions.None);
             if (parts.Length >= 1)
             {
                 OpenCardDirectory(new DirectoryInfo(parts[0]));
 
-                if (parts.Length >= 2)
+                if (parts.Length == 3)
                 {
-                    try { listView.RestoreState(Convert.FromBase64String(parts[1])); }
+                    try
+                    {
+                        DirectorySearchMode = (SearchOption)Enum.Parse(typeof(SearchOption), parts[1]);
+                        listView.RestoreState(Convert.FromBase64String(parts[1]));
+                    }
                     catch { /* safe to ignore */ }
                 }
             }
@@ -146,7 +154,7 @@ namespace KKManager.Windows.Content
 
         protected override string GetPersistString()
         {
-            return base.GetPersistString() + "|||" + _currentDirectory?.FullName + "|||" + Convert.ToBase64String(listView.SaveState());
+            return base.GetPersistString() + "|||" + _currentDirectory?.FullName + "|||" + DirectorySearchMode + "|||" + Convert.ToBase64String(listView.SaveState());
         }
 
         private void addressBar_KeyDown(object sender, KeyEventArgs e)
