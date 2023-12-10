@@ -823,5 +823,10 @@ namespace KKManager.Windows
         {
             InstallDirectoryHelper.OpenLog();
         }
+
+        private void toolStripStatusLabelStatus_Click(object sender, EventArgs e)
+        {
+            openLogViewerToolStripMenuItem_Click(sender, e);
+        }
     }
 }

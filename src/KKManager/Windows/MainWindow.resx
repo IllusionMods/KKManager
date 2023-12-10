@@ -477,7 +477,10 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
     <value>132, 17</value>
   </metadata>
   <data name="toolStripStatusLabelStatus.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 17</value>
+    <value>48, 17</value>
+  </data>
+  <data name="toolStripStatusLabelStatus.Text" xml:space="preserve">
+    <value>Status...</value>
   </data>
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 657</value>
@@ -2433,6 +2436,12 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;languagesToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Name" xml:space="preserve">
+    <value>tryToDeleteToRecycleBinToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;helpToolStripMenuItem.Name" xml:space="preserve">
     <value>helpToolStripMenuItem</value>
   </data>
@@ -2486,12 +2495,6 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   </data>
   <data name="&gt;&gt;toolStripStatusLabelStatus.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Name" xml:space="preserve">
-    <value>tryToDeleteToRecycleBinToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>

@@ -76,6 +76,7 @@ namespace KKManager.Windows
             this.cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.languagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tryToDeleteToRecycleBinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -87,7 +88,6 @@ namespace KKManager.Windows
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tryToDeleteToRecycleBinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -400,6 +400,11 @@ namespace KKManager.Windows
             this.languagesToolStripMenuItem.Name = "languagesToolStripMenuItem";
             resources.ApplyResources(this.languagesToolStripMenuItem, "languagesToolStripMenuItem");
             // 
+            // tryToDeleteToRecycleBinToolStripMenuItem
+            // 
+            this.tryToDeleteToRecycleBinToolStripMenuItem.Name = "tryToDeleteToRecycleBinToolStripMenuItem";
+            resources.ApplyResources(this.tryToDeleteToRecycleBinToolStripMenuItem, "tryToDeleteToRecycleBinToolStripMenuItem");
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -469,11 +474,7 @@ namespace KKManager.Windows
             // 
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
-            // 
-            // tryToDeleteToRecycleBinToolStripMenuItem
-            // 
-            this.tryToDeleteToRecycleBinToolStripMenuItem.Name = "tryToDeleteToRecycleBinToolStripMenuItem";
-            resources.ApplyResources(this.tryToDeleteToRecycleBinToolStripMenuItem, "tryToDeleteToRecycleBinToolStripMenuItem");
+            this.toolStripStatusLabelStatus.Click += new System.EventHandler(this.toolStripStatusLabelStatus_Click);
             // 
             // MainWindow
             // 
