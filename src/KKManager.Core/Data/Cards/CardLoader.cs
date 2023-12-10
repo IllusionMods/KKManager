@@ -199,7 +199,21 @@ namespace KKManager.Data.Cards
                     }
 
                     if (card.Extended != null)
+                    {
                         ExtData.ExtDataParser.DeserializeInPlace(card.Extended);
+
+                        // Remove any byte[] extended data from the card, as it's not useful anymore and takes up a lot of memory
+                        foreach (var pluginData in card.Extended.Values)
+                        {
+                            if (pluginData?.Data == null) continue;
+
+                            foreach (var data in pluginData.Data.Where(x => x.Value is byte[]).ToList())
+                            {
+                                // Keep the key to know what data was there, but clear the value
+                                pluginData.Data[data.Key] = Array.Empty<byte>();
+                            }
+                        }
+                    }
 
                     return card;
                 }
