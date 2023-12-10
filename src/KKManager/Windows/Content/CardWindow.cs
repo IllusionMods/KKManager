@@ -712,25 +712,26 @@ namespace KKManager.Windows.Content
                         {
                             if (zipmods)
                             {
-                                writer.WriteLine($"\"# Zipmods used by the cards\",\"{cards.Count} cards\"");
-                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
+                                writer.WriteLine($"\"# Chara zipmods used by selected cards\",\"Card count:\",\"{cards.Count}\"");
+                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\",\"Zipmod filename\"");
 
                                 var usedZipmods = cards.SelectMany(x => x.Extended.Values.SelectMany(y => y?.RequiredZipmodGUIDs ?? new List<string>(0)).Distinct())
                                                                  .GroupBy(x => x)
                                                                  .Select(x => new Tuple<string, int>(x.Key, x.Count()))
                                                                  .ToList();
                                 if (includeUnused)
-                                    usedZipmods.AddRange(SideloaderModLoader.Zipmods.Select(x => x.Guid).ToEnumerable().Except(usedZipmods.Select(x => x.Item1)).Select(x => new Tuple<string, int>(x, 0)));
+                                    usedZipmods.AddRange(SideloaderModLoader.Zipmods.Where(x => x.ContentsKind.HasFlag(SideloaderModInfo.ZipmodContentsKind.Character)).Select(x => x.Guid).ToEnumerable().Except(usedZipmods.Select(x => x.Item1)).Select(x => new Tuple<string, int>(x, 0)));
 
                                 foreach (var zipmodGuid in usedZipmods.OrderByDescending(x => x.Item2).ThenBy(x => x.Item1))
                                 {
-                                    var zipmodInstalled = zipmodGuid.Item2 == 0 || SideloaderModLoader.Zipmods.Any(x => x.Guid == zipmodGuid.Item1).Wait();
-                                    writer.WriteLine($"\"{zipmodGuid.Item1}\",\"{zipmodGuid.Item2}\",\"{(zipmodInstalled ? "Yes" : "No")}\"");
+                                    var zipmod = SideloaderModLoader.Zipmods.FirstOrDefaultAsync(x => x.Guid == zipmodGuid.Item1).Wait();
+                                    var zipmodInstalled = zipmod != null;
+                                    writer.WriteLine($"\"{zipmodGuid.Item1}\",\"{zipmodGuid.Item2}\",\"{(zipmodInstalled ? "Yes" : "No")}\",\"{zipmod?.FileName}\"");
                                 }
 
                                 writer.WriteLine();
                             }
-                            if (plugins) 
+                            if (plugins)
                             {
                                 writer.WriteLine($"\"# Plugins used by the cards\",\"{cards.Count} cards\"");
                                 writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
