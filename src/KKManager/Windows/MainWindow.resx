@@ -356,10 +356,21 @@
     <value>&amp;Tools</value>
   </data>
   <data name="languagesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>126, 22</value>
+    <value>215, 22</value>
   </data>
   <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 22</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.Text" xml:space="preserve">
+    <value>Try to delete to Recycle Bin</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Attempt to move files to the recycle bin when deleting cards/mods/plugins and when updating mods.
+If this fails for whatever reason (e.g. recycle bin is full or disabled) the files are deleted permanently.
+</value>
   </data>
   <data name="settingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 20</value>
@@ -2164,6 +2175,18 @@
   <data name="&gt;&gt;fileToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;openGameLogToolStripMenuItem.Name" xml:space="preserve">
+    <value>openGameLogToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;openGameLogToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">
+    <value>toolStripSeparator7</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;changeGameInstallDirectoryToolStripMenuItem.Name" xml:space="preserve">
     <value>changeGameInstallDirectoryToolStripMenuItem</value>
   </data>
@@ -2464,17 +2487,11 @@
   <data name="&gt;&gt;toolStripStatusLabelStatus.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;openGameLogToolStripMenuItem.Name" xml:space="preserve">
-    <value>openGameLogToolStripMenuItem</value>
+  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Name" xml:space="preserve">
+    <value>tryToDeleteToRecycleBinToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;openGameLogToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;tryToDeleteToRecycleBinToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator7.Name" xml:space="preserve">
-    <value>toolStripSeparator7</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>

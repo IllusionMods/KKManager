@@ -65,6 +65,7 @@ namespace KKManager.Windows
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
             Settings.Default.Binder.BindControl(useSystemProxyServerToolStripMenuItem, settings => settings.UseProxy, this);
+            Settings.Default.Binder.BindControl(tryToDeleteToRecycleBinToolStripMenuItem, settings => settings.DeleteToRecycleBin, this);
             Settings.Default.Binder.SendUpdates(this);
 
             // Before using the window location, check if isn't the default value and that it's actually visible on the screen

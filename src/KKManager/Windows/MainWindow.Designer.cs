@@ -33,6 +33,8 @@ namespace KKManager.Windows
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openGameLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.changeGameInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,8 +87,7 @@ namespace KKManager.Windows
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openGameLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.tryToDeleteToRecycleBinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -117,6 +118,17 @@ namespace KKManager.Windows
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             resources.ApplyResources(this.fileToolStripMenuItem, "fileToolStripMenuItem");
+            // 
+            // openGameLogToolStripMenuItem
+            // 
+            this.openGameLogToolStripMenuItem.Name = "openGameLogToolStripMenuItem";
+            resources.ApplyResources(this.openGameLogToolStripMenuItem, "openGameLogToolStripMenuItem");
+            this.openGameLogToolStripMenuItem.Click += new System.EventHandler(this.openGameLogToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            resources.ApplyResources(this.toolStripSeparator7, "toolStripSeparator7");
             // 
             // changeGameInstallDirectoryToolStripMenuItem
             // 
@@ -377,7 +389,8 @@ namespace KKManager.Windows
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.languagesToolStripMenuItem});
+            this.languagesToolStripMenuItem,
+            this.tryToDeleteToRecycleBinToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             resources.ApplyResources(this.settingsToolStripMenuItem, "settingsToolStripMenuItem");
             this.settingsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.settingsToolStripMenuItem_DropDownOpening);
@@ -457,16 +470,10 @@ namespace KKManager.Windows
             this.toolStripStatusLabelStatus.Name = "toolStripStatusLabelStatus";
             resources.ApplyResources(this.toolStripStatusLabelStatus, "toolStripStatusLabelStatus");
             // 
-            // openGameLogToolStripMenuItem
+            // tryToDeleteToRecycleBinToolStripMenuItem
             // 
-            this.openGameLogToolStripMenuItem.Name = "openGameLogToolStripMenuItem";
-            resources.ApplyResources(this.openGameLogToolStripMenuItem, "openGameLogToolStripMenuItem");
-            this.openGameLogToolStripMenuItem.Click += new System.EventHandler(this.openGameLogToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            resources.ApplyResources(this.toolStripSeparator7, "toolStripSeparator7");
+            this.tryToDeleteToRecycleBinToolStripMenuItem.Name = "tryToDeleteToRecycleBinToolStripMenuItem";
+            resources.ApplyResources(this.tryToDeleteToRecycleBinToolStripMenuItem, "tryToDeleteToRecycleBinToolStripMenuItem");
             // 
             // MainWindow
             // 
@@ -547,5 +554,6 @@ namespace KKManager.Windows
         private ToolStripMenuItem openIndividualDownloadWebsiteToolStripMenuItem;
         private ToolStripMenuItem openGameLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
+        private ToolStripMenuItem tryToDeleteToRecycleBinToolStripMenuItem;
     }
 }

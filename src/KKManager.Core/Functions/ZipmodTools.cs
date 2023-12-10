@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using KKManager.Data.Zipmods;
+using KKManager.Util;
 
 namespace KKManager.Windows
 {
@@ -121,7 +122,7 @@ namespace KKManager.Windows
             try
             {
                 if (!_simulate)
-                    File.Delete(file);
+                    file.SafeDelete().Wait();
             }
             catch (SystemException)
             {
