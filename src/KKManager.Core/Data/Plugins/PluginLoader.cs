@@ -86,7 +86,7 @@ namespace KKManager.Data.Plugins
                     var configDir = new DirectoryInfo(Path.Combine(pluginDirectory, "config"));
                     var configFiles = configDir.Exists ? configDir.GetFiles("*.cfg", SearchOption.TopDirectoryOnly) : Array.Empty<FileInfo>();
 
-                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
+                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = token}, file =>
                     {
                         try
                         {

@@ -75,7 +75,7 @@ namespace KKManager.Data.Zipmods
                     }
 
                     var files = Directory.EnumerateFiles(modDirectory, "*.*", searchOption);
-                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4 }, file =>
+                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = cancellationToken}, file =>
                     {
                         try
                         {
