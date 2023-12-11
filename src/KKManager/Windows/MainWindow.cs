@@ -35,7 +35,7 @@ namespace KKManager.Windows
     {
         private UpdateSourceBase[] _updateSources;
         public UpdateSourceBase[] GetUpdateSources() => _updateSources ?? (_updateSources = UpdateSourceManager.FindUpdateSources(Program.ProgramLocation));
-
+        
         public MainWindow()
         {
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
@@ -48,6 +48,12 @@ namespace KKManager.Windows
             dockPanel.Theme = new VS2015LightTheme();
 
             InstallDirectoryHelper.Initialize(GetGameDirectory());
+
+            installDirectoryToolStripMenuItem.ToolTipText = InstallDirectoryHelper.GameDirectory.FullName;
+            screenshotsToolStripMenuItem.ToolTipText = InstallDirectoryHelper.ScreenshotDir;
+            charactersToolStripMenuItem.ToolTipText = InstallDirectoryHelper.CardDir;
+            scenesToolStripMenuItem.ToolTipText = InstallDirectoryHelper.SceneDir;
+            kKManagerToolStripMenuItem.ToolTipText = Program.ProgramLocation;
 
             SetupTabs();
 
@@ -471,17 +477,17 @@ namespace KKManager.Windows
 
         private void screenshotsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\cap"));
+            ProcessTools.SafeStartProcess(InstallDirectoryHelper.ScreenshotDir);
         }
 
         private void charactersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\chara"));
+            ProcessTools.SafeStartProcess(InstallDirectoryHelper.CardDir);
         }
 
         private void scenesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(Path.Combine(InstallDirectoryHelper.GameDirectory.FullName, "UserData\\Studio\\scene"));
+            ProcessTools.SafeStartProcess(InstallDirectoryHelper.SceneDir);
         }
 
         private void kKManagerToolStripMenuItem_Click(object sender, EventArgs e)

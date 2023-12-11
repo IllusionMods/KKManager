@@ -71,6 +71,10 @@ namespace KKManager.Functions
             private set => _tempPath = value;
         }
 
+        public static string ScreenshotDir => Path.Combine(GameDirectory.FullName, "UserData\\cap");
+        public static string CardDir => Path.Combine(GameDirectory.FullName, "UserData\\chara");
+        public static string SceneDir => Path.Combine(GameDirectory.FullName, "UserData\\Studio\\scene");
+
         public static GameType GameType { get; private set; } = GameType.Unknown;
 
         public static void Initialize(DirectoryInfo gameDirectory)
@@ -137,7 +141,7 @@ namespace KKManager.Functions
                 //               File.Exists(Path.Combine(path, "CharaStudio.exe"));
 
                 var anyDatas = Directory.GetDirectories(path)
-                    .Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
+                                        .Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
                 var abdataExist = File.Exists(Path.Combine(path, "abdata/abdata"));
 
                 // todo use this to offer to install bepinex and other mods / run update wizzard
@@ -170,7 +174,7 @@ namespace KKManager.Functions
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
         }
-        
+
         /// <summary>
         /// Figure out where the log file is written to and open it.
         /// </summary>

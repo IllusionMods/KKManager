@@ -136,6 +136,9 @@
   <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
     <value>Select game directory...</value>
   </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Point KKManager to a different game install.</value>
+  </data>
   <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
   </data>
@@ -259,6 +262,10 @@
   <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
     <value>Install a new mod...</value>
   </data>
+  <data name="installANewModToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Attempt to install a plugin or a zipmod. 
+For plugins, patchers and especially non-zipmod mods it's recommended to follow the installation steps provided by the author instead.</value>
+  </data>
   <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>318, 22</value>
   </data>
@@ -271,6 +278,9 @@
   <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
     <value>Open the single-mod-download website</value>
   </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>You can download zipmods individually here instead of updating the whole modpack.</value>
+  </data>
   <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
     <value>315, 6</value>
   </data>
@@ -279,6 +289,9 @@
   </data>
   <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
     <value>Check for mod updates on startup</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>The Mod updater menu button will turn green if there is an update available.</value>
   </data>
   <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>318, 22</value>
@@ -292,6 +305,9 @@
   <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
     <value>P2P update transfer settings...</value>
   </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Note: FTP connections are still required even with P2P enabled.</value>
+  </data>
   <data name="updateSideloaderModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 20</value>
   </data>
@@ -304,17 +320,28 @@
   <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
     <value>Fix file and folder permissions</value>
   </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>This will attempt to fix any file or folder permission issues in the game directory.
+Make sure that no other applications are using anything inside the game directory before uisng, otherwise a PC restart might be required to be able to access some of the files again.</value>
+  </data>
   <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 22</value>
   </data>
   <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
     <value>Compress game files</value>
   </data>
+  <data name="compressGameFilesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Reduce the size of the game by recompressing its asset bundles with a higher compression level.
+Generally safe but might cause issues in rare cases, especially with newer games like RG or HC. If in doubt, back up the abdata and *_Data folders.</value>
+  </data>
   <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 22</value>
   </data>
   <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
     <value>Clean up duplicate zipmods</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Attempt to automatically clean up zipmods with the same GUIDs so that only the latest versions are left.</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
     <value>228, 6</value>
@@ -360,6 +387,9 @@
   </data>
   <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="languagesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>To fully change the language KKManager needs to be restarted.</value>
   </data>
   <data name="tryToDeleteToRecycleBinToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>215, 22</value>
@@ -506,6 +536,9 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>247, 17</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2495,6 +2528,12 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   </data>
   <data name="&gt;&gt;toolStripStatusLabelStatus.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
+    <value>toolTip1</value>
+  </data>
+  <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>
