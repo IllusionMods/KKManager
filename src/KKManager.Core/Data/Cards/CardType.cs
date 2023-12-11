@@ -11,6 +11,7 @@
         KoikatsuSunshine,
         RoomGirl,
         HoneyCome,
-        HoneyComeccp
+        HoneyComeccp,
+        KoikatuClothes
     }
 }

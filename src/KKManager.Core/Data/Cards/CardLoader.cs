@@ -195,6 +195,10 @@ namespace KKManager.Data.Cards
                             card = HoneyCoomCard.ParseHCPChara(file, reader, gameType);
                             break;
 
+                        case CardType.KoikatuClothes:
+                            card = KoiCoordCard.ParseKoiClothes(file, reader, gameType);
+                            break;
+
                         case CardType.Unknown:
                         default:
                             throw new ArgumentOutOfRangeException($"GameType={gameType} is not supported");
@@ -252,6 +256,8 @@ namespace KKManager.Data.Cards
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;
+                case "【KoiKatuClothes】":
+                    return CardType.KoikatuClothes;
                 default:
                     if (throwOnUnknown)
                         throw new ArgumentOutOfRangeException($"Unknown game tag: {PathTools.SanitizeFileName(marker.Left(20))}");
