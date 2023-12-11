@@ -198,6 +198,9 @@ namespace KKManager.Data.Cards
                         case CardType.KoikatuClothes:
                             card = KoiCoordCard.ParseKoiClothes(file, reader, gameType);
                             break;
+                        case CardType.AiSyoujyoClothes:
+                            card = AiCoordCard.ParseAiClothes(file, reader, gameType);
+                            break;
 
                         case CardType.Unknown:
                         default:
@@ -258,6 +261,8 @@ namespace KKManager.Data.Cards
                 //    return CardType.KoikatuStudio;
                 case "【KoiKatuClothes】":
                     return CardType.KoikatuClothes;
+                case "【AIS_Clothes】":
+                    return CardType.AiSyoujyoClothes;
                 default:
                     if (throwOnUnknown)
                         throw new ArgumentOutOfRangeException($"Unknown game tag: {PathTools.SanitizeFileName(marker.Left(20))}");

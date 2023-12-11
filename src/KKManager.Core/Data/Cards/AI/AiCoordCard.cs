@@ -10,11 +10,12 @@ namespace KKManager.Data.Cards.KK
     /// <summary>
     /// Supports all versions of Koikatu/Koikatsu Party and Koikatsu Sunshine
     /// </summary>
-    public sealed class KoiCoordCard : Card
+    public sealed class AiCoordCard : Card
     {
-        public static Card ParseKoiClothes(FileInfo file, BinaryReader reader, CardType gameType)
+        public static Card ParseAiClothes(FileInfo file, BinaryReader reader, CardType gameType)
         {
             var loadVersion = new Version(reader.ReadString());
+            var language = reader.ReadInt32();
             var coordinateName = reader.ReadString();
             var num = reader.ReadInt32();
             //load clothes and accs from the bytes array
@@ -22,7 +23,7 @@ namespace KKManager.Data.Cards.KK
 
             var extended = TryReadExtData(reader);
 
-            return new KoiCoordCard(file, gameType, extended, loadVersion, coordinateName);
+            return new AiCoordCard(file, gameType, extended, loadVersion, coordinateName, language);
         }
         private static Dictionary<string, PluginData> TryReadExtData(BinaryReader br)
         {
@@ -47,9 +48,10 @@ namespace KKManager.Data.Cards.KK
             return null;
         }
 
-        public KoiCoordCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version version, string coordinateName) : base(cardFile, type, extended, version)
+        public AiCoordCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version version, string coordinateName, int language) : base(cardFile, type, extended, version)
         {
             Name = coordinateName;
+            Language = language;
         }
         [Browsable(false)] public override CharaSex Sex => CharaSex.Unknown;
         [Browsable(false)] public override string PersonalityName => null;

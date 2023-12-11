@@ -161,6 +161,7 @@
     <Compile Include="Data\Cards\HC\HumanDataParameter.cs" />
     <Compile Include="Data\Cards\HC\HoneyCoomCard.cs" />
     <Compile Include="Data\Cards\KKS\ChaFileAbout.cs" />
+    <Compile Include="Data\Cards\AI\AiCoordCard.cs" />
     <Compile Include="Data\Cards\KK\KoiCoordCard.cs" />
     <Compile Include="Data\Cards\RG\BlockHeader.cs" />
     <Compile Include="Data\Cards\RG\ChaFileExtended.cs" />
