@@ -256,8 +256,12 @@
   <data name="openToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Open directory</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="installANewModToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="installANewModToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 20</value>
+    <value>122, 20</value>
   </data>
   <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
     <value>Install a new mod...</value>
@@ -265,6 +269,9 @@
   <data name="installANewModToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Attempt to install a plugin or a zipmod. 
 For plugins, patchers and especially non-zipmod mods it's recommended to follow the installation steps provided by the author instead.</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>318, 22</value>
@@ -457,7 +464,6 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
     <value>1012, 24</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>

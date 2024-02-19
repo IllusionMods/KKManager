@@ -272,8 +272,8 @@ namespace KKManager.Windows
             // 
             // installANewModToolStripMenuItem
             // 
-            this.installANewModToolStripMenuItem.Name = "installANewModToolStripMenuItem";
             resources.ApplyResources(this.installANewModToolStripMenuItem, "installANewModToolStripMenuItem");
+            this.installANewModToolStripMenuItem.Name = "installANewModToolStripMenuItem";
             this.installANewModToolStripMenuItem.Click += new System.EventHandler(this.installANewModToolStripMenuItem_Click);
             // 
             // updateSideloaderModpackToolStripMenuItem
