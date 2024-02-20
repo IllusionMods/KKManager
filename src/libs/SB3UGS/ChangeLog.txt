@@ -1,5 +1,46 @@
-﻿[23.3.1]
+﻿[23.4.1]
+  - Fixed AnimatorController table of strings unsorted since Unity 2019.4+
+  - Fixed crash when saving the file for empty AnimationClip slots in AnimatorController
+  - Changed inventory alignment for Unity5+ AssetBundle files. Added support for Linux versions.
+
+[23.4]
+  - Fixed SetMachineDefaultState in AnimatorControllerEditor when opening
+  - Fixed crash in RemoveUnusedBones() when SkinnedMeshRenderer was misaligned
+  - Added GetMaterialShaderState/SetMaterialShaderState in AnimatorEditor (not used in the gui)
+  - Fixed unknown member in cabinet's type definitions for Unity 2019.4+
+  - Fixed cabinet's inventory alignment for Unity 2021.3+
+  - Added support for Chinese Unity versions
+  - Fixed StreamingInfo offset (textures in big files e.i.)
+  - Changed ViewAssetData to be shortened by SHIFT and CTRL keys
+  - Changed MagicaBoneCloth checking and added computations for all related data
+
+[23.3.5]
+  - Fixed texture replacement not retaining filter mode, aniso, mipbias and wrap mode
+  - Fixed HC List entry optimization introduced in 23.3.4
+  - Added MagicaBoneCloth helper functions
+    (Types float3, float4 and quaternion are single line in MB editor)
+  - Fixed crash reading open files from previous sessions
+
+[23.3.4]
+  - Fixed pasting from clipboard into HC TextAssets
+
+[23.3.3]
+  - Fixed crash in Material editor for Unity Version < 5.5
+
+[23.3.2]
+  - Fixed crash when TextureNameAlternatives.txt was missing or had not been loaded by using the Material editor.
+    Settings moved into UnityPlugin.dll.config
+  - Changed texture alternatives without texture are skipped
+  - Fixed logical corruption when loading references of deleted assets
+  - Added partial support for ScaleContraint assets
+  - Added SetMachineDefaultState to AnimatorControllerEditor
+
+[23.3.1]
   - Added support for sound related HoneyCome TextAsset formats
+
+Known issue:
+  - exporting meshes crash without proper error message
+    Workaround: select a Material before export
 
 [23.3]
   - Fixed compression for Unity 2021.3+
@@ -12,9 +53,9 @@
 Known issues:
   - Adding a texture to a SceneAB causes "Uncommitted external Texture2D cant be selected"
              when it gets assigned to a Material.
-    Workarond: Save the SceneAB after adding the texture(s). No need to reload the SceneAB afterwards.
+    Workaround: Save the SceneAB after adding the texture(s). No need to reload the SceneAB afterwards.
   - Deleting assets then loading assets referencing the deleted assets leads to logical corruption of the AB
-    No workaround except not deleting shared assets. Can be seen with "View Data".
+    Workaround: load all assets in the file before deleting shared assets. Can be seen with "View Data".
   - Imported morphs get invalid when their mesh gets split by material
 
 [23.2.1]
@@ -330,10 +371,10 @@ Workaround for import and replacement of animations in older versions:
   - Fixed "Goto Frame" in the Bone editor not switching to the Frame editor
   - Fixed MuscleClipSize for AnimationClip in Unity 2018.4+
   - Added SetStateAttributes() in AnimatorController editor
-  - Added warning before ReplaceMeshRenderer() for unaligned SkinnedMeshrenderers to prevent crash when saving
+  - Added warning before ReplaceMeshRenderer() for misaligned SkinnedMeshrenderers to prevent crash when saving
   - Fixed AlignMesh() doesn't make the editor dirty
   - Fixed Virtual Avatar getting lost when reopening the Virtual Animator
-  - Fixed SetFrameName() crashing for unaligned SkinnedMeshRenderers
+  - Fixed SetFrameName() crashing for misaligned SkinnedMeshRenderers
   - Fixed RemoveBone() crashing for SkinnedMeshRenderers without influences
 
 [20.6.2]
