@@ -209,6 +209,7 @@ namespace KKManager.Data.Plugins
                             author,
                             description,
                             url,
+                            null, //Needed to handle additional parameter returned by PluginInfo, placeholder for future reading plugin BepInDependency application name
                             config);
                     }
                 }
@@ -232,7 +233,7 @@ namespace KKManager.Data.Plugins
                         var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
 
                         yield return new PluginInfo(Path.GetFileNameWithoutExtension(dllFile), string.IsNullOrWhiteSpace(f.FileVersion) ? f.ProductVersion : f.FileVersion, "< PATCHER PLUGIN >", null, location,
-                                                    Array.Empty<string>(), assRefs, author, description, fileUrl, null);
+                                                    Array.Empty<string>(), assRefs, author, description, fileUrl, null, null); //for future reading plugin BepInDependency application name replace the first "null" with a proper name
                     }
                 }
             }
