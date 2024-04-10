@@ -11,7 +11,7 @@ namespace KKManager.Data.Zipmods
     public class SideloaderModInfo : ModInfoBase
     {
         public SideloaderModInfo(FileInfo location, Manifest manifest, List<Func<Image>> images, IReadOnlyList<string> contents)
-            : base(location, manifest.GUID, manifest.Name, manifest.Version, manifest.Author, manifest.Description, manifest.Website)
+            : base(location, manifest.GUID, manifest.Name, manifest.Version, manifest.Author, manifest.Description, manifest.Website, manifest.Game)
         {
             var extension = location.Extension;
             if (!SideloaderModLoader.IsValidZipmodExtension(extension))
