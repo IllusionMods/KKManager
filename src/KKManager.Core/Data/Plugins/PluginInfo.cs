@@ -19,8 +19,9 @@ namespace KKManager.Data.Plugins
             string author,
             string description,
             string website,
+            string game,
             FileInfo configFile)
-            : base(location, guid, name, version, author, description, website)
+            : base(location, guid, name, version, author, description, website, game)
         {
             var extension = location.Extension;
             if (!PluginLoader.IsValidPluginExtension(extension))
