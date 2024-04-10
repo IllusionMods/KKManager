@@ -7,7 +7,7 @@ namespace KKManager.Data
 {
     public abstract class ModInfoBase : IFileInfoBase
     {
-        protected ModInfoBase(FileInfo location, string guid, string name, string version, string author, string description, string website)
+        protected ModInfoBase(FileInfo location, string guid, string name, string version, string author, string description, string website, string game)
         {
             Location = location ?? throw new ArgumentNullException(nameof(location));
             Guid = guid ?? throw new ArgumentNullException(nameof(guid));
@@ -16,6 +16,7 @@ namespace KKManager.Data
             Author = author;
             Description = description;
             Website = website;
+            Game = game;
         }
 
         public FileInfo Location { get; }
@@ -26,6 +27,8 @@ namespace KKManager.Data
         public string Author { get; }
         public string Description { get; }
         public string Website { get; }
+        public string Game { get; }
+
 
         [Browsable(false)]
         public string FileName => Location.Name;
