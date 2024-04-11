@@ -150,6 +150,7 @@ namespace KKManager.Windows.Content
             // olvColumnGame
             // 
             this.olvColumnGame.AspectName = "Game";
+            this.olvColumnAuthor.MinimumWidth = 50;
             resources.ApplyResources(this.olvColumnGame, "olvColumnGame");
             // 
             // toolStrip1
@@ -257,8 +258,8 @@ namespace KKManager.Windows.Content
         }
 
         #endregion
-        private BrightIdeasSoftware.FastObjectListView objectListView1;
-        private BrightIdeasSoftware.OLVColumn olvColumnName;
+        private BrightIdeasSoftware.FastObjectListView objectListView1;        
+        private BrightIdeasSoftware.OLVColumn olvColumnGame;
         private BrightIdeasSoftware.OLVColumn olvColumnVersion;
         private BrightIdeasSoftware.OLVColumn olvColumnAuthor;
         private BrightIdeasSoftware.OLVColumn olvColumnGuid;
@@ -278,6 +279,5 @@ namespace KKManager.Windows.Content
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton toolStripButtonSameGuid;
         private BrightIdeasSoftware.OLVColumn olvColumnPath;
-        private BrightIdeasSoftware.OLVColumn olvColumnGame;
     }
 }
