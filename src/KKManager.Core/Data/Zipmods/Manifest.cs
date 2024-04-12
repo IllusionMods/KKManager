@@ -102,7 +102,6 @@ namespace Sideloader
         /// <summary>
         /// Games the mod is made for. If specified, the mod will only load for those games. If not specified will load on any game.
         /// </summary>
-        public string Game => string.Join("/", Games); //Joins all Games strings into single Game string
         public List<string> Games
         {
             get => ManifestDocumentRoot.Elements().Where(x => x.Name.ToString().Equals("game", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value.Trim()).Where(x => x.Length > 0).ToList();

@@ -37,10 +37,10 @@ namespace KKManager.Windows.Content
             this.olvColumnVersion = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnGuid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnGames = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnGame = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -64,10 +64,10 @@ namespace KKManager.Windows.Content
             this.objectListView1.AllColumns.Add(this.olvColumnVersion);
             this.objectListView1.AllColumns.Add(this.olvColumnAuthor);
             this.objectListView1.AllColumns.Add(this.olvColumnGuid);
+            this.objectListView1.AllColumns.Add(this.olvColumnGames);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
             this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
-            this.objectListView1.AllColumns.Add(this.olvColumnGame);
             this.objectListView1.AllowColumnReorder = true;
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -77,8 +77,7 @@ namespace KKManager.Windows.Content
             this.olvColumnAuthor,
             this.olvColumnGuid,
             this.olvColumnFilename,
-            this.olvColumnWebsite,
-            this.olvColumnGame});
+            this.olvColumnWebsite});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.FullRowSelect = true;
@@ -127,6 +126,13 @@ namespace KKManager.Windows.Content
             this.olvColumnGuid.MinimumWidth = 50;
             resources.ApplyResources(this.olvColumnGuid, "olvColumnGuid");
             // 
+            // olvColumnGames
+            // 
+            this.olvColumnGames.AspectName = "";
+            resources.ApplyResources(this.olvColumnGames, "olvColumnGames");
+            this.olvColumnGames.IsVisible = false;
+            this.olvColumnGames.MinimumWidth = 60;
+            // 
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
@@ -136,8 +142,8 @@ namespace KKManager.Windows.Content
             // olvColumnPath
             // 
             this.olvColumnPath.AspectName = "RelativePath";
-            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
             this.olvColumnPath.IsVisible = false;
+            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
             // 
             // olvColumnWebsite
             // 
@@ -145,12 +151,6 @@ namespace KKManager.Windows.Content
             this.olvColumnWebsite.Hyperlink = true;
             this.olvColumnWebsite.MinimumWidth = 100;
             resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
-            // 
-            // olvColumnGame
-            // 
-            this.olvColumnGame.AspectName = "Game";
-            this.olvColumnGame.MinimumWidth = 60;
-            resources.ApplyResources(this.olvColumnGame, "olvColumnGame");
             // 
             // toolStrip1
             // 
@@ -278,6 +278,6 @@ namespace KKManager.Windows.Content
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton toolStripButtonSameGuid;
         private BrightIdeasSoftware.OLVColumn olvColumnPath;
-        private BrightIdeasSoftware.OLVColumn olvColumnGame;
+        private BrightIdeasSoftware.OLVColumn olvColumnGames;
     }
 }
