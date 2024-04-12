@@ -9,6 +9,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.Data;
 using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using KKManager.Util;
@@ -35,6 +36,8 @@ namespace KKManager.Windows.Content
             objectListView1.SecondarySortColumn = olvColumnPath;
             objectListView1.PrimarySortOrder = SortOrder.Ascending;
             objectListView1.SecondarySortOrder = SortOrder.Ascending;
+
+            olvColumnGames.AspectGetter = x => string.Join(", ", ((ModInfoBase)x)?.Games.Distinct().OrderBy(z => z) ?? Enumerable.Empty<string>());
 
             ListTools.SetUpSearchBox(objectListView1, toolStripTextBoxSearch);
         }

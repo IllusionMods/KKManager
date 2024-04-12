@@ -19,9 +19,9 @@ namespace KKManager.Data.Plugins
             string author,
             string description,
             string website,
-            string game,
+            IReadOnlyList<string> processes,
             FileInfo configFile)
-            : base(location, guid, name, version, author, description, website, game)
+            : base(location, guid, name, version, author, description, website, processes)
         {
             var extension = location.Extension;
             if (!PluginLoader.IsValidPluginExtension(extension))

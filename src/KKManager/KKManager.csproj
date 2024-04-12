@@ -312,6 +312,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\CardWindow.ru.resx">
       <DependentUpon>CardWindow.cs</DependentUpon>
@@ -388,9 +389,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\MainWindow.ru.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
