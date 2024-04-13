@@ -66,7 +66,7 @@ namespace KKManager.Windows
 #endif
             var gameName = InstallDirectoryHelper.GameType.GetFancyGameName();
             var installDir = InstallDirectoryHelper.GameDirectory.FullName;
-            Text = $"KK Manager {version} (out of beta edition) - [{gameName}] in {installDir}";
+            Text = $"KK Manager {version} - {gameName} in {installDir}";
             Console.WriteLine($"Game: {gameName}   Path: {installDir}");
 
             Settings.Default.Binder.BindControl(checkForUpdatesOnStartupToolStripMenuItem, settings => settings.AutoUpdateSearch, this);
