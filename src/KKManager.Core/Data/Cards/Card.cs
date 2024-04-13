@@ -28,10 +28,8 @@ namespace KKManager.Data.Cards
 
         [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
         public string[] MissingZipmods { get; set; }
-
         [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
         public string[] MissingPlugins { get; set; }
-
         [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
         public string[] MissingPluginsMaybe { get; set; }
 
