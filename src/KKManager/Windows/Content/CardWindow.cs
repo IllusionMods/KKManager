@@ -238,6 +238,8 @@ namespace KKManager.Windows.Content
         {
             CancelRefreshing();
 
+            UseWaitCursor = true;
+
             listView.ClearObjects();
             listView.SmallImageList.Images.Clear();
             listView.LargeImageList.Images.Clear();
@@ -277,6 +279,8 @@ namespace KKManager.Windows.Content
                     {
                         listView.FastAutoResizeColumns();
                         RefreshThumbnails(true);
+
+                        UseWaitCursor = false;
 
                         MainWindow.SetStatusText("Done loading cards");
                         listView.EmptyListMsg = prevEmptyListMsg;
@@ -417,10 +421,11 @@ namespace KKManager.Windows.Content
             };
         }
 
-        private static void ShowFailedToLoadDirError(Exception exception)
+        private void ShowFailedToLoadDirError(Exception exception)
         {
             Console.WriteLine(exception);
             MessageBox.Show(exception.Message, "Failed to open folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UseWaitCursor = false;
         }
 
         private void ShowOpenFolderDialog(object sender, EventArgs e)

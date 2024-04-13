@@ -74,6 +74,8 @@ namespace KKManager.Windows.Content
 
         public void RefreshList()
         {
+            UseWaitCursor = true;
+
             objectListView1.ClearObjects();
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -86,6 +88,7 @@ namespace KKManager.Windows.Content
                            () =>
                            {
                                objectListView1.FastAutoResizeColumns();
+                               UseWaitCursor = false;
                                MainWindow.SetStatusText("Done loading plugins");
                            }, token);
         }
@@ -93,6 +96,7 @@ namespace KKManager.Windows.Content
         public void CancelRefreshing()
         {
             _cancellationTokenSource?.Cancel();
+            UseWaitCursor = false;
         }
 
         private void SideloaderModsWindow_FormClosed(object sender, FormClosedEventArgs e)
