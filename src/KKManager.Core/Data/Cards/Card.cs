@@ -26,9 +26,14 @@ namespace KKManager.Data.Cards
         [TypeConverter(typeof(DictionaryTypeConverter<string, PluginData>))]
         public Dictionary<string, PluginData> Extended { get; }
 
-        [ReadOnly(true)] public string[] MissingZipmods { get; set; }
-        [ReadOnly(true)] public string[] MissingPlugins { get; set; }
-        [ReadOnly(true)] public string[] MissingPluginsMaybe { get; set; }
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingZipmods { get; set; }
+
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingPlugins { get; set; }
+
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingPluginsMaybe { get; set; }
 
         public virtual Image GetCardImage()
         {

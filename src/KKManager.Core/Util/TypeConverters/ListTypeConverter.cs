@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +10,17 @@ namespace KKManager.Util
 {
     public class ListTypeConverter : CollectionConverter
     {
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == null)
+                throw new ArgumentNullException(nameof(destinationType));
+
+            if (value is ICollection arr)
+                return $"{arr.Count} item{(arr.Count == 1 ? "" : "s")}";
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
         public override bool GetPropertiesSupported(ITypeDescriptorContext context)
         {
             return true;
