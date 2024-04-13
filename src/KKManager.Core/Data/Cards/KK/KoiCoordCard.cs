@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.KK
@@ -20,12 +21,13 @@ namespace KKManager.Data.Cards.KK
             //load clothes and accs from the bytes array
             var _ = reader.ReadBytes(num);
 
-            var extended = TryReadExtData(reader);
+            var extended = TryReadExtData(reader, out var size);
 
-            return new KoiCoordCard(file, gameType, extended, loadVersion, coordinateName);
+            return new KoiCoordCard(file, gameType, extended, Util.FileSize.FromBytes(size), loadVersion, coordinateName);
         }
-        private static Dictionary<string, PluginData> TryReadExtData(BinaryReader br)
+        private static Dictionary<string, PluginData> TryReadExtData(BinaryReader br, out int size)
         {
+            size = 0;
             try
             {
                 var marker = br.ReadString();
@@ -35,6 +37,7 @@ namespace KKManager.Data.Cards.KK
 
                 if (marker == "KKEx" /*&& version == DataVersion*/ && length > 0)
                 {
+                    size = length;
                     var bytes = br.ReadBytes(length);
                     return MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(bytes);
                 }
@@ -47,7 +50,7 @@ namespace KKManager.Data.Cards.KK
             return null;
         }
 
-        public KoiCoordCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version version, string coordinateName) : base(cardFile, type, extended, version)
+        public KoiCoordCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, Version version, string coordinateName) : base(cardFile, type, extended, extendedSize, version)
         {
             Name = coordinateName;
         }

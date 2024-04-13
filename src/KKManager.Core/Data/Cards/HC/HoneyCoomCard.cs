@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using MessagePack;
 using System.Linq;
+using KKManager.Util;
 
 namespace KKManager.Data.Cards.HC
 {
@@ -19,7 +20,15 @@ namespace KKManager.Data.Cards.HC
         [ReadOnly(true)] public HumanDataGameInfo_HC GameInfo { get; }
         [ReadOnly(true)] public HumanDataGameParameter_HC GameParameter { get; }
 
-        private HoneyCoomCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, HumanDataParameter parameter, Version version, HumanDataGameInfo_HC gameInfo, HumanDataGameParameter_HC gameParameter) : base(cardFile, type, extended, version)
+        private HoneyCoomCard(
+            FileInfo cardFile,
+            CardType type,
+            Dictionary<string, PluginData> extended,
+            FileSize extendedSize,
+            HumanDataParameter parameter,
+            Version version,
+            HumanDataGameInfo_HC gameInfo,
+            HumanDataGameParameter_HC gameParameter) : base(cardFile, type, extended, extendedSize, version)
         {
             Parameter = parameter;
             GameInfo = gameInfo;
@@ -85,6 +94,7 @@ namespace KKManager.Data.Cards.HC
 
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
+            var extendedSize = info != null ? Util.FileSize.FromBytes((int)info.size) : Util.FileSize.Empty;
 
             HumanDataAbout about = new HumanDataAbout();
             info = blockHeader.SearchInfo(HumanDataAbout.BlockName);
@@ -128,7 +138,7 @@ namespace KKManager.Data.Cards.HC
                 }
             }
 
-            var card = new HoneyCoomCard(file, gameType, extData, parameter, loadVersion, gameInfo, gameParameter)
+            var card = new HoneyCoomCard(file, gameType, extData, extendedSize, parameter, loadVersion, gameInfo, gameParameter)
             {
                 Language = about.language,
                 UserID = about.userID,
