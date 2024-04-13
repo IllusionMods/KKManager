@@ -18,7 +18,7 @@ namespace KKManager.Data
             if (arr != null || arr2 != null)
             {
                 var count = arr?.Count ?? arr2.Count;
-                var result = $"{count} items";
+                var result = $"{count} item{(count == 1 ? "" : "s")}";
                 if (count > 0)
                 {
                     result += $" - {string.Join(", ", ((IEnumerable<string>)arr ?? arr2).Take(3))}";

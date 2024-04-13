@@ -27,9 +27,12 @@ namespace KKManager.Data.Cards
         [DisplayName("Extended Data Size")]
         public FileSize ExtendedSize { get; }
 
-        [ReadOnly(true)] public string[] MissingZipmods { get; set; }
-        [ReadOnly(true)] public string[] MissingPlugins { get; set; }
-        [ReadOnly(true)] public string[] MissingPluginsMaybe { get; set; }
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingZipmods { get; set; }
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingPlugins { get; set; }
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        public string[] MissingPluginsMaybe { get; set; }
 
         public virtual Image GetCardImage()
         {

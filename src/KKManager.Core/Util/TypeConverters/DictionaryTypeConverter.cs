@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace KKManager.Util
 {
     public class DictionaryTypeConverter<T, T2> : CollectionConverter
     {
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == null)
+                throw new ArgumentNullException(nameof(destinationType));
+
+            if (value is ICollection arr)
+                return $"{arr.Count} item{(arr.Count == 1 ? "" : "s")}";
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
         {
             var d = value as Dictionary<T, T2>;
