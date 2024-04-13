@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Security.Permissions;
 using KKManager.Functions;
 
 namespace KKManager.Data
 {
     public abstract class ModInfoBase : IFileInfoBase
     {
-        protected ModInfoBase(FileInfo location, string guid, string name, string version, string author, string description, string website)
+        protected ModInfoBase(FileInfo location, string guid, string name, string version, string author, string description, string website, IReadOnlyList<string> games)
         {
             Location = location ?? throw new ArgumentNullException(nameof(location));
             Guid = guid ?? throw new ArgumentNullException(nameof(guid));
@@ -16,6 +19,7 @@ namespace KKManager.Data
             Author = author;
             Description = description;
             Website = website;
+            Games = games ?? Array.Empty<string>();
         }
 
         public FileInfo Location { get; }
@@ -26,6 +30,9 @@ namespace KKManager.Data
         public string Author { get; }
         public string Description { get; }
         public string Website { get; }
+        [TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
+        public IReadOnlyList<string> Games { get; }
+
 
         [Browsable(false)]
         public string FileName => Location.Name;

@@ -36,7 +36,9 @@
             this.olvColumnAuthor = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnGuid = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnFilename = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnWebsite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnGames = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -49,7 +51,6 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSameGuid = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.olvColumnPath = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -64,6 +65,7 @@
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
             this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
+            this.objectListView1.AllColumns.Add(this.olvColumnGames);
             this.objectListView1.AllowColumnReorder = true;
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -122,12 +124,24 @@
             this.olvColumnFilename.AspectName = "FileName";
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             // 
+            // olvColumnPath
+            // 
+            this.olvColumnPath.AspectName = "RelativePath";
+            this.olvColumnPath.IsVisible = false;
+            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
+            // 
             // olvColumnWebsite
             // 
             this.olvColumnWebsite.AspectName = "Website";
             this.olvColumnWebsite.Hyperlink = true;
             this.olvColumnWebsite.MinimumWidth = 100;
             resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
+            // 
+            // olvColumnGames
+            // 
+            resources.ApplyResources(this.olvColumnGames, "olvColumnGames");
+            this.olvColumnGames.IsVisible = false;
+            this.olvColumnGames.MinimumWidth = 60;
             // 
             // toolStrip1
             // 
@@ -212,15 +226,9 @@
             // toolStripTextBoxSearch
             // 
             this.toolStripTextBoxSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            resources.ApplyResources(this.toolStripTextBoxSearch, "toolStripTextBoxSearch");
-            // 
-            // olvColumnPath
-            // 
-            this.olvColumnPath.AspectName = "RelativePath";
-            resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
-            this.olvColumnPath.IsVisible = false;
             // 
             // PluginsWindow
             // 
@@ -261,5 +269,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton toolStripButtonSameGuid;
         private BrightIdeasSoftware.OLVColumn olvColumnPath;
+        private BrightIdeasSoftware.OLVColumn olvColumnGames;
     }
 }

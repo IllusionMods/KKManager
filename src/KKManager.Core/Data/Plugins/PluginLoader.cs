@@ -86,7 +86,7 @@ namespace KKManager.Data.Plugins
                     var configDir = new DirectoryInfo(Path.Combine(pluginDirectory, "config"));
                     var configFiles = configDir.Exists ? configDir.GetFiles("*.cfg", SearchOption.TopDirectoryOnly) : Array.Empty<FileInfo>();
 
-                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = token}, file =>
+                    Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = token }, file =>
                     {
                         try
                         {
@@ -186,6 +186,14 @@ namespace KKManager.Data.Plugins
                                    .Where(x => !string.IsNullOrWhiteSpace(x))
                                    .ToArray();
 
+
+                        var processAttributes = pc.c.CustomAttributes
+                                              .Where(x => x.AttributeType.FullName == "BepInEx.BepInProcess");
+                        var processes = processAttributes
+                                        .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
+                                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                                        .ToArray();
+
                         var url = pc.c.CustomAttributes
                                     .Where(x => x.AttributeType.FullName == "UnityEngine.HelpURLAttribute")
                                     .Select(x => x.ConstructorArguments.ElementAtOrDefault(0).Value?.ToString())
@@ -209,6 +217,7 @@ namespace KKManager.Data.Plugins
                             author,
                             description,
                             url,
+                            processes,
                             config);
                     }
                 }
@@ -232,7 +241,7 @@ namespace KKManager.Data.Plugins
                         var assRefs = md.AssemblyReferences.Select(x => x.FullName).ToArray();
 
                         yield return new PluginInfo(Path.GetFileNameWithoutExtension(dllFile), string.IsNullOrWhiteSpace(f.FileVersion) ? f.ProductVersion : f.FileVersion, "< PATCHER PLUGIN >", null, location,
-                                                    Array.Empty<string>(), assRefs, author, description, fileUrl, null);
+                                                    Array.Empty<string>(), assRefs, author, description, fileUrl, null, null);
                     }
                 }
             }
