@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.EC
@@ -16,7 +17,7 @@ namespace KKManager.Data.Cards.EC
 
         public ChaFileParameter Parameter { get; }
 
-        private EmoCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, Version loadVersion) : base(cardFile, type, extended, loadVersion)
+        private EmoCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, ChaFileParameter parameter, Version loadVersion) : base(cardFile, type, extended, extendedSize, loadVersion)
         {
             Parameter = parameter;
         }
@@ -71,8 +72,9 @@ namespace KKManager.Data.Cards.EC
 
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
+            var extendedSize = info != null ? Util.FileSize.FromBytes((int)info.size) : Util.FileSize.Empty;
 
-            var card = new EmoCard(file, gameType, extData, parameter, loadVersion)
+            var card = new EmoCard(file, gameType, extData, extendedSize, parameter, loadVersion)
             {
                 Language = language,
                 DataID = dataID,

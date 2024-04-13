@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.RG
@@ -16,7 +17,7 @@ namespace KKManager.Data.Cards.RG
         public string Traits => String.Join(", ", GetTraits(Parameter.features));
         [ReadOnly(true)] public ChaFileParameter Parameter { get; }
 
-        private RoomGirlCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, Version version) : base(cardFile, type, extended, version)
+        private RoomGirlCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, ChaFileParameter parameter, Version version) : base(cardFile, type, extended, extendedSize, version)
         {
             Parameter = parameter;
         }
@@ -80,8 +81,9 @@ namespace KKManager.Data.Cards.RG
 
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
+            var extendedSize = info != null ? Util.FileSize.FromBytes((int)info.size) : Util.FileSize.Empty;
 
-            var card = new RoomGirlCard(file, gameType, extData, parameter, loadVersion)
+            var card = new RoomGirlCard(file, gameType, extData, extendedSize, parameter, loadVersion)
             {
                 Language = language,
                 UserID = userID,

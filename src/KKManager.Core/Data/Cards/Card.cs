@@ -21,10 +21,11 @@ namespace KKManager.Data.Cards
         [ReadOnly(true)] public virtual string DataID { get; protected set; }
         public Version Version { get; }
 
-        //[Browsable(false)]
         [DisplayName("Extended Data (plugins)")]
         [TypeConverter(typeof(DictionaryTypeConverter<string, PluginData>))]
         public Dictionary<string, PluginData> Extended { get; }
+        [DisplayName("Extended Data Size")]
+        public FileSize ExtendedSize { get; }
 
         [ReadOnly(true)] public string[] MissingZipmods { get; set; }
         [ReadOnly(true)] public string[] MissingPlugins { get; set; }
@@ -57,12 +58,13 @@ namespace KKManager.Data.Cards
             }
         }
 
-        internal Card(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version version)
+        internal Card(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, Version version)
         {
             Location = cardFile ?? throw new ArgumentNullException(nameof(cardFile));
             Version = version ?? throw new ArgumentNullException(nameof(version));
             Type = type;
             Extended = extended ?? new Dictionary<string, PluginData>();
+            ExtendedSize = extendedSize;
 
             FileSize = Util.FileSize.FromBytes(cardFile.Length).ToString();
         }

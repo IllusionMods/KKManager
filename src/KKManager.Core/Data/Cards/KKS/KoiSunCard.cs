@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.KKS
@@ -19,8 +20,8 @@ namespace KKManager.Data.Cards.KKS
         public override string UserID => About.userID;
         public override string DataID => About.dataID;
 
-        private KoiSunCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, ChaFileParameter parameter, ChaFileAbout about, Version version) :
-            base(cardFile, type, extended, about?.version ?? version)
+        private KoiSunCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, ChaFileParameter parameter, ChaFileAbout about, Version version) :
+            base(cardFile, type, extended, extendedSize, about?.version ?? version)
         {
             Parameter = parameter;
             About = about ?? new ChaFileAbout();
@@ -86,8 +87,9 @@ namespace KKManager.Data.Cards.KKS
 
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
+            var extendedSize = info != null ? Util.FileSize.FromBytes((int)info.size) : Util.FileSize.Empty;
 
-            var card = new KoiSunCard(file, gameType, extData, parameter, about, loadVersion);
+            var card = new KoiSunCard(file, gameType, extData, extendedSize, parameter, about, loadVersion);
 
             return card;
         }

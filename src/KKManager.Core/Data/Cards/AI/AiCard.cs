@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using KKManager.Util;
 using MessagePack;
 
 namespace KKManager.Data.Cards.AI
@@ -49,8 +50,9 @@ namespace KKManager.Data.Cards.AI
                 var parameterBytes = reader.ReadBytes((int)info.size);
                 extData = MessagePackSerializer.Deserialize<Dictionary<string, PluginData>>(parameterBytes);
             }
+            var extendedSize = info != null ? Util.FileSize.FromBytes((int)info.size) : Util.FileSize.Empty;
 
-            var card = new AiCard(file, gameType, extData, loadVersion)
+            var card = new AiCard(file, gameType, extData, extendedSize, loadVersion)
             {
                 Language = language,
                 UserID = userID,
@@ -105,7 +107,7 @@ namespace KKManager.Data.Cards.AI
             return KKManager.Properties.Resources.Unknown;
         }
 
-        public AiCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, Version loadVersion) : base(cardFile, type, extended, loadVersion)
+        public AiCard(FileInfo cardFile, CardType type, Dictionary<string, PluginData> extended, FileSize extendedSize, Version loadVersion) : base(cardFile, type, extended, extendedSize, loadVersion)
         {
         }
     }
