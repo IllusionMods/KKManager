@@ -1,4 +1,20 @@
-﻿[23.4.1]
+﻿[24.0.1]
+  - Fixed dark mesh in preview when showing morphs
+  - Fixed bounding box for skinned meshes with modified rest pose
+  - Fixed crash when selecting renderers other than MeshRenderer and SkinnedMeshRenderer
+
+[24.0]
+  - Changed platform: VS2022, .Net Framework 4.6.2, Windows 11 SDK 10.0.22621.0, MSVC v143
+  - Changed visual style to Windows7 look
+  - Added support for AssetBundle files with stripped Unity version
+  - Added cancelling with ESC in several dialogs
+  - Added display of vertex colours in 3d preview
+  - Added support for anti-aliasing in 3d preview
+  - Changed export and preview of UV maps now considers all selected meshes
+  - Fixed default destination frame in replacement dialog
+  - Fixed morph preview moving into the wrong X direction (same for morph normals)
+
+[23.4.1]
   - Fixed AnimatorController table of strings unsorted since Unity 2019.4+
   - Fixed crash when saving the file for empty AnimationClip slots in AnimatorController
   - Changed inventory alignment for Unity5+ AssetBundle files. Added support for Linux versions.
