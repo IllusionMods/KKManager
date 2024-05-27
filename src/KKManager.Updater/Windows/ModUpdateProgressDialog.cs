@@ -81,7 +81,8 @@ namespace KKManager.Updater.Windows
 
         private async void ModUpdateProgress_Shown(object sender, EventArgs e)
         {
-            var averageDownloadSpeed = new MovingAverage(20);
+            var averageDownloadSpeed = new MovingAverage(25);
+            var averageDownloadSpeedFast = new MovingAverage(4);
             var downloadStartTime = DateTime.Now;
             UpdateDownloadCoordinator downloader = null;
 
@@ -112,6 +113,7 @@ namespace KKManager.Updater.Windows
                 var downloadedSinceLast = FileSize.FromKilobytes((long)((_completedSize - lastCompletedSize).GetKbSize() / secondsPassed));
                 lastCompletedSize = _completedSize;
                 averageDownloadSpeed.Sample(downloadedSinceLast.GetKbSize());
+                averageDownloadSpeedFast.Sample(downloadedSinceLast.GetKbSize());
                 var etaSeconds = (_overallSize - _completedSize).GetKbSize() / (double)averageDownloadSpeed.GetAverage();
                 var eta = double.IsNaN(etaSeconds) || etaSeconds < 0 || etaSeconds > TimeSpan.MaxValue.TotalSeconds
                     ? KKManager.Properties.Resources.Unknown
@@ -122,7 +124,7 @@ namespace KKManager.Updater.Windows
                 var uploadSpeed = TorrentUpdater.GetCurrentUpload();
                 if (uploadSpeed.HasValue) text += $" | Seeding: {FileSize.FromBytes(uploadSpeed.Value)}/s";
 
-                text += $"\r\nSpeed: {downloadedSinceLast}/s  (ETA: {eta})";
+                text += $"\r\nSpeed: {FileSize.FromKilobytes(averageDownloadSpeedFast.GetAverage())}/s  (ETA: {eta})";
 
                 labelPercent.Text = text;
 
