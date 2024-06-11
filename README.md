@@ -11,6 +11,8 @@ You can see a list of supported games [here](https://github.com/IllusionMods/KKM
 While the app is already useful, it's still in beta. Expect some bugs and lacking features. You can report issues on [GitHub Issues page](https://github.com/bbepis/KKManager/issues), or on the [Koikatu! discord server](https://discord.gg/urDt8CK).
 
 ## How to use
+If you want to update your existing KKManager you can watch [this video guide](https://www.youtube.com/watch?v=ceg2XXGNwcU&feature=youtu.be).
+
 1. Download the latest release from the [releases](https://github.com/IllusionMods/KKManager/releases) page.
 2. Extract to a new folder anywhere. If you want to update your current KK Manager install then it's recommended to remove all old files except for the .settings file.
 3. Start KKManager.exe, create a shortcut to it if you want.
