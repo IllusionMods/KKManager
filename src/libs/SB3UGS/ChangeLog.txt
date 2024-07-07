@@ -1,4 +1,30 @@
-﻿[24.0.1]
+﻿[24.1.4]
+  - Fixed loading and saving big ABs. ABs close to 4GB and more are not supported.
+
+[24.1.3]
+  - Fixed WorldCoordinate option in NML computation. Now considers the pose of adjacent meshes.
+  - Added globally loadable shaders keep being globally loadable when copied
+
+[24.1.2]
+  - Fixed crash when saving ABs with Non-CAB files
+
+[24.1.1]
+  - Fixed freezing during save or corrupting streamed textures (introduced in 24.1.0)
+
+[24.1.0]
+  - Fixed crash for ReplaceMorphKeyframe for meshes with two or more submeshes
+  - Added drag 'n drop for ImportedMesh node onto ImportedMorph for mass replacement of keyframes
+  - Added minimum angle for custom normals in blendshapes for unmorphed positions
+  - Removed message for bad normals when keeping existing normals in blendshapes
+  - Fixed crash for AB files exceeding 2GB
+
+[24.0.2]
+  - Fixed crash in MeshEditor Attributes dialog for Meshes differing from SkinnedMeshRenderers
+  - Fixed crash in Texture editor preview for uv maps with negative scaling
+  - Added support for normals in blendshapes (FBX import and export)
+  - Fixed preview of meshes in older game engine (in XX units)
+
+[24.0.1]
   - Fixed dark mesh in preview when showing morphs
   - Fixed bounding box for skinned meshes with modified rest pose
   - Fixed crash when selecting renderers other than MeshRenderer and SkinnedMeshRenderer
