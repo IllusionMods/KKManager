@@ -19,6 +19,7 @@ namespace KKManager.Updater.Windows
             checkBoxEnable.Checked = s.P2P_Enabled;
             numericUpDown1.Value = s.P2P_Port;
             checkBoxForward.Checked = s.P2P_PortForward;
+            checkBoxLogVerbose.Checked = s.P2P_VerboseLogging;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -27,6 +28,7 @@ namespace KKManager.Updater.Windows
             s.P2P_Enabled = checkBoxEnable.Checked;
             s.P2P_Port = (int)numericUpDown1.Value;
             s.P2P_PortForward = checkBoxForward.Checked;
+            s.P2P_VerboseLogging = checkBoxLogVerbose.Checked;
             s.P2P_SettingsShown = true;
             Close();
         }

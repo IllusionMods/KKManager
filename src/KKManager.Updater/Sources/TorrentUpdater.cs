@@ -51,9 +51,7 @@ namespace KKManager.Updater.Sources
                         }
                     }
                 };
-#if DEBUG
-                MonoTorrent.Logging.LoggerFactory.Register(className => new MonoTorrent.Logging.TextLogger(Console.Out, className));
-#endif
+                MonoTorrent.Logging.LoggerFactory.Register(className => new TorrentUpdaterLogger(className));
                 _eventsInitialized = true;
             }
 
@@ -343,6 +341,35 @@ namespace KKManager.Updater.Sources
                     Debug.WriteLine($"Moving {_info.FullPath} -> {targetpath.FullName}");
                     _torrent.MoveFileAsync(_info, targetpath.FullName);
                 }
+            }
+        }
+
+        private sealed class TorrentUpdaterLogger : MonoTorrent.Logging.ILogger
+        {
+            private readonly string _prefix;
+            private readonly TextWriter _writer;
+
+            public TorrentUpdaterLogger(string className)
+            {
+                _prefix = className == null ? "[P2P]" : $"[P2P:{className}]";
+                _writer = Console.Out;
+            }
+
+            public void Debug(string message)
+            {
+                if (KKManager.Properties.Settings.Default.P2P_VerboseLogging)
+                    _writer.WriteLine($"{_prefix} [DEBUG] {message}");
+            }
+
+            public void Error(string message)
+            {
+                _writer.WriteLine($"{_prefix} [ERROR] {message}");
+            }
+
+            public void Info(string message)
+            {
+                if (KKManager.Properties.Settings.Default.P2P_VerboseLogging)
+                    _writer.WriteLine($"{_prefix} {message}");
             }
         }
 

@@ -37,6 +37,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.checkBoxForward = new System.Windows.Forms.CheckBox();
+            this.checkBoxLogVerbose = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -84,9 +85,9 @@
             // 
             // panel1
             // 
-            resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.numericUpDown1);
             this.panel1.Controls.Add(this.label3);
+            resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
             // button1
@@ -102,6 +103,12 @@
             this.checkBoxForward.Name = "checkBoxForward";
             this.checkBoxForward.UseVisualStyleBackColor = true;
             // 
+            // checkBoxLogVerbose
+            // 
+            resources.ApplyResources(this.checkBoxLogVerbose, "checkBoxLogVerbose");
+            this.checkBoxLogVerbose.Name = "checkBoxLogVerbose";
+            this.checkBoxLogVerbose.UseVisualStyleBackColor = true;
+            // 
             // P2PSettingsDialog
             // 
             this.AcceptButton = this.button1;
@@ -109,6 +116,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ControlBox = false;
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.checkBoxLogVerbose);
             this.Controls.Add(this.checkBoxForward);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label2);
@@ -137,5 +145,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox checkBoxForward;
+        private System.Windows.Forms.CheckBox checkBoxLogVerbose;
     }
 }
