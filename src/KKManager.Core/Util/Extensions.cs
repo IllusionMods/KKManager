@@ -72,8 +72,14 @@ namespace KKManager.Util
 
         public static IEnumerable<TOut> Attempt<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, TOut> action)
         {
+            return Attempt(source, action, (@in, e) => Console.Error.WriteLine(e));
+        }
+
+        public static IEnumerable<TOut> Attempt<TIn, TOut>(this IEnumerable<TIn> source, Func<TIn, TOut> action, Action<TIn, Exception> onError)
+        {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (action == null) throw new ArgumentNullException(nameof(action));
+            if (onError == null) throw new ArgumentNullException(nameof(onError));
 
             foreach (var item in source)
             {
@@ -84,7 +90,7 @@ namespace KKManager.Util
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine(e);
+                    onError(item, e);
                     continue;
                 }
                 yield return output;
