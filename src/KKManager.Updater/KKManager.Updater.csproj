@@ -55,10 +55,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.Core.3.7.304.25\lib\net45\AWSSDK.Core.dll</HintPath>
+      <HintPath>..\packages\AWSSDK.Core.3.7.400.11\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.S3.3.7.310.2\lib\net45\AWSSDK.S3.dll</HintPath>
+      <HintPath>..\packages\AWSSDK.S3.3.7.402.2\lib\net45\AWSSDK.S3.dll</HintPath>
     </Reference>
     <Reference Include="Ben.Demystifier, Version=0.4.0.0, Culture=neutral, PublicKeyToken=a6d206e05440431a, processorArchitecture=MSIL">
       <HintPath>..\packages\Ben.Demystifier.0.4.1\lib\net45\Ben.Demystifier.dll</HintPath>
@@ -70,10 +70,10 @@
       <HintPath>..\packages\MegaApiClient.1.10.4\lib\net471\MegaApiClient.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack, Version=2.5.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.2.5.171\lib\net472\MessagePack.dll</HintPath>
+      <HintPath>..\packages\MessagePack.2.5.172\lib\net472\MessagePack.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack.Annotations, Version=2.5.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
-      <HintPath>..\packages\MessagePack.Annotations.2.5.171\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
+      <HintPath>..\packages\MessagePack.Annotations.2.5.172\lib\netstandard2.0\MessagePack.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -85,7 +85,7 @@
       <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.8.0.1\lib\net462\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.NET.StringTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.NET.StringTools.17.10.4\lib\net472\Microsoft.NET.StringTools.dll</HintPath>
+      <HintPath>..\packages\Microsoft.NET.StringTools.17.11.4\lib\net472\Microsoft.NET.StringTools.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Windows7APICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -94,40 +94,40 @@
       <HintPath>..\packages\Windows7APICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Nat, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6c9468a3c21bc6d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\Mono.Nat.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\Mono.Nat.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.BEncoding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.BEncoding.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.BEncoding.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Client, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Client.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Client.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Connections, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Connections.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Connections.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Dht, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Dht.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Dht.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Factories, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Factories.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Factories.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Messages, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Messages.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Messages.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PiecePicking, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.PiecePicking.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.PiecePicking.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PieceWriter, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.PieceWriter.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.PieceWriter.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.PortForwarding, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.PortForwarding.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.PortForwarding.dll</HintPath>
     </Reference>
     <Reference Include="MonoTorrent.Trackers, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MonoTorrent.3.0.0\lib\net472\MonoTorrent.Trackers.dll</HintPath>
+      <HintPath>..\packages\MonoTorrent.3.0.2\lib\net472\MonoTorrent.Trackers.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -372,8 +372,8 @@
     <None Include="Resources\aichika.png" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\AWSSDK.S3.3.7.310.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
-    <Analyzer Include="..\packages\AWSSDK.S3.3.7.310.2\analyzers\dotnet\cs\SharedAnalysisCode.dll" />
+    <Analyzer Include="..\packages\AWSSDK.S3.3.7.402.2\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+    <Analyzer Include="..\packages\AWSSDK.S3.3.7.402.2\analyzers\dotnet\cs\SharedAnalysisCode.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\ReusableTasks.4.0.0\build\ReusableTasks.targets" Condition="Exists('..\packages\ReusableTasks.4.0.0\build\ReusableTasks.targets')" />
