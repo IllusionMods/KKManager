@@ -95,6 +95,7 @@ namespace KKManager.Functions
                 new Tuple<string, GameType>("RoomGirl.exe", GameType.RoomGirl),
                 new Tuple<string, GameType>("HoneyCome.exe", GameType.HoneyCome),
                 new Tuple<string, GameType>("HoneyComeccp.exe", GameType.HoneyComeSteam),
+                new Tuple<string, GameType>("SamabakeScramble.exe", GameType.SamabakeScramble),
             };
 
             GameType = gameCheck.FirstOrDefault(x => File.Exists(Path.Combine(path, x.Item1)))?.Item2 ?? GameType.Unknown;
@@ -171,6 +172,7 @@ namespace KKManager.Functions
                 case GameType.RoomGirl: return "Room Girl";
                 case GameType.HoneyCome: return "HoneyCome";
                 case GameType.HoneyComeSteam: return "HoneyCome come come party";
+                case GameType.SamabakeScramble: return "Summer Vacation Scramble";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
         }
