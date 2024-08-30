@@ -17,6 +17,7 @@ using KKManager.Data.Cards.HC;
 using KKManager.Data.Cards.KK;
 using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
+using KKManager.Data.Cards.SVS;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
 using KKManager.Util;
@@ -159,9 +160,7 @@ namespace KKManager.Data.Cards
                 {
                     var loadProductNo = reader.ReadInt32();
                     //if (loadProductNo > 100)
-                    //{
                     //    return null;
-                    //}
 
                     var marker = reader.ReadString();
                     var gameType = GetGameType(marker, true);
@@ -195,6 +194,10 @@ namespace KKManager.Data.Cards
                             card = HoneyCoomCard.ParseHCPChara(file, reader, gameType);
                             break;
 
+                        case CardType.SamabakeScramble:
+                            card = SamabakeCard.ParseSvsChara(file, reader, gameType);
+                            break;
+
                         case CardType.KoikatuClothes:
                             card = KoiCoordCard.ParseKoiClothes(file, reader, gameType);
                             break;
@@ -202,6 +205,7 @@ namespace KKManager.Data.Cards
                             card = AiCoordCard.ParseAiClothes(file, reader, gameType);
                             break;
 
+                        case CardType.SamabakeScrambleClothes:
                         case CardType.Unknown:
                         default:
                             throw new ArgumentOutOfRangeException($"GameType={gameType} is not supported");
@@ -256,13 +260,20 @@ namespace KKManager.Data.Cards
                     return CardType.HoneyCome;
                 case "【HCPChara】":
                     return CardType.HoneyComeccp;
+                case "【SVChara】":
+                    return CardType.SamabakeScramble;
+
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
                 //    return CardType.KoikatuStudio;
+
                 case "【KoiKatuClothes】":
                     return CardType.KoikatuClothes;
                 case "【AIS_Clothes】":
                     return CardType.AiSyoujyoClothes;
+                case "【SVClothes】":
+                    return CardType.SamabakeScrambleClothes;
+
                 default:
                     if (throwOnUnknown)
                         throw new ArgumentOutOfRangeException($"Unknown game tag: {PathTools.SanitizeFileName(marker.Left(20))}");

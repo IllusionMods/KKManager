@@ -12,7 +12,9 @@
         RoomGirl,
         HoneyCome,
         HoneyComeccp,
+        SamabakeScramble,
         KoikatuClothes,
         AiSyoujyoClothes,
+        SamabakeScrambleClothes,
     }
 }

@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using KKManager.Util;
+using MessagePack;
+using Newtonsoft.Json;
 
 namespace KKManager.Data.Cards
 {
@@ -66,6 +70,64 @@ namespace KKManager.Data.Cards
         public static long SearchForPngStart(Stream stream)
         {
             return SearchForSequence(stream, _pngStartChunk);
+        }
+
+        public static bool TryGetObject<TObj>(this BlockHeader blockHeader, BinaryReader reader, long basePosition, string blockName, out TObj blockInfo, out BlockHeader.Info info)
+        {
+            if (blockHeader == null) throw new ArgumentNullException(nameof(blockHeader));
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (blockName == null) throw new ArgumentNullException(nameof(blockName));
+
+            if (!reader.BaseStream.CanRead) throw new ArgumentException(@"stream is not readable", nameof(reader));
+            if (basePosition < 0 || reader.BaseStream.Length <= basePosition) throw new ArgumentOutOfRangeException(nameof(basePosition), basePosition, @"position must be inside the stream");
+
+            blockInfo = default;
+            info = blockHeader.SearchInfo(blockName);
+            if (info != null)
+            {
+                reader.BaseStream.Seek(basePosition + info.pos, SeekOrigin.Begin);
+                var parameterBytes = reader.ReadBytes((int)info.size);
+
+                try
+                {
+                    blockInfo = MessagePackSerializer.Deserialize<TObj>(parameterBytes);
+
+                    if (blockInfo != null)
+                        return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($@"Failed to deserialize block ""{blockName}"" from BlockHeader - {e}");
+                }
+            }
+            return false;
+        }
+
+        public static FileSize GetSize(this BlockHeader.Info info)
+        {
+            return info != null ? FileSize.FromBytes((int)info.size) : FileSize.Empty;
+        }
+
+        public static void DumpBlocksToJson(this BlockHeader blockHeader, BinaryReader reader, long basePosition, DirectoryInfo targetDirectory)
+        {
+            if (blockHeader == null) throw new ArgumentNullException(nameof(blockHeader));
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (targetDirectory == null) throw new ArgumentNullException(nameof(targetDirectory));
+
+            targetDirectory.Create();
+
+            foreach (var blockInfo in blockHeader.lstInfo)
+            {
+                reader.BaseStream.Seek(basePosition + blockInfo.pos, SeekOrigin.Begin);
+                var parameterBytes = reader.ReadBytes((int)blockInfo.size);
+
+                var jsn = MessagePackSerializer.ConvertToJson(parameterBytes);
+
+                dynamic parsedJson = JsonConvert.DeserializeObject(jsn);
+                jsn = JsonConvert.SerializeObject((object)parsedJson, Formatting.Indented);
+
+                File.WriteAllText(Path.Combine(targetDirectory.FullName, $@"BLOCK_{blockInfo.name}.json"), jsn);
+            }
         }
     }
 }

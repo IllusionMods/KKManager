@@ -13,6 +13,7 @@
         KoikatsuSunshine,
         RoomGirl,
         HoneyCome,
-        HoneyComeSteam
+        HoneyComeSteam,
+        SamabakeScramble
     }
 }
