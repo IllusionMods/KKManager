@@ -15,7 +15,6 @@ namespace KKManager.Data.Cards.SVS
         public override string PersonalityName => GetProfession(Parameter?.personality ?? -1);
         public string Birthday => $"{GetBirthMonth(Parameter.birthMonth)} {Parameter.birthDay}";
         [ReadOnly(true)] public Parameter Parameter { get; }
-        [ReadOnly(true)] public Status Status { get; }
         [ReadOnly(true)] public Graphic Graphic { get; }
         [ReadOnly(true)] public GameInfo_SV GameInfo { get; }
         [ReadOnly(true)] public GameParameter_SV GameParameter { get; }
@@ -26,14 +25,12 @@ namespace KKManager.Data.Cards.SVS
             Dictionary<string, PluginData> extended,
             FileSize extendedSize,
             Parameter parameter,
-            Status status,
             Graphic graphic,
             Version version,
             GameInfo_SV gameInfo,
             GameParameter_SV gameParameter) : base(cardFile, type, extended, extendedSize, version)
         {
             Parameter = parameter;
-            Status = status;
             Graphic = graphic;
             GameInfo = gameInfo;
             GameParameter = gameParameter;
@@ -84,7 +81,7 @@ namespace KKManager.Data.Cards.SVS
             var extendedSize = info.GetSize();
             // ---------- end blocks ----------
 
-            var card = new SamabakeCard(file, gameType, extData, extendedSize, parameter, null, graphic, loadVersion, gameInfo, gameParameter)
+            var card = new SamabakeCard(file, gameType, extData, extendedSize, parameter, graphic, loadVersion, gameInfo, gameParameter)
             {
                 Language = about?.language ?? -1,
                 UserID = about?.userID,
