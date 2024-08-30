@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MessagePack;
 
-namespace KKManager.Data.Cards.HC
+namespace KKManager.Data.Cards
 {
 	[MessagePackObject(true)]
 	public class BlockHeader
@@ -17,8 +17,11 @@ namespace KKManager.Data.Cards.HC
 		public class Info
 		{
 			public string name { get; set; }
+
 			public string version { get; set; }
+
 			public long pos { get; set; }
+
 			public long size { get; set; }
 		}
 	}

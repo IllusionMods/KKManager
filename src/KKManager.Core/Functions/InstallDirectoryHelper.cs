@@ -143,7 +143,7 @@ namespace KKManager.Functions
 
                 var anyDatas = Directory.GetDirectories(path)
                                         .Any(x => x.EndsWith("_Data", StringComparison.OrdinalIgnoreCase));
-                var abdataExist = File.Exists(Path.Combine(path, "abdata/abdata"));
+                var abdataExist = File.Exists(Path.Combine(path, "abdata/abdata")) || File.Exists(Path.Combine(path, "abdata/sv_abdata"));
 
                 // todo use this to offer to install bepinex and other mods / run update wizzard
                 //var modsExist = Directory.Exists(Path.Combine(path, "bepinex")) && Directory.Exists(Path.Combine(path, "mods"));
