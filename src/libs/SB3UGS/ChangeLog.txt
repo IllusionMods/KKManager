@@ -1,4 +1,19 @@
-﻿[24.1.4]
+﻿[24.2.2]
+  - Fixed replacing morph keyframes to support submeshes with identical number of vertices
+
+[24.2.1]
+  - Fixed replacement of morph keyframes if the shape target mesh has only one submesh
+  - Added command line option /DefaultVisualStyle
+  - Fixed invalid bone indices when creating "New Skin" with less than four influences
+
+[24.2]
+  - Fixed unhandled cloning of references to AudioClip and Shader.
+    Generalized and used for MonoScript, Material, Mesh, Texture2D and Cubemap as well
+  - Fixed crash when opening a MonoBehaviour in an Animator (tried to open a missing AB before)
+  - Fixed crash in Workspace when replacing morph keyframes
+  - Added support for imported meshes with blendshapes getting split by material
+
+[24.1.4]
   - Fixed loading and saving big ABs. ABs close to 4GB and more are not supported.
 
 [24.1.3]
