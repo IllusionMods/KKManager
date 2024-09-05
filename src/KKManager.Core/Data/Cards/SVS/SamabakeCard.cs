@@ -93,13 +93,14 @@ namespace KKManager.Data.Cards.SVS
 
         public override Image GetCardFaceImage()
         {
-            if (GameParameter != null)
+            if (GameParameter?.imageData != null)
             {
                 using (var str = new MemoryStream(GameParameter.imageData))
                     return Image.FromStream(str);
             }
 
-            return base.GetCardFaceImage();
+            // Imported HC cards don't have a face image
+            return null;
         }
 
         public static string GetProfession(int profession)
