@@ -246,9 +246,6 @@
   <data name="olvColumnVersion.ToolTipText" xml:space="preserve">
     <value>Version of the card's data format. Older version means the card was last saved with an older version of the game.</value>
   </data>
-  <metadata name="toolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>556, 17</value>
-  </metadata>
   <data name="toolStripOpenDropdown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -547,9 +544,6 @@ If off, only cards from the top directory are shown.</value>
   <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
     <value>Large icons</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
@@ -787,4 +781,10 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481</value>
   </data>
+  <metadata name="toolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>556, 17</value>
+  </metadata>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

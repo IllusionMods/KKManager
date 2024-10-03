@@ -117,4 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="buttonAcc.Text" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="buttonAnon.Text" xml:space="preserve">
+    <value>不要登录</value>
+  </data>
+  <data name="buttonAnon.ToolTip" xml:space="preserve">
+    <value>跳过登录，以匿名用户身份继续</value>
+  </data>
+  <data name="buttonCancel.Text" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>记住（？）</value>
+  </data>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>这将记住您的登录名和密码，以便将来自动登录。这通常是不必要的，因为如果关闭了“记住”，您的会话仍将被保存。
+
+密码将以哈希形式存储，而不是以纯文本形式存储。
+
+如果您选择不记住凭据，则会在几天后（会话到期后）要求您重新登录。</value>
+  </data>
+  <data name="labelPass.Text" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="labelEmail.Text" xml:space="preserve">
+    <value>你的邮箱</value>
+  </data>
+  <data name="labelEmail.ToolTip" xml:space="preserve">
+    <value>您在mega.nz上使用的登录名</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Mega.nz被用作提供高速下载的下载源之一。存在下载限制，这可能会迫使KK Manager使用较慢的源代码。
+为了避免此限制，您可以登录您的mega.nz帐户（如果有的话）。请注意，免费帐户可能不会增加限额。</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>更新程序-登录mega.nz</value>
+  </data>
 </root>

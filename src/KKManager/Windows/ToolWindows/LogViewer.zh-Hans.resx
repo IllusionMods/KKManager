@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="$this.Text" xml:space="preserve">
+    <value>日志查看器</value>
+  </data>
+  <data name="toolStripButtonRead.Text" xml:space="preserve">
+    <value>工具栏按钮读取</value>
+  </data>
+  <data name="toolStripButtonClear.Text" xml:space="preserve">
+    <value>工具栏按钮清除</value>
+  </data>
 </root>

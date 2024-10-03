@@ -117,4 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label4.Text" xml:space="preserve">
+    <value>拖放以重新排序。一个包含多种mod类型的zipmod将使用此列表中的第一个子文件夹，
+但是如果其任何内容类型被设置为不压缩，则它将不会被压缩。未知仅在未发现其他类型时使用。</value>
+  </data>
 </root>

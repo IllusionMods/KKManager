@@ -168,4 +168,7 @@
   <data name="$this.Text" xml:space="preserve">
     <value>P2P更新传输设置</value>
   </data>
+  <data name="checkBoxLogVerbose.Text" xml:space="preserve">
+    <value>启用详细日志记录（用于排除下载问题）</value>
+  </data>
 </root>

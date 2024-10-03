@@ -117,4 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="buttonSave.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="buttonRead.Text" xml:space="preserve">
+    <value>读取</value>
+  </data>
+  <data name="buttonBrowse.Text" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="buttonHash.Text" xml:space="preserve">
+    <value>为选定的UpdateInfo生成哈希值</value>
+  </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>刷新列表</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>UpdateInfo.xml编辑器</value>
+  </data>
 </root>

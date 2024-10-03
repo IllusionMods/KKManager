@@ -148,4 +148,13 @@
         TgDQASA1MVpwzwAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="toolStripButtonRead.Text" xml:space="preserve">
+    <value>打开日志文件</value>
+  </data>
+  <data name="toolStripButtonClear.Text" xml:space="preserve">
+    <value>清除窗口</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>工具栏1</value>
+  </data>
 </root>
