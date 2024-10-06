@@ -117,4 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="toolStripButtonLocation.Text" xml:space="preserve">
+    <value>打开安装位置</value>
+  </data>
+  <data name="toolStripButtonConf.Text" xml:space="preserve">
+    <value>打开配置文件</value>
+  </data>
+  <data name="toolStripButtonUrl.Text" xml:space="preserve">
+    <value>打开网站</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>工具栏1</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>一般的</value>
+  </data>
+  <data name="groupBoxRefs.Text" xml:space="preserve">
+    <value>这些插件需要这个插件：</value>
+  </data>
+  <data name="groupBoxDeps.Text" xml:space="preserve">
+    <value>此插件需要以下插件：</value>
+  </data>
 </root>

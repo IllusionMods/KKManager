@@ -141,4 +141,14 @@
     <value>未知</value>
     <comment>Shown in lists when the value is unknown (e.g. unknown date, unknown file size)</comment>
   </data>
+  <data name="OpenGameLogFailedMessage" xml:space="preserve">
+    <value>无法打开日志文件：｛0｝
+
+如果游戏似乎没有生成日志文件，则可能是在appdata内部的某个地方生成的。
+
+尝试在doorstop_config.ini中设置“redirectOutputLog=true”，如果这不会导致在游戏根目录中创建日志文件，请在BepInEx.cfg中启用磁盘日志。</value>
+  </data>
+  <data name="OpenGameLogMessageTitle" xml:space="preserve">
+    <value>打开日志文件</value>
+  </data>
 </root>

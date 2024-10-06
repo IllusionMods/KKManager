@@ -249,4 +249,59 @@
   <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
     <value>清理重复的和无效的zipmods...</value>
   </data>
+  <data name="openGameLogToolStripMenuItem.Text" xml:space="preserve">
+    <value>打开游戏日志</value>
+  </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>将KKManager指向其他游戏安装</value>
+  </data>
+  <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
+    <value>KK Manager</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>尝试安装插件或zipmod。
+对于插件、补丁程序，特别是非zipmod mods，建议按照作者提供的安装步骤进行操作。</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>你可以在这里单独下载zipmods，而不是更新整个modpack。</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>如果有可用的更新，Mod更新器菜单按钮将变为绿色。</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>注意：即使启用了P2P，仍然需要FTP连接。</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>这将尝试修复游戏目录中的任何文件或文件夹权限问题。
+在执行ui之前，请确保没有其他应用程序正在使用游戏目录中的任何内容，否则可能需要重新启动电脑才能再次访问某些文件。</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>通过使用更高的压缩级别重新压缩其资产包来减小游戏的大小。
+一般来说是安全的，但在极少数情况下可能会导致问题，特别是对于RG或HC等较新的游戏。如有疑问，请备份abdata和*_Data文件夹。</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>尝试自动清理具有相同GUID的zipmods，以便只留下最新版本。</value>
+  </data>
+  <data name="languagesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>要完全更改语言，需要重新启动KKManager。</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.Text" xml:space="preserve">
+    <value>尝试删除到回收站</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>在删除卡片/模组/插件以及更新模组时，尝试将文件移至回收站。
+如果此操作因任何原因失败（例如回收站已满或已禁用），则文件将被永久删除。</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>菜单行程1</value>
+  </data>
+  <data name="toolStripStatusLabelStatus.Text" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="statusStrip1.Text" xml:space="preserve">
+    <value>状态行程1</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>KK Manager</value>
+  </data>
 </root>

@@ -117,4 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>名字：</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>昵称：</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>姓氏：</value>
+  </data>
+  <data name="groupBox2.Text" xml:space="preserve">
+    <value>信息</value>
+  </data>
 </root>

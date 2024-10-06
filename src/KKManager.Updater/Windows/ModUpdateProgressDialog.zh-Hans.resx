@@ -154,4 +154,13 @@
   <data name="$this.Text" xml:space="preserve">
     <value>Mods更新中</value>
   </data>
+  <data name="buttonLog.Text" xml:space="preserve">
+    <value>查看日志</value>
+  </data>
+  <data name="buttonMinimize.Text" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+  <data name="buttonCancelClose.Text" xml:space="preserve">
+    <value>取消</value>
+  </data>
 </root>

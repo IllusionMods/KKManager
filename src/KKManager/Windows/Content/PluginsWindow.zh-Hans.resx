@@ -147,4 +147,22 @@
   <data name="toolStripButtonOpenDir.Text" xml:space="preserve">
     <value>打开插件目录</value>
   </data>
+  <data name="olvColumnGuid.Text" xml:space="preserve">
+    <value>Guid</value>
+  </data>
+  <data name="olvColumnPath.Text" xml:space="preserve">
+    <value>文件路径</value>
+  </data>
+  <data name="olvColumnGames.Text" xml:space="preserve">
+    <value>过程</value>
+  </data>
+  <data name="toolStripButtonSameGuid.Text" xml:space="preserve">
+    <value>显示相同的Guid</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>工具栏1</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>插件</value>
+  </data>
 </root>
