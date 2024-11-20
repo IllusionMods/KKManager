@@ -5,15 +5,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Ionic.Zip;
 using KKManager.Data.Cards;
 using KKManager.SB3UGS;
 using KKManager.Util;
 using SharpCompress.Archives;
-using CompressionLevel = Ionic.Zlib.CompressionLevel;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
+using SharpCompress.Compressors.Deflate;
+using SharpCompress.Writers.Zip;
 
 namespace KKManager.ModpackTool
 {
@@ -131,34 +134,22 @@ namespace KKManager.ModpackTool
                         manifestWorkCopy.Save(writer, SaveOptions.OmitDuplicateNamespaces);
 
                     // ------ Recompress the archive
-                    //using (var zf = ZipArchive.Create())
-                    //using (var writeStream = File.OpenWrite(outPath))
-                    //{
-                    //    zf.DeflateCompressionLevel = CompressionLevel.None;
-                    //    zf.AddAllFromDirectory(tempDir);
-                    //    zf.SaveTo(writeStream, new ZipWriterOptions(CompressionType.None)
-                    //    {
-                    //        //ArchiveEncoding = new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
-                    //        //ArchiveComment = archiveComment
-                    //    });
-                    //}
-
-                    using (var writeStream = File.OpenWrite(outPath))
-                    using (var zf = new Ionic.Zip.ZipFile())
+                    using (var zf = ZipArchive.Create())
+                    using (var fs = File.Create(outPath))
                     {
-                        zf.CompressionMethod = CompressionMethod.None;
-                        zf.CompressionLevel = CompressionLevel.None;
-                        zf.Comment = archiveComment;
-
-                        zf.AddDirectory(tempDir, "");
-                        zf.Save(writeStream);
+                        zf.DeflateCompressionLevel = CompressionLevel.None;
+                        zf.AddAllFromDirectory(tempDir);
+                        zf.SaveTo(fs, new ZipWriterOptions(CompressionType.Deflate)
+                        {
+                            ArchiveComment = archiveComment,
+                            ArchiveEncoding = new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
+                            // Seems like there's soem funny business going on (getting zip version 63 instead of 20) and setting both of these again seems to fix it???
+                            CompressionType = CompressionType.Deflate,
+                            DeflateCompressionLevel = CompressionLevel.None,
+                            UseZip64 = false,
+                            LeaveStreamOpen = false
+                        });
                     }
-
-
-
-
-
-
 
                     // ------ Clean up
                     await new DirectoryInfo(tempDir).SafeDelete();
