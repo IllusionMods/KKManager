@@ -5,7 +5,7 @@ using KKManager.Windows;
 
 namespace KKManager.ModpackTool
 {
-    public class ValidatedStringWrapper : INotifyPropertyChanged
+    public class ValidatedStringWrapper : INotifyPropertyChanged, IComparable<ValidatedStringWrapper>, IComparable, IEquatable<ValidatedStringWrapper>
     {
         public static implicit operator string(ValidatedStringWrapper w) => w.Value;
 
@@ -51,5 +51,9 @@ namespace KKManager.ModpackTool
         public bool VerifyString(string value) => VerifyValue(value);
 
         public override string ToString() => Value ?? "";
+
+        public int CompareTo(object obj) => obj is ValidatedStringWrapper other ? CompareTo(other) : 1;
+        public int CompareTo(ValidatedStringWrapper other) => string.Compare(Value, other.Value, StringComparison.Ordinal);
+        public bool Equals(ValidatedStringWrapper other) => Value == other?.Value;
     }
 }
