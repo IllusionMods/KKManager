@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using Ionic.Zip;
 using KKManager.Util;
 using SharpCompress.Archives;
 using System.Diagnostics;
+using SharpCompress.Archives.Zip;
 #if AI || HS2
 using AIChara;
 #endif
@@ -239,11 +239,11 @@ namespace Sideloader
             }
         }
 
-        internal static Manifest LoadFromZip(ZipFile zip)
+        internal static Manifest LoadFromZip(ZipArchive zip)
         {
-            var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && x.FileName == "manifest.xml");
+            var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && string.Equals(x.Key, "manifest.xml", StringComparison.OrdinalIgnoreCase));
 
-            return LoadFromZipInt(entry?.OpenReader());
+            return LoadFromZipInt(entry?.OpenEntryStream());
         }
 
         internal static Manifest LoadFromZip(IArchive zip)
