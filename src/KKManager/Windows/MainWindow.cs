@@ -111,7 +111,7 @@ namespace KKManager.Windows
                         try
                         {
                             path = Registry.CurrentUser.OpenSubKey(@"Software\Illusion\Koikatu\koikatu")
-                                           ?.GetValue("INSTALLDIR") as string;
+                                ?.GetValue("INSTALLDIR") as string;
                         }
                         catch (SystemException) { }
                         catch (Exception ex) { ex.ToStringDemystified(); }
