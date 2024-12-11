@@ -182,7 +182,7 @@ namespace KKManager.Data.Zipmods
                                 }
                             }
                         }
-                        catch (SystemException ex)
+                        catch (Exception ex)
                         {
                             Console.WriteLine($"Failed to load image \"{imgName}\" from mod archive \"{location.Name}\" with error: {ex.Message}");
                             return null;

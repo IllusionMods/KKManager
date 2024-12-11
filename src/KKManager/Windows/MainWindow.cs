@@ -35,7 +35,7 @@ namespace KKManager.Windows
     {
         private UpdateSourceBase[] _updateSources;
         public UpdateSourceBase[] GetUpdateSources() => _updateSources ?? (_updateSources = UpdateSourceManager.FindUpdateSources(Program.ProgramLocation));
-        
+
         public MainWindow()
         {
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
@@ -114,6 +114,7 @@ namespace KKManager.Windows
                                 ?.GetValue("INSTALLDIR") as string;
                         }
                         catch (SystemException) { }
+                        catch (Exception ex) { ex.ToStringDemystified(); }
                     }
 
                     path = ShowInstallDirectoryDialog(path);

@@ -230,7 +230,7 @@ namespace Sideloader
                 manifest = LoadFromZip(zip);
                 return true;
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"Cannot load {zip} - {ex.Message}.");
                 if (!(ex is OperationCanceledException))
@@ -239,25 +239,19 @@ namespace Sideloader
             }
         }
 
-        internal static Manifest LoadFromZip(ZipArchive zip)
+        internal static Manifest LoadFromZip(IArchive zip)
         {
             var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && string.Equals(x.Key, "manifest.xml", StringComparison.OrdinalIgnoreCase));
 
-            return LoadFromZipInt(entry?.OpenEntryStream());
-        }
+            if (entry == null)
+                throw new InvalidDataException("Manifest.xml is missing, make sure this is a zipmod");
 
-        internal static Manifest LoadFromZip(IArchive zip)
-        {
-            var entry = zip.Entries.FirstOrDefault(x => !x.IsDirectory && x.Key == "manifest.xml");
-
-            return LoadFromZipInt(entry?.OpenEntryStream());
+            var entryStream = entry.OpenEntryStream();
+            return LoadFromZipInt(entryStream);
         }
 
         private static Manifest LoadFromZipInt(Stream entry)
         {
-            if (entry == null)
-                throw new InvalidDataException("Manifest.xml is missing, make sure this is a zipmod");
-
             var manifest = new Manifest(entry);
 
             if (manifest.GUID == null)
