@@ -132,7 +132,7 @@ namespace KKManager.Functions
             {
                 newPlugs = PluginLoader.LoadFromFile(fileName).ToList();
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 throw new InvalidDataException("The file is not a plugin or is broken - " + ex.Message, ex);
             }
@@ -182,7 +182,7 @@ namespace KKManager.Functions
             {
                 throw;
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 throw new InvalidDataException("The file is not a zipmod or is broken - " + ex.Message, ex);
             }
@@ -219,7 +219,7 @@ namespace KKManager.Functions
                 Directory.CreateDirectory(installModDir);
                 newMod.Location.CopyTo(Path.Combine(installModDir, newMod.Location.Name));
             }
-            catch (SystemException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw new InvalidOperationException("Failed to install zipmod file - " + e.Message, e);

@@ -169,7 +169,7 @@ namespace KKManager.Windows.Content
                 {
                     plug.SetEnabled(enabled);
                 }
-                catch (SystemException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     MessageBox.Show("Failed to toggle active state of " + plug.Name + "\n\n" + ex.Message, "Enable/Disable plugins", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -207,7 +207,7 @@ namespace KKManager.Windows.Content
             {
                 Process.Start(InstallDirectoryHelper.PluginPath.FullName);
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

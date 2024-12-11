@@ -120,7 +120,7 @@ namespace KKManager.Windows.Content
                 {
                     obj.SetEnabled(enabled);
                 }
-                catch (SystemException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     MessageBox.Show("Failed to toggle active state of " + obj.Name + "\n\n" + ex.Message, "Enable/Disable zipmods", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -148,7 +148,7 @@ namespace KKManager.Windows.Content
                     await obj.Location.SafeDelete();
                     objectListView1.RemoveObject(obj);
                 }
-                catch (SystemException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     MessageBox.Show("Failed to delete " + obj.Name + "\n\n" + ex.Message, "Delete zipmods", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -162,7 +162,7 @@ namespace KKManager.Windows.Content
             {
                 Process.Start(InstallDirectoryHelper.ModsPath.FullName);
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Failed to start application", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

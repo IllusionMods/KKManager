@@ -34,6 +34,11 @@ namespace KKManager.Util
                 MessageBox.Show(ex.Message, Resources.FailedToStartApplicationMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToStringDemystified(), Resources.FailedToStartApplicationMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
 
         public static Process SafeStartProcess(string filename, bool elevated = false)

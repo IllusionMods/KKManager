@@ -126,7 +126,7 @@ namespace KKManager.Windows.Content
                 OpenCardDirectory(new DirectoryInfo(path));
                 return true;
             }
-            catch (SystemException ex)
+            catch (Exception ex)
             {
                 ShowFailedToLoadDirError(ex);
                 return false;
@@ -334,6 +334,11 @@ namespace KKManager.Windows.Content
                         {
                             return false;
                         }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            return false;
+                        }
                     });
             }
 
@@ -415,6 +420,7 @@ namespace KKManager.Windows.Content
                         }
                     }
                     catch (SystemException) { }
+                    catch (Exception e) { Console.WriteLine(e); }
                 }
 
                 return null;

@@ -37,7 +37,7 @@ namespace KKManager.Util
                 {
                     olv.EndUpdate();
                 }
-                catch (SystemException ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }

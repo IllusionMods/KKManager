@@ -39,7 +39,7 @@ namespace KKManager
                     {
                         return x.GetFiles("KKManager.resources.dll", SearchOption.TopDirectoryOnly).Any();
                     }
-                    catch (SystemException e)
+                    catch (Exception e)
                     {
                         Console.WriteLine(e);
                         return false;

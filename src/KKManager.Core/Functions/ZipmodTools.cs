@@ -58,7 +58,7 @@ namespace KKManager.Windows
                     {
                         mods.Add(SideloaderModLoader.LoadFromFile(mod));
                     }
-                    catch (SystemException ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine($"Deleting zipmod file: {mod} | Reason: {ex.Message}");
                         // Kill it with fire
@@ -127,6 +127,10 @@ namespace KKManager.Windows
             catch (SystemException)
             {
                 // Nom nom nom
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Unexpected Exception when trying to delete file: {file}\n{e.ToStringDemystified()}");
             }
         }
     }
