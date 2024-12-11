@@ -36,6 +36,7 @@ namespace KKManager.Util
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 MessageBox.Show(ex.ToStringDemystified(), Resources.FailedToStartApplicationMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
