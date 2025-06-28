@@ -385,6 +385,45 @@ If off, only cards from the top directory are shown.</value>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 27</value>
   </data>
+  <data name="detailsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 22</value>
+  </data>
+  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 22</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Small icons</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 22</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Large icons</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 6</value>
+  </data>
+  <data name="showUnknowninvalidCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 22</value>
+  </data>
+  <data name="showUnknowninvalidCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Show unknown/invalid cards</value>
+  </data>
+  <data name="toolStripSeparator5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>224, 6</value>
+  </data>
+  <data name="openInExplorerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>227, 22</value>
+  </data>
+  <data name="openInExplorerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open folder in explorer</value>
+  </data>
   <data name="toolStripViewSelect.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -408,57 +447,6 @@ If off, only cards from the top directory are shown.</value>
   </data>
   <data name="toolStripViewSelect.Text" xml:space="preserve">
     <value>View</value>
-  </data>
-  <data name="segregateBySexToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
-    <value>Segregate selected by sex</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Rename selected card files...</value>
-  </data>
-  <data name="exportAListOfMissingModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Export a list of missing mods...</value>
-  </data>
-  <data name="cardMetadataToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>253, 22</value>
-  </data>
-  <data name="cardMetadataToolStripMenuItem.Text" xml:space="preserve">
-    <value>Full card metadata</value>
-  </data>
-  <data name="usedZipmodsAndPluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>253, 22</value>
-  </data>
-  <data name="usedZipmodsAndPluginsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Used zipmods and plugins</value>
-  </data>
-  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>253, 22</value>
-  </data>
-  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
-    <value>Zipmod usage (including unused)</value>
-  </data>
-  <data name="pluginUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>253, 22</value>
-  </data>
-  <data name="pluginUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
-    <value>Plugin usage (including unused)</value>
-  </data>
-  <data name="exportToCsvToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>235, 22</value>
-  </data>
-  <data name="exportToCsvToolStripMenuItem.Text" xml:space="preserve">
-    <value>Export to csv...</value>
   </data>
   <data name="toolStripDropDownButtonTools.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -532,35 +520,56 @@ If off, only cards from the top directory are shown.</value>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
     <value>169, 6</value>
   </data>
-  <data name="detailsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="segregateBySexToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Details</value>
+  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
+    <value>Segregate selected by sex</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
+  <data name="renameCardsToolStripMenuItem.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="renameCardsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Small icons</value>
+  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Rename selected card files...</value>
   </data>
-  <data name="largeIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Large icons</value>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export a list of missing mods...</value>
   </data>
-  <data name="openInExplorerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+  <data name="exportToCsvToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 22</value>
   </data>
-  <data name="openInExplorerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open in explorer</value>
+  <data name="exportToCsvToolStripMenuItem.Text" xml:space="preserve">
+    <value>Export to csv...</value>
   </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+  <data name="cardMetadataToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="cardMetadataToolStripMenuItem.Text" xml:space="preserve">
+    <value>Full card metadata</value>
+  </data>
+  <data name="usedZipmodsAndPluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="usedZipmodsAndPluginsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Used zipmods and plugins</value>
+  </data>
+  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>Zipmod usage (including unused)</value>
+  </data>
+  <data name="pluginUsageincludingUnusedToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="pluginUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>Plugin usage (including unused)</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -742,6 +751,18 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;largeIconsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Name" xml:space="preserve">
+    <value>openInExplorerToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;toolStripDropDownButtonTools.Name" xml:space="preserve">
     <value>toolStripDropDownButtonTools</value>
   </data>
@@ -772,6 +793,12 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;exportToCsvToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Name" xml:space="preserve">
+    <value>cardMetadataToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;usedZipmodsAndPluginsToolStripMenuItem.Name" xml:space="preserve">
     <value>usedZipmodsAndPluginsToolStripMenuItem</value>
   </data>
@@ -796,23 +823,17 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Name" xml:space="preserve">
-    <value>openInExplorerToolStripMenuItem</value>
+  <data name="&gt;&gt;showUnknowninvalidCardsToolStripMenuItem.Name" xml:space="preserve">
+    <value>showUnknowninvalidCardsToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;showUnknowninvalidCardsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
-    <value>toolStripSeparator1</value>
+  <data name="&gt;&gt;toolStripSeparator5.Name" xml:space="preserve">
+    <value>toolStripSeparator5</value>
   </data>
-  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+  <data name="&gt;&gt;toolStripSeparator5.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Name" xml:space="preserve">
-    <value>cardMetadataToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>CardWindow</value>

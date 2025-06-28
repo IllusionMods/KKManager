@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace KKManager.Windows.Content
 {
@@ -38,6 +37,15 @@ namespace KKManager.Windows.Content
         {
             get => toolStripButtonSubdirs.Checked ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             set => toolStripButtonSubdirs.Checked = value == SearchOption.AllDirectories;
+        }
+        private bool ShowInvalid
+        {
+            get => showUnknowninvalidCardsToolStripMenuItem.Checked;
+            set
+            {
+                showUnknowninvalidCardsToolStripMenuItem.Checked = value;
+                RefreshList();
+            }
         }
 
         public CardWindow()
@@ -67,7 +75,9 @@ namespace KKManager.Windows.Content
             {
                 if (args.Model is Card card)
                 {
-                    if (card.MissingPlugins?.Length > 0 || card.MissingZipmods?.Length > 0)
+                    if (card is UnknownCard)
+                        args.Item.BackColor = Color.LightGray;
+                    else if (card.MissingPlugins?.Length > 0 || card.MissingZipmods?.Length > 0)
                         args.Item.BackColor = Color.MistyRose;
                 }
             };
@@ -136,12 +146,12 @@ namespace KKManager.Windows.Content
 
         public void DeserializeContent(string contentString)
         {
-            var parts = contentString.Split(new[] { "|||" }, 3, StringSplitOptions.None);
+            var parts = contentString.Split(new[] { "|||" }, StringSplitOptions.None);
             if (parts.Length >= 1)
             {
                 OpenCardDirectory(new DirectoryInfo(parts[0]));
 
-                if (parts.Length == 3)
+                if (parts.Length >= 3)
                 {
                     try
                     {
@@ -150,12 +160,21 @@ namespace KKManager.Windows.Content
                     }
                     catch { /* safe to ignore */ }
                 }
+                if (parts.Length >= 4)
+                {
+                    bool showInvalid;
+                    if (bool.TryParse(parts[3], out showInvalid))
+                    {
+                        ShowInvalid = showInvalid;
+                        showUnknowninvalidCardsToolStripMenuItem.Checked = showInvalid;
+                    }
+                }
             }
         }
 
         protected override string GetPersistString()
         {
-            return base.GetPersistString() + "|||" + _currentDirectory?.FullName + "|||" + DirectorySearchMode + "|||" + Convert.ToBase64String(listView.SaveState());
+            return base.GetPersistString() + "|||" + _currentDirectory?.FullName + "|||" + DirectorySearchMode + "|||" + Convert.ToBase64String(listView.SaveState()) + "|||" + ShowInvalid;
         }
 
         private void addressBar_KeyDown(object sender, KeyEventArgs e)
@@ -272,7 +291,7 @@ namespace KKManager.Windows.Content
                     list =>
                     {
                         MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
-                        listView.AddObjects(list);
+                        listView.AddObjects(ShowInvalid ? list : list.Where(x => x is not UnknownCard).ToList());
                         //RefreshThumbnails(true);
                     },
                     ShowFailedToLoadDirError,
@@ -852,6 +871,12 @@ namespace KKManager.Windows.Content
         private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(_currentDirectory.FullName);
+        }
+
+        private void showUnknowninvalidCardsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showUnknowninvalidCardsToolStripMenuItem.Checked = !showUnknowninvalidCardsToolStripMenuItem.Checked;
+            ShowInvalid = showUnknowninvalidCardsToolStripMenuItem.Checked;
         }
     }
 }

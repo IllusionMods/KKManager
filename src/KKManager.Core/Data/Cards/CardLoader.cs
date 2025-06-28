@@ -163,7 +163,7 @@ namespace KKManager.Data.Cards
                     //    return null;
 
                     var marker = reader.ReadString();
-                    var gameType = GetGameType(marker, true);
+                    var gameType = GetGameType(marker, false);
 
                     Card card;
                     switch (gameType)
@@ -208,7 +208,8 @@ namespace KKManager.Data.Cards
                         case CardType.SamabakeScrambleClothes:
                         case CardType.Unknown:
                         default:
-                            throw new ArgumentOutOfRangeException($"GameType={gameType} is not supported");
+                            // Instead of throwing, return an UnknownCard
+                            return new UnknownCard(file, $"Unknown or unsupported card type: {marker}");
                     }
 
                     if (card.Extended != null)
@@ -230,9 +231,13 @@ namespace KKManager.Data.Cards
 
                     return card;
                 }
-                catch (EndOfStreamException e)
+                catch (Exception e)
                 {
-                    throw new IOException("The card is corrupted or in an unknown format", e);
+                    // Do not create an UnknownCard if the exception is due to access permissions
+                    if (e is UnauthorizedAccessException || e is IOException ioEx && (ioEx.HResult & 0xFFFF) == 0x21) // ERROR_LOCK_VIOLATION
+                        throw;
+
+                    return new UnknownCard(file, "The card is corrupted or in an unknown format", e);
                 }
             }
         }
