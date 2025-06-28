@@ -219,7 +219,9 @@ namespace KKManager.Updater.Windows
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
-                if (updateTasks.All(x => x.UpToDate))
+                // If no update tasks are found (empty collection) or all tasks are already up-to-date,
+                // treat this as all tasks being up-to-date and proceed accordingly.
+                if (updateTasks.Count == 0 || updateTasks.All(x => x.UpToDate))
                 {
                     SetStatus(Resources.ModUpdateProgress_AllUpToDate);
                     progressBar1.Value = progressBar1.Maximum;

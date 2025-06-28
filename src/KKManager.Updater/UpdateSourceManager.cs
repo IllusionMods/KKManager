@@ -68,10 +68,11 @@ namespace KKManager.Updater
                 {
                     try
                     {
-                        foreach (var task in await source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).ConfigureAwait(false))
+                        var updateItems = await source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).ConfigureAwait(false);
+                        // Using AllInfos to set anySuccessful because it includes all update items, even those filtered out.
+                        if (updateItems.AllInfos.Any()) anySuccessful = true;
+                        foreach (var task in updateItems.FilteredTasks)
                         {
-                            anySuccessful = true;
-
                             if (cancellationToken.IsCancellationRequested || criticalException != null) break;
 
                             // todo move further inside or decouple getting update tasks and actually processing them
