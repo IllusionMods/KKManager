@@ -1,4 +1,11 @@
-﻿using System;
+﻿using BrightIdeasSoftware;
+using KKManager.Data.Cards;
+using KKManager.Data.Plugins;
+using KKManager.Data.Zipmods;
+using KKManager.Functions;
+using KKManager.Util;
+using KKManager.Windows.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,14 +18,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BrightIdeasSoftware;
-using KKManager.Data.Cards;
-using KKManager.Data.Plugins;
-using KKManager.Data.Zipmods;
-using KKManager.Functions;
-using KKManager.Util;
-using KKManager.Windows.Dialogs;
 using WeifenLuo.WinFormsUI.Docking;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace KKManager.Windows.Content
 {
@@ -697,9 +698,73 @@ namespace KKManager.Windows.Content
             RefreshList();
         }
 
-        private void ExportModCsv(ICollection<Card> cards, bool includeUnused, bool plugins, bool zipmods)
+        private static void ExportModCsv(ICollection<Card> cards, bool includeUnused, bool plugins, bool zipmods)
         {
-            using (var sfd = new SaveFileDialog
+            using var sfd = CreateCsvSaveDialog();
+
+            try
+            {
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+
+                using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
+                {
+                    if (zipmods)
+                    {
+                        writer.WriteLine($"\"# Chara zipmods used by selected cards\",\"Card count:\",\"{cards.Count}\"");
+                        writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\",\"Zipmod filename\"");
+
+                        var usedZipmods = cards.SelectMany(x => x.Extended.Values.SelectMany(y => y?.RequiredZipmodGUIDs ?? new List<string>(0)).Distinct())
+                                               .GroupBy(x => x)
+                                               .Select(x => new Tuple<string, int>(x.Key, x.Count()))
+                                               .ToList();
+                        if (includeUnused)
+                            usedZipmods.AddRange(SideloaderModLoader.Zipmods.Where(x => x.ContentsKind.HasFlag(SideloaderModInfo.ZipmodContentsKind.Character)).Select(x => x.Guid).ToEnumerable().Except(usedZipmods.Select(x => x.Item1)).Select(x => new Tuple<string, int>(x, 0)));
+
+                        foreach (var zipmodGuid in usedZipmods.OrderByDescending(x => x.Item2).ThenBy(x => x.Item1))
+                        {
+                            var zipmod = SideloaderModLoader.Zipmods.FirstOrDefaultAsync(x => x.Guid == zipmodGuid.Item1).Wait();
+                            var zipmodInstalled = zipmod != null;
+                            writer.WriteLine($"\"{zipmodGuid.Item1}\",\"{zipmodGuid.Item2}\",\"{(zipmodInstalled ? "Yes" : "No")}\",\"{zipmod?.FileName}\"");
+                        }
+
+                        writer.WriteLine();
+                    }
+                    if (plugins)
+                    {
+                        writer.WriteLine($"\"# Plugins used by the cards\",\"{cards.Count} cards\"");
+                        writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
+
+                        var usedPlugins = cards.SelectMany(x => x.Extended.SelectMany(y => y.Value?.RequiredPluginGUIDs?.Count > 0
+                                                                                          ? y.Value.RequiredPluginGUIDs.Select(z => new Tuple<string, bool>(z, true))
+                                                                                          : new List<Tuple<string, bool>> { new Tuple<string, bool>(y.Key, false) })
+                                                                 .DistinctBy(c => c.Item1))
+                                               .GroupBy(x => x.Item1)
+                                               .Select(x => new Tuple<string, int, bool>(x.Key, x.Count(), x.First().Item2))
+                                               .ToList();
+
+                        if (includeUnused)
+                            usedPlugins.AddRange(PluginLoader.Plugins.Select(x => x.Guid).ToEnumerable().Except(usedPlugins.Select(x => x.Item1)).Select(a => new Tuple<string, int, bool>(a, 0, true)));
+
+                        foreach (var pluginGuid in usedPlugins.OrderByDescending(x => x.Item2).ThenByDescending(x => x.Item3).ThenBy(x => x.Item1))
+                        {
+                            var pluginInstalled = pluginGuid.Item2 == 0 || PluginLoader.Plugins.Any(p => p.Guid == pluginGuid.Item1).Wait() || PluginLoader.Plugins.SelectMany(x => x.ExtDataGuidCandidates).Any(p => p == pluginGuid.Item1).Wait();
+                            writer.WriteLine($"\"{pluginGuid.Item1}\",\"{pluginGuid.Item2}\",\"{(pluginInstalled ? "Yes" : pluginGuid.Item3 ? "No" : "Maybe")}\"");
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+
+                MessageBox.Show($"Failed to export: {exception.Message}\n\nTry saving to a different location. If the error persists, report it on GitHub together with the log file.",
+                                "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static SaveFileDialog CreateCsvSaveDialog()
+        {
+            return new SaveFileDialog
             {
                 AddExtension = true,
                 CheckFileExists = false,
@@ -713,68 +778,7 @@ namespace KKManager.Windows.Content
                 //InitialDirectory = InstallDirectoryHelper.GameDirectory.FullName,
                 DereferenceLinks = true,
                 FileName = "KKManager data export",
-            })
-            {
-                try
-                {
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
-                        {
-                            if (zipmods)
-                            {
-                                writer.WriteLine($"\"# Chara zipmods used by selected cards\",\"Card count:\",\"{cards.Count}\"");
-                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\",\"Zipmod filename\"");
-
-                                var usedZipmods = cards.SelectMany(x => x.Extended.Values.SelectMany(y => y?.RequiredZipmodGUIDs ?? new List<string>(0)).Distinct())
-                                                                 .GroupBy(x => x)
-                                                                 .Select(x => new Tuple<string, int>(x.Key, x.Count()))
-                                                                 .ToList();
-                                if (includeUnused)
-                                    usedZipmods.AddRange(SideloaderModLoader.Zipmods.Where(x => x.ContentsKind.HasFlag(SideloaderModInfo.ZipmodContentsKind.Character)).Select(x => x.Guid).ToEnumerable().Except(usedZipmods.Select(x => x.Item1)).Select(x => new Tuple<string, int>(x, 0)));
-
-                                foreach (var zipmodGuid in usedZipmods.OrderByDescending(x => x.Item2).ThenBy(x => x.Item1))
-                                {
-                                    var zipmod = SideloaderModLoader.Zipmods.FirstOrDefaultAsync(x => x.Guid == zipmodGuid.Item1).Wait();
-                                    var zipmodInstalled = zipmod != null;
-                                    writer.WriteLine($"\"{zipmodGuid.Item1}\",\"{zipmodGuid.Item2}\",\"{(zipmodInstalled ? "Yes" : "No")}\",\"{zipmod?.FileName}\"");
-                                }
-
-                                writer.WriteLine();
-                            }
-                            if (plugins)
-                            {
-                                writer.WriteLine($"\"# Plugins used by the cards\",\"{cards.Count} cards\"");
-                                writer.WriteLine("\"GUID\",\"Cards with usages\",\"Is installed\"");
-
-                                var usedPlugins = cards.SelectMany(x => x.Extended.SelectMany(y => y.Value?.RequiredPluginGUIDs?.Count > 0
-                                                                                                                  ? y.Value.RequiredPluginGUIDs.Select(z => new Tuple<string, bool>(z, true))
-                                                                                                                  : new List<Tuple<string, bool>> { new Tuple<string, bool>(y.Key, false) })
-                                                                                   .DistinctBy(c => c.Item1))
-                                                                       .GroupBy(x => x.Item1)
-                                                                       .Select(x => new Tuple<string, int, bool>(x.Key, x.Count(), x.First().Item2))
-                                                                       .ToList();
-
-                                if (includeUnused)
-                                    usedPlugins.AddRange(PluginLoader.Plugins.Select(x => x.Guid).ToEnumerable().Except(usedPlugins.Select(x => x.Item1)).Select(a => new Tuple<string, int, bool>(a, 0, true)));
-
-                                foreach (var pluginGuid in usedPlugins.OrderByDescending(x => x.Item2).ThenByDescending(x => x.Item3).ThenBy(x => x.Item1))
-                                {
-                                    var pluginInstalled = pluginGuid.Item2 == 0 || PluginLoader.Plugins.Any(p => p.Guid == pluginGuid.Item1).Wait() || PluginLoader.Plugins.SelectMany(x => x.ExtDataGuidCandidates).Any(p => p == pluginGuid.Item1).Wait();
-                                    writer.WriteLine($"\"{pluginGuid.Item1}\",\"{pluginGuid.Item2}\",\"{(pluginInstalled ? "Yes" : pluginGuid.Item3 ? "No" : "Maybe")}\"");
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
-
-                    MessageBox.Show($"Failed to export: {exception.Message}\n\nTry saving to a different location. If the error persists, report it on GitHub together with the log file.",
-                                    "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
+            };
         }
 
         private void usedZipmodsAndPluginsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -799,6 +803,55 @@ namespace KKManager.Windows.Content
             if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
 
             ExportModCsv(selectedObjects, true, true, false);
+        }
+
+        private void cardMetadataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using var sfd = CreateCsvSaveDialog();
+
+            try
+            {
+                if (sfd.ShowDialog() != DialogResult.OK) return;
+
+                using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
+                {
+                    writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtenedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
+
+                    foreach (var card in _typedListView.SelectedObjects)
+                    {
+                        var fileName = card.Location?.FullName ?? "";
+                        var fileSize = card.FileSize ?? "";
+                        var cardType = card.Type.ToString();
+                        var characterName = card.Name ?? "";
+                        var sex = card.Sex.ToString();
+                        var personality = card.PersonalityName ?? "";
+                        var extendedDataCount = card.Extended?.Count ?? 0;
+                        var creatorId = card.UserID ?? "";
+                        var dataId = card.DataID ?? "";
+                        var version = card.Version?.ToString() ?? "";
+                        var extendedSize = card.ExtendedSize.ToString();
+                        var missingZipmods = card.MissingZipmods != null ? string.Join(";", card.MissingZipmods) : "";
+                        var missingPlugins = card.MissingPlugins != null ? string.Join(";", card.MissingPlugins) : "";
+                        var missingPluginsMaybe = card.MissingPluginsMaybe != null ? string.Join(";", card.MissingPluginsMaybe) : "";
+
+                        writer.WriteLine($"\"{fileName}\",\"{fileSize}\",\"{cardType}\",\"{characterName}\",\"{sex}\",\"{personality}\",\"{creatorId}\",\"{dataId}\",\"{version}\",\"{extendedDataCount}\",\"{extendedSize}\",\"{missingZipmods}\",\"{missingPlugins}\",\"{missingPluginsMaybe}\"");
+                    }
+
+                    writer.WriteLine();
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+
+                MessageBox.Show($"Failed to export: {exception.Message}\n\nTry saving to a different location. If the error persists, report it on GitHub together with the log file.",
+                                "Failed to export", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(_currentDirectory.FullName);
         }
     }
 }

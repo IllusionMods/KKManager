@@ -430,6 +430,12 @@ If off, only cards from the top directory are shown.</value>
   <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
     <value>Export a list of missing mods...</value>
   </data>
+  <data name="cardMetadataToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 22</value>
+  </data>
+  <data name="cardMetadataToolStripMenuItem.Text" xml:space="preserve">
+    <value>Full card metadata</value>
+  </data>
   <data name="usedZipmodsAndPluginsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 22</value>
   </data>
@@ -512,22 +518,22 @@ If off, only cards from the top directory are shown.</value>
     <value>1</value>
   </data>
   <data name="femaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>172, 22</value>
   </data>
   <data name="femaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
     <value>Female card folder</value>
   </data>
   <data name="maleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>172, 22</value>
   </data>
   <data name="maleCardFolderToolStripMenuItem.Text" xml:space="preserve">
     <value>Male card folder</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>169, 6</value>
   </data>
   <data name="detailsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
     <value>Details</value>
@@ -536,16 +542,25 @@ If off, only cards from the top directory are shown.</value>
     <value>False</value>
   </data>
   <data name="smallIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
     <value>Small icons</value>
   </data>
   <data name="largeIconsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 22</value>
+    <value>180, 22</value>
   </data>
   <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
     <value>Large icons</value>
+  </data>
+  <data name="openInExplorerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="openInExplorerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open in explorer</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>177, 6</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -637,6 +652,30 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;olvColumnVersion.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
+  <data name="&gt;&gt;toolStripOpenDropdown.Name" xml:space="preserve">
+    <value>toolStripOpenDropdown</value>
+  </data>
+  <data name="&gt;&gt;toolStripOpenDropdown.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSplitButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;femaleCardFolderToolStripMenuItem.Name" xml:space="preserve">
+    <value>femaleCardFolderToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;femaleCardFolderToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;maleCardFolderToolStripMenuItem.Name" xml:space="preserve">
+    <value>maleCardFolderToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;maleCardFolderToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;addressBar.Name" xml:space="preserve">
     <value>addressBar</value>
   </data>
@@ -665,30 +704,6 @@ If off, only cards from the top directory are shown.</value>
     <value>toolStripSeparator3</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripOpenDropdown.Name" xml:space="preserve">
-    <value>toolStripOpenDropdown</value>
-  </data>
-  <data name="&gt;&gt;toolStripOpenDropdown.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSplitButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;femaleCardFolderToolStripMenuItem.Name" xml:space="preserve">
-    <value>femaleCardFolderToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;femaleCardFolderToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;maleCardFolderToolStripMenuItem.Name" xml:space="preserve">
-    <value>maleCardFolderToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;maleCardFolderToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
-    <value>toolStripSeparator2</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripButtonDelete.Name" xml:space="preserve">
@@ -751,12 +766,6 @@ If off, only cards from the top directory are shown.</value>
   <data name="&gt;&gt;exportAListOfMissingModsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;toolStripTextBoxSearch.Name" xml:space="preserve">
-    <value>toolStripTextBoxSearch</value>
-  </data>
-  <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;exportToCsvToolStripMenuItem.Name" xml:space="preserve">
     <value>exportToCsvToolStripMenuItem</value>
   </data>
@@ -779,6 +788,30 @@ If off, only cards from the top directory are shown.</value>
     <value>pluginUsageincludingUnusedToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;pluginUsageincludingUnusedToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripTextBoxSearch.Name" xml:space="preserve">
+    <value>toolStripTextBoxSearch</value>
+  </data>
+  <data name="&gt;&gt;toolStripTextBoxSearch.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Name" xml:space="preserve">
+    <value>openInExplorerToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;openInExplorerToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Name" xml:space="preserve">
+    <value>cardMetadataToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;cardMetadataToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
