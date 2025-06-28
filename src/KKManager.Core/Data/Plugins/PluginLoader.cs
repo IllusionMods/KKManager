@@ -101,6 +101,10 @@ namespace KKManager.Data.Plugins
                         {
                             throw;
                         }
+                        catch (BadImageFormatException)
+                        {
+                            // Not a valid .NET assembly, skip
+                        }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Failed to load plugin from \"{file}\" with error: {ex.ToStringDemystified()}");
