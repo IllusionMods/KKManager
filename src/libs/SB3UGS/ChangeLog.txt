@@ -1,4 +1,150 @@
-﻿[24.2.2]
+﻿[25.2.10]
+  - Fixed import of flat in-between blendshapes (introduced in 20.3.4)
+  - Fixed SVS LookAt TextAsset
+  - Added support for SVS Camera TextAsset
+  - Changed SVS h/list TextAssets with hashed keys - name resolving by opening AnimatorControllers
+
+[25.2.9]
+  - Fixed MotionIK TextAssets (broken since 23.2.1), added support for HS2
+    Remaining issues: RG one subtype is supported the other is not. HC has a unhandled extensions.
+  - Added support for SVS TextAssets in h/list/lookat and layermask
+
+Known issue: computing in-between blendshape successors
+
+[25.2.8]
+  - Fixed SVS TextAssets in h/list/item and posture
+  - Added support for SVS TextAssets in h/list/loaddata, h/list/hit, h/list/yure, h/list/eyeneck
+  - Changed SVS TextAsset voice-breath, voice-general, voice-heart to have a header and booleans
+
+[25.2.7]
+  - Added support for SVS h/list/se and h/list/item TextAssets
+
+[25.2.6]
+  - Fixed preview of "blue" tangents
+  - Added support for SVS posture TextAssets
+
+[25.2.5]
+  - Changed FormStringTable to show a selected cell fully
+  - Added support for SVS voice-breath, voice-general, voice-heart TextAsset
+  - Fixed crash for Unity versions before 5.5 when selecting a material
+  - Added a line for assets not found in the AssetBundle in the report for loadable assets
+
+[25.2.4]
+  - Added report of loadable assets in FormStringTable (list entry editor)
+  - Fixed copying MBs leaving references to non-uniquely named Renderers uncopied
+
+[25.2.3]
+  - Fixed invisible crash when cells of list entries were cleared
+
+[25.2.2]
+  - Added support for FbxSurfaceMaterial (3DS Max)
+
+[25.2.1]
+  - Fixed crash in DumpFile() for Unity versions < 2019.4.3
+  - Changed mesh replacement to aquire also Mesh type definition
+  - Added FBX import of Lambert materials
+
+[25.2]
+  - Changed FBX to version 2020.3.7
+  - Changed dropdown controls for textures and materials to adapt width according to contents
+  - Changed automatic resizing of editor views. Can be halted with "Calm" in the Object Tree.
+  - Added AnimatorController editing BlendEventID and BlendEventYID
+  - Changed AnimatorController deleting ALL SELECTED slots instead of only the last selected
+
+[25.1]
+  - Changed platform: .Net Framework 4.8.1
+  - Fixed refresh in the file's Animator list where all were painted black and loaded not bold
+  - Added RenderQueue information in the Material editor's Mat/Shader comparison tooltip
+  - Fixed search in ObjectTree not showing Frame/Bone editor for the next selection
+
+[25.0]
+  - Fixed crash when saving regular game files - all Unity versions. Introduced in 24.0
+  - Changed/added replacement of backslashes and Yen symbols to forward slashes in List and ABM editors
+  - Removed Apply button in AssetBundleManifest editor. It is auto commit now.
+
+[24.3.6]
+  - Fixed DC ListItem TextAssets with insanely number of empty lines at the end
+  - Added support for YureData format in DC ListItem TextAssets
+
+[24.3.5]
+  - Added support for DC ListItem TextAssets
+  - Fixed HC TableData TextAsset
+
+[24.3.4]
+  - Fixed MotionIK new formats for HC and SVS
+
+[24.3.3]
+  - Fixed Euler filter in curve display and FBX export
+  - Added curve preview as tooltip in MB editor (mostly for DynamicBone)
+
+[24.3.2]
+  - Added a global scripting function ReportIDConflicts(string categoryName, object[] unity3dEditors)
+
+[24.3.1]
+  - Added ID checking per category (GUI only)
+
+[24.3]
+  - Changed SVSMapListTextAsset to show original column-names
+  - Fixed computation in auxiliary points for Fbx import and export animation and curve display
+  - Fixed loading/saving constraints
+  - Added animation track editing curves-wise with child preservation
+
+[24.2.15]
+  - Added support for SVS voice TextAsset
+
+[24.2.14]
+  - Changed layout of AssetBundleManifest editor, tooltips on dependencies, dependency resolving
+
+[24.2.13]
+  - Fixed CTD without /DefaultVisualStyle because of tooltip in DataGridViews (introduced with 24.0)
+
+[24.2.12]
+  - Added Ctrl-A to select all in text boxes
+  - Added editing weights of AnimatorController SkeletonMask weights
+
+[24.2.11]
+  - Fixed BinaryAsset MBs
+
+[24.2.10]
+  - Added clipboard functions and id checking for AssetBundleManifest
+  - Added support for SVS job TextAsset
+  - Fixed SVS NavMesh TextAsset
+
+[24.2.9]
+  - Fixed copying BinaryAsset (mark/paste)
+  - Fixed copying asset with referenced type. Incomplete implementation.
+  - Fixed file header problem for Unity2019.4+ introduced in 24.0
+  - Added support for SVS navmesh TextAssets
+
+[24.2.8]
+  - Added support for BinaryAsset MBs
+
+[24.2.7]
+  - Added support for one referenced type per class. Incomplete implementation.
+  - Added support for SVS litlist TextAssets
+
+[24.2.6]
+  - Added support for SVS maplist TextAssets
+
+[24.2.5]
+  - Added Material colour alternative _Main_color_01 for _Color
+  - Changed NML computation to use world coordinates for all meshes involved
+  - Added normals computation for all morph channels at once
+
+[24.2.4]
+  - Fix for preview of morphed meshes finally considering the mesh's world coordinates without animation
+  - Fix for ABs with stripped Unity version
+  - Changed NML computation to use world coordinates for source and destination meshes
+  - Fixed NML computation for adjacent meshes
+
+[24.2.3]
+  - Fixed replacing morph keyframes for meshes with more than nine submeshes
+  - Added normals and tangents calculations for shape targets in Morph editor
+  - Added normals and tangents of morphs to the preview, fixed normalmaps preview in morph shader
+  - Changed display of Morph channel nodes to show channel indices (and shape indices)
+  - Fixed imported channel order from BlendshapeDeformer attributes (Maya only)
+
+[24.2.2]
   - Fixed replacing morph keyframes to support submeshes with identical number of vertices
 
 [24.2.1]
