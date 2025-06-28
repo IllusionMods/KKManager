@@ -69,6 +69,7 @@ namespace KKManager.Updater
                     try
                     {
                         var updateItems = await source.GetUpdateItems(cancellationToken, onlyDiscover, taskProgress).ConfigureAwait(false);
+                        // Using AllInfos to set anySuccessful because it includes all update items, even those filtered out.
                         if (updateItems.AllInfos.Any()) anySuccessful = true;
                         foreach (var task in updateItems.FilteredTasks)
                         {
