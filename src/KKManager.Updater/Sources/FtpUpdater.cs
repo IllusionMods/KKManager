@@ -125,7 +125,7 @@ namespace KKManager.Updater.Sources
             _client.Dispose();
         }
 
-        public override async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
+        public override async Task<UpdateItems> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
         {
             await Connect(cancellationToken);
 

@@ -55,7 +55,17 @@ namespace KKManager.Updater.Sources
 
         public abstract void Dispose();
 
-        public virtual async Task<List<UpdateTask>> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
+        public sealed class UpdateItems
+        {
+            public UpdateItems(List<UpdateInfo> allInfos, List<UpdateTask> filteredTasks)
+            {
+                AllInfos = allInfos;
+                FilteredTasks = filteredTasks;
+            }
+            public List<UpdateTask> FilteredTasks { get; }
+            public List<UpdateInfo> AllInfos { get; }
+        }
+        public virtual async Task<UpdateItems> GetUpdateItems(CancellationToken cancellationToken, bool onlyDiscover, IProgress<float> progressCallback)
         {
             var updateInfos = new List<UpdateInfo>();
 
@@ -114,6 +124,8 @@ namespace KKManager.Updater.Sources
 
             if (updateInfos.Count == 0)
                 throw new FileNotFoundException($"[{Origin}] Failed to get update list, check previous log for details.");
+
+            var allUpdateInfos = updateInfos.ToList();
 
             updateInfos.RemoveAll(
                 info =>
@@ -201,7 +213,7 @@ namespace KKManager.Updater.Sources
             }
             progressCallback.Report(1);
 
-            return allResults;
+            return new UpdateItems(allUpdateInfos, allResults);
         }
 
         protected abstract Task<Stream> DownloadFileAsync(string updateFileName, CancellationToken cancellationToken);

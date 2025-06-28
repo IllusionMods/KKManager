@@ -219,7 +219,7 @@ namespace KKManager.Updater.Windows
 
                 _cancelToken.Token.ThrowIfCancellationRequested();
 
-                if (updateTasks.All(x => x.UpToDate))
+                if (updateTasks.Count == 0 || updateTasks.All(x => x.UpToDate))
                 {
                     SetStatus(Resources.ModUpdateProgress_AllUpToDate);
                     progressBar1.Value = progressBar1.Maximum;
