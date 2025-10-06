@@ -50,7 +50,7 @@ namespace KKManager.SB3UGS
                 }
             }
 
-            _sb3uDlls = _pluginDirName.GetFiles("*.dll").Concat(directoryName.GetFiles("*.dll")).ToDictionary(x => Path.GetFileNameWithoutExtension(x.Name), x => x);
+            _sb3uDlls = _pluginDirName.GetFiles("*.dll").Concat(directoryName.GetFiles("*.dll")).GroupBy(x => Path.GetFileNameWithoutExtension(x.Name)).ToDictionary(x => x.Key, x => x.OrderBy(y => y.FullName.Length).First());
 
             AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
 
