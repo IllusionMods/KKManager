@@ -11,6 +11,7 @@ using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KKManager.Data.Cards.AC;
 using KKManager.Data.Cards.AI;
 using KKManager.Data.Cards.EC;
 using KKManager.Data.Cards.HC;
@@ -198,6 +199,10 @@ namespace KKManager.Data.Cards
                             card = SamabakeCard.ParseSvsChara(file, reader, gameType);
                             break;
 
+                        case CardType.Aicomi:
+                            card = AicomiCard.ParseAcChara(file, reader, gameType);
+                            break;
+
                         case CardType.KoikatuClothes:
                             card = KoiCoordCard.ParseKoiClothes(file, reader, gameType);
                             break;
@@ -206,6 +211,7 @@ namespace KKManager.Data.Cards
                             break;
 
                         case CardType.SamabakeScrambleClothes:
+                        case CardType.AicomiClothes:
                         case CardType.Unknown:
                         default:
                             // Instead of throwing, return an UnknownCard
@@ -267,6 +273,8 @@ namespace KKManager.Data.Cards
                     return CardType.HoneyComeccp;
                 case "【SVChara】":
                     return CardType.SamabakeScramble;
+                case "【ACChara】":
+                    return CardType.Aicomi;
 
                 // todo differnt format, saved at very end of data
                 //case "【KStudio】":
@@ -278,6 +286,8 @@ namespace KKManager.Data.Cards
                     return CardType.AiSyoujyoClothes;
                 case "【SVClothes】":
                     return CardType.SamabakeScrambleClothes;
+                case "【ACClothes】":
+                    return CardType.AicomiClothes;
 
                 default:
                     if (throwOnUnknown)
