@@ -1,4 +1,61 @@
-﻿[25.2.10]
+﻿[25.7.2]
+  - Fixed crash when saving Unity 2022.3.+ file after creating new texture
+
+[25.7.1]
+  - Changed path handling of ABs, entries in AssetBundle assets and CAB-string generation
+
+[25.7]
+  - Added support for Aicomi
+  - Fixed missing NormalMap textures in workspace from FBX imports
+  - Fixed FBX export of NormalMap as BumpMap
+
+[25.6]
+  - Fixed scaled bone matrices in exports, import/replacements and preview
+  - Added causing functions or full stack trace to ReportException()
+
+[25.5]
+  - Added support for NML MBs in separate files (SVS)
+  - Fixed crash in NML computation when adjacent meshes were unskinned
+  - Requries D3D Feature Level 11.1. Falls back to older shader if not available.
+    - Changed preview shader to compute vertex positions in compute shader instead of vertex shader
+    - Added "Max Extent" in Mesh Attribute dialog.
+  - Fixed unnecessary Render calls for selection changes of multiple meshes
+  - Fixed flickering in the Renderer preview when the mouse left or touched the buttons below
+
+Known issues and possbible optimizations
+  - CS could skip AABB computation when the mesh is not animated
+  - Renderer could skip meshes outside of the viewing frustum
+  - The skeleton and selected submesh's edges are not always rendered on top as they should
+
+[25.4]
+  - Fixed using new textures in SceneABs (see 23.3)
+  - Added flip Y option to normalmap conversion function
+  - Fixed disappearing tooltips (and StartIndex exception in Morph editor after adding first morphs)
+  - Fixed invalid cast exception for "Go to" in MB editor
+  - Fixed Offset and Scaling in Texture editor for materials without "MainTex"
+
+[25.3.1]
+  - Fixed crash for virtual Animators in the root when a regular Animator inside the hierarchy was opened
+  - Added removal of Avatar in Animator editor
+  - Added support for uncompressed headers
+  - Fixed bad FBX import in-between blendshape track names (introduced in 22.3.5)
+  - Fixed natural order of flat in-between blendshapes in FBX import
+
+[25.3]
+  - Fixed HoneyComeHVoiceListTextAsset, HoneyComeTableDataTextAsset with new line characters
+  - Changed handling of TextAssets. Copy/paste MotionIK data through clipboard (HC's still incomplete).
+  - Fixed non-critical MotionIK format corruption for SVS
+  - Changed "Last Value" in TextAsset editor to consider all selected cells
+  - Fixed crash in Material tooltip for external Shaders
+  - Added support for external Mesh assets
+  - Fixed out of memory crash in Texture editor when using Offset and Scale (introduced in 24.0.2)
+  - Added drag 'n drop of an Animator in the root which converts the virtual Animator into a regular
+    MergeLinkedByGameObject returns the newly created asset
+  - Added deletion of a regular Animator in the root which converts the regular Animator into a virtual
+    The Avatar is not automatically removed. Type definitions for Animator and Avatar remain.
+    RemoveLinkedByGameObject returns the current Animator, including the newly created virtual one
+
+[25.2.10]
   - Fixed import of flat in-between blendshapes (introduced in 20.3.4)
   - Fixed SVS LookAt TextAsset
   - Added support for SVS Camera TextAsset
@@ -8,8 +65,6 @@
   - Fixed MotionIK TextAssets (broken since 23.2.1), added support for HS2
     Remaining issues: RG one subtype is supported the other is not. HC has a unhandled extensions.
   - Added support for SVS TextAssets in h/list/lookat and layermask
-
-Known issue: computing in-between blendshape successors
 
 [25.2.8]
   - Fixed SVS TextAssets in h/list/item and posture
