@@ -13,8 +13,10 @@
         HoneyCome,
         HoneyComeccp,
         SamabakeScramble,
+        Aicomi,
         KoikatuClothes,
         AiSyoujyoClothes,
         SamabakeScrambleClothes,
+        AicomiClothes,
     }
 }

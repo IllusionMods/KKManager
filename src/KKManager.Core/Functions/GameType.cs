@@ -14,6 +14,7 @@
         RoomGirl,
         HoneyCome,
         HoneyComeSteam,
-        SamabakeScramble
+        SamabakeScramble,
+        Aicomi
     }
 }

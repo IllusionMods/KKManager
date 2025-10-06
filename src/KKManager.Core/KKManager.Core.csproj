@@ -149,6 +149,13 @@
     <Compile Include="Controls\LogControl.Designer.cs">
       <DependentUpon>LogControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Cards\AC\About.cs" />
+    <Compile Include="Data\Cards\AC\ChaFileExtended.cs" />
+    <Compile Include="Data\Cards\AC\HumanDataGameInfo_AC.cs" />
+    <Compile Include="Data\Cards\AC\HumanDataGameParameter_AC.cs" />
+    <Compile Include="Data\Cards\AC\Graphic.cs" />
+    <Compile Include="Data\Cards\AC\Parameter.cs" />
+    <Compile Include="Data\Cards\AC\AicomiCard.cs" />
     <Compile Include="Data\Cards\BlockHeader.cs" />
     <Compile Include="Data\Cards\AI\ChaFileDefine.cs" />
     <Compile Include="Data\Cards\AI\ChaFileExtended.cs" />
