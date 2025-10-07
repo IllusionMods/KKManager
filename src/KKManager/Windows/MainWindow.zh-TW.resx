@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="openGameLogToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟遊戲記錄...</value>
+  </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>選擇遊戲目錄...</value>
+  </data>
+  <data name="changeGameInstallDirectoryToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>將 KKManager 指向不同的遊戲安裝位置。</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;檔案</value>
+  </data>
+  <data name="openFemaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟女性卡片資料夾</value>
+  </data>
+  <data name="openMaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟男性卡片資料夾</value>
+  </data>
+  <data name="otherToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟其他資料夾...</value>
+  </data>
+  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟卡片瀏覽器</value>
+  </data>
+  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟側載模組瀏覽器</value>
+  </data>
+  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟外掛瀏覽器</value>
+  </data>
+  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟屬性</value>
+  </data>
+  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟日誌檢視器</value>
+  </data>
+  <data name="viewToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;檢視</value>
+  </data>
+  <data name="startTheGameToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;開始</value>
+  </data>
+  <data name="installDirectoryToolStripMenuItem.Text" xml:space="preserve">
+    <value>安裝目錄</value>
+  </data>
+  <data name="screenshotsToolStripMenuItem.Text" xml:space="preserve">
+    <value>螢幕截圖</value>
+  </data>
+  <data name="charactersToolStripMenuItem.Text" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="scenesToolStripMenuItem.Text" xml:space="preserve">
+    <value>場景</value>
+  </data>
+  <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
+    <value>KK Manager</value>
+  </data>
+  <data name="openToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;開啟目錄</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.Text" xml:space="preserve">
+    <value>安裝新模組...</value>
+  </data>
+  <data name="installANewModToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>嘗試安裝外掛程式或zipmod模組。
+針對外掛程式、修補程式，尤其是非zipmod格式的模組，建議遵循作者提供的安裝步驟進行操作。</value>
+  </data>
+  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
+    <value>尋找模組更新...</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟單一模組下載網站</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>您可在此處單獨下載zipmods，無需更新整個模組包。</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
+    <value>啟動時檢查模組更新</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>若存在可用更新，模組更新器的選單按鈕將轉為綠色。</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
+    <value>使用系統代理伺服器進行 FTP 傳輸（需重新啟動）</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>P2P 更新傳輸設定...</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>注意：即使啟用了點對點功能，仍需建立FTP連線。</value>
+  </data>
+  <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;模組更新器</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>修復檔案與資料夾權限</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>此操作將嘗試修復遊戲目錄內任何檔案或資料夾的權限問題。
+執行前請確保沒有其他應用程式正在使用遊戲目錄內的任何內容，否則可能需要重新啟動電腦才能再次存取部分檔案。</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>壓縮遊戲檔案</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>透過以更高壓縮等級重新壓縮遊戲資源包來縮小遊戲體積。
+此操作通常安全無虞，但極少數情況下可能引發問題，尤其針對RG或HC等較新遊戲。如有疑慮，請先備份abdata及*_Data資料夾。</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>清理重複的zipmod模組</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>嘗試自動清理具有相同GUID的zipmods，僅保留最新版本。</value>
+  </data>
+  <data name="openModpackToolToolStripMenuItem.Text" xml:space="preserve">
+    <value>開啟模組包工具</value>
+  </data>
+  <data name="generateContentsOfUpdatexmlToolStripMenuItem.Text" xml:space="preserve">
+    <value>生成 Update.xml 的內容...</value>
+  </data>
+  <data name="compressBundlesAndRandomizeCABsToolStripMenuItem.Text" xml:space="preserve">
+    <value>將資料夾中的檔案束壓縮...</value>
+  </data>
+  <data name="cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>清理重複及無效的zipmod模組...</value>
+  </data>
+  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
+    <value>開發人員</value>
+  </data>
+  <data name="toolsToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;工具</value>
+  </data>
+  <data name="languagesToolStripMenuItem.Text" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="languagesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>要完全變更語言，需要重新啟動 KKManager。</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.Text" xml:space="preserve">
+    <value>嘗試刪除至資源回收筒</value>
+  </data>
+  <data name="tryToDeleteToRecycleBinToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>刪除卡牌/模組/外掛程式時，以及更新模組時，嘗試將檔案移至資源回收筒。
+若因任何原因（例如資源回收筒已滿或停用）導致此操作失敗，檔案將被永久刪除。
+</value>
+  </data>
+  <data name="settingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="checkForUpdatesToolStripMenuItem.Text" xml:space="preserve">
+    <value>檢查是否有新版 KKManager...</value>
+  </data>
+  <data name="readmeAndSourceCodeToolStripMenuItem.Text" xml:space="preserve">
+    <value>閱讀說明</value>
+  </data>
+  <data name="licenseToolStripMenuItem.Text" xml:space="preserve">
+    <value>許可證</value>
+  </data>
+  <data name="websiteToolStripMenuItem.Text" xml:space="preserve">
+    <value>網站／原始碼</value>
+  </data>
+  <data name="aboutToolStripMenuItem.Text" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="helpToolStripMenuItem.Text" xml:space="preserve">
+    <value>幫助</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>選單列1</value>
+  </data>
+  <data name="toolStripStatusLabelStatus.Text" xml:space="preserve">
+    <value>狀態...</value>
+  </data>
+  <data name="statusStrip1.Text" xml:space="preserve">
+    <value>狀態列1</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>KK Manager</value>
+  </data>
+</root>
