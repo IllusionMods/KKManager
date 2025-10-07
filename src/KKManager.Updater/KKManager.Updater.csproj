@@ -352,6 +352,7 @@
     <EmbeddedResource Include="Windows\UpdateInfoEditorWindow.zh-Hans.resx">
       <DependentUpon>UpdateInfoEditorWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj">
