@@ -477,6 +477,7 @@
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.zh-Hans.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="**\*.resx" />
     <None Include="..\..\LICENSE">
       <Link>LICENSE</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

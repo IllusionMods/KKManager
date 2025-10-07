@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="olvColumnName.Text" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="olvColumnName.ToolTipText" xml:space="preserve">
+    <value>卡片全名。</value>
+  </data>
+  <data name="olvColumnSex.Text" xml:space="preserve">
+    <value>性別</value>
+  </data>
+  <data name="olvColumnSex.ToolTipText" xml:space="preserve">
+    <value>卡片性別</value>
+  </data>
+  <data name="olvColumnPersonality.Text" xml:space="preserve">
+    <value>個性</value>
+  </data>
+  <data name="olvColumnPersonality.ToolTipText" xml:space="preserve">
+    <value>卡片人格名稱（如製造者所見）</value>
+  </data>
+  <data name="olvColumnExtended.Text" xml:space="preserve">
+    <value>擴展數據計數</value>
+  </data>
+  <data name="olvColumnExtended.ToolTipText" xml:space="preserve">
+    <value>擴展資料計數（外掛程式使用的附加卡片資料）</value>
+  </data>
+  <data name="olvColumnModDate.Text" xml:space="preserve">
+    <value>變更日期</value>
+  </data>
+  <data name="olvColumnModDate.ToolTipText" xml:space="preserve">
+    <value>此卡片檔案最後修改日期。轉移卡片時可能遺失，也可能不會遺失。</value>
+  </data>
+  <data name="olvColumnFileSize.Text" xml:space="preserve">
+    <value>檔案大小</value>
+  </data>
+  <data name="olvColumnFileSize.ToolTipText" xml:space="preserve">
+    <value>磁碟上卡片檔案的大小。</value>
+  </data>
+  <data name="olvColumnRelativeFilename.Text" xml:space="preserve">
+    <value>相對檔名</value>
+  </data>
+  <data name="olvColumnRelativeFilename.ToolTipText" xml:space="preserve">
+    <value>卡片檔案名稱及其所在資料夾路徑（相對於當前目錄，僅在啟用「包含子目錄」時有效）。</value>
+  </data>
+  <data name="olvColumnFilename.Text" xml:space="preserve">
+    <value>檔案名稱</value>
+  </data>
+  <data name="olvColumnFilename.ToolTipText" xml:space="preserve">
+    <value>不含副檔名的卡片檔案名稱。</value>
+  </data>
+  <data name="olvColumnCardType.Text" xml:space="preserve">
+    <value>卡片類型</value>
+  </data>
+  <data name="olvColumnCardType.ToolTipText" xml:space="preserve">
+    <value>卡片檔案格式。部分遊戲可能因版本不同而具備多種格式。</value>
+  </data>
+  <data name="olvColumnUserID.Text" xml:space="preserve">
+    <value>使用者ID</value>
+  </data>
+  <data name="olvColumnUserID.ToolTipText" xml:space="preserve">
+    <value>建立此卡片檔案的使用者之唯一識別碼。官方上傳工具用於此管理已上傳的卡片。並非所有卡片類型皆支援此欄位。</value>
+  </data>
+  <data name="olvColumnDataID.Text" xml:space="preserve">
+    <value>資料識別碼</value>
+  </data>
+  <data name="olvColumnDataID.ToolTipText" xml:space="preserve">
+    <value>此卡片資料的唯一識別碼。獨立於使用者ID。並非所有卡片類型皆支援此欄位。</value>
+  </data>
+  <data name="olvColumnMissingMods.Text" xml:space="preserve">
+    <value>缺少 zipmods/plugins</value>
+  </data>
+  <data name="olvColumnMissingMods.ToolTipText" xml:space="preserve">
+    <value>遺失的 zipmods 與外掛程式數量（相加總和）。</value>
+  </data>
+  <data name="olvColumnVersion.Text" xml:space="preserve">
+    <value>資料版本</value>
+  </data>
+  <data name="olvColumnVersion.ToolTipText" xml:space="preserve">
+    <value>卡片資料格式的版本。舊版本表示該卡片最後是以舊版遊戲格式儲存的。</value>
+  </data>
+  <data name="toolStripOpenDropdown.Text" xml:space="preserve">
+    <value>開啟...</value>
+  </data>
+  <data name="toolStripButtonGo.Text" xml:space="preserve">
+    <value>移動</value>
+  </data>
+  <data name="toolStripButtonRefresh.Text" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="toolStripButtonSubdirs.Text" xml:space="preserve">
+    <value>包含子目錄</value>
+  </data>
+  <data name="toolStripButtonSubdirs.ToolTipText" xml:space="preserve">
+    <value>開啟此選項可顯示本目錄內所有子目錄的卡片。
+若關閉此選項，僅顯示頂層目錄的卡片。</value>
+  </data>
+  <data name="toolStripButtonDelete.Text" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="detailsToolStripMenuItem.Text" xml:space="preserve">
+    <value>詳情</value>
+  </data>
+  <data name="smallIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>小圖示</value>
+  </data>
+  <data name="largeIconsToolStripMenuItem.Text" xml:space="preserve">
+    <value>大圖示</value>
+  </data>
+  <data name="showUnknowninvalidCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>顯示未知/無效卡片</value>
+  </data>
+  <data name="openInExplorerToolStripMenuItem.Text" xml:space="preserve">
+    <value>在檔案總管中開啟資料夾</value>
+  </data>
+  <data name="toolStripViewSelect.Text" xml:space="preserve">
+    <value>檢視</value>
+  </data>
+  <data name="toolStripDropDownButtonTools.Text" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="toolStripDropDownButtonTools.ToolTipText" xml:space="preserve">
+    <value>工具</value>
+  </data>
+  <data name="toolStrip.Text" xml:space="preserve">
+    <value>工具列1</value>
+  </data>
+  <data name="femaleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>女性角色資料夾</value>
+  </data>
+  <data name="maleCardFolderToolStripMenuItem.Text" xml:space="preserve">
+    <value>男性角色資料夾</value>
+  </data>
+  <data name="segregateBySexToolStripMenuItem.Text" xml:space="preserve">
+    <value>按性別分開選取</value>
+  </data>
+  <data name="renameCardsToolStripMenuItem.Text" xml:space="preserve">
+    <value>重新命名選取的卡片檔案...</value>
+  </data>
+  <data name="exportAListOfMissingModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>匯出缺失模組清單...</value>
+  </data>
+  <data name="exportToCsvToolStripMenuItem.Text" xml:space="preserve">
+    <value>匯出為 csv...</value>
+  </data>
+  <data name="cardMetadataToolStripMenuItem.Text" xml:space="preserve">
+    <value>完整卡片元數據</value>
+  </data>
+  <data name="usedZipmodsAndPluginsToolStripMenuItem.Text" xml:space="preserve">
+    <value>已使用的 zipmods 與外掛程式</value>
+  </data>
+  <data name="zipmodUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>Zipmod 使用情況（包含未使用項目）</value>
+  </data>
+  <data name="pluginUsageincludingUnusedToolStripMenuItem.Text" xml:space="preserve">
+    <value>外掛程式使用情況（包含未使用項目）</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>卡片</value>
+  </data>
+</root>
