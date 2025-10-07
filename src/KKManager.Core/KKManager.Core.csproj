@@ -335,6 +335,7 @@
     <EmbeddedResource Include="Util\ProcessWaiter\ProcessWaiterControl.zh-Hant.resx">
       <DependentUpon>ProcessWaiterControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="**\*.resx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj">
