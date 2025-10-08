@@ -118,25 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SelfUpdater_NewVersionMessage" xml:space="preserve">
-    <value>有新版本的KK Manager可供下載，想要前往下載頁面嗎?</value>
+    <value>新版 KKManager 已推出。您是否要前往下載頁面？</value>
   </data>
   <data name="SelfUpdater_NewVersionTitle" xml:space="preserve">
-    <value>新版本可供使用</value>
+    <value>新版本已推出</value>
   </data>
   <data name="KKManagerOutdatedMessageBody" xml:space="preserve">
-    <value>有新版本的KK Manager可供下載。在更新KK Manager之前，Mods更新功能將無法使用。</value>
+    <value>KK Manager 已推出新版。請先更新至最新版本，模組更新功能才會生效。
+
+是否要開啟 KKManager 最新版本的下載頁面？</value>
   </data>
   <data name="KKManagerOutdatedMessageTitle" xml:space="preserve">
-    <value>此版本KK Manager已過時。</value>
+    <value>KK Manager 已過時</value>
   </data>
   <data name="FailedToStartApplicationMessageTitle" xml:space="preserve">
-    <value>應用程序啓動失敗</value>
+    <value>無法啟動應用程式</value>
   </data>
   <data name="GetTempDownloadFilename_SecurityException_Message" xml:space="preserve">
-    <value>由於安全問題，在目錄 {0} 中創建文件失敗 - {1}</value>
+    <value>因安全問題無法在目錄 {0} 中建立檔案 - {1}
+
+是否要讓 KK Manager 嘗試修復此問題？若要中止操作，請點擊取消。</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>未知</value>
     <comment>Shown in lists when the value is unknown (e.g. unknown date, unknown file size)</comment>
+  </data>
+  <data name="OpenGameLogFailedMessage" xml:space="preserve">
+    <value>無法開啟記錄檔：{0}
+
+若遊戲似乎未產生記錄檔，該檔案可能儲存於 appdata 目錄內的某處。
+
+請嘗試在 doorstop_config.ini 中設定 『redirectOutputLog=true』，若此操作仍未在遊戲根目錄生成記錄檔，請於 BepInEx.cfg 中啟用磁碟記錄功能。</value>
+  </data>
+  <data name="OpenGameLogMessageTitle" xml:space="preserve">
+    <value>開啟日誌檔案</value>
   </data>
 </root>
