@@ -118,44 +118,44 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SecurityExceptionRetry_Message" xml:space="preserve">
-    <value>由於安全問題，在目錄 {0} 中創建文件失敗 - {1}
+    <value>因安全問題無法在目錄 {0} 中建立檔案 - {1}
 
-是否想讓KK Manager嘗試修復這個問題？如果不想，請點擊取消。</value>
+是否要讓 KK Manager 嘗試修復此問題？若要中止操作，請點擊取消。</value>
   </data>
   <data name="SecurityExceptionRetry_Title" xml:space="preserve">
-    <value>無法安裝更新</value>
+    <value>無法套用更新</value>
   </data>
   <data name="ModUpdateProgress_PleaseWait" xml:space="preserve">
-    <value>請稍等，這可能需要幾分鐘時間。</value>
+    <value>請稍候，此過程可能需要幾分鐘。</value>
   </data>
   <data name="ModUpdateProgress_PleaseWait_P2P" xml:space="preserve">
-    <value>啓用P2P時，可能需要等待超過10分鐘。</value>
+    <value>當P2P功能啟用時，此過程可能需要超過10分鐘。</value>
   </data>
   <data name="ModUpdateProgress_Preparing" xml:space="preserve">
-    <value>準備中...</value>
+    <value>正在準備中...</value>
   </data>
   <data name="ModUpdateProgress_Searching" xml:space="preserve">
-    <value>搜索Mod更新中...</value>
+    <value>正在搜尋模組更新...</value>
   </data>
   <data name="ModUpdateProgress_AllUpToDate" xml:space="preserve">
-    <value>全部已更新！</value>
+    <value>一切皆為最新狀態！</value>
   </data>
   <data name="ModUpdateProgress_UpdatesFoundConfirmation" xml:space="preserve">
-    <value>發現 {0} 項更新任務（ {1} 項已經是最新的），等待用戶確認。</value>
+    <value>找到 {0} 個更新任務（其中 {1} 個已為最新狀態），等待使用者確認。</value>
   </data>
   <data name="ModUpdateProgress_Downloading" xml:space="preserve">
-    <value>下載更新中...</value>
+    <value>正在下載更新...</value>
   </data>
   <data name="ModUpdateProgress_Finished_Main" xml:space="preserve">
-    <value>成功更新或刪除了 {1} 任務中的 {0} 文件。</value>
+    <value>已成功更新/移除 {0} 個檔案，來自 {1} 個任務。</value>
     <comment>Message box shown when updating finishes</comment>
   </data>
   <data name="ModUpdateProgress_Finished_Fails" xml:space="preserve">
-    <value>更新 {0} 文件失敗，因爲一些源崩潰了。請檢查日誌來瞭解詳情。</value>
+    <value>更新 {0} 個檔案失敗，因為某些來源發生崩潰。請檢查日誌以獲取詳細資訊。</value>
     <comment>Message box after finishing the update, this is only shown if any items failed to update</comment>
   </data>
   <data name="ModUpdateProgress_Finished_FailReasons" xml:space="preserve">
-    <value>錯誤原因：</value>
+    <value>失敗的原因：</value>
     <comment>Message box at end of update, shown only if any updates failed and reasons are available</comment>
   </data>
   <data name="ModUpdateProgress_Finished_Title" xml:space="preserve">
@@ -163,18 +163,18 @@
     <comment>Title of the message box</comment>
   </data>
   <data name="ModUpdateProgress_Failed_Outdated" xml:space="preserve">
-    <value>此版本已過時，請更新。</value>
+    <value>KK Manager 需要更新才能取得最新版本。</value>
   </data>
   <data name="ModUpdateProgress_Failed_CancelledByUser" xml:space="preserve">
-    <value>更新已被用戶取消。</value>
+    <value>更新已被使用者取消。</value>
   </data>
   <data name="ModUpdateProgress_Failed_Unexpected" xml:space="preserve">
-    <value>在更新Mods時出現了意外的崩潰，操作已被中止。</value>
+    <value>更新模組時發生意外當機，中止操作。</value>
   </data>
   <data name="ModUpdateProgress_Failed_Unexpected_Message" xml:space="preserve">
-    <value>出現了一些意外狀況，導致更新無法完成。請確保您的網絡連接穩定，且未超出下載限制，然後重試。
+    <value>發生意外狀況導致更新無法完成。請確認網路連線穩定且未達下載流量上限，然後重新嘗試。
 
-錯誤信息（請查看日誌以瞭解詳細信息）
+錯誤訊息（詳見日誌）：
 {0}</value>
     <comment>Message box shown if update fails because of unexpected error</comment>
   </data>
@@ -183,48 +183,48 @@
     <comment>Title of the message box</comment>
   </data>
   <data name="ModUpdateProgress_NothingWasDownloaded" xml:space="preserve">
-    <value>未下載任何內容</value>
+    <value>沒有任何東西被下載</value>
   </data>
   <data name="ModUpdateProgress_DownloadFinishedStats" xml:space="preserve">
-    <value>在 {2} 的 {1} 中下載了 {0} </value>
+    <value>已下載 {0} 個檔案，共 {1} 個檔案，耗時 {2}</value>
     <comment>0 is size with unit (e.g. 10MB) 1 is total size with unit (e.g. 2.1GB) 2 is time in culture dependant format (e.g. 14 seconds)</comment>
   </data>
   <data name="ModUpdateProgress_DownloadFinished_Seeding" xml:space="preserve">
-    <value>正在爲 {1} 個節點做種，速度爲 {0}/秒（點擊“確定”停止）</value>
+    <value>向 {0} 個節點發送 {1} 個種子檔（點擊確定以停止）</value>
     <comment>0 is size with unit, 1 is a number</comment>
   </data>
   <data name="ModUpdateProgress_DownloadFinished_Average" xml:space="preserve">
-    <value>平均下載速度： {0}/s)</value>
+    <value>平均下載速度：{0}/秒</value>
   </data>
   <data name="ModUpdateProgress_OKbutton" xml:space="preserve">
-    <value>確定</value>
+    <value>OK</value>
     <comment>Text on the bottom right button shown after updating finishes or is otherwise stopped</comment>
   </data>
   <data name="ModUpdateProgress_Finishing" xml:space="preserve">
-    <value>更新過程即將完成，請耐心等待...</value>
+    <value>更新程序正在完成中，請稍候...</value>
   </data>
   <data name="ModUpdateProgress_ThisCouldTakeAMinute" xml:space="preserve">
-    <value>這可能需要一點時間。</value>
+    <value>這可能需要一分鐘。</value>
   </data>
   <data name="ModUpdateSelect_AllUpToDate" xml:space="preserve">
-    <value>所有Mods都是最新的！</value>
+    <value>所有模組皆已更新至最新版本！</value>
   </data>
   <data name="ModUpdateSelect_SelectTaskToView" xml:space="preserve">
-    <value>選擇一個項目來查看其詳細信息。</value>
+    <value>選擇一項任務以檢視其詳細資訊。</value>
   </data>
   <data name="ModUpdateSelect_WillBeRemoved" xml:space="preserve">
-    <value>將被刪除</value>
+    <value>將會被移除</value>
     <comment>Shown in update select list in the size column if the file will be removed</comment>
   </data>
   <data name="ModUpdateSelect_FailedMessage_Title" xml:space="preserve">
-    <value>更新信息獲取失敗</value>
+    <value>未能取得更新</value>
   </data>
   <data name="ModUpdateSelect_SizeStatus_Nothing" xml:space="preserve">
-    <value>無可下載內容</value>
+    <value>無需下載</value>
     <comment>Shown at bottom of the window if no updates are selected or the updates only remove files</comment>
   </data>
   <data name="ModUpdateSelect_SizeStatus_BytesToDownload" xml:space="preserve">
-    <value>有 {0} 可供下載</value>
+    <value>{0} 下載</value>
     <comment>Shown at bottom of the window, 0 is size of all updates to be downloaded (with unit included)</comment>
   </data>
 </root>
