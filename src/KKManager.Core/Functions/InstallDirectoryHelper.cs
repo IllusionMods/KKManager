@@ -15,7 +15,6 @@ namespace KKManager.Functions
         private static DirectoryInfo _femaleCardDir;
         private static DirectoryInfo _maleCardDir;
         private static DirectoryInfo _zipmodsPath;
-        private static DirectoryInfo _sardinesPath;
         private static DirectoryInfo _tempPath;
         public static DirectoryInfo GameDirectory
         {
@@ -43,15 +42,6 @@ namespace KKManager.Functions
                 return _zipmodsPath;
             }
             private set => _zipmodsPath = value;
-        }
-        public static DirectoryInfo SardinesPath
-        {
-            get
-            {
-                ThrowIfNotInitialized();
-                return _sardinesPath;
-            }
-            private set => _sardinesPath = value;
         }
         public static DirectoryInfo MaleCardDir
         {
@@ -113,7 +103,6 @@ namespace KKManager.Functions
             MaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\male"));
             FemaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\female"));
             ZipmodsPath = new DirectoryInfo(Path.Combine(GameDirectory.FullName, "mods"));
-            SardinesPath = new DirectoryInfo(Path.Combine(GameDirectory.FullName, "sardines"));
             PluginPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "BepInEx"));
             TempDir = new DirectoryInfo(Path.Combine(GameDirectory.FullName, "temp"));
         }
