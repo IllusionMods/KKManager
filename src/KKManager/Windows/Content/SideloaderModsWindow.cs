@@ -160,7 +160,7 @@ namespace KKManager.Windows.Content
         {
             try
             {
-                Process.Start(InstallDirectoryHelper.ModsPath.FullName);
+                Process.Start(InstallDirectoryHelper.ZipmodsPath.FullName);
             }
             catch (Exception ex)
             {

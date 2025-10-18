@@ -321,7 +321,7 @@ namespace KKManager.Windows
             OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
             OpenOrGetCardWindow(InstallDirectoryHelper.FemaleCardDir);
 
-            if (InstallDirectoryHelper.ModsPath.Exists)
+            if (InstallDirectoryHelper.ZipmodsPath.Exists)
                 GetOrCreateWindow<SideloaderModsWindow>();
 
             if (InstallDirectoryHelper.SardinesPath.Exists)
