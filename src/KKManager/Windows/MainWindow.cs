@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Data.Plugins;
+using KKManager.Data.Sardines;
 using KKManager.Data.Zipmods;
 using KKManager.Functions;
 using KKManager.ModpackTool;
@@ -320,7 +321,12 @@ namespace KKManager.Windows
             OpenOrGetCardWindow(InstallDirectoryHelper.MaleCardDir);
             OpenOrGetCardWindow(InstallDirectoryHelper.FemaleCardDir);
 
-            GetOrCreateWindow<SideloaderModsWindow>();
+            if (InstallDirectoryHelper.ZipmodsPath.Exists)
+                GetOrCreateWindow<SideloaderModsWindow>();
+
+            if (InstallDirectoryHelper.SardinesPath.Exists)
+                GetOrCreateWindow<SardineModsWindow>();
+
             GetOrCreateWindow<PluginsWindow>();
 
             dockPanel.DockRightPortion = 400;
@@ -400,6 +406,11 @@ namespace KKManager.Windows
             GetOrCreateWindow<SideloaderModsWindow>().Show(dockPanel, DockState.Document);
         }
 
+        private void openSardineModBrowserToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetOrCreateWindow<SardineModsWindow>().Show(dockPanel, DockState.Document);
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
@@ -424,7 +435,7 @@ namespace KKManager.Windows
                 ValidateNames = true,
                 AutoUpgradeEnabled = true,
                 Title = "Choose a .dll file or an archive with the mod to install",
-                Filter = "Supported mod files(*.dll;*.zipmod;*.zip)|*.dll;*.zipmod;*.zip"
+                Filter = "Supported mod files(*.dll;*.zipmod;*.zip)|*.dll;*.zipmod;*.zip" //TODO sardines
             })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -432,7 +443,7 @@ namespace KKManager.Windows
                     try
                     {
                         ModInstaller.InstallFromUnknownFile(dialog.FileName);
-                        RefreshContents(true, true);
+                        RefreshContents(true, true, true);
                     }
                     catch (Exception ex)
                     {
@@ -443,10 +454,11 @@ namespace KKManager.Windows
             }
         }
 
-        private void RefreshContents(bool plugins, bool sideloader)
+        private void RefreshContents(bool plugins, bool sideloader, bool sardine)
         {
             if (plugins) PluginLoader.StartReload();
             if (sideloader) SideloaderModLoader.StartReload();
+            if (sardine) SardineModLoader.StartReload();
 
             foreach (var window in GetWindows<DockContent>().OfType<IContentWindow>())
             {
@@ -457,6 +469,9 @@ namespace KKManager.Windows
                         break;
                     case SideloaderModsWindow sm:
                         if (sideloader) sm.RefreshList();
+                        break;
+                    case SardineModsWindow sw:
+                        if (sardine) sw.RefreshList();
                         break;
                     default:
                         window.RefreshList();
@@ -513,9 +528,11 @@ namespace KKManager.Windows
 
                     PluginLoader.CancelReload();
                     SideloaderModLoader.CancelReload();
+                    SardineModLoader.CancelReload();
 
                     await PluginLoader.Plugins.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
                     await SideloaderModLoader.Zipmods.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
+                    await SardineModLoader.Sardines.LastOrDefaultAsync().Timeout(TimeSpan.FromSeconds(30));
 
                     var updateSources = GetUpdateSources();
                     if (!updateSources.Any()) throw new IOException("No update sources are available");
@@ -536,6 +553,7 @@ namespace KKManager.Windows
 
                 _ = SideloaderModLoader.StartReload();
                 _ = PluginLoader.StartReload();
+                _ = SardineModLoader.StartReload();
 
                 var contentWindows = GetWindows<DockContent>().OfType<IContentWindow>().ToList();
                 foreach (var window in contentWindows) window.RefreshList();
