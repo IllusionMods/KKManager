@@ -14,7 +14,7 @@ namespace KKManager.Functions
         private static DirectoryInfo _pluginPath;
         private static DirectoryInfo _femaleCardDir;
         private static DirectoryInfo _maleCardDir;
-        private static DirectoryInfo _modsPath;
+        private static DirectoryInfo _zipmodsPath;
         private static DirectoryInfo _tempPath;
         public static DirectoryInfo GameDirectory
         {
@@ -34,14 +34,14 @@ namespace KKManager.Functions
             }
             private set => _pluginPath = value;
         }
-        public static DirectoryInfo ModsPath
+        public static DirectoryInfo ZipmodsPath
         {
             get
             {
                 ThrowIfNotInitialized();
-                return _modsPath;
+                return _zipmodsPath;
             }
-            private set => _modsPath = value;
+            private set => _zipmodsPath = value;
         }
         public static DirectoryInfo MaleCardDir
         {
@@ -102,9 +102,9 @@ namespace KKManager.Functions
             GameType = gameCheck.FirstOrDefault(x => File.Exists(Path.Combine(path, x.Item1)))?.Item2 ?? GameType.Unknown;
             MaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\male"));
             FemaleCardDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, @"UserData\chara\female"));
-            ModsPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "mods"));
+            ZipmodsPath = new DirectoryInfo(Path.Combine(GameDirectory.FullName, "mods"));
             PluginPath = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "BepInEx"));
-            TempDir = Directory.CreateDirectory(Path.Combine(GameDirectory.FullName, "temp"));
+            TempDir = new DirectoryInfo(Path.Combine(GameDirectory.FullName, "temp"));
         }
 
         /// <summary>

@@ -202,15 +202,22 @@ namespace KKManager.Updater.Windows
                 var progress = new Progress<float>(p => this.SafeInvoke(() => progressBar1.Value = (int)Math.Round(p * 1000)));
 
                 // Re-enable any disabled zipmods and plugins before searching for updates so that they don't get treated as missing
-                foreach (var fileInfo in InstallDirectoryHelper.PluginPath.GetFiles("*.*", SearchOption.AllDirectories))
+                if (InstallDirectoryHelper.PluginPath.Exists)
                 {
-                    if (PluginLoader.IsDisabledPlugin(fileInfo.Extension, out var enabledExtension))
-                        AddReEnabledMod(fileInfo, enabledExtension);
+                    foreach (var fileInfo in InstallDirectoryHelper.PluginPath.GetFiles("*.*", SearchOption.AllDirectories))
+                    {
+                        if (PluginLoader.IsDisabledPlugin(fileInfo.Extension, out var enabledExtension))
+                            AddReEnabledMod(fileInfo, enabledExtension);
+                    }
                 }
-                foreach (var fileInfo in InstallDirectoryHelper.ModsPath.GetFiles("*.*", SearchOption.AllDirectories))
+
+                if (InstallDirectoryHelper.ZipmodsPath.Exists)
                 {
-                    if (SideloaderModLoader.IsDisabledZipmod(fileInfo.Extension, out var enabledExtension))
-                        AddReEnabledMod(fileInfo, enabledExtension);
+                    foreach (var fileInfo in InstallDirectoryHelper.ZipmodsPath.GetFiles("*.*", SearchOption.AllDirectories))
+                    {
+                        if (SideloaderModLoader.IsDisabledZipmod(fileInfo.Extension, out var enabledExtension))
+                            AddReEnabledMod(fileInfo, enabledExtension);
+                    }
                 }
 
                 var updateTasks = await Task.Run(() => UpdateSourceManager.GetUpdates(_cancelToken.Token, _updaters, _autoInstallGuids, false, progress));
