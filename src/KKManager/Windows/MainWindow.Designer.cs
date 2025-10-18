@@ -90,6 +90,9 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.openSardineModBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -154,8 +157,11 @@ namespace KKManager.Windows
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openCardBrowserToolStripMenuItem,
-            this.sideloaderModsToolStripMenuItem,
+            this.toolStripSeparator8,
             this.openPluginBrowserToolStripMenuItem,
+            this.sideloaderModsToolStripMenuItem,
+            this.openSardineModBrowserToolStripMenuItem,
+            this.toolStripSeparator9,
             this.openPropertiesToolStripMenuItem,
             this.openLogViewerToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
@@ -486,6 +492,22 @@ namespace KKManager.Windows
             this.toolTip1.ReshowDelay = 100;
             this.toolTip1.ShowAlways = true;
             // 
+            // openSardineModBrowserToolStripMenuItem
+            // 
+            this.openSardineModBrowserToolStripMenuItem.Name = "openSardineModBrowserToolStripMenuItem";
+            resources.ApplyResources(this.openSardineModBrowserToolStripMenuItem, "openSardineModBrowserToolStripMenuItem");
+            this.openSardineModBrowserToolStripMenuItem.Click += new System.EventHandler(this.openSardineModBrowserToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            resources.ApplyResources(this.toolStripSeparator8, "toolStripSeparator8");
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            resources.ApplyResources(this.toolStripSeparator9, "toolStripSeparator9");
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -567,5 +589,8 @@ namespace KKManager.Windows
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem tryToDeleteToRecycleBinToolStripMenuItem;
         private ToolTip toolTip1;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripMenuItem openSardineModBrowserToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator9;
     }
 }

@@ -3,31 +3,26 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
-using KKManager.Data.Zipmods;
-using Sideloader;
 
 namespace KKManager.Data.Sardines
 {
     public class SardineModInfo : ModInfoBase
     {
-        public SardineModInfo(FileInfo location, List<Func<Image>> images, IReadOnlyList<string> contents)
-            : base(location, manifest.GUID, manifest.Name, manifest.Version, manifest.Author, manifest.Description, manifest.Website, manifest.Games)
+        public SardineModInfo(FileInfo location, string guid, string version, List<Func<Image>> images, IReadOnlyList<string> contents)
+            : base(location, guid, null, version, null, null, null, Array.Empty<string>())
         {
             var extension = location.Extension;
-            if (!SideloaderModLoader.IsValidZipmodExtension(extension))
-                throw new InvalidOperationException("Zipmod has invalid extension: " + Location.Extension);
+            if (!SardineModLoader.IsValidSardineExtension(extension))
+                throw new InvalidOperationException("Sardine mod has invalid extension: " + Location.Extension);
 
-            Manifest = manifest;
             _delayedImages = images ?? throw new ArgumentNullException(nameof(images));
             Contents = contents ?? throw new ArgumentNullException(nameof(contents));
-            ContentsKind = CheckContentsKinds(contents, manifest);
         }
 
         private readonly List<Func<Image>> _delayedImages;
         private List<Image> _cachedImages;
 
-        ~SideloaderModInfo()
+        ~SardineModInfo()
         {
             // todo handle properly or move images out of here
             if (_cachedImages != null)
@@ -38,9 +33,6 @@ namespace KKManager.Data.Sardines
                 _cachedImages = null;
             }
         }
-
-        [Browsable(false)]
-        public Manifest Manifest { get; }
 
         [Browsable(false)]
         public IReadOnlyList<Image> Images
@@ -74,7 +66,7 @@ namespace KKManager.Data.Sardines
             return Uri.IsWellFormedUriString(Website, UriKind.RelativeOrAbsolute) ? new Uri(Website) : null;
         }
 
-        public override bool Enabled => Location.Extension.StartsWith(".zip", StringComparison.OrdinalIgnoreCase);
+        public override bool Enabled => Location.Extension.Equals(".stp", StringComparison.OrdinalIgnoreCase);
 
         public override void SetEnabled(bool value)
         {
@@ -96,56 +88,56 @@ namespace KKManager.Data.Sardines
             return new FileInfo(location.FullName.Substring(0, location.FullName.Length - ext.Length) + new string(ext));
         }
 
-        private static ZipmodContentsKind CheckContentsKinds(IReadOnlyList<string> contents, Manifest manifest)
-        {
-            var kind = ZipmodContentsKind.Unknown;
+        //private static ZipmodContentsKind CheckContentsKinds(IReadOnlyList<string> contents, Manifest manifest)
+        //{
+        //    var kind = ZipmodContentsKind.Unknown;
 
-            if (manifest.ManifestDocumentRoot.Element("AnimationLoader") != null)
-                kind |= ZipmodContentsKind.AnimationFreeH;
+        //    if (manifest.ManifestDocumentRoot.Element("AnimationLoader") != null)
+        //        kind |= ZipmodContentsKind.AnimationFreeH;
 
-            if (manifest.ManifestDocumentRoot.Element("KK_UncensorSelector") != null)
-                kind |= ZipmodContentsKind.UncensorSelector;
+        //    if (manifest.ManifestDocumentRoot.Element("KK_UncensorSelector") != null)
+        //        kind |= ZipmodContentsKind.UncensorSelector;
 
-            if (manifest.ManifestDocumentRoot.Element("MaterialEditor") != null)
-                kind |= ZipmodContentsKind.MaterialEditor;
+        //    if (manifest.ManifestDocumentRoot.Element("MaterialEditor") != null)
+        //        kind |= ZipmodContentsKind.MaterialEditor;
 
-            foreach (var filePath in contents)
-            {
-                if (filePath.StartsWith(@"abdata\map\", StringComparison.OrdinalIgnoreCase))
-                    kind |= ZipmodContentsKind.MapFreeH;
-                else if (filePath.StartsWith(@"abdata\h\anim\", StringComparison.OrdinalIgnoreCase))
-                    kind |= ZipmodContentsKind.AnimationFreeH;
-                else if (filePath.StartsWith(@"abdata\list\characustom\", StringComparison.OrdinalIgnoreCase))
-                    kind |= ZipmodContentsKind.Character;
-                else if (filePath.StartsWith(@"abdata\studio\info\", StringComparison.OrdinalIgnoreCase))
-                {
-                    var fileName = Path.GetFileName(filePath);
-                    if (fileName.StartsWith("Map_", StringComparison.OrdinalIgnoreCase))
-                        kind |= ZipmodContentsKind.MapStudio;
-                    else if (Regex.IsMatch(fileName, @"^(H)?Anime(Category|Group)?_", RegexOptions.IgnoreCase))
-                        kind |= ZipmodContentsKind.AnimationStudio;
-                    else
-                        kind |= ZipmodContentsKind.Studio;
-                }
-            }
+        //    foreach (var filePath in contents)
+        //    {
+        //        if (filePath.StartsWith(@"abdata\map\", StringComparison.OrdinalIgnoreCase))
+        //            kind |= ZipmodContentsKind.MapFreeH;
+        //        else if (filePath.StartsWith(@"abdata\h\anim\", StringComparison.OrdinalIgnoreCase))
+        //            kind |= ZipmodContentsKind.AnimationFreeH;
+        //        else if (filePath.StartsWith(@"abdata\list\characustom\", StringComparison.OrdinalIgnoreCase))
+        //            kind |= ZipmodContentsKind.Character;
+        //        else if (filePath.StartsWith(@"abdata\studio\info\", StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            var fileName = Path.GetFileName(filePath);
+        //            if (fileName.StartsWith("Map_", StringComparison.OrdinalIgnoreCase))
+        //                kind |= ZipmodContentsKind.MapStudio;
+        //            else if (Regex.IsMatch(fileName, @"^(H)?Anime(Category|Group)?_", RegexOptions.IgnoreCase))
+        //                kind |= ZipmodContentsKind.AnimationStudio;
+        //            else
+        //                kind |= ZipmodContentsKind.Studio;
+        //        }
+        //    }
 
-            return kind;
-        }
+        //    return kind;
+        //}
 
-        [Flags]
-        public enum ZipmodContentsKind
-        { //todo draggable grid list, order matters, save as separate xml elems, each has output subfolder name, compressbydefault, place in author subfolders
-            Unknown = 0,
-            MapFreeH = 1 << 0,
-            MapStudio = 1 << 1,
-            AnimationFreeH = 1 << 2,
-            AnimationStudio = 1 << 3,
-            Studio = 1 << 4,
-            Character = 1 << 5,
-            UncensorSelector = 1 << 6,
-            MaterialEditor = 1 << 7,
-        }
+        //[Flags]
+        //public enum ZipmodContentsKind
+        //{ //todo draggable grid list, order matters, save as separate xml elems, each has output subfolder name, compressbydefault, place in author subfolders
+        //    Unknown = 0,
+        //    MapFreeH = 1 << 0,
+        //    MapStudio = 1 << 1,
+        //    AnimationFreeH = 1 << 2,
+        //    AnimationStudio = 1 << 3,
+        //    Studio = 1 << 4,
+        //    Character = 1 << 5,
+        //    UncensorSelector = 1 << 6,
+        //    MaterialEditor = 1 << 7,
+        //}
 
-        public ZipmodContentsKind ContentsKind { get; }
+        //public ZipmodContentsKind ContentsKind { get; }
     }
 }

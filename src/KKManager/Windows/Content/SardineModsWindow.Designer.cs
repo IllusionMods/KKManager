@@ -64,7 +64,7 @@ namespace KKManager.Windows.Content
             this.olvColumnEnabled,
             this.olvColumnName,
             this.olvColumnVersion,
-            this.olvColumnFilename});
+            this.olvColumnPath});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.FullRowSelect = true;
@@ -91,7 +91,7 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnName
             // 
-            this.olvColumnName.AspectName = "Name";
+            this.olvColumnName.AspectName = "Guid";
             this.olvColumnName.MinimumWidth = 100;
             resources.ApplyResources(this.olvColumnName, "olvColumnName");
             // 
@@ -104,13 +104,13 @@ namespace KKManager.Windows.Content
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
-            this.olvColumnFilename.MinimumWidth = 50;
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
+            this.olvColumnFilename.IsVisible = false;
+            this.olvColumnFilename.MinimumWidth = 50;
             // 
             // olvColumnPath
             // 
             this.olvColumnPath.AspectName = "RelativePath";
-            this.olvColumnPath.IsVisible = false;
             resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
             // 
             // toolStrip1

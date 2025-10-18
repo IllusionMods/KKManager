@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using KKManager.Functions;
 using SharpCompress.Archives.Zip;
-using Sideloader;
 
 namespace KKManager.Data.Sardines
 {
@@ -32,7 +31,7 @@ namespace KKManager.Data.Sardines
                     _sardines = new ReplaySubject<SardineModInfo>();
                     _cancelSource?.Dispose();
                     _cancelSource = new CancellationTokenSource();
-                    _currentTask = TryReadSardineMods(InstallDirectoryHelper..FullName, _sardines, _cancelSource.Token);
+                    _currentTask = TryReadSardineMods(InstallDirectoryHelper.SardinesPath.FullName, _sardines, _cancelSource.Token);
                 }
             }
             return _sardines;
@@ -49,7 +48,7 @@ namespace KKManager.Data.Sardines
         /// <summary>
         /// Gather information about valid plugins inside the selected directory
         /// </summary>
-        /// <param name="modDirectory">Directory containing the zipmods to gather info from. Usually mods directory inside game root.</param>
+        /// <param name="modDirectory">Directory containing the sardines to gather info from. Usually sardines directory inside game root.</param>
         /// <param name="subject"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="searchOption">Where to search</param>
@@ -78,7 +77,7 @@ namespace KKManager.Data.Sardines
                         {
                             token.ThrowIfCancellationRequested();
 
-                            if (!IsValidZipmodExtension(Path.GetExtension(file))) return;
+                            if (!IsValidSardineExtension(Path.GetExtension(file))) return;
 
                             subject.OnNext(LoadFromFile(file));
                         }
@@ -88,7 +87,7 @@ namespace KKManager.Data.Sardines
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Failed to load zipmod from \"{file}\" with error: {ex.ToStringDemystified()}");
+                            Console.WriteLine($"Failed to load sardines from \"{file}\" with error: {ex.ToStringDemystified()}");
                         }
                     });
 
@@ -104,15 +103,15 @@ namespace KKManager.Data.Sardines
                         return;
 
                     if (ex is SecurityException || ex is UnauthorizedAccessException)
-                        MessageBox.Show("Could not load information about zipmods because access to the plugins folder was denied. Check the permissions of your mods folder and try again.\n\n" + ex.Message,
-                            "Load zipmods", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show("Could not load information about sardines because access to the folder was denied. Check the permissions of your mods folder and try again.\n\n" + ex.Message,
+                            "Load sardines", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                    Console.WriteLine("Crash when loading zipmods: " + ex.ToStringDemystified());
+                    Console.WriteLine("Crash when loading sardines: " + ex.ToStringDemystified());
                     subject.OnError(ex);
                 }
                 finally
                 {
-                    Console.WriteLine($"Finished loading zipmods from [{modDirectory}] in {sw.ElapsedMilliseconds}ms");
+                    Console.WriteLine($"Finished loading sardines from [{modDirectory}] in {sw.ElapsedMilliseconds}ms");
                     subject.OnCompleted();
                 }
             }
@@ -133,18 +132,23 @@ namespace KKManager.Data.Sardines
         {
             var location = new FileInfo(filename);
 
-            if (!IsValidZipmodExtension(location.Extension))
-                throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
+            if (!IsValidSardineExtension(location.Extension))
+                throw new ArgumentException($"The file {filename} has an invalid extension and can't be a sardine mod", nameof(filename));
+
+
+            var name = Path.GetFileNameWithoutExtension(filename);
+            var versionSepIdx = name.LastIndexOf('-');
+            if (versionSepIdx < 0 || versionSepIdx == name.Length - 1)
+                throw new InvalidDataException($"The sardine mod file {filename} does not have a valid name format (expected GUID-Version.stp)");
+
+            var guid = name.Substring(0, versionSepIdx);
+            var version = name.Substring(versionSepIdx + 1);
+
 
             using (var zf = ZipArchive.Open(location))
             {
                 // Without this reading crashes if any entry name has invalid characters
                 // TODO not available in sharplib - zf.IgnoreDuplicateFiles = true;
-
-                var manifest = Manifest.LoadFromZip(zf);
-
-                if (manifest == null)
-                    throw new InvalidDataException("manifest.xml was not found in the mod archive. Make sure this is a zipmod.");
 
                 var images = new List<Func<Image>>();
                 foreach (var imageFile in zf.Entries
@@ -158,7 +162,7 @@ namespace KKManager.Data.Sardines
                                                 catch (Exception e)
                                                 {
                                                     // Handle entries with invalid characters in filename
-                                                    Console.WriteLine($"WARN: Zipmod={location.Name} Entry={x.Key} Error={e.Message}");
+                                                    Console.WriteLine($"WARN: Sardine={location.Name} Entry={x.Key} Error={e.Message}");
                                                     return false;
                                                 }
                                             })
@@ -192,32 +196,25 @@ namespace KKManager.Data.Sardines
 
                 var contents = zf.Entries.Where(x => !x.IsDirectory).Select(x => x.Key?.Replace('/', '\\')).ToList();
 
-                return new SideloaderModInfo(location, manifest, images, contents);
+                return new SardineModInfo(location, guid, version, images, contents);
             }
         }
 
-        public static bool IsValidZipmodExtension(string extension)
+        public static bool IsValidSardineExtension(string extension)
         {
             var exts = new[]
             {
-                ".zip",
-                ".zi_",
-                ".zipmod",
-                ".zi_mod",
+                ".stp",
+                ".st_",
             };
 
             return exts.Any(x => x.Equals(extension, StringComparison.OrdinalIgnoreCase));
         }
-        public static bool IsDisabledZipmod(string extension, out string enabledExtension)
+        public static bool IsDisabledSardine(string extension, out string enabledExtension)
         {
-            if (extension.Equals(".zi_", StringComparison.OrdinalIgnoreCase))
+            if (extension.Equals(".st_", StringComparison.OrdinalIgnoreCase))
             {
-                enabledExtension = ".zip";
-                return true;
-            }
-            if (extension.Equals(".zi_mod", StringComparison.OrdinalIgnoreCase))
-            {
-                enabledExtension = ".zipmod";
+                enabledExtension = ".stp";
                 return true;
             }
             enabledExtension = null;

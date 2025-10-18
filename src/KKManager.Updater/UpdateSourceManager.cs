@@ -8,6 +8,8 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KKManager.Data;
+using KKManager.Data.Sardines;
 using KKManager.Data.Zipmods;
 using KKManager.Updater.Data;
 using KKManager.Updater.Properties;
@@ -47,7 +49,7 @@ namespace KKManager.Updater
             var ignoreListPath = "ignorelist.txt";
             var ignoreList = File.Exists(ignoreListPath) ? File.ReadAllLines(ignoreListPath).ToList() : new List<string>();
             // Skip updating disabled mods
-            ignoreList.AddRange(SideloaderModLoader.Zipmods.ToEnumerable().Where(x => !x.Enabled).Select(x => x.Location.GetNameWithoutExtension()));
+            ignoreList.AddRange(SideloaderModLoader.Zipmods.Cast<ModInfoBase>().Concat(SardineModLoader.Sardines).ToEnumerable().Where(x => !x.Enabled).Select(x => x.Location.GetNameWithoutExtension()));
 
             var anySuccessful = false;
 

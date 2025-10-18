@@ -20,6 +20,7 @@ using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
 using KKManager.Data.Cards.SVS;
 using KKManager.Data.Plugins;
+using KKManager.Data.Sardines;
 using KKManager.Data.Zipmods;
 using KKManager.Util;
 
@@ -70,6 +71,7 @@ namespace KKManager.Data.Cards
 
                     Task.WhenAll(readCardTask,
                             SideloaderModLoader.Zipmods.ToTask(cancellationToken),
+                            //TODO sardine support SardineModLoader.Sardines.ToTask(cancellationToken),
                             PluginLoader.Plugins.ToTask(cancellationToken))
                         .ContinueWith(t =>
                         {

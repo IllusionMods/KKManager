@@ -273,6 +273,12 @@
     <Compile Include="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.Designer.cs">
       <DependentUpon>CardInfoViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.Designer.cs">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -486,6 +492,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\PluginViewer.zh-Hans.resx">
       <DependentUpon>PluginViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.ja.resx">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.resx">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.ru.resx">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.zh-Hans.resx">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.ja.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
