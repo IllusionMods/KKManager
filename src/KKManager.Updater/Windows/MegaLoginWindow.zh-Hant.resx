@@ -117,33 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>點對點（P2P）檔案傳輸允許所有正在更新的客戶端相互溝通，並共享更新片段，從而大幅提升整體下載速度。部分網路服務供應商（ISP）與防火牆可能限制或封鎖P2P流量，若您遇到任何問題，請使用虛擬私人網路（VPN）或停用P2P傳輸功能。</value>
+  <data name="buttonAcc.Text" xml:space="preserve">
+    <value>登入</value>
   </data>
-  <data name="checkBoxEnable.Text" xml:space="preserve">
-    <value>啟用點對點傳輸</value>
+  <data name="buttonAnon.Text" xml:space="preserve">
+    <value>不登入</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>若啟用此功能，此客戶端將能從其他用戶下載資料，
-同時向他們傳送其尚未擁有的更新片段。
-
-若停用此功能，此客戶端僅能從中央伺服器下載資料，
-且不會與任何其他客戶端進行通訊。
-</value>
+  <data name="buttonAnon.ToolTip" xml:space="preserve">
+    <value>跳過登入程序，以匿名使用者身分繼續操作</value>
+  </data>
+  <data name="buttonCancel.Text" xml:space="preserve">
+    <value>取消</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>用於點對點連線的連接埠</value>
+    <value>記得 (?)</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>套用設定</value>
+  <data name="label3.ToolTip" xml:space="preserve">
+    <value>此功能將記住您的登入帳號與密碼，以便未來自動登入。通常無需啟用此功能，因為即使關閉「記住」選項，您的會話仍會被保存。
+
+密碼將以雜湊值形式儲存，而非明文。
+
+若選擇不記住憑證，則數日後（會話到期後）系統將要求您重新登入。</value>
   </data>
-  <data name="checkBoxForward.Text" xml:space="preserve">
-    <value>嘗試自動進行埠轉發（UPnP / NAT-PNP）</value>
+  <data name="labelPass.Text" xml:space="preserve">
+    <value>密碼</value>
   </data>
-  <data name="checkBoxLogVerbose.Text" xml:space="preserve">
-    <value>啟用詳細記錄模式（用於疑難排解下載問題）</value>
+  <data name="labelEmail.Text" xml:space="preserve">
+    <value>您的電子郵件</value>
+  </data>
+  <data name="labelEmail.ToolTip" xml:space="preserve">
+    <value>您在 mega.nz 上使用的登入帳號</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Mega.nz 作為其中一個下載來源，提供高速下載服務。該平台設有下載限制，可能迫使 KK Manager 改用速度較慢的來源。
+若您擁有 mega.nz 帳戶，可登入帳戶以避免此限制。請注意：免費帳戶可能無法提高下載限額。</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>點對點更新傳輸設定</value>
+    <value>更新程式 - 登入 mega.nz</value>
   </data>
 </root>

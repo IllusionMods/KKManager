@@ -117,33 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>點對點（P2P）檔案傳輸允許所有正在更新的客戶端相互溝通，並共享更新片段，從而大幅提升整體下載速度。部分網路服務供應商（ISP）與防火牆可能限制或封鎖P2P流量，若您遇到任何問題，請使用虛擬私人網路（VPN）或停用P2P傳輸功能。</value>
-  </data>
-  <data name="checkBoxEnable.Text" xml:space="preserve">
-    <value>啟用點對點傳輸</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>若啟用此功能，此客戶端將能從其他用戶下載資料，
-同時向他們傳送其尚未擁有的更新片段。
-
-若停用此功能，此客戶端僅能從中央伺服器下載資料，
-且不會與任何其他客戶端進行通訊。
-</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>用於點對點連線的連接埠</value>
-  </data>
-  <data name="button1.Text" xml:space="preserve">
-    <value>套用設定</value>
-  </data>
-  <data name="checkBoxForward.Text" xml:space="preserve">
-    <value>嘗試自動進行埠轉發（UPnP / NAT-PNP）</value>
-  </data>
-  <data name="checkBoxLogVerbose.Text" xml:space="preserve">
-    <value>啟用詳細記錄模式（用於疑難排解下載問題）</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>點對點更新傳輸設定</value>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>屬性</value>
   </data>
 </root>

@@ -191,7 +191,7 @@ namespace KKManager.Functions
 
             try
             {
-                var modDirectory = InstallDirectoryHelper.ModsPath.FullName;
+                var modDirectory = InstallDirectoryHelper.ZipmodsPath.FullName;
 
                 var oldMod = SideloaderModLoader.Zipmods.ToList().Wait().FirstOrDefault(x => x.Guid == newMod.Guid);
 

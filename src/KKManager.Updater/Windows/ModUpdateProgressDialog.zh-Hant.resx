@@ -118,12 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-    <value>別急，我們的專業技術人員Chika正在幫你下載和安裝最新的更新！更新完成之前請不要動遊戲文件哦。</value>
+    <value>請稍候，我們的認證技術人員Chikarin正在為您下載並安裝選定的更新檔！更新完成前請避免存取遊戲檔案。</value>
   </data>
   <data name="checkBoxSleep.Text" xml:space="preserve">
-    <value>更新完成後進入睡眠模式</value>
+    <value>完成後請進入睡眠模式</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="buttonLog.Text" xml:space="preserve">
+    <value>檢視記錄</value>
+  </data>
+  <data name="buttonMinimize.Text" xml:space="preserve">
+    <value>最小化</value>
+  </data>
+  <data name="buttonCancelClose.Text" xml:space="preserve">
     <value>取消</value>
   </data>
   <data name="olvColumnNo.Text" xml:space="preserve">
@@ -139,19 +145,19 @@
     <value>進度</value>
   </data>
   <data name="olvColumnStatus.Text" xml:space="preserve">
-    <value>現狀</value>
+    <value>狀態</value>
   </data>
   <data name="fastObjectListView1.EmptyListMsg" xml:space="preserve">
-    <value>文件下載中，請稍等</value>
+    <value>等待檔案下載中...</value>
   </data>
   <data name="labelPercent.Text" xml:space="preserve">
-    <value>總體：完成50%（111MB / 2.2 GB） 
-速度：1234KB / s（預計剩餘時間：40分鐘20秒）</value>
+    <value>總進度：50%完成  (111MB / 總容量2.2 GB)
+傳輸速度：1234KB/秒  (預計完成時間：40 分鐘 20 秒)</value>
   </data>
   <data name="labelStatus.Text" xml:space="preserve">
-    <value>下載狀態</value>
+    <value>下載狀態訊息</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Mods更新中</value>
+    <value>模組正在更新中</value>
   </data>
 </root>
