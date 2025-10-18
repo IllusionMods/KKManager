@@ -789,7 +789,7 @@ namespace KKManager.Windows
 
         private void cleanUpDuplicateZipmodsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ZipmodTools.RemoveDuplicateZipmodsInDir(InstallDirectoryHelper.ModsPath, false);
+            ZipmodTools.RemoveDuplicateZipmodsInDir(InstallDirectoryHelper.ZipmodsPath, false);
         }
 
         private void cleanUpDuplicateAndInvalidZipmodsToolStripMenuItem_Click(object sender, EventArgs e)

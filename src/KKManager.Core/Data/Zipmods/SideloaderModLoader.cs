@@ -32,7 +32,7 @@ namespace KKManager.Data.Zipmods
                     _zipmods = new ReplaySubject<SideloaderModInfo>();
                     _cancelSource?.Dispose();
                     _cancelSource = new CancellationTokenSource();
-                    _currentTask = TryReadSideloaderMods(InstallDirectoryHelper.ModsPath.FullName, _zipmods, _cancelSource.Token);
+                    _currentTask = TryReadSideloaderMods(InstallDirectoryHelper.ZipmodsPath.FullName, _zipmods, _cancelSource.Token);
                 }
             }
             return _zipmods;
