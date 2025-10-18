@@ -204,6 +204,8 @@
     <Compile Include="Data\ModInfoBase.cs" />
     <Compile Include="Data\Plugins\PluginInfo.cs" />
     <Compile Include="Data\Plugins\PluginLoader.cs" />
+    <Compile Include="Data\Sardines\SardineModInfo.cs" />
+    <Compile Include="Data\Sardines\SardineModLoader.cs" />
     <Compile Include="Util\TypeConverters\ReadOnlyStringCollectionConverterWithPreview.cs" />
     <Compile Include="Data\Zipmods\Manifest.cs" />
     <Compile Include="Data\Zipmods\MigrationInfo.cs" />

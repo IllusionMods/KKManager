@@ -202,6 +202,12 @@
     <Compile Include="ModpackTool\Windows\ModpackToolWindow.Designer.cs">
       <DependentUpon>ModpackToolWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Content\SardineModsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Content\SardineModsWindow.Designer.cs">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Dialogs\PathSelectPopup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -337,6 +343,22 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\PluginsWindow.zh-Hant.resx">
       <DependentUpon>PluginsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SardineModsWindow.ja.resx">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SardineModsWindow.resx">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SardineModsWindow.ru.resx">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SardineModsWindow.zh-Hans.resx">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\Content\SardineModsWindow.zh-Hant.resx">
+      <DependentUpon>SardineModsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\Content\SideloaderModsWindow.ja.resx">
       <DependentUpon>SideloaderModsWindow.cs</DependentUpon>
