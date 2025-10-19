@@ -1,4 +1,4 @@
-﻿﻿using BrightIdeasSoftware;
+using BrightIdeasSoftware;
 using KKManager.Data.Cards;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
@@ -48,6 +48,8 @@ namespace KKManager.Windows.Content
             }
         }
 
+        private Dictionary<ToolStripMenuItem, Func<Card, object>> _duplicateKeySelectors;
+
         public CardWindow()
         {
             _emptyImage = new Bitmap(1, 1);
@@ -94,6 +96,15 @@ namespace KKManager.Windows.Content
 #endif
 
             ListTools.SetUpSearchBox(listView, toolStripTextBoxSearch);
+
+            _duplicateKeySelectors = new Dictionary<ToolStripMenuItem, Func<Card, object>>
+            {
+                { duplicatesByNameToolStripMenuItem, c => c.Name },
+                { duplicatesByFileSizeToolStripMenuItem, c => c?.Location != null ? (object)c.Location.Length : "" },
+                { duplicatesByFilenameToolStripMenuItem, c => c?.Location?.Name },
+                { duplicatesByUserIDToolStripMenuItem, c => c.UserID },
+                { duplicatesByDataIDToolStripMenuItem, c => c.DataID }
+            };
         }
 
         /// <summary>
@@ -302,6 +313,8 @@ namespace KKManager.Windows.Content
 
                         MainWindow.SetStatusText("Done loading cards");
                         listView.EmptyListMsg = prevEmptyListMsg;
+
+                        RebuildDuplicateFilter();
                     },
                     _cancellationTokenSource.Token);
         }
@@ -854,6 +867,28 @@ namespace KKManager.Windows.Content
             Process.Start(_currentDirectory.FullName);
         }
 
+        private void openSelectedInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var selection = _typedListView.SelectedObjects;
+                if (selection == null || selection.Count == 0) return;
+
+                foreach (var card in selection)
+                {
+                    var path = card?.Location?.FullName;
+                    if (string.IsNullOrEmpty(path) || !File.Exists(path)) continue;
+
+                    // Open Explorer on the file's folder and select/focus the file.
+                    Process.Start("explorer.exe", "/select,\"" + path + "\"");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
         private void showUnknowninvalidCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             showUnknowninvalidCardsToolStripMenuItem.Checked = !showUnknowninvalidCardsToolStripMenuItem.Checked;
@@ -974,6 +1009,83 @@ namespace KKManager.Windows.Content
                 MessageBox.Show($"Moved {moved} file(s){(failed > 0 ? ", some failed" : "")}.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 RefreshList();
             }
+        }
+
+        private void RebuildDuplicateFilter()
+        {
+            var activeSelectors = _duplicateKeySelectors
+                .Where(kvp => kvp.Key.Checked)
+                .Select(kvp => kvp.Value)
+                .ToList();
+
+            if (activeSelectors.Count == 0)
+            {
+                listView.AdditionalFilter = null;
+                listView.BuildList(true);
+                return;
+            }
+
+            var src = _typedListView.Objects;
+            if (src == null || src.Count == 0)
+            {
+                listView.AdditionalFilter = null;
+                listView.BuildList(true);
+                return;
+            }
+
+            string NormalizeToString(object v)
+            {
+                if (v == null) return "";
+                if (v is string s) return s.Trim().ToLowerInvariant();
+                if (v is IFormattable f) return f.ToString(null, System.Globalization.CultureInfo.InvariantCulture);
+                return v.ToString();
+            }
+
+            string CompositeKey(Card c) =>
+                string.Join("\u001F", activeSelectors.Select(sel => NormalizeToString(sel(c))));
+
+            var dupSet = new HashSet<Card>(
+                src.GroupBy(CompositeKey)
+                   .Where(g => g.Count() > 1)
+                   .SelectMany(g => g)
+            );
+
+            listView.AdditionalFilter = new ModelFilter(o => dupSet.Contains((Card)o));
+            listView.BuildList(true);
+        }
+
+        private void clearDuplicateFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var kvp in _duplicateKeySelectors.Keys)
+                kvp.Checked = false;
+
+            listView.AdditionalFilter = null;
+            listView.BuildList(true);
+        }
+
+        private void duplicatesByNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RebuildDuplicateFilter();
+        }
+
+        private void duplicatesByFileSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RebuildDuplicateFilter();
+        }
+
+        private void duplicatesByFilenameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RebuildDuplicateFilter();
+        }
+
+        private void duplicatesByUserIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RebuildDuplicateFilter();
+        }
+
+        private void duplicatesByDataIDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RebuildDuplicateFilter();
         }
     }
 }
