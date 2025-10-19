@@ -66,9 +66,18 @@ namespace KKManager.Windows.Content
             this.showUnknowninvalidCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openSelectedInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findDuplicatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicatesByNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicatesByFileSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicatesByFilenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicatesByUserIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicatesByDataIDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorFindDuplicates = new System.Windows.Forms.ToolStripSeparator();
+            this.clearDuplicateFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectMarkedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveSelectedToFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAListOfMissingModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -307,7 +316,8 @@ namespace KKManager.Windows.Content
             this.useCheckboxesToolStripMenuItem,
             this.showUnknowninvalidCardsToolStripMenuItem,
             this.toolStripSeparator5,
-            this.openInExplorerToolStripMenuItem});
+            this.openInExplorerToolStripMenuItem,
+            this.openSelectedInExplorerToolStripMenuItem});
             resources.ApplyResources(this.toolStripViewSelect, "toolStripViewSelect");
             this.toolStripViewSelect.Name = "toolStripViewSelect";
             // 
@@ -360,12 +370,19 @@ namespace KKManager.Windows.Content
             resources.ApplyResources(this.openInExplorerToolStripMenuItem, "openInExplorerToolStripMenuItem");
             this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
             // 
+            // openSelectedInExplorerToolStripMenuItem
+            // 
+            this.openSelectedInExplorerToolStripMenuItem.Name = "openSelectedInExplorerToolStripMenuItem";
+            this.openSelectedInExplorerToolStripMenuItem.Text = "Open selected folder in explorer";
+            this.openSelectedInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openSelectedInExplorerToolStripMenuItem_Click);
+            // 
             // toolStripDropDownButtonTools
             // 
             this.toolStripDropDownButtonTools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.segregateBySexToolStripMenuItem,
             this.renameCardsToolStripMenuItem,
+            this.findDuplicatesToolStripMenuItem,
             this.selectMarkedToolStripMenuItem,
             this.moveSelectedToFolderToolStripMenuItem,
             this.exportAListOfMissingModsToolStripMenuItem,
@@ -384,6 +401,64 @@ namespace KKManager.Windows.Content
             resources.ApplyResources(this.renameCardsToolStripMenuItem, "renameCardsToolStripMenuItem");
             this.renameCardsToolStripMenuItem.Name = "renameCardsToolStripMenuItem";
             this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
+            // 
+            // findDuplicatesToolStripMenuItem
+            // 
+            this.findDuplicatesToolStripMenuItem.Name = "findDuplicatesToolStripMenuItem";
+            this.findDuplicatesToolStripMenuItem.Text = "Find duplicates";
+            this.findDuplicatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.duplicatesByNameToolStripMenuItem,
+            this.duplicatesByFileSizeToolStripMenuItem,
+            this.duplicatesByFilenameToolStripMenuItem,
+            this.duplicatesByUserIDToolStripMenuItem,
+            this.duplicatesByDataIDToolStripMenuItem,
+            this.toolStripSeparatorFindDuplicates,
+            this.clearDuplicateFilterToolStripMenuItem});
+            // 
+            // duplicatesByNameToolStripMenuItem
+            // 
+            this.duplicatesByNameToolStripMenuItem.CheckOnClick = true;
+            this.duplicatesByNameToolStripMenuItem.Name = "duplicatesByNameToolStripMenuItem";
+            this.duplicatesByNameToolStripMenuItem.Text = "By Name";
+            this.duplicatesByNameToolStripMenuItem.Click += new System.EventHandler(this.duplicatesByNameToolStripMenuItem_Click);
+            // 
+            // duplicatesByFileSizeToolStripMenuItem
+            // 
+            this.duplicatesByFileSizeToolStripMenuItem.CheckOnClick = true;
+            this.duplicatesByFileSizeToolStripMenuItem.Name = "duplicatesByFileSizeToolStripMenuItem";
+            this.duplicatesByFileSizeToolStripMenuItem.Text = "By File Size";
+            this.duplicatesByFileSizeToolStripMenuItem.Click += new System.EventHandler(this.duplicatesByFileSizeToolStripMenuItem_Click);
+            // 
+            // duplicatesByFilenameToolStripMenuItem
+            // 
+            this.duplicatesByFilenameToolStripMenuItem.CheckOnClick = true;
+            this.duplicatesByFilenameToolStripMenuItem.Name = "duplicatesByFilenameToolStripMenuItem";
+            this.duplicatesByFilenameToolStripMenuItem.Text = "By Filename";
+            this.duplicatesByFilenameToolStripMenuItem.Click += new System.EventHandler(this.duplicatesByFilenameToolStripMenuItem_Click);
+            // 
+            // duplicatesByUserIDToolStripMenuItem
+            // 
+            this.duplicatesByUserIDToolStripMenuItem.CheckOnClick = true;
+            this.duplicatesByUserIDToolStripMenuItem.Name = "duplicatesByUserIDToolStripMenuItem";
+            this.duplicatesByUserIDToolStripMenuItem.Text = "By UserID";
+            this.duplicatesByUserIDToolStripMenuItem.Click += new System.EventHandler(this.duplicatesByUserIDToolStripMenuItem_Click);
+            // 
+            // duplicatesByDataIDToolStripMenuItem
+            // 
+            this.duplicatesByDataIDToolStripMenuItem.CheckOnClick = true;
+            this.duplicatesByDataIDToolStripMenuItem.Name = "duplicatesByDataIDToolStripMenuItem";
+            this.duplicatesByDataIDToolStripMenuItem.Text = "By DataID";
+            this.duplicatesByDataIDToolStripMenuItem.Click += new System.EventHandler(this.duplicatesByDataIDToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorFindDuplicates
+            // 
+            this.toolStripSeparatorFindDuplicates.Name = "toolStripSeparatorFindDuplicates";
+            // 
+            // clearDuplicateFilterToolStripMenuItem
+            // 
+            this.clearDuplicateFilterToolStripMenuItem.Name = "clearDuplicateFilterToolStripMenuItem";
+            this.clearDuplicateFilterToolStripMenuItem.Text = "Clear filter";
+            this.clearDuplicateFilterToolStripMenuItem.Click += new System.EventHandler(this.clearDuplicateFilterToolStripMenuItem_Click);
             // 
             // selectMarkedToolStripMenuItem
             // 
@@ -510,5 +585,14 @@ namespace KKManager.Windows.Content
         private System.Windows.Forms.ToolStripMenuItem useCheckboxesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectMarkedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveSelectedToFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findDuplicatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesByNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesByFileSizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesByFilenameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesByUserIDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicatesByDataIDToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFindDuplicates;
+        private System.Windows.Forms.ToolStripMenuItem clearDuplicateFilterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openSelectedInExplorerToolStripMenuItem;
     }
 }
