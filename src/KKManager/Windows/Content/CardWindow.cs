@@ -1,4 +1,4 @@
-﻿using BrightIdeasSoftware;
+﻿﻿using BrightIdeasSoftware;
 using KKManager.Data.Cards;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
@@ -62,11 +62,11 @@ namespace KKManager.Windows.Content
 
             Details(this, EventArgs.Empty);
 
-            //((OLVColumn)listView.Columns[listView.Columns.Count - 1]).FillsFreeSpace = true;
-
             _typedListView = new TypedObjectListView<Card>(listView);
 
             listView.CacheVirtualItems += ListView_CacheVirtualItems;
+            listView.KeyDown += ListView_KeyDown;
+            listView.MouseDoubleClick += ListView_MouseDoubleClick;
 
             listView.EmptyListMsgFont = new Font(Font.FontFamily, 24);
             listView.EmptyListMsg = "No cards were found";
@@ -83,7 +83,7 @@ namespace KKManager.Windows.Content
             };
 
             olvColumnRelativeFilename.AspectGetter = rowObject => rowObject is Card card ? card.Location.FullName.Substring(_currentDirectory.FullName.Length).TrimStart('/', '\\') : rowObject;
-            olvColumnMissingMods.AspectGetter = rowObject => rowObject is Card card ? card.MissingPlugins?.Length ?? 0 + card.MissingZipmods?.Length ?? 0 : 0;
+            olvColumnMissingMods.AspectGetter = rowObject => rowObject is Card c2 ? (c2.MissingPlugins?.Length ?? 0) + (c2.MissingZipmods?.Length ?? 0) : 0;
 
 #if DEBUG
             foreach (var column in listView.AllColumns)
@@ -162,8 +162,7 @@ namespace KKManager.Windows.Content
                 }
                 if (parts.Length >= 4)
                 {
-                    bool showInvalid;
-                    if (bool.TryParse(parts[3], out showInvalid))
+                    if (bool.TryParse(parts[3], out var showInvalid))
                     {
                         ShowInvalid = showInvalid;
                         showUnknowninvalidCardsToolStripMenuItem.Checked = showInvalid;
@@ -292,7 +291,6 @@ namespace KKManager.Windows.Content
                     {
                         MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
                         listView.AddObjects(ShowInvalid ? list : list.Where(x => x is not UnknownCard).ToList());
-                        //RefreshThumbnails(true);
                     },
                     ShowFailedToLoadDirError,
                     () =>
@@ -308,9 +306,6 @@ namespace KKManager.Windows.Content
                     _cancellationTokenSource.Token);
         }
 
-        /// <summary>
-        /// Cancels previous thumbnail refresh if any and starts a new one
-        /// </summary>
         private void RefreshThumbnails(bool additive = false, CharacterRange refreshRange = default)
         {
             CancelThumbnailRefresh();
@@ -334,7 +329,6 @@ namespace KKManager.Windows.Content
             }
 
             var token = _thumbnailCancellationTokenSource.Token;
-
             if (token.IsCancellationRequested) return;
 
             var large = listView.View == View.LargeIcon;
@@ -350,20 +344,12 @@ namespace KKManager.Windows.Content
                         {
                             return !imageList.Images.ContainsKey(x.Location.FullName);
                         }
-                        catch (SystemException)
-                        {
-                            return false;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            return false;
-                        }
+                        catch (SystemException) { return false; }
+                        catch (Exception e) { Console.WriteLine(e); return false; }
                     });
             }
 
             var cardsToProcess = targetCards.ToList();
-
             if (cardsToProcess.Count == 0) return;
 
             var width = imageList.ImageSize.Width;
@@ -386,7 +372,6 @@ namespace KKManager.Windows.Content
                             updateSubject.OnNext(card);
                         }
 
-                        // Need to keep SmallImageList keys in sync when using LargeImageList
                         if (large)
                             listView.SmallImageList.Images.Add(key, _emptyImage);
                     }
@@ -429,7 +414,6 @@ namespace KKManager.Windows.Content
                         var key = card.Location.FullName;
                         if (listView.View == View.LargeIcon)
                         {
-                            // Need to use index to fix large images not showing in large icon view of a vritual list
                             var index = listView.LargeImageList.Images.IndexOfKey(key);
                             if (index >= 0) return index;
                         }
@@ -578,7 +562,7 @@ namespace KKManager.Windows.Content
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            var sexes = _typedListView.SelectedObjects.GroupBy(x => x.Sex).ToList();
+            var sexes = GetActionTargets().GroupBy(x => x.Sex).ToList();
 
             if (sexes.Count < 2)
             {
@@ -599,12 +583,12 @@ namespace KKManager.Windows.Content
 
         private void renameCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RenameCards.ShowDialog(this, _typedListView.SelectedObjects.ToArray());
+            RenameCards.ShowDialog(this, GetActionTargets().ToArray());
         }
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
+            var selectedObjects = GetActionTargets();
             if (!selectedObjects.Any()) return;
 
             if (MessageBox.Show($"Are you sure you want to delete {selectedObjects.Count} card(s)? This cannot be undone.", "Delete cards", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
@@ -626,8 +610,8 @@ namespace KKManager.Windows.Content
 
         private void exportAListOfMissingModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetActionTargets();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             var cardsWithMissingMods = selectedObjects.Where(x => (x.MissingPlugins?.Length ?? 0 + x.MissingPluginsMaybe?.Length ?? 0 + x.MissingZipmods?.Length ?? 0) > 0).ToList();
             if (cardsWithMissingMods.Count == 0)
@@ -648,7 +632,6 @@ namespace KKManager.Windows.Content
                 ValidateNames = true,
                 Title = "Export a list of missing mods",
                 RestoreDirectory = true,
-                //InitialDirectory = InstallDirectoryHelper.GameDirectory.FullName,
                 DereferenceLinks = true,
                 FileName = "Missing mod export",
             })
@@ -672,7 +655,6 @@ namespace KKManager.Windows.Content
                                 writer.WriteLine(missingZipmod);
 
                             writer.WriteLine();
-
 
                             foreach (var cardWithMissingMods in cardsWithMissingMods)
                             {
@@ -794,7 +776,6 @@ namespace KKManager.Windows.Content
                 ValidateNames = true,
                 Title = "Export...",
                 RestoreDirectory = true,
-                //InitialDirectory = InstallDirectoryHelper.GameDirectory.FullName,
                 DereferenceLinks = true,
                 FileName = "KKManager data export",
             };
@@ -802,24 +783,24 @@ namespace KKManager.Windows.Content
 
         private void usedZipmodsAndPluginsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetActionTargets();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, false, true, true);
         }
 
         private void zipmodUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetActionTargets();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, true, false, true);
         }
 
         private void pluginUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetActionTargets();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, true, true, false);
         }
@@ -836,7 +817,7 @@ namespace KKManager.Windows.Content
                 {
                     writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtenedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
 
-                    foreach (var card in _typedListView.SelectedObjects)
+                    foreach (var card in GetActionTargets())
                     {
                         var fileName = card.Location?.FullName ?? "";
                         var fileSize = card.FileSize ?? "";
@@ -877,6 +858,122 @@ namespace KKManager.Windows.Content
         {
             showUnknowninvalidCardsToolStripMenuItem.Checked = !showUnknowninvalidCardsToolStripMenuItem.Checked;
             ShowInvalid = showUnknowninvalidCardsToolStripMenuItem.Checked;
+        }
+
+        private void useCheckboxesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                listView.CheckBoxes = useCheckboxesToolStripMenuItem.Checked;
+                listView.TriStateCheckBoxes = false;
+            }
+            catch { }
+        }
+
+        private void ListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space && listView.CheckBoxes)
+            {
+                var obj = listView.FocusedObject;
+                if (obj != null)
+                {
+                    try { listView.ToggleCheckObject(obj); } catch { }
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void ListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (!listView.CheckBoxes) return;
+            try
+            {
+                var hit = listView.OlvHitTest(e.X, e.Y);
+                var obj = hit?.RowObject;
+                if (obj != null)
+                    listView.ToggleCheckObject(obj);
+            }
+            catch { }
+        }
+
+        private List<Card> GetActionTargets()
+        {
+            try
+            {
+                if (listView.CheckBoxes)
+                {
+                    var chk = _typedListView.CheckedObjects;
+                    if (chk != null && chk.Count > 0)
+                        return new List<Card>(chk);
+                }
+            }
+            catch { }
+            return _typedListView.SelectedObjects != null
+                ? new List<Card>(_typedListView.SelectedObjects)
+                : new List<Card>();
+        }
+
+        private void selectMarkedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!listView.CheckBoxes)
+                {
+                    MessageBox.Show("Enable 'Use checkboxes' in View first.", "Select marked", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                var checkedItems = _typedListView.CheckedObjects;
+                if (checkedItems == null || checkedItems.Count == 0)
+                {
+                    MessageBox.Show("No marked items.", "Select marked", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                listView.SelectObjects(checkedItems.Cast<object>().ToList());
+                listView.FocusedObject = checkedItems[0];
+            }
+            catch { }
+        }
+
+        private void moveSelectedToFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var targets = GetActionTargets();
+            if (targets == null || targets.Count == 0)
+            {
+                MessageBox.Show("Nothing selected.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using (var dlg = new FolderBrowserDialog())
+            {
+                dlg.Description = "Choose destination folder";
+                if (dlg.ShowDialog(this) != DialogResult.OK) return;
+                var destRoot = new DirectoryInfo(dlg.SelectedPath);
+                if (!destRoot.Exists)
+                {
+                    MessageBox.Show("Destination folder does not exist.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                int moved = 0, failed = 0;
+                foreach (var card in targets)
+                {
+                    try
+                    {
+                        var destPath = Path.Combine(destRoot.FullName, card.Location.Name);
+                        var candidate = destPath;
+                        int n = 1;
+                        while (File.Exists(candidate))
+                        {
+                            var name = Path.GetFileNameWithoutExtension(destPath);
+                            var ext = Path.GetExtension(destPath);
+                            candidate = Path.Combine(destRoot.FullName, $"{name} ({n++}){ext}");
+                        }
+                        File.Move(card.Location.FullName, candidate);
+                        moved++;
+                    }
+                    catch { failed++; }
+                }
+                MessageBox.Show($"Moved {moved} file(s){(failed > 0 ? ", some failed" : "")}.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                RefreshList();
+            }
         }
     }
 }
