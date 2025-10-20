@@ -208,4 +208,22 @@
   <data name="toolStripButtonOpenModsDir.Text" xml:space="preserve">
     <value>打開Mods目錄</value>
   </data>
+  <data name="olvColumnName.Text" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="olvColumnVersion.Text" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="olvColumnFilename.Text" xml:space="preserve">
+    <value>檔案名稱</value>
+  </data>
+  <data name="olvColumnPath.Text" xml:space="preserve">
+    <value>檔案路徑</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>工具列1</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Sardine模組</value>
+  </data>
 </root>
