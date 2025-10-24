@@ -178,7 +178,7 @@ namespace KKManager.Windows.Content
             // 
             // olvColumnFilename
             // 
-            this.olvColumnFilename.AspectName = "Name";
+            this.olvColumnFilename.AspectName = "Location.Name";
             resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.IsVisible = false;
             this.olvColumnFilename.MinimumWidth = 60;

@@ -532,6 +532,9 @@
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.zh-Hans.resx">
       <DependentUpon>SardineViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SardineViewer.zh-Hant.resx">
+      <DependentUpon>SardineViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.ja.resx">
       <DependentUpon>SideloaderViewer.cs</DependentUpon>
     </EmbeddedResource>
