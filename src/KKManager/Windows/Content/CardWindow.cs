@@ -665,7 +665,7 @@ namespace KKManager.Windows.Content
             var selectedObjects = GetSelectedCards();
             if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
-            var cardsWithMissingMods = selectedObjects.Where(x => (x.MissingPlugins?.Length ?? 0 + x.MissingPluginsMaybe?.Length ?? 0 + x.MissingZipmods?.Length ?? 0) > 0).ToList();
+            var cardsWithMissingMods = selectedObjects.Where(x => ((x.MissingPlugins?.Length ?? 0) + (x.MissingPluginsMaybe?.Length ?? 0) + (x.MissingZipmods?.Length ?? 0)) > 0).ToList();
             if (cardsWithMissingMods.Count == 0)
             {
                 MessageBox.Show("None of the selected cards are using mods or plugins that are missing. Make sure that you selected the cards you want to export in the card list.",
