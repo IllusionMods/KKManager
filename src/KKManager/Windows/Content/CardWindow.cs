@@ -1,4 +1,4 @@
-﻿using BrightIdeasSoftware;
+using BrightIdeasSoftware;
 using KKManager.Data.Cards;
 using KKManager.Data.Plugins;
 using KKManager.Data.Zipmods;
@@ -7,6 +7,7 @@ using KKManager.Util;
 using KKManager.Windows.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -48,6 +49,9 @@ namespace KKManager.Windows.Content
             }
         }
 
+        // Persist marked (checked) cards across refreshes
+        private HashSet<string> _persistMarkedPaths = null;
+
         public CardWindow()
         {
             _emptyImage = new Bitmap(1, 1);
@@ -67,6 +71,9 @@ namespace KKManager.Windows.Content
             _typedListView = new TypedObjectListView<Card>(listView);
 
             listView.CacheVirtualItems += ListView_CacheVirtualItems;
+            listView.KeyDown += ListView_KeyDown;
+            listView.MouseDoubleClick += ListView_MouseDoubleClick;
+            listView.ItemDrag += ListView_ItemDrag;
 
             listView.EmptyListMsgFont = new Font(Font.FontFamily, 24);
             listView.EmptyListMsg = "No cards were found";
@@ -83,7 +90,7 @@ namespace KKManager.Windows.Content
             };
 
             olvColumnRelativeFilename.AspectGetter = rowObject => rowObject is Card card ? card.Location.FullName.Substring(_currentDirectory.FullName.Length).TrimStart('/', '\\') : rowObject;
-            olvColumnMissingMods.AspectGetter = rowObject => rowObject is Card card ? card.MissingPlugins?.Length ?? 0 + card.MissingZipmods?.Length ?? 0 : 0;
+            olvColumnMissingMods.AspectGetter = rowObject => rowObject is Card c2 ? (c2.MissingPlugins?.Length ?? 0) + (c2.MissingZipmods?.Length ?? 0) : 0;
 
 #if DEBUG
             foreach (var column in listView.AllColumns)
@@ -162,8 +169,7 @@ namespace KKManager.Windows.Content
                 }
                 if (parts.Length >= 4)
                 {
-                    bool showInvalid;
-                    if (bool.TryParse(parts[3], out showInvalid))
+                    if (bool.TryParse(parts[3], out var showInvalid))
                     {
                         ShowInvalid = showInvalid;
                         showUnknowninvalidCardsToolStripMenuItem.Checked = showInvalid;
@@ -256,6 +262,17 @@ namespace KKManager.Windows.Content
 
         public void RefreshList()
         {
+            // Persist marked items (checkbox mode) by absolute path
+            _persistMarkedPaths = null;
+            if (listView.CheckBoxes && _typedListView?.CheckedObjects?.Count > 0)
+            {
+                _persistMarkedPaths = new HashSet<string>(
+                    _typedListView.CheckedObjects
+                        .Select(c => c?.Location?.FullName)
+                        .Where(p => !string.IsNullOrWhiteSpace(p)),
+                    StringComparer.OrdinalIgnoreCase);
+            }
+
             CancelRefreshing();
 
             UseWaitCursor = true;
@@ -291,8 +308,21 @@ namespace KKManager.Windows.Content
                     list =>
                     {
                         MainWindow.SetStatusText($"Loading cards in progress, {processedCount += list.Count} loaded so far...");
-                        listView.AddObjects(ShowInvalid ? list : list.Where(x => x is not UnknownCard).ToList());
-                        //RefreshThumbnails(true);
+                        var toAdd = ShowInvalid ? list : list.Where(x => x is not UnknownCard).ToList();
+                        listView.AddObjects(toAdd);
+
+                        // Re-apply check state for items that appeared in this batch
+                        if (listView.CheckBoxes && _persistMarkedPaths != null && _persistMarkedPaths.Count > 0)
+                        {
+                            foreach (var c in toAdd)
+                            {
+                                var path = c?.Location?.FullName;
+                                if (!string.IsNullOrEmpty(path) && _persistMarkedPaths.Contains(path))
+                                {
+                                    try { listView.CheckObject(c); } catch { }
+                                }
+                            }
+                        }
                     },
                     ShowFailedToLoadDirError,
                     () =>
@@ -304,6 +334,21 @@ namespace KKManager.Windows.Content
 
                         MainWindow.SetStatusText("Done loading cards");
                         listView.EmptyListMsg = prevEmptyListMsg;
+
+                        // Final pass to ensure all matching items are checked
+                        if (listView.CheckBoxes && _persistMarkedPaths != null && _persistMarkedPaths.Count > 0)
+                        {
+                            foreach (var c in _typedListView.Objects)
+                            {
+                                var path = c?.Location?.FullName;
+                                if (!string.IsNullOrEmpty(path) && _persistMarkedPaths.Contains(path))
+                                {
+                                    try { listView.CheckObject(c); } catch { }
+                                }
+                            }
+                        }
+
+                        _persistMarkedPaths = null; // clear cache
                     },
                     _cancellationTokenSource.Token);
         }
@@ -334,7 +379,6 @@ namespace KKManager.Windows.Content
             }
 
             var token = _thumbnailCancellationTokenSource.Token;
-
             if (token.IsCancellationRequested) return;
 
             var large = listView.View == View.LargeIcon;
@@ -350,20 +394,12 @@ namespace KKManager.Windows.Content
                         {
                             return !imageList.Images.ContainsKey(x.Location.FullName);
                         }
-                        catch (SystemException)
-                        {
-                            return false;
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e);
-                            return false;
-                        }
+                        catch (SystemException) { return false; }
+                        catch (Exception e) { Console.WriteLine(e); return false; }
                     });
             }
 
             var cardsToProcess = targetCards.ToList();
-
             if (cardsToProcess.Count == 0) return;
 
             var width = imageList.ImageSize.Width;
@@ -429,7 +465,7 @@ namespace KKManager.Windows.Content
                         var key = card.Location.FullName;
                         if (listView.View == View.LargeIcon)
                         {
-                            // Need to use index to fix large images not showing in large icon view of a vritual list
+                            // Need to use index to fix large images not showing in large icon view of a virtual list
                             var index = listView.LargeImageList.Images.IndexOfKey(key);
                             if (index >= 0) return index;
                         }
@@ -578,7 +614,7 @@ namespace KKManager.Windows.Content
 
         private void toolStripButtonSegregate_Click(object sender, EventArgs e)
         {
-            var sexes = _typedListView.SelectedObjects.GroupBy(x => x.Sex).ToList();
+            var sexes = GetSelectedCards().GroupBy(x => x.Sex).ToList();
 
             if (sexes.Count < 2)
             {
@@ -599,12 +635,12 @@ namespace KKManager.Windows.Content
 
         private void renameCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RenameCards.ShowDialog(this, _typedListView.SelectedObjects.ToArray());
+            RenameCards.ShowDialog(this, GetSelectedCards().ToArray());
         }
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
+            var selectedObjects = GetSelectedCards();
             if (!selectedObjects.Any()) return;
 
             if (MessageBox.Show($"Are you sure you want to delete {selectedObjects.Count} card(s)? This cannot be undone.", "Delete cards", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
@@ -626,10 +662,10 @@ namespace KKManager.Windows.Content
 
         private void exportAListOfMissingModsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetSelectedCards();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
-            var cardsWithMissingMods = selectedObjects.Where(x => (x.MissingPlugins?.Length ?? 0 + x.MissingPluginsMaybe?.Length ?? 0 + x.MissingZipmods?.Length ?? 0) > 0).ToList();
+            var cardsWithMissingMods = selectedObjects.Where(x => ((x.MissingPlugins?.Length ?? 0) + (x.MissingPluginsMaybe?.Length ?? 0) + (x.MissingZipmods?.Length ?? 0)) > 0).ToList();
             if (cardsWithMissingMods.Count == 0)
             {
                 MessageBox.Show("None of the selected cards are using mods or plugins that are missing. Make sure that you selected the cards you want to export in the card list.",
@@ -672,7 +708,6 @@ namespace KKManager.Windows.Content
                                 writer.WriteLine(missingZipmod);
 
                             writer.WriteLine();
-
 
                             foreach (var cardWithMissingMods in cardsWithMissingMods)
                             {
@@ -767,7 +802,7 @@ namespace KKManager.Windows.Content
                         foreach (var pluginGuid in usedPlugins.OrderByDescending(x => x.Item2).ThenByDescending(x => x.Item3).ThenBy(x => x.Item1))
                         {
                             var pluginInstalled = pluginGuid.Item2 == 0 || PluginLoader.Plugins.Any(p => p.Guid == pluginGuid.Item1).Wait() || PluginLoader.Plugins.SelectMany(x => x.ExtDataGuidCandidates).Any(p => p == pluginGuid.Item1).Wait();
-                            writer.WriteLine($"\"{pluginGuid.Item1}\",\"{pluginGuid.Item2}\",\"{(pluginInstalled ? "Yes" : pluginGuid.Item3 ? "No" : "Maybe")}\"");
+                            writer.WriteLine($"\"{pluginGuid.Item1}\",\"{pluginGuid.Item2}\",\"{(pluginInstalled ? "Yes" : "No")}\"");
                         }
                     }
                 }
@@ -802,24 +837,24 @@ namespace KKManager.Windows.Content
 
         private void usedZipmodsAndPluginsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetSelectedCards();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, false, true, true);
         }
 
         private void zipmodUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetSelectedCards();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, true, false, true);
         }
 
         private void pluginUsageincludingUnusedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedObjects = _typedListView.SelectedObjects;
-            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects;
+            var selectedObjects = GetSelectedCards();
+            if (!selectedObjects.Any()) selectedObjects = _typedListView.Objects.ToList();
 
             ExportModCsv(selectedObjects, true, true, false);
         }
@@ -834,9 +869,9 @@ namespace KKManager.Windows.Content
 
                 using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
                 {
-                    writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtenedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
+                    writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtendedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
 
-                    foreach (var card in _typedListView.SelectedObjects)
+                    foreach (var card in GetSelectedCards())
                     {
                         var fileName = card.Location?.FullName ?? "";
                         var fileSize = card.FileSize ?? "";
@@ -870,13 +905,174 @@ namespace KKManager.Windows.Content
 
         private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(_currentDirectory.FullName);
+            try
+            {
+                var sel = GetSelectedCards();
+                if (sel != null && sel.Count > 0)
+                {
+                    foreach (var card in sel)
+                    {
+                        var path = card?.Location?.FullName;
+                        if (!string.IsNullOrEmpty(path) && File.Exists(path))
+                            Process.Start("explorer.exe", "/select,\"" + path + "\"");
+                    }
+                    return;
+                }
+                if (_currentDirectory != null && _currentDirectory.Exists)
+                    Process.Start(_currentDirectory.FullName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private void showUnknowninvalidCardsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             showUnknowninvalidCardsToolStripMenuItem.Checked = !showUnknowninvalidCardsToolStripMenuItem.Checked;
             ShowInvalid = showUnknowninvalidCardsToolStripMenuItem.Checked;
+        }
+
+        private void useCheckboxesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                listView.CheckBoxes = useCheckboxesToolStripMenuItem.Checked;
+                listView.TriStateCheckBoxes = false;
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+        }
+
+        private void ListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (listView.CheckBoxes &&
+                (e.KeyCode == Keys.Space || e.KeyCode == Keys.NumPad0 || e.KeyCode == Keys.Insert))
+            {
+                var obj = listView.FocusedObject;
+                if (obj != null)
+                {
+                    try { listView.ToggleCheckObject(obj); } catch { }
+                    // Consume the keystroke so Windows doesn't play the "ding"
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                }
+            }
+        }
+
+
+        private void ListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (!listView.CheckBoxes) return;
+            try
+            {
+                var hit = listView.OlvHitTest(e.X, e.Y);
+                var obj = hit?.RowObject;
+                if (obj != null)
+                    listView.ToggleCheckObject(obj);
+            }
+            catch { }
+        }
+
+        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Build a file-drop data object for dragging out to Explorer
+            var cards = listView.CheckBoxes && _typedListView.CheckedObjects?.Count > 0
+                ? _typedListView.CheckedObjects
+                : _typedListView.SelectedObjects;
+
+            if (cards == null || cards.Count == 0) return;
+
+            var files = new StringCollection();
+            foreach (var c in cards)
+            {
+                var p = c?.Location?.FullName;
+                if (!string.IsNullOrEmpty(p) && File.Exists(p))
+                    files.Add(p);
+            }
+            if (files.Count == 0) return;
+
+            var data = new DataObject();
+            data.SetFileDropList(files);
+            try
+            {
+                listView.DoDragDrop(data, DragDropEffects.Move | DragDropEffects.Copy);
+            }
+            catch { }
+        }
+
+        private List<Card> GetSelectedCards()
+        {
+            try
+            {
+                if (listView.CheckBoxes)
+                {
+                    var chk = _typedListView.CheckedObjects;
+                    if (chk != null && chk.Count > 0)
+                        return new List<Card>(chk);
+                }
+            }
+            catch { }
+            return _typedListView.SelectedObjects != null
+                ? new List<Card>(_typedListView.SelectedObjects)
+                : new List<Card>();
+        }
+
+        private void unmarkAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!listView.CheckBoxes) return;
+            try
+            {
+                var chkd = _typedListView.CheckedObjects?.ToList();
+                if (chkd == null || chkd.Count == 0) return;
+                foreach (var obj in chkd)
+                    listView.UncheckObject(obj);
+            }
+            catch { }
+        }
+
+        private void moveSelectedToFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var targets = GetSelectedCards();
+            if (targets == null || targets.Count == 0)
+            {
+                MessageBox.Show("Nothing selected.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            using (var dlg = new FolderBrowserDialog())
+            {
+                dlg.Description = "Choose destination folder";
+                // Preselect current folder per request
+                try { dlg.SelectedPath = _currentDirectory?.FullName; } catch { }
+
+                if (dlg.ShowDialog(this) != DialogResult.OK) return;
+                var destRoot = new DirectoryInfo(dlg.SelectedPath);
+                if (!destRoot.Exists)
+                {
+                    MessageBox.Show("Destination folder does not exist.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                int moved = 0, failed = 0;
+                foreach (var card in targets)
+                {
+                    try
+                    {
+                        var destPath = Path.Combine(destRoot.FullName, card.Location.Name);
+                        var candidate = destPath;
+                        int n = 1;
+                        while (File.Exists(candidate))
+                        {
+                            var name = Path.GetFileNameWithoutExtension(destPath);
+                            var ext = Path.GetExtension(destPath);
+                            candidate = Path.Combine(destRoot.FullName, $"{name} ({n++}){ext}");
+                        }
+                        File.Move(card.Location.FullName, candidate);
+                        moved++;
+                    }
+                    catch { failed++; }
+                }
+                MessageBox.Show($"Moved {moved} file(s){(failed > 0 ? ", some failed" : "")}.", "Move cards", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                RefreshList();
+            }
         }
     }
 }
