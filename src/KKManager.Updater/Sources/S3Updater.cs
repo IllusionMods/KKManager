@@ -181,7 +181,7 @@ namespace KKManager.Updater.Sources
                 IsFile = true;
 
                 ItemSize = _sourceItem.Size ?? throw new InvalidDataException("null size");
-                ModifiedTime = _sourceItem.LastModified ?? default(DateTime);
+                ModifiedTime = _sourceItem.LastModified ?? DateTime.MinValue;
                 Name = Path.GetFileName(_fullPath);
             }
 
