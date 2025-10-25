@@ -869,7 +869,7 @@ namespace KKManager.Windows.Content
 
                 using (var writer = new StreamWriter(sfd.FileName, false, Encoding.Unicode))
                 {
-                    writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtenedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
+                    writer.WriteLine("\"FileName\",\"Size\",\"CardType\",\"CharacterName\",\"Sex\",\"Personality\",\"CreatorID\",\"DataID\",\"Version\",\"ExtendedDataCount\",\"ExtendedSize\",\"MissingZipmods\",\"MissingPlugins\",\"MissingPluginsMaybe\"");
 
                     foreach (var card in GetSelectedCards())
                     {
@@ -940,7 +940,7 @@ namespace KKManager.Windows.Content
                 listView.CheckBoxes = useCheckboxesToolStripMenuItem.Checked;
                 listView.TriStateCheckBoxes = false;
             }
-            catch { }
+            catch (Exception ex) { Console.WriteLine(ex); }
         }
 
         private void ListView_KeyDown(object sender, KeyEventArgs e)
