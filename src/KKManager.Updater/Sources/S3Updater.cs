@@ -82,7 +82,7 @@ namespace KKManager.Updater.Sources
                 });
                 _results.AddRange(result.S3Objects.Where(x => !IsTempFile(x)));
                 continuationToken = result.NextContinuationToken;
-            } while (result.IsTruncated);
+            } while (result.IsTruncated == true);
 
             bool IsTempFile(S3Object x) => Path.GetFileName(x.Key).StartsWith(".", StringComparison.Ordinal) && Path.GetExtension(x.Key)?.Length == 7;
         }
@@ -101,15 +101,18 @@ namespace KKManager.Updater.Sources
                 const int preferredUpdateSteps = 100;
                 const long minBufferSize = 128 * 1024; //kb
                 const long maxBufferSize = 5 * 1024 * 1024; //mb
-                var buffer = new byte[Math.Min(maxBufferSize, Math.Max(minBufferSize, sourceItem.Size / preferredUpdateSteps))];
-                int bytesRead;
-                while ((bytesRead = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                if (sourceItem.Size != null)
                 {
-                    var task = output.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+                    var buffer = new byte[Math.Min(maxBufferSize, Math.Max(minBufferSize, sourceItem.Size.Value) / preferredUpdateSteps)];
+                    int bytesRead;
+                    while ((bytesRead = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
+                    {
+                        var task = output.WriteAsync(buffer, 0, bytesRead, cancellationToken);
 
-                    progressCallback.Report(100d * Math.Min(1d, output.Position / (double)sourceItem.Size));
+                        progressCallback.Report(100d * Math.Min(1d, output.Position / (double)sourceItem.Size.Value));
 
-                    await task;
+                        await task;
+                    }
                 }
 
                 if (output.Position != sourceItem.Size) throw new InvalidDataException("The downloaded file was not the correct size");
@@ -177,8 +180,8 @@ namespace KKManager.Updater.Sources
                 if (IsDirectory) throw new ArgumentException("Directory object received in wrong overload");
                 IsFile = true;
 
-                ItemSize = _sourceItem.Size;
-                ModifiedTime = _sourceItem.LastModified;
+                ItemSize = _sourceItem.Size ?? throw new InvalidDataException("null size");
+                ModifiedTime = _sourceItem.LastModified ?? DateTime.MinValue;
                 Name = Path.GetFileName(_fullPath);
             }
 
