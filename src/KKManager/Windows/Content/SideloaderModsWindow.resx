@@ -158,6 +158,9 @@
   <data name="olvColumnGames.Width" type="System.Int32, mscorlib">
     <value>90</value>
   </data>
+  <data name="olvColumnFilename.DisplayIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
   <data name="olvColumnFilename.Text" xml:space="preserve">
     <value>File name</value>
   </data>
@@ -170,11 +173,23 @@
   <data name="olvColumnPath.Width" type="System.Int32, mscorlib">
     <value>200</value>
   </data>
+  <data name="olvColumnWebsite.DisplayIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
   <data name="olvColumnWebsite.Text" xml:space="preserve">
     <value>Website</value>
   </data>
   <data name="olvColumnWebsite.Width" type="System.Int32, mscorlib">
     <value>123</value>
+  </data>
+  <data name="olvColumnContentType.DisplayIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="olvColumnContentType.Text" xml:space="preserve">
+    <value>Contents Kind</value>
+  </data>
+  <data name="olvColumnContentType.Width" type="System.Int32, mscorlib">
+    <value>104</value>
   </data>
   <data name="objectListView1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -204,6 +219,30 @@
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="toolStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>891, 25</value>
+  </data>
+  <data name="toolStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Name" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="toolStripButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -336,30 +375,6 @@
   <data name="toolStripTextBoxSearch.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 25</value>
   </data>
-  <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="toolStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>891, 25</value>
-  </data>
-  <data name="toolStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="toolStrip1.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Name" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -424,6 +439,12 @@
     <value>olvColumnWebsite</value>
   </data>
   <data name="&gt;&gt;olvColumnWebsite.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnContentType.Name" xml:space="preserve">
+    <value>olvColumnContentType</value>
+  </data>
+  <data name="&gt;&gt;olvColumnContentType.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;toolStripButton1.Name" xml:space="preserve">
