@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System.ComponentModel;
+using MessagePack;
 
 namespace Sideloader.AutoResolver
 {
@@ -6,6 +7,7 @@ namespace Sideloader.AutoResolver
     /// Data about the migration to be performed
     /// </summary>
     [MessagePackObject]
+    [ReadOnly(true)]
     public class MigrationInfo
     {
         /// <summary>
@@ -55,6 +57,28 @@ namespace Sideloader.AutoResolver
             MigrationType = migrationType;
             GUIDOld = guidOld;
             GUIDNew = guidNew;
+        }
+
+        public override string ToString()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendFormat("migrationType=\"{0}\"", MigrationType);
+
+            if (!string.IsNullOrEmpty(Category))
+                sb.AppendFormat(" category=\"{0}\"", Category);
+
+            if (!string.IsNullOrEmpty(GUIDOld))
+                sb.AppendFormat(" guidOld=\"{0}\"", GUIDOld);
+
+            if (!string.IsNullOrEmpty(GUIDNew))
+                sb.AppendFormat(" guidNew=\"{0}\"", GUIDNew);
+
+            if (IDOld != 0 || IDNew != 0)
+            {
+                sb.AppendFormat(" idOld=\"{0}\"", IDOld);
+                sb.AppendFormat(" idNew=\"{0}\"", IDNew);
+            }
+            return sb.ToString();
         }
     }
 }

@@ -38,7 +38,6 @@ namespace KKManager.Data.Zipmods
             }
         }
 
-        [Browsable(false)]
         public Manifest Manifest { get; }
 
         [Browsable(false)]

@@ -1,6 +1,7 @@
 ﻿using Sideloader.AutoResolver;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -19,6 +20,8 @@ namespace Sideloader
     /// <summary>
     /// Contains data about the loaded manifest.xml
     /// </summary>
+    [ReadOnly(true)]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class Manifest
     {
         /// <summary>
@@ -86,6 +89,7 @@ namespace Sideloader
         /// Parsed contents of the manifest.xml.
         /// </summary>
         public XDocument ManifestDocument => manifestDocument;
+        [Browsable(false)]
         public XElement ManifestDocumentRoot => ManifestDocument.Root;
         // /// <summary>
         // /// Raw contents of the manifest.xml.
@@ -102,6 +106,7 @@ namespace Sideloader
         /// <summary>
         /// Games the mod is made for. If specified, the mod will only load for those games. If not specified will load on any game.
         /// </summary>
+        [TypeConverter(typeof(ListTypeConverter))]
         public List<string> Games
         {
             get => ManifestDocumentRoot.Elements().Where(x => x.Name.ToString().Equals("game", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value.Trim()).Where(x => x.Length > 0).ToList();
@@ -115,10 +120,13 @@ namespace Sideloader
         /// <summary>
         /// List of all migration info for this mod
         /// </summary>
+        [TypeConverter(typeof(ListTypeConverter))]
         public List<MigrationInfo> MigrationList { get; }
 
 #if AI || HS2
+        [TypeConverter(typeof(ListTypeConverter))]
         [Key(10)] public List<HeadPresetInfo> HeadPresetList { get; }
+        [TypeConverter(typeof(ListTypeConverter))]
         [Key(11)] public List<FaceSkinInfo> FaceSkinList { get; }
 #endif
 
