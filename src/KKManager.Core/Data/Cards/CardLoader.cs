@@ -78,16 +78,17 @@ namespace KKManager.Data.Cards
                             try
                             {
                                 var allPlugins = PluginLoader.Plugins.ToEnumerable().ToList();
-                                var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
-
                                 var existingPluginGuids = allPlugins.Select(p => p.Guid).ToHashSet();
+
+                                var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
                                 var existingZipmodGuids = allZipmods.Select(z => z.Guid).ToHashSet();
+                                // Also consider migrated GUIDs as existing (but only if zipmod with the target GUID is actually present).
+                                // No easy way to check StripAll so just assume the required zipmod is present
                                 var migratedGuids = allZipmods.SelectMany(x => x.Manifest.MigrationList)
                                                               .Where(x => !string.IsNullOrEmpty(x.GUIDOld) && (x.MigrationType == MigrationType.StripAll || existingZipmodGuids.Contains(x.GUIDNew)))
                                                               .Select(x => x.GUIDOld);
                                 foreach (var migratedGuid in migratedGuids)
                                     existingZipmodGuids.Add(migratedGuid);
-
 
                                 foreach (var card in s.ToEnumerable())
                                     CheckIfRequiredModsExist(card, allPlugins, allZipmods, existingPluginGuids, existingZipmodGuids);

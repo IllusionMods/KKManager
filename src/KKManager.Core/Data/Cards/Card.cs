@@ -26,17 +26,17 @@ namespace KKManager.Data.Cards
         public Dictionary<string, PluginData> Extended { get; }
         [DisplayName("Extended Data Size")]
         public FileSize ExtendedSize { get; }
-        
-        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
         public string[] UsedZipmods { get; set; }
-        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
         public string[] UsedPlugins { get; set; }
 
-        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
         public string[] MissingZipmods { get; set; }
-        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
         public string[] MissingPlugins { get; set; }
-        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))] 
+        [ReadOnly(true), TypeConverter(typeof(ReadOnlyStringCollectionConverterWithPreview))]
         public string[] MissingPluginsMaybe { get; set; }
 
         public virtual Image GetCardImage()
