@@ -20,9 +20,9 @@ using KKManager.Data.Cards.KKS;
 using KKManager.Data.Cards.RG;
 using KKManager.Data.Cards.SVS;
 using KKManager.Data.Plugins;
-using KKManager.Data.Sardines;
 using KKManager.Data.Zipmods;
 using KKManager.Util;
+using Sideloader.AutoResolver;
 
 namespace KKManager.Data.Cards
 {
@@ -78,9 +78,20 @@ namespace KKManager.Data.Cards
                             try
                             {
                                 var allPlugins = PluginLoader.Plugins.ToEnumerable().ToList();
+                                var existingPluginGuids = allPlugins.Select(p => p.Guid).ToHashSet();
+
                                 var allZipmods = SideloaderModLoader.Zipmods.ToEnumerable().ToList();
+                                var existingZipmodGuids = allZipmods.Select(z => z.Guid).ToHashSet();
+                                // Also consider migrated GUIDs as existing (but only if zipmod with the target GUID is actually present).
+                                // No easy way to check StripAll so just assume the required zipmod is present
+                                var migratedGuids = allZipmods.SelectMany(x => x.Manifest.MigrationList)
+                                                              .Where(x => !string.IsNullOrEmpty(x.GUIDOld) && (x.MigrationType == MigrationType.StripAll || existingZipmodGuids.Contains(x.GUIDNew)))
+                                                              .Select(x => x.GUIDOld);
+                                foreach (var migratedGuid in migratedGuids)
+                                    existingZipmodGuids.Add(migratedGuid);
+
                                 foreach (var card in s.ToEnumerable())
-                                    CheckIfRequiredModsExist(card, allPlugins, allZipmods);
+                                    CheckIfRequiredModsExist(card, allPlugins, allZipmods, existingPluginGuids, existingZipmodGuids);
                             }
                             catch (TargetInvocationException ex)
                             {
@@ -99,15 +110,17 @@ namespace KKManager.Data.Cards
             return s;
         }
 
-        private static void CheckIfRequiredModsExist(Card card, List<PluginInfo> allPlugins, List<SideloaderModInfo> allZipmods)
+        private static void CheckIfRequiredModsExist(Card card, List<PluginInfo> allPlugins, List<SideloaderModInfo> allZipmods, HashSet<string> existingPluginGuids, HashSet<string> existingZipmodGuids)
         {
             if (card.Extended == null) return;
 
             var cardExtDatas = card.Extended.Where(x => x.Value != null).ToList();
 
-            var extGroups = cardExtDatas.ToLookup(x => x.Value.RequiredPluginGUIDs.Count > 0);
+            var cardExtDatasPlugins = cardExtDatas.ToLookup(x => x.Value.RequiredPluginGUIDs.Count > 0);
+            var definiteRequirements = cardExtDatasPlugins[true].SelectMany(x => x.Value.RequiredPluginGUIDs).Distinct().OrderBy(x => x).ToArray();
+            card.UsedPlugins = definiteRequirements;
 
-            var missingPlugs = extGroups[true].SelectMany(x => x.Value.RequiredPluginGUIDs).Where(x => allPlugins.All(p => x != p.Guid)).Distinct().ToArray();
+            var missingPlugs = definiteRequirements.Where(x => !existingPluginGuids.Contains(x)).ToArray();
             if (missingPlugs.Length > 0)
             {
                 card.MissingPlugins = missingPlugs;
@@ -115,14 +128,17 @@ namespace KKManager.Data.Cards
             }
 
             var allExtCandidates = allPlugins.SelectMany(z => z.ExtDataGuidCandidates ?? Enumerable.Empty<string>()).ToHashSet();
-            var missingPlugsMaybe = extGroups[false].Where(x => !allExtCandidates.Contains(x.Key)).Select(x => x.Key).Distinct().ToArray();
+            var possibleRequirements = cardExtDatasPlugins[false];
+            var missingPlugsMaybe = possibleRequirements.Where(x => !allExtCandidates.Contains(x.Key)).Select(x => x.Key).Distinct().ToArray();
             if (missingPlugsMaybe.Length > 0)
             {
                 card.MissingPluginsMaybe = missingPlugsMaybe;
             }
 
-            var zipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs);
-            var missingZipmods = zipmodGuids.Where(x => allZipmods.All(p => x != p.Guid)).Distinct().ToArray();
+            var cardZipmodGuids = cardExtDatas.SelectMany(x => x.Value.RequiredZipmodGUIDs).Distinct().OrderBy(x => x).ToArray();
+            card.UsedZipmods = cardZipmodGuids;
+
+            var missingZipmods = cardZipmodGuids.Where(x => !existingZipmodGuids.Contains(x)).ToArray();
             if (missingZipmods.Length > 0)
             {
                 card.MissingZipmods = missingZipmods;
