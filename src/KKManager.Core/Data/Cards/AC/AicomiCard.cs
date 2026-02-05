@@ -110,26 +110,31 @@ namespace KKManager.Data.Cards.AC
                 case CharaSex.Female:
                     var femalePersonalities = new[]
                     {
-                        "Cheerful",
-                        "Gentle",
-                        "Friendly",
-                        "Optimistic",
-                        "Gyaru",
-                        "Cool",
-                        "Deliquent",
-                        "Shy",
-                        "Mysterious",
-                        "Otaku",
-                        "Bokukko",
-                        "Proper lady",
-                        "Glamorous",
-                        "Old-fashioned",
-                        "Boyish",
-                        "Sadistic",
-                        "Tsundere",
-                        "Ojousama",
-                        "Cheeky",
-                        "Lazy"
+                        "Cheerful",       //c00
+                        "Gentle",         //c01
+                        "Friendly",       //c02
+                        "Optimistic",     //c03
+                        "Gyaru",          //c04
+                        "Cool",           //c05
+                        "Deliquent",      //c06
+                        "Shy",            //c07
+                        "Mysterious",     //c08
+                        "Otaku",          //c09
+                        "Bokukko",        //c10
+                        "Proper lady",    //c11
+                        "Glamorous",      //c12
+                        "Old-fashioned",  //c13
+                        "Boyish",         //c14
+                        "Sadistic",       //c15
+                        "Tsundere",       //c16
+                        "Ojousama",       //c17
+                        "Cheeky",         //c18
+                        "Lazy",           //c19
+                        "Innocent",       //c20
+                        "Serious",        //c21
+                        "Show-off",       //c22
+                        "Reserved",       //c23
+                        "Excited",        //c24
                     };
                     return GetValue(profession, femalePersonalities);
 
