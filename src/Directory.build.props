@@ -1,11 +1,23 @@
 <Project>
 	<PropertyGroup>
+		<!-- This is the master version, only change this one -->
+		<Version>1.7</Version>
+
+		<!-- Sets the 'Company' field on the dll file -->
+		<Authors>https://gitgoon.dev/IllusionMods/KKManager</Authors>
+		<!-- Sets the 'Copyright' field on the dll file -->
+		<Copyright>Copyright GPL-3 © 2019</Copyright>
+		<!-- Sets the 'Product name' field on the dll file -->
+		<Product>KKManager</Product>
+		<!-- Sets the 'File description' field on the dll file -->
+		<AssemblyTitle>Manager for Koikatu cards, scenes and mods</AssemblyTitle>
+
+
 		<TargetFramework>net472</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
 
 		<OutputPath>..\bin\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Deterministic>false</Deterministic>
 
 		<UseWindowsForms>true</UseWindowsForms>
@@ -22,5 +34,28 @@
 	<Target Name="CopyLicenseAndReadme" AfterTargets="Build">
 		<Copy SourceFiles="$(SolutionDir)\..\LICENSE" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
 		<Copy SourceFiles="$(SolutionDir)\..\README.md" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+	</Target>
+
+	<!-- Allow using of the csproj properties defined above in the code itself -->
+	<Target Name="AddGeneratedConstantsFile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)GeneratedConstantsFile.cs">
+		<PropertyGroup>
+			<GeneratedText>
+				<![CDATA[namespace $(RootNamespace) {
+    internal static class Constants {
+        public const string Version = "$(Version)"%3B
+        public const string Name = "$(Product)"%3B
+        public const string Description = "$(AssemblyTitle)"%3B
+        public const string Website = "$(Authors)"%3B
+        public const string Copyright = "$(Copyright)"%3B
+    }
+}]]>
+			</GeneratedText>
+			<GeneratedFilePath>$(IntermediateOutputPath)GeneratedConstantsFile.cs</GeneratedFilePath>
+		</PropertyGroup>
+		<ItemGroup>
+			<Compile Include="$(GeneratedFilePath)" />
+			<FileWrites Include="$(GeneratedFilePath)" />
+		</ItemGroup>
+		<WriteLinesToFile Lines="$(GeneratedText)" File="$(GeneratedFilePath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
 	</Target>
 </Project>

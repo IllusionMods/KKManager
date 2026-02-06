@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
 		<OutputPath>bin\</OutputPath>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj" />

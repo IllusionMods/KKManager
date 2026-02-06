@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<AssemblyTitle>Automatic update downloader for scripting</AssemblyTitle>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj" />
