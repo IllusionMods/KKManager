@@ -1,35 +1,35 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
 namespace KKManager.Windows.Content
 {
-	partial class CardWindow
-	{
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+    partial class CardWindow
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CardWindow));
             this.listView = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -62,10 +62,15 @@ namespace KKManager.Windows.Content
             this.smallIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.largeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.useCheckboxesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showUnknowninvalidCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButtonTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.segregateBySexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unmarkAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveSelectedToFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAListOfMissingModsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToCsvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cardMetadataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,8 +78,6 @@ namespace KKManager.Windows.Content
             this.zipmodUsageincludingUnusedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginUsageincludingUnusedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
-            this.showUnknowninvalidCardsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.listView)).BeginInit();
             this.toolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -301,6 +304,7 @@ namespace KKManager.Windows.Content
             this.smallIconsToolStripMenuItem,
             this.largeIconsToolStripMenuItem,
             this.toolStripSeparator1,
+            this.useCheckboxesToolStripMenuItem,
             this.showUnknowninvalidCardsToolStripMenuItem,
             this.toolStripSeparator5,
             this.openInExplorerToolStripMenuItem});
@@ -330,6 +334,26 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             resources.ApplyResources(this.toolStripSeparator1, "toolStripSeparator1");
             // 
+            // useCheckboxesToolStripMenuItem
+            // 
+            this.useCheckboxesToolStripMenuItem.CheckOnClick = true;
+            this.useCheckboxesToolStripMenuItem.Name = "useCheckboxesToolStripMenuItem";
+            this.useCheckboxesToolStripMenuItem.Text = "Use checkboxes";
+            this.useCheckboxesToolStripMenuItem.Click += new System.EventHandler(this.useCheckboxesToolStripMenuItem_Click);
+            // 
+            // showUnknowninvalidCardsToolStripMenuItem
+            // 
+            this.showUnknowninvalidCardsToolStripMenuItem.Checked = true;
+            this.showUnknowninvalidCardsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showUnknowninvalidCardsToolStripMenuItem.Name = "showUnknowninvalidCardsToolStripMenuItem";
+            resources.ApplyResources(this.showUnknowninvalidCardsToolStripMenuItem, "showUnknowninvalidCardsToolStripMenuItem");
+            this.showUnknowninvalidCardsToolStripMenuItem.Click += new System.EventHandler(this.showUnknowninvalidCardsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
+            // 
             // openInExplorerToolStripMenuItem
             // 
             this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
@@ -342,6 +366,8 @@ namespace KKManager.Windows.Content
             this.toolStripDropDownButtonTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.segregateBySexToolStripMenuItem,
             this.renameCardsToolStripMenuItem,
+            this.unmarkAllToolStripMenuItem,
+            this.moveSelectedToFolderToolStripMenuItem,
             this.exportAListOfMissingModsToolStripMenuItem,
             this.exportToCsvToolStripMenuItem});
             resources.ApplyResources(this.toolStripDropDownButtonTools, "toolStripDropDownButtonTools");
@@ -358,6 +384,18 @@ namespace KKManager.Windows.Content
             resources.ApplyResources(this.renameCardsToolStripMenuItem, "renameCardsToolStripMenuItem");
             this.renameCardsToolStripMenuItem.Name = "renameCardsToolStripMenuItem";
             this.renameCardsToolStripMenuItem.Click += new System.EventHandler(this.renameCardsToolStripMenuItem_Click);
+            // 
+            // unmarkAllToolStripMenuItem
+            // 
+            this.unmarkAllToolStripMenuItem.Name = "unmarkAllToolStripMenuItem";
+            this.unmarkAllToolStripMenuItem.Text = "Unmark all";
+            this.unmarkAllToolStripMenuItem.Click += new System.EventHandler(this.unmarkAllToolStripMenuItem_Click);
+            // 
+            // moveSelectedToFolderToolStripMenuItem
+            // 
+            this.moveSelectedToFolderToolStripMenuItem.Name = "moveSelectedToFolderToolStripMenuItem";
+            this.moveSelectedToFolderToolStripMenuItem.Text = "Move to folder...";
+            this.moveSelectedToFolderToolStripMenuItem.Click += new System.EventHandler(this.moveSelectedToFolderToolStripMenuItem_Click);
             // 
             // exportAListOfMissingModsToolStripMenuItem
             // 
@@ -406,19 +444,6 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
-            // showUnknowninvalidCardsToolStripMenuItem
-            // 
-            this.showUnknowninvalidCardsToolStripMenuItem.Checked = true;
-            this.showUnknowninvalidCardsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showUnknowninvalidCardsToolStripMenuItem.Name = "showUnknowninvalidCardsToolStripMenuItem";
-            resources.ApplyResources(this.showUnknowninvalidCardsToolStripMenuItem, "showUnknowninvalidCardsToolStripMenuItem");
-            this.showUnknowninvalidCardsToolStripMenuItem.Click += new System.EventHandler(this.showUnknowninvalidCardsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            resources.ApplyResources(this.toolStripSeparator5, "toolStripSeparator5");
-            // 
             // CardWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -435,9 +460,9 @@ namespace KKManager.Windows.Content
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
+        }
 
-		#endregion
+        #endregion
         private BrightIdeasSoftware.FastObjectListView listView;
         private BrightIdeasSoftware.OLVColumn olvColumnName;
         private BrightIdeasSoftware.OLVColumn olvColumnModDate;
@@ -482,6 +507,8 @@ namespace KKManager.Windows.Content
         private ToolStripMenuItem cardMetadataToolStripMenuItem;
         private ToolStripMenuItem showUnknowninvalidCardsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem useCheckboxesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unmarkAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveSelectedToFolderToolStripMenuItem;
     }
 }
-
