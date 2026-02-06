@@ -88,9 +88,9 @@ namespace KKManager.Updater.Data
 
             [IgnoreMember] private FileInfo _file;
 
-            [Key(2)] private int _fileHash;
+            [Key(2)] internal int _fileHash;
 
-            [Key(1)] private int _sb3UHash;
+            [Key(1)] internal int _sb3UHash;
 
             [Key(0)] public long Identifier { get; set; }
 
