@@ -88,6 +88,9 @@ namespace KKManager.Updater.Data
 
             [IgnoreMember] private FileInfo _file;
 
+            // NOTE: These fields are intentionally `internal` instead of `private`.
+            // In SDK-style projects, MessagePack's field-based serialization may require
+            // non-private visibility to correctly serialize/deserialize these values.
             [Key(2)] internal int _fileHash;
 
             [Key(1)] internal int _sb3UHash;
