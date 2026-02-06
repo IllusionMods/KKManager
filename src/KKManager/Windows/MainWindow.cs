@@ -422,7 +422,7 @@ namespace KKManager.Windows
             if (File.Exists(readmePath))
                 Process.Start("notepad.exe", readmePath);
             else
-                Process.Start("https://github.com/bbepis/KKManager");
+                Process.Start(Constants.Website);
         }
 
         private void installANewModToolStripMenuItem_Click(object sender, EventArgs e)
@@ -797,12 +797,12 @@ namespace KKManager.Windows
             if (File.Exists(licensePath))
                 Process.Start("notepad.exe", licensePath);
             else
-                Process.Start("https://github.com/bbepis/KKManager");
+                Process.Start(Constants.Website);
         }
 
         private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/bbepis/KKManager");
+            Process.Start(Constants.Website);
         }
 
         private void cleanUpDuplicateZipmodsToolStripMenuItem_Click(object sender, EventArgs e)

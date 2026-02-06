@@ -17,7 +17,8 @@ namespace KKManager.Util
         {
             if (MessageBox.Show(Resources.KKManagerOutdatedMessageBody, Resources.KKManagerOutdatedMessageTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
-                ProcessTools.SafeStartProcess(Constants.LatestReleaseLink);
+                const string latestReleaseLink = Constants.Website + "/releases/latest";
+                ProcessTools.SafeStartProcess(latestReleaseLink);
             }
         }
     }
