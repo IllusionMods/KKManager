@@ -1,4 +1,13 @@
-﻿[25.7.2]
+﻿[25.8]
+  - Added dropping assets into MB and LoadedByTypedefinition editors fills PathID=0 entries
+    or adds a new entry at the end of the array
+  - Changed handling of Avatars to reduce occasions of manual correction
+  - Fixed crash for improperly named blendshapes. Indices in names still required.
+  - Changed default for m_CookingOptions in Mesh asset in Unity 2022.3+
+  - Changed the switch to Windows 7 style so that COMCTL32.DLL version 6 gets loaded always
+  - Fixed MotionIK handling for Aicomi
+
+[25.7.2]
   - Fixed crash when saving Unity 2022.3.+ file after creating new texture
 
 [25.7.1]
