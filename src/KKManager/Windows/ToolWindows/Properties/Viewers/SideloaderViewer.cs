@@ -7,12 +7,12 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows.Properties.Viewers
 {
-    public partial class SideloaderViewerBase : PropertyViewerBase
+    public partial class SideloaderViewer : PropertyViewerBase
     {
         private int _currentImageId;
         private SideloaderModInfo _currentObject;
 
-        public SideloaderViewerBase()
+        public SideloaderViewer()
         {
             InitializeComponent();
 

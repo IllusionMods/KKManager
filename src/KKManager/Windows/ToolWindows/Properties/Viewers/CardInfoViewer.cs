@@ -3,11 +3,11 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace KKManager.Windows.ToolWindows.Properties.Viewers
 {
-    public partial class CardInfoViewerBase : PropertyViewerBase
+    public partial class CardInfoViewer : PropertyViewerBase
     {
         private Card _currentCard;
 
-        public CardInfoViewerBase()
+        public CardInfoViewer()
         {
             InitializeComponent();
             SupportedTypes = new[] { typeof(Card) };

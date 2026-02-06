@@ -526,7 +526,7 @@
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>SideloaderViewerBase</value>
+    <value>SideloaderViewer</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>KKManager.Windows.ToolWindows.Properties.PropertyViewerBase, KKManager, Version=1.6.1.0, Culture=neutral, PublicKeyToken=null</value>
