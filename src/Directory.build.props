@@ -6,12 +6,17 @@
 		<OutputPath>..\bin\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Deterministic>false</Deterministic>
 
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
 
+		<Deterministic>true</Deterministic>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>embedded</DebugType>
+		<FileAlignment>512</FileAlignment>
+
 		<LangVersion>latest</LangVersion>
-		<Deterministic>false</Deterministic>
 	</PropertyGroup>
 
 	<Target Name="CopyLicenseAndReadme" AfterTargets="Build">
