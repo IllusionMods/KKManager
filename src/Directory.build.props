@@ -1,7 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<!-- This is the master version, only change this one -->
-		<Version>1.7</Version>
+		<Version>1.8</Version>
 
 		<!-- Sets the 'Company' field on the dll file -->
 		<Authors>https://github.com/IllusionMods/KKManager</Authors>
