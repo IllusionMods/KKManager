@@ -9,7 +9,7 @@ namespace KKManager.Functions
 {
     public static class SelfUpdater
     {
-        private static readonly string _LatestReleaseUrl = "https://github.com/IllusionMods/KKManager/releases/latest";
+        private static readonly string _LatestReleaseUrl = Constants.Website + "/releases/latest";
 
         public static async Task<Version> CheckLatestVersion()
         {

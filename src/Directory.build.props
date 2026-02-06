@@ -4,7 +4,7 @@
 		<Version>1.7</Version>
 
 		<!-- Sets the 'Company' field on the dll file -->
-		<Authors>https://gitgoon.dev/IllusionMods/KKManager</Authors>
+		<Authors>https://github.com/IllusionMods/KKManager</Authors>
 		<!-- Sets the 'Copyright' field on the dll file -->
 		<Copyright>Copyright GPL-3 © 2019</Copyright>
 		<!-- Sets the 'Product name' field on the dll file -->
@@ -18,7 +18,6 @@
 
 		<OutputPath>..\bin\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<Deterministic>false</Deterministic>
 
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>

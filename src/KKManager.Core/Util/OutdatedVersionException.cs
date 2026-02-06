@@ -17,7 +17,7 @@ namespace KKManager.Util
         {
             if (MessageBox.Show(Resources.KKManagerOutdatedMessageBody, Resources.KKManagerOutdatedMessageTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
-                const string latestReleaseLink = "https://github.com/IllusionMods/KKManager/releases/latest";
+                const string latestReleaseLink = Constants.Website + "/releases/latest";
                 ProcessTools.SafeStartProcess(latestReleaseLink);
             }
         }
