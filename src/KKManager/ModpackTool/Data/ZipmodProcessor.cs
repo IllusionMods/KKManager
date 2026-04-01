@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using KKManager.Data.Cards;
+using KKManager.ModpackTool.Windows;
 using KKManager.SB3UGS;
 using KKManager.Util;
 using SharpCompress.Archives;
@@ -18,7 +19,7 @@ using SharpCompress.Common;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers.Zip;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public static class ZipmodProcessor
     {

@@ -16,7 +16,7 @@ using KKManager.Data.Plugins;
 using KKManager.Data.Sardines;
 using KKManager.Data.Zipmods;
 using KKManager.Functions;
-using KKManager.ModpackTool;
+using KKManager.ModpackTool.Windows;
 using KKManager.Properties;
 using KKManager.SB3UGS;
 using KKManager.Updater;

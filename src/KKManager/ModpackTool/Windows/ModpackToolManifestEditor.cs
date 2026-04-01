@@ -1,9 +1,10 @@
 ﻿using System.Linq;
-using KKManager.Windows.ToolWindows.Properties;
 using System.Windows.Forms;
+using KKManager.ModpackTool.Data;
+using KKManager.Windows.ToolWindows.Properties;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Windows
 {
     public partial class ModpackToolManifestEditor : PropertyViewerBase
     {

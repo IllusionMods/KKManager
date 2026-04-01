@@ -11,7 +11,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using KKManager.Data.Zipmods;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public class ModpackToolConfiguration : IXmlSerializable, INotifyPropertyChanged
     {

@@ -11,10 +11,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Data.Zipmods;
+using KKManager.ModpackTool.Windows;
 using KKManager.Util;
 using KKManager.Windows;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public class ZipmodEntry : INotifyPropertyChanged
     {

@@ -1,4 +1,4 @@
-﻿namespace KKManager.ModpackTool
+﻿namespace KKManager.ModpackTool.Windows
 {
     partial class ModpackToolWindow
     {
@@ -38,7 +38,7 @@
             this.configBrowseBtn = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageConfiguration = new System.Windows.Forms.TabPage();
-            this.toolConfigurationEditor1 = new KKManager.ModpackTool.ToolConfigurationEditor();
+            this.toolConfigurationEditor1 = new ToolConfigurationEditor();
             this.tabPageIngest = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.objectListViewMain = new BrightIdeasSoftware.ObjectListView();

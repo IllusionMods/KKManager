@@ -4,11 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.ModpackTool.Data;
 using KKManager.Windows;
 using KKManager.Windows.Content;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Windows
 {
     public partial class ModpackToolWindow : DockContent, IContentWindow
     {

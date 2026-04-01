@@ -3,7 +3,7 @@ using System.ComponentModel;
 using KKManager.Util;
 using KKManager.Windows;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public class ValidatedStringWrapper : INotifyPropertyChanged, IComparable<ValidatedStringWrapper>, IComparable, IEquatable<ValidatedStringWrapper>
     {

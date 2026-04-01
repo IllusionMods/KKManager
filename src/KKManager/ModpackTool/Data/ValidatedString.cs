@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public class ValidatedString : ValidatedStringWrapper
     {

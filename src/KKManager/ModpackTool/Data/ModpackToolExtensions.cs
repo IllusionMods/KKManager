@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Data
 {
     public static class ModpackToolExtensions
     {

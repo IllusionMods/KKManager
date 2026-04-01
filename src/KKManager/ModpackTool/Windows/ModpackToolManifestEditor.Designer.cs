@@ -1,4 +1,6 @@
-﻿namespace KKManager.ModpackTool
+﻿using KKManager.ModpackTool.Data;
+
+namespace KKManager.ModpackTool.Windows
 {
     partial class ModpackToolManifestEditor
     {
@@ -631,7 +633,7 @@
             // 
             // zipmodEntryBindingSource
             // 
-            this.zipmodEntryBindingSource.DataSource = typeof(KKManager.ModpackTool.ZipmodEntry);
+            this.zipmodEntryBindingSource.DataSource = typeof(ZipmodEntry);
             // 
             // ModpackToolManifestEditor
             // 

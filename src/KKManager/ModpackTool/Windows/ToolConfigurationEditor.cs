@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using KKManager.ModpackTool.Data;
 
-namespace KKManager.ModpackTool
+namespace KKManager.ModpackTool.Windows
 {
     public partial class ToolConfigurationEditor : UserControl
     {

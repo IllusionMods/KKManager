@@ -1,4 +1,6 @@
-﻿namespace KKManager.ModpackTool
+﻿using KKManager.ModpackTool.Data;
+
+namespace KKManager.ModpackTool.Windows
 {
     partial class ToolConfigurationEditor
     {
@@ -32,6 +34,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolConfigurationEditor));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.looseFolderTextBox = new System.Windows.Forms.TextBox();
+            this.looseFolderOk = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.folderOutputtextBox = new System.Windows.Forms.TextBox();
             this.folderOutputOk = new System.Windows.Forms.Label();
@@ -82,9 +87,6 @@
             this.checkBoxRandomizeCab = new System.Windows.Forms.CheckBox();
             this.modpackToolConfigurationBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkBoxPngCompress = new System.Windows.Forms.CheckBox();
-            this.looseFolderOk = new System.Windows.Forms.Label();
-            this.looseFolderTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -145,6 +147,41 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(631, 156);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label14.Location = new System.Drawing.Point(3, 130);
+            this.label14.Name = "label14";
+            this.label14.Padding = new System.Windows.Forms.Padding(4);
+            this.label14.Size = new System.Drawing.Size(266, 21);
+            this.label14.TabIndex = 7;
+            this.label14.Text = "Loose cards folder (card PNGs from processed mods)";
+            // 
+            // looseFolderTextBox
+            // 
+            this.looseFolderTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.looseFolderTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.looseFolderTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.looseFolderTextBox.Location = new System.Drawing.Point(275, 133);
+            this.looseFolderTextBox.Name = "looseFolderTextBox";
+            this.looseFolderTextBox.Size = new System.Drawing.Size(253, 20);
+            this.looseFolderTextBox.TabIndex = 6;
+            // 
+            // looseFolderOk
+            // 
+            this.looseFolderOk.AutoSize = true;
+            this.looseFolderOk.BackColor = System.Drawing.Color.Green;
+            this.looseFolderOk.Dock = System.Windows.Forms.DockStyle.Top;
+            this.looseFolderOk.ForeColor = System.Drawing.Color.White;
+            this.looseFolderOk.Location = new System.Drawing.Point(534, 130);
+            this.looseFolderOk.Name = "looseFolderOk";
+            this.looseFolderOk.Padding = new System.Windows.Forms.Padding(4);
+            this.looseFolderOk.Size = new System.Drawing.Size(94, 21);
+            this.looseFolderOk.TabIndex = 5;
+            this.looseFolderOk.Text = "OK";
+            this.looseFolderOk.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label1
             // 
@@ -739,12 +776,12 @@
             this.checkBoxRandomizeCab.Name = "checkBoxRandomizeCab";
             this.checkBoxRandomizeCab.Size = new System.Drawing.Size(631, 17);
             this.checkBoxRandomizeCab.TabIndex = 0;
-            this.checkBoxRandomizeCab.Text = "Randomize CABs (only works of AssetBundle is also compressed, see options below)";
+            this.checkBoxRandomizeCab.Text = "Randomize CABs (only works if AssetBundle is also compressed, see options below)";
             this.checkBoxRandomizeCab.UseVisualStyleBackColor = true;
             // 
             // modpackToolConfigurationBindingSource
             // 
-            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.ModpackToolConfiguration);
+            this.modpackToolConfigurationBindingSource.DataSource = typeof(KKManager.ModpackTool.Data.ModpackToolConfiguration);
             // 
             // checkBoxPngCompress
             // 
@@ -757,41 +794,6 @@
             this.checkBoxPngCompress.TabIndex = 0;
             this.checkBoxPngCompress.Text = "Compress PNGs (pngcrush)";
             this.checkBoxPngCompress.UseVisualStyleBackColor = true;
-            // 
-            // looseFolderOk
-            // 
-            this.looseFolderOk.AutoSize = true;
-            this.looseFolderOk.BackColor = System.Drawing.Color.Green;
-            this.looseFolderOk.Dock = System.Windows.Forms.DockStyle.Top;
-            this.looseFolderOk.ForeColor = System.Drawing.Color.White;
-            this.looseFolderOk.Location = new System.Drawing.Point(534, 130);
-            this.looseFolderOk.Name = "looseFolderOk";
-            this.looseFolderOk.Padding = new System.Windows.Forms.Padding(4);
-            this.looseFolderOk.Size = new System.Drawing.Size(94, 21);
-            this.looseFolderOk.TabIndex = 5;
-            this.looseFolderOk.Text = "OK";
-            this.looseFolderOk.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // looseFolderTextBox
-            // 
-            this.looseFolderTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.looseFolderTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.looseFolderTextBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.looseFolderTextBox.Location = new System.Drawing.Point(275, 133);
-            this.looseFolderTextBox.Name = "looseFolderTextBox";
-            this.looseFolderTextBox.Size = new System.Drawing.Size(253, 20);
-            this.looseFolderTextBox.TabIndex = 6;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label14.Location = new System.Drawing.Point(3, 130);
-            this.label14.Name = "label14";
-            this.label14.Padding = new System.Windows.Forms.Padding(4);
-            this.label14.Size = new System.Drawing.Size(266, 21);
-            this.label14.TabIndex = 7;
-            this.label14.Text = "Loose cards folder (card PNGs from processed mods)";
             // 
             // ToolConfigurationEditor
             // 

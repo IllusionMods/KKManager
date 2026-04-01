@@ -5,33 +5,6 @@
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Update="ModpackTool\Windows\ModpackToolManifestEditor.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="ModpackTool\Windows\ToolConfigurationEditor.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="ModpackTool\Windows\VerificationTool.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\PropertyViewerBase.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\Viewers\CardInfoViewer.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\Viewers\GenericViewer.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\Viewers\PluginViewer.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\Viewers\SardineViewer.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Update="Windows\ToolWindows\Properties\Viewers\SideloaderViewer.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
 		<None Update="NBug.config">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
