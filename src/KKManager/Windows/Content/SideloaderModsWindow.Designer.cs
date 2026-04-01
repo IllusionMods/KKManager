@@ -54,6 +54,7 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSameGuid = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -66,6 +67,7 @@ namespace KKManager.Windows.Content
             this.objectListView1.AllColumns.Add(this.olvColumnAuthor);
             this.objectListView1.AllColumns.Add(this.olvColumnGuid);
             this.objectListView1.AllColumns.Add(this.olvColumnGames);
+            this.objectListView1.AllColumns.Add(this.olvColumnFileSize);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
             this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllColumns.Add(this.olvColumnWebsite);
@@ -78,6 +80,7 @@ namespace KKManager.Windows.Content
             this.olvColumnVersion,
             this.olvColumnAuthor,
             this.olvColumnGuid,
+            this.olvColumnFileSize,
             this.olvColumnFilename,
             this.olvColumnWebsite,
             this.olvColumnContentType});
@@ -139,21 +142,21 @@ namespace KKManager.Windows.Content
             // olvColumnFilename
             // 
             this.olvColumnFilename.AspectName = "FileName";
-            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             this.olvColumnFilename.MinimumWidth = 50;
+            resources.ApplyResources(this.olvColumnFilename, "olvColumnFilename");
             // 
             // olvColumnPath
             // 
             this.olvColumnPath.AspectName = "RelativePath";
-            this.olvColumnPath.IsVisible = false;
             resources.ApplyResources(this.olvColumnPath, "olvColumnPath");
+            this.olvColumnPath.IsVisible = false;
             // 
             // olvColumnWebsite
             // 
             this.olvColumnWebsite.AspectName = "Website";
-            resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
             this.olvColumnWebsite.Hyperlink = true;
             this.olvColumnWebsite.MinimumWidth = 100;
+            resources.ApplyResources(this.olvColumnWebsite, "olvColumnWebsite");
             // 
             // olvColumnContentType
             // 
@@ -247,6 +250,11 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
+            // olvColumnFileSize
+            // 
+            this.olvColumnFileSize.AspectName = "FileSize";
+            resources.ApplyResources(this.olvColumnFileSize, "olvColumnFileSize");
+            // 
             // SideloaderModsWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -288,5 +296,6 @@ namespace KKManager.Windows.Content
         private BrightIdeasSoftware.OLVColumn olvColumnPath;
         private BrightIdeasSoftware.OLVColumn olvColumnGames;
         private BrightIdeasSoftware.OLVColumn olvColumnContentType;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileSize;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using KKManager.Util;
 
 namespace KKManager.Data
 {
@@ -6,5 +7,6 @@ namespace KKManager.Data
     {
         FileInfo Location { get; }
         string Name { get; }
+        public FileSize FileSize { get; }
     }
 }
