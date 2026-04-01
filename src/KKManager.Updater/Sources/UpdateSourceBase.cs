@@ -91,9 +91,12 @@ namespace KKManager.Updater.Sources
                 catch (FileNotFoundException)
                 {
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException ex)
                 {
-                    throw;
+                    if (HandlesRetry)
+                        throw;
+                    else
+                        throw RetryHelper.DoNotAttemptToRetry(ex);
                 }
                 catch (Exception ex)
                 {
@@ -137,6 +140,8 @@ namespace KKManager.Updater.Sources
                     }
                     return false;
                 });
+
+            Console.WriteLine($"[{Origin}] Applicable mod lists: {string.Join(", ", updateInfos.Select(x => x.GUID))}");
 
             var allResults = new List<UpdateTask>();
             if (updateInfos.Any())
