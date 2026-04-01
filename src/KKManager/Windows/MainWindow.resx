@@ -127,48 +127,6 @@
   <data name="fileToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;File</value>
   </data>
-  <data name="openCardBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open card browser</value>
-  </data>
-  <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 6</value>
-  </data>
-  <data name="openPluginBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open plugin browser</value>
-  </data>
-  <data name="sideloaderModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open sideloader mod browser</value>
-  </data>
-  <data name="openSardineModBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="openSardineModBrowserToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open sardine mod browser</value>
-  </data>
-  <data name="toolStripSeparator9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>230, 6</value>
-  </data>
-  <data name="openPropertiesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open properties</value>
-  </data>
-  <data name="openLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 22</value>
-  </data>
-  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open log viewer</value>
-  </data>
   <data name="viewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
@@ -203,6 +161,57 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   </data>
   <data name="installANewModToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Look for mod updates...</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open the single-mod-download website</value>
+  </data>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>You can download zipmods individually here instead of updating the whole modpack.</value>
+  </data>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Text" xml:space="preserve">
+    <value>Report an issue with the modpack</value>
+  </data>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>This will open a bug report webpage.</value>
+  </data>
+  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 6</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check for mod updates on startup</value>
+  </data>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>The Mod updater menu button will turn green if there is an update available.</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Use system proxy server for FTP (needs restart)</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>P2P update transfer settings...</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Note: FTP connections are still required even with P2P enabled.</value>
   </data>
   <data name="updateSideloaderModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 20</value>
@@ -283,6 +292,12 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="openCardBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openCardBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open card browser</value>
+  </data>
   <data name="openFemaleCardFolderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>202, 22</value>
   </data>
@@ -303,6 +318,42 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   </data>
   <data name="otherToolStripMenuItem.Text" xml:space="preserve">
     <value>Open other folder...</value>
+  </data>
+  <data name="toolStripSeparator8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>230, 6</value>
+  </data>
+  <data name="openPluginBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openPluginBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open plugin browser</value>
+  </data>
+  <data name="sideloaderModsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="sideloaderModsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open sideloader mod browser</value>
+  </data>
+  <data name="openSardineModBrowserToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openSardineModBrowserToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open sardine mod browser</value>
+  </data>
+  <data name="toolStripSeparator9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>230, 6</value>
+  </data>
+  <data name="openPropertiesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openPropertiesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open properties</value>
+  </data>
+  <data name="openLogViewerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 22</value>
+  </data>
+  <data name="openLogViewerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open log viewer</value>
   </data>
   <data name="installDirectoryToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>155, 22</value>
@@ -336,48 +387,6 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   </data>
   <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
     <value>KK Manager</value>
-  </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Look for mod updates...</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open the single-mod-download website</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>You can download zipmods individually here instead of updating the whole modpack.</value>
-  </data>
-  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 6</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
-    <value>Check for mod updates on startup</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>The Mod updater menu button will turn green if there is an update available.</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Use system proxy server for FTP (needs restart)</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>P2P update transfer settings...</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Note: FTP connections are still required even with P2P enabled.</value>
   </data>
   <data name="fixFileAndFolderPermissionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 22</value>
@@ -2295,17 +2304,35 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;otherToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;sideloaderModsToolStripMenuItem.Name" xml:space="preserve">
-    <value>sideloaderModsToolStripMenuItem</value>
+  <data name="&gt;&gt;toolStripSeparator8.Name" xml:space="preserve">
+    <value>toolStripSeparator8</value>
   </data>
-  <data name="&gt;&gt;sideloaderModsToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;openPluginBrowserToolStripMenuItem.Name" xml:space="preserve">
     <value>openPluginBrowserToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;openPluginBrowserToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;sideloaderModsToolStripMenuItem.Name" xml:space="preserve">
+    <value>sideloaderModsToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;sideloaderModsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openSardineModBrowserToolStripMenuItem.Name" xml:space="preserve">
+    <value>openSardineModBrowserToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;openSardineModBrowserToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator9.Name" xml:space="preserve">
+    <value>toolStripSeparator9</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator9.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;openPropertiesToolStripMenuItem.Name" xml:space="preserve">
     <value>openPropertiesToolStripMenuItem</value>
@@ -2553,23 +2580,11 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;openSardineModBrowserToolStripMenuItem.Name" xml:space="preserve">
-    <value>openSardineModBrowserToolStripMenuItem</value>
+  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Name" xml:space="preserve">
+    <value>reportAnIssueWithTheModpackToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;openSardineModBrowserToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator8.Name" xml:space="preserve">
-    <value>toolStripSeparator8</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator8.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator9.Name" xml:space="preserve">
-    <value>toolStripSeparator9</value>
-  </data>
-  <data name="&gt;&gt;toolStripSeparator9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>

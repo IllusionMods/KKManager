@@ -853,5 +853,10 @@ namespace KKManager.Windows
         {
             openLogViewerToolStripMenuItem_Click(sender, e);
         }
+
+        private void reportAnIssueWithTheModpackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProcessTools.SafeStartProcess(@"https://github.com/BetterRepack/SideloaderModpackTracker/issues");
+        }
     }
 }
