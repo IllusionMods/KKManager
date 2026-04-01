@@ -47,6 +47,7 @@ namespace KKManager.Windows.Content
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOpenModsDir = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBoxSearch = new System.Windows.Forms.ToolStripTextBox();
+            this.olvColumnFileSize = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +57,7 @@ namespace KKManager.Windows.Content
             this.objectListView1.AllColumns.Add(this.olvColumnEnabled);
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.olvColumnVersion);
+            this.objectListView1.AllColumns.Add(this.olvColumnFileSize);
             this.objectListView1.AllColumns.Add(this.olvColumnFilename);
             this.objectListView1.AllColumns.Add(this.olvColumnPath);
             this.objectListView1.AllowColumnReorder = true;
@@ -64,6 +66,7 @@ namespace KKManager.Windows.Content
             this.olvColumnEnabled,
             this.olvColumnName,
             this.olvColumnVersion,
+            this.olvColumnFileSize,
             this.olvColumnPath});
             this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
             resources.ApplyResources(this.objectListView1, "objectListView1");
@@ -186,6 +189,11 @@ namespace KKManager.Windows.Content
             this.toolStripTextBoxSearch.Name = "toolStripTextBoxSearch";
             this.toolStripTextBoxSearch.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             // 
+            // olvColumnFileSize
+            // 
+            this.olvColumnFileSize.AspectName = "FileSize";
+            resources.ApplyResources(this.olvColumnFileSize, "olvColumnFileSize");
+            // 
             // SardineModsWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -220,5 +228,6 @@ namespace KKManager.Windows.Content
         private System.Windows.Forms.ToolStripButton toolStripButtonOpenModsDir;
         private ToolStripTextBox toolStripTextBoxSearch;
         private BrightIdeasSoftware.OLVColumn olvColumnPath;
+        private BrightIdeasSoftware.OLVColumn olvColumnFileSize;
     }
 }

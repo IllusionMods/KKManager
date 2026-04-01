@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Security.Permissions;
 using KKManager.Functions;
+using KKManager.Util;
 
 namespace KKManager.Data
 {
@@ -14,6 +13,7 @@ namespace KKManager.Data
         {
             Location = location ?? throw new ArgumentNullException(nameof(location));
             Guid = guid ?? throw new ArgumentNullException(nameof(guid));
+            FileSize = FileSize.FromBytes(location.Length);
             Name = name;// ?? throw new ArgumentNullException(nameof(name));
             Version = version;// ?? throw new ArgumentNullException(nameof(version));
             Author = author;
@@ -23,6 +23,7 @@ namespace KKManager.Data
         }
 
         public FileInfo Location { get; }
+        public FileSize FileSize { get; }
         public string Name { get; }
         public string Version { get; }
         public string Guid { get; }
