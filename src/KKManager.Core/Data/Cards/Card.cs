@@ -13,7 +13,7 @@ namespace KKManager.Data.Cards
         [DisplayName("Filename")]
         public FileInfo Location { get; }
         public CardType Type { get; }
-        public string FileSize { get; }
+        public FileSize FileSize { get; }
         public abstract CharaSex Sex { get; }
         public abstract string PersonalityName { get; }
         [ReadOnly(true)] public virtual int Language { get; protected set; }
@@ -74,7 +74,7 @@ namespace KKManager.Data.Cards
             Extended = extended ?? new Dictionary<string, PluginData>();
             ExtendedSize = extendedSize;
 
-            FileSize = Util.FileSize.FromBytes(cardFile.Length).ToString();
+            FileSize = Util.FileSize.FromBytes(cardFile.Length);
         }
     }
 }

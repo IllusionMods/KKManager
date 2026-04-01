@@ -874,7 +874,7 @@ namespace KKManager.Windows.Content
                     foreach (var card in GetSelectedCards())
                     {
                         var fileName = card.Location?.FullName ?? "";
-                        var fileSize = card.FileSize ?? "";
+                        var fileSize = card.FileSize.ToString();
                         var cardType = card.Type.ToString();
                         var characterName = card.Name ?? "";
                         var sex = card.Sex.ToString();
