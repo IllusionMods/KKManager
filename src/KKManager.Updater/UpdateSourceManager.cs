@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Reactive.Linq;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using KKManager.Data;
@@ -111,10 +113,19 @@ namespace KKManager.Updater
                 catch (OperationCanceledException) { }
                 catch (Exception e)
                 {
-                    if (e is AggregateException ae && ae.InnerExceptions.Any(x => x is OperationCanceledException))
-                        continue;
-                    else
-                        Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {e.ToStringDemystified()}");
+                    if (e is AggregateException ae)
+                    {
+                        e = ae = ae.Flatten();
+                        if (ae.InnerExceptions.Any(x => x is OperationCanceledException))
+                            continue;
+
+                        if(ae.InnerExceptions.Count == 1)
+                            e = ae.InnerExceptions[0];
+                    }
+
+                    var noStacktrace = e is SocketException or WebException or SecurityException or OutdatedVersionException;
+                    var errorStr = noStacktrace ? e.GetType().FullName + ": " + e.Message : e.ToStringDemystified();
+                    Console.WriteLine($"[ERROR] Unexpected error while collecting updates from source {task.source.Origin} - skipping the source. Error: {errorStr}");
                 }
             }
             progressCallback.Report(1);
