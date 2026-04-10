@@ -228,9 +228,8 @@ namespace KKManager.Updater.Sources
 
         private async Task UpdateItem(FtpListItem sourceItem, FileInfo targetPath, IProgress<double> progressCallback, CancellationToken cancellationToken)
         {
-            // Delete old file if any exists so the download doesn't try to append to it. Append mode is needed for retrying downloads to resume instead of restarting
-            await targetPath.SafeDelete();
-
+            // Keep any existing partial file so that FtpLocalExists.Resume can resume an interrupted download.
+            // FtpVerify.Delete will remove the file and retry from scratch if the completed download fails verification.
             await Connect(cancellationToken).ConfigureAwait(false);
 
             await _client.DownloadFileAsync(
