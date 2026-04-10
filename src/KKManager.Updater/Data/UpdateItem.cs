@@ -133,10 +133,7 @@ namespace KKManager.Updater.Data
                                     Console.WriteLine($"Removing empty directory: {dir.FullName}");
                                     dir.Delete(false);
                                 }
-                                catch (IOException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
-                                catch (UnauthorizedAccessException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
-                                catch (DirectoryNotFoundException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
-                                catch (SecurityException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
+                                catch (Exception ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
                                 dir = dir.Parent;
                             }
                         }
