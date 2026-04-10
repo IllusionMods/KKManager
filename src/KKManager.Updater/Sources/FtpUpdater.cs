@@ -17,6 +17,12 @@ namespace KKManager.Updater.Sources
 {
     public class FtpUpdater : UpdateSourceBase
     {
+        /// <summary>Milliseconds for socket-level connect/read timeouts on the FTP client.</summary>
+        private const int SocketTimeoutMs = 30_000;
+
+        /// <summary>Hard timeout applied to the entire connection handshake (AutoConnect).</summary>
+        private static readonly TimeSpan ConnectionTimeout = TimeSpan.FromSeconds(60);
+
         private readonly FtpClient _client;
 
         private Dictionary<string, FtpListItem> AllNodesLookup
@@ -24,7 +30,7 @@ namespace KKManager.Updater.Sources
             get
             {
                 if (_allNodesLookup == null)
-                    PopulateNodeLookups(CancellationToken.None).Wait();
+                    throw new InvalidOperationException("Node lookups have not been populated yet. Call PopulateNodeLookups first.");
                 return _allNodesLookup;
             }
         }
@@ -34,7 +40,7 @@ namespace KKManager.Updater.Sources
             get
             {
                 if (_allNodesNameLookup == null)
-                    PopulateNodeLookups(CancellationToken.None).Wait();
+                    throw new InvalidOperationException("Node lookups have not been populated yet. Call PopulateNodeLookups first.");
                 return _allNodesNameLookup;
             }
         }
@@ -44,7 +50,7 @@ namespace KKManager.Updater.Sources
             get
             {
                 if (_childNodesLookup == null)
-                    PopulateNodeLookups(CancellationToken.None).Wait();
+                    throw new InvalidOperationException("Node lookups have not been populated yet. Call PopulateNodeLookups first.");
                 return _childNodesLookup;
             }
         }
@@ -117,6 +123,13 @@ namespace KKManager.Updater.Sources
             _client.DownloadDataType = FtpDataType.Binary;
             _client.ListingDataType = FtpDataType.Binary;
 
+            // Set explicit timeouts so that unresponsive servers don't hang indefinitely.
+            // These socket-level timeouts apply even when async operations block internally.
+            _client.ConnectTimeout = SocketTimeoutMs;
+            _client.ReadTimeout = SocketTimeoutMs;
+            _client.DataConnectionConnectTimeout = SocketTimeoutMs;
+            _client.DataConnectionReadTimeout = SocketTimeoutMs;
+
             FtpTrace.EnableTracing = false;
         }
 
@@ -179,11 +192,19 @@ namespace KKManager.Updater.Sources
         {
             if (!_client.IsConnected)
             {
+                // Enforce a hard deadline so that an unresponsive server cannot block the caller
+                // indefinitely. AutoConnectAsync may perform blocking socket work internally (hence
+                // the Task.Run wrapper), and blocking socket calls are not interrupted by a
+                // CancellationToken alone – they rely on the socket-level timeouts set above.
+                // The linked token ensures the *async* path is also bounded.
+                using var timeoutCts = new CancellationTokenSource(ConnectionTimeout);
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+
                 // Need to wrap the connect into a new task because it can block main thread when failing to connect
                 await Task.Run(async () =>
                 {
-                    await _client.AutoConnectAsync(cancellationToken).ConfigureAwait(false);
-                }, cancellationToken).ConfigureAwait(false);
+                    await _client.AutoConnectAsync(linkedCts.Token).ConfigureAwait(false);
+                }, linkedCts.Token).ConfigureAwait(false);
 
                 // todo hack, some servers don't announce the capability, needed for proper functionality
                 _client.RecursiveList = true;
