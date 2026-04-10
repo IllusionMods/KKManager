@@ -125,11 +125,16 @@ namespace KKManager.Updater.Data
                             // File was deleted without replacement, try to remove now-empty parent directories
                             var gameDir = InstallDirectoryHelper.GameDirectory.FullName;
                             var dir = TargetPath.Directory;
-                            while (dir != null && dir.Exists && !PathTools.PathsEqual(dir.FullName, gameDir) && !dir.EnumerateFileSystemInfos().Any())
+                            while (dir != null && dir.Exists && !PathTools.PathsEqual(dir.FullName, gameDir))
                             {
-                                Console.WriteLine($"Removing empty directory: {dir.FullName}");
-                                try { dir.Delete(false); }
-                                catch (Exception ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
+                                try
+                                {
+                                    if (dir.EnumerateFileSystemInfos().Any()) break;
+                                    Console.WriteLine($"Removing empty directory: {dir.FullName}");
+                                    dir.Delete(false);
+                                }
+                                catch (IOException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
+                                catch (UnauthorizedAccessException ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
                                 dir = dir.Parent;
                             }
                         }
