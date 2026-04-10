@@ -96,7 +96,11 @@ namespace KKManager.Data.Cards.AI
                 "Confident and aware",
                 "Selfish and spoiled",
                 "Lazy and sluggish",
-                "Positive and cheerful"
+                "Positive and cheerful",
+                "Decent, Careful & Methodical",
+                "Elegant Ideal Japanese",
+                "Friendly Tomboy",
+                "Tidy but Obsessed"
             };
 
             if (personality < 0 || personality > 90) return "Invalid";
