@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,6 +120,23 @@ namespace KKManager.Updater.Data
                         if (RemoteFile != null)
                         {
                             downloadTarget.MoveTo(TargetPath.FullName);
+                        }
+                        else
+                        {
+                            // File was deleted without replacement, try to remove now-empty parent directories
+                            var gameDir = InstallDirectoryHelper.GameDirectory.FullName;
+                            var dir = TargetPath.Directory;
+                            while (dir != null && dir.Exists && !PathTools.PathsEqual(dir.FullName, gameDir))
+                            {
+                                try
+                                {
+                                    if (dir.EnumerateFileSystemInfos().Any()) break;
+                                    Console.WriteLine($"Removing empty directory: {dir.FullName}");
+                                    dir.Delete(false);
+                                }
+                                catch (Exception ex) { Console.WriteLine($"Failed to remove empty directory {dir.FullName}: {ex.Message}"); break; }
+                                dir = dir.Parent;
+                            }
                         }
                     }
                 }
