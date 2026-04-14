@@ -155,9 +155,16 @@ namespace KKManager.Util
                            || StringComparison == StringComparison.InvariantCultureIgnoreCase
                            || StringComparison == StringComparison.OrdinalIgnoreCase;
 
-            RegexOptions regexOptions = RegexOptions.CultureInvariant;
+            RegexOptions regexOptions = RegexOptions.None;
             if (ignoreCase) regexOptions |= RegexOptions.IgnoreCase;
 
+            if (StringComparison == StringComparison.InvariantCulture
+                || StringComparison == StringComparison.InvariantCultureIgnoreCase
+                || StringComparison == StringComparison.Ordinal
+                || StringComparison == StringComparison.OrdinalIgnoreCase)
+            {
+                regexOptions |= RegexOptions.CultureInvariant;
+            }
             foreach (string item in _containsStrings)
             {
                 if (item.Contains("*") || item.Contains("?"))
