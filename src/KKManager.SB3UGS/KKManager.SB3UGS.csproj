@@ -24,7 +24,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj" />
 	</ItemGroup>
-	<PropertyGroup>
-		<PostBuildEvent>xcopy /E /Q /R /Y /D "$(SolutionDir)libs\SB3UGS\*" "$(TargetDir)SB3UGS\"</PostBuildEvent>
-	</PropertyGroup>
+	<Target Name="CopySB3UGSFiles" AfterTargets="Build">
+		<ItemGroup>
+			<SB3UGSFiles Include="$(SolutionDir)libs\SB3UGS\**\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(SB3UGSFiles)" DestinationFolder="$(TargetDir)SB3UGS\%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
 </Project>
