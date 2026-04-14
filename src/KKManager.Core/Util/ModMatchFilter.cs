@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BrightIdeasSoftware;
+using System.Text.RegularExpressions;
 
 namespace KKManager.Util
 {
@@ -28,6 +29,7 @@ namespace KKManager.Util
         private string _sameCol;
         private bool _isMod;
         private bool _isFilterCol;
+        private bool _isWildcardSearch;
 
 
         public ModMatchFilter(ObjectListView olv)
@@ -40,7 +42,7 @@ namespace KKManager.Util
         {
             bool textMatch = _textMatchFilter.Filter(modelObject);
 
-            if (_isMod && _isFilterCol && textMatch)
+            if (_isMod && ((_isFilterCol && textMatch) || _isWildcardSearch))
             {
                 return _sameMods.Contains(modelObject);
             }
@@ -54,6 +56,7 @@ namespace KKManager.Util
             _sameCol = null;
             _isFilterCol = false;
             _isMod = false;
+            _isWildcardSearch = false;
             _sameMods.Clear();
             if (strs == null)
             {
@@ -66,7 +69,6 @@ namespace KKManager.Util
                 _isMod = item is Data.ModInfoBase;
                 break;
             }
-
 
             List<string> textStrs = new List<string>();
             foreach (var item in strs)
@@ -82,6 +84,10 @@ namespace KKManager.Util
                     words = item.Replace("same:name", "");
                     _sameCol = "name";
                 }
+                else if (item.Contains("?") || item.Contains("*")) // wildcard search
+                {
+                    _isWildcardSearch = true;
+                }
                 textStrs.Add(words.Trim());
             }
 
@@ -95,10 +101,17 @@ namespace KKManager.Util
                 {
                     mods.Add(item as Data.ModInfoBase);
                 }
-                FilterSameColumn(mods);
+
+                if (!string.IsNullOrWhiteSpace(_sameCol))
+                {
+                    FilterSameColumn(mods);
+                }
+                else if (_isWildcardSearch)
+                {
+                    FilterWildcard(mods);
+                }
             }
         }
-
 
         private IEnumerable FilterSameColumn(IEnumerable<Data.ModInfoBase> modelObjects)
         {
@@ -134,6 +147,43 @@ namespace KKManager.Util
             return _sameMods;
         }
 
+        private IEnumerable FilterWildcard(IEnumerable<Data.ModInfoBase> modelObjects)
+        {
+            _sameMods.Clear();
 
+            bool ignoreCase = StringComparison == StringComparison.CurrentCultureIgnoreCase
+                           || StringComparison == StringComparison.InvariantCultureIgnoreCase
+                           || StringComparison == StringComparison.OrdinalIgnoreCase;
+
+            RegexOptions regexOptions = RegexOptions.None;
+            if (ignoreCase) regexOptions |= RegexOptions.IgnoreCase;
+
+            if (StringComparison == StringComparison.InvariantCulture
+                || StringComparison == StringComparison.InvariantCultureIgnoreCase
+                || StringComparison == StringComparison.Ordinal
+                || StringComparison == StringComparison.OrdinalIgnoreCase)
+            {
+                regexOptions |= RegexOptions.CultureInvariant;
+            }
+            foreach (string item in _containsStrings)
+            {
+                if (item.Contains("*") || item.Contains("?"))
+                {
+                    // Convert wildcard to regex: escape then replace wildcard tokens
+                    string trimmed = item.Trim();
+                    string escaped = Regex.Escape(trimmed);
+                    string pattern = "^" + escaped.Replace("\\*", ".*").Replace("\\?", ".") + "$";
+                    Regex regex = new Regex(pattern, regexOptions);
+
+                    var matches = modelObjects
+                        .Where(r => r != null && (regex.IsMatch(r.Name ?? string.Empty) || regex.IsMatch(r.Guid ?? string.Empty) || regex.IsMatch(r.FileName ?? string.Empty)));
+
+                    foreach (var mod in matches)
+                        _sameMods.Add(mod);
+                }
+            }
+
+            return _sameMods;
+        }
     }
 }
