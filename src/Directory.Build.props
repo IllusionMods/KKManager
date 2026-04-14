@@ -28,7 +28,15 @@
 		<FileAlignment>512</FileAlignment>
 
 		<LangVersion>latest</LangVersion>
+
+		<!-- Fix MSB3822: required at runtime for non-string resources -->
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Fix MSB3822: required at runtime for non-string resources -->
+		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
+	</ItemGroup>
 
 	<Target Name="CopyLicenseAndReadme" AfterTargets="Build">
 		<Copy SourceFiles="$(SolutionDir)\..\LICENSE" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
