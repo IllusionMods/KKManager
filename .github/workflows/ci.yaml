@@ -1,0 +1,17 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+    - name: Update build number
+      run: echo "internal static class BuildNumber{public const string Version = \"${{ github.run_number }}\";}" > src/Common.Core/BuildNumber.cs
+    - run: dotnet build --configuration Release
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}_${{ github.sha }}
+        path: bin/Release
