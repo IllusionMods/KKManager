@@ -64,6 +64,7 @@ namespace KKManager.Windows
             this.updateSideloaderModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lookForModUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openIndividualDownloadWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportAnIssueWithTheModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +94,7 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.reportAnIssueWithTheModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDebugInfoToolStripmenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -324,6 +325,12 @@ namespace KKManager.Windows
             resources.ApplyResources(this.openIndividualDownloadWebsiteToolStripMenuItem, "openIndividualDownloadWebsiteToolStripMenuItem");
             this.openIndividualDownloadWebsiteToolStripMenuItem.Click += new System.EventHandler(this.openIndividualDownloadWebsiteToolStripMenuItem_Click);
             // 
+            // reportAnIssueWithTheModpackToolStripMenuItem
+            // 
+            this.reportAnIssueWithTheModpackToolStripMenuItem.Name = "reportAnIssueWithTheModpackToolStripMenuItem";
+            resources.ApplyResources(this.reportAnIssueWithTheModpackToolStripMenuItem, "reportAnIssueWithTheModpackToolStripMenuItem");
+            this.reportAnIssueWithTheModpackToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueWithTheModpackToolStripMenuItem_Click);
+            // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
@@ -351,6 +358,7 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
             this.cleanUpDuplicateZipmodsToolStripMenuItem,
+            this.generateDebugInfoToolStripmenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -510,11 +518,11 @@ namespace KKManager.Windows
             this.toolTip1.ReshowDelay = 100;
             this.toolTip1.ShowAlways = true;
             // 
-            // reportAnIssueWithTheModpackToolStripMenuItem
+            // toolStripMenuItem1
             // 
-            this.reportAnIssueWithTheModpackToolStripMenuItem.Name = "reportAnIssueWithTheModpackToolStripMenuItem";
-            resources.ApplyResources(this.reportAnIssueWithTheModpackToolStripMenuItem, "reportAnIssueWithTheModpackToolStripMenuItem");
-            this.reportAnIssueWithTheModpackToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueWithTheModpackToolStripMenuItem_Click);
+            this.generateDebugInfoToolStripmenuItem.Name = "toolStripMenuItem1";
+            resources.ApplyResources(this.generateDebugInfoToolStripmenuItem, "toolStripMenuItem1");
+            this.generateDebugInfoToolStripmenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
             // 
             // MainWindow
             // 
@@ -601,5 +609,6 @@ namespace KKManager.Windows
         private ToolStripMenuItem openSardineModBrowserToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem reportAnIssueWithTheModpackToolStripMenuItem;
+        private ToolStripMenuItem generateDebugInfoToolStripmenuItem;
     }
 }
