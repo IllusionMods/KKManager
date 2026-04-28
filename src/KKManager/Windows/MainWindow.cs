@@ -859,7 +859,8 @@ namespace KKManager.Windows
             ProcessTools.SafeStartProcess(@"https://github.com/BetterRepack/SideloaderModpackTracker/issues");
         }
 
-        private void generateDebugInfoZip_Click(object sender, EventArgs e) {
+        private void generateDebugInfoZip_Click(object sender, EventArgs e) 
+        {
             DebugInfo.GenerateDebugInfo();
         }
     }
