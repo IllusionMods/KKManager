@@ -136,7 +136,6 @@ namespace KKManager.Functions
             Uri relativeUri = baseUri.MakeRelativeUri(fullUri);
 
             return relativeUri.ToString().Replace('/', '\\');
-
         }
 
         static void GetLogs(DirectoryInfo debugDirInfo)
