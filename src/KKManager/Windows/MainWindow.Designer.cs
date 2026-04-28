@@ -73,6 +73,7 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDebugInfoToolStripmenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openModpackToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,7 +95,6 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.generateDebugInfoToolStripmenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -382,6 +382,12 @@ namespace KKManager.Windows
             resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
             this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
+            // generateDebugInfoToolStripmenuItem
+            // 
+            this.generateDebugInfoToolStripmenuItem.Name = "generateDebugInfoToolStripmenuItem";
+            resources.ApplyResources(this.generateDebugInfoToolStripmenuItem, "generateDebugInfoToolStripmenuItem");
+            this.generateDebugInfoToolStripmenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -517,12 +523,6 @@ namespace KKManager.Windows
             this.toolTip1.InitialDelay = 200;
             this.toolTip1.ReshowDelay = 100;
             this.toolTip1.ShowAlways = true;
-            // 
-            // toolStripMenuItem1
-            // 
-            this.generateDebugInfoToolStripmenuItem.Name = "toolStripMenuItem1";
-            resources.ApplyResources(this.generateDebugInfoToolStripmenuItem, "toolStripMenuItem1");
-            this.generateDebugInfoToolStripmenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
             // 
             // MainWindow
             // 
