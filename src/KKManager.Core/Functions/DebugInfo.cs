@@ -114,18 +114,29 @@ namespace KKManager.Functions
                 using (ZipArchive zip = new ZipArchive(zipStream, ZipArchiveMode.Create))
                 {
                     DirectoryInfo pluginsDirInfo = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.PluginPath.FullName, "plugins"));
-                    foreach (FileInfo file in pluginsDirInfo.GetFiles())
-                    {
-                        zip.CreateEntryFromFile(file.FullName, Path.Combine(file.Directory.Name, file.Name));
+                    foreach (FileInfo file in pluginsDirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
+                    {                       
+                        zip.CreateEntryFromFile(file.FullName, RelativePath(file.FullName, pluginsDirInfo.FullName));
                     }
 
                     DirectoryInfo configDirInfo = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.PluginPath.FullName, "config"));
-                    foreach (FileInfo file in configDirInfo.GetFiles())
+                    foreach (FileInfo file in configDirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
                     {
-                        zip.CreateEntryFromFile(file.FullName, Path.Combine(file.Directory.Name, file.Name));
+                        zip.CreateEntryFromFile(file.FullName, RelativePath(file.FullName, configDirInfo.FullName));
                     }
                 }
             }
+        }
+
+        static string RelativePath(string fullPath, string pathRelativeTo)
+        {
+            Uri baseUri = new Uri(pathRelativeTo);
+            Uri fullUri = new Uri(fullPath);
+
+            Uri relativeUri = baseUri.MakeRelativeUri(fullUri);
+
+            return relativeUri.ToString().Replace('/', '\\');
+
         }
 
         static void GetLogs(DirectoryInfo debugDirInfo)
