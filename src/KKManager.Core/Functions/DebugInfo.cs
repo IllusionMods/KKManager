@@ -114,7 +114,7 @@ namespace KKManager.Functions
                 using (ZipArchive zip = new ZipArchive(zipStream, ZipArchiveMode.Create))
                 {
                     DirectoryInfo pluginsDirInfo = new DirectoryInfo(Path.Combine(InstallDirectoryHelper.PluginPath.FullName, "plugins"));
-                    foreach (FileInfo file in pluginsDirInfo.EnumerateFiles("*", SearchOption.AllDirectories))
+                    foreach (FileInfo file in pluginsDirInfo.EnumerateFiles("*.dll", SearchOption.AllDirectories))
                     {                       
                         zip.CreateEntryFromFile(file.FullName, RelativePath(file.FullName, pluginsDirInfo.FullName));
                     }
