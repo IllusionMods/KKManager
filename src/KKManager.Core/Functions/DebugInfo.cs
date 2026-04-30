@@ -35,9 +35,9 @@ namespace KKManager.Functions
         {
             StringBuilder resultTree = new StringBuilder();
 
-            DirectoryInfo[] baseDiretories = InstallDirectoryHelper.GameDirectory.GetDirectories();
+            DirectoryInfo[] baseDirectories = InstallDirectoryHelper.GameDirectory.GetDirectories();
 
-            foreach (DirectoryInfo dI in baseDiretories)
+            foreach (DirectoryInfo dI in baseDirectories)
             {
                 string dirName = dI.Name;
                 // get everything for now
