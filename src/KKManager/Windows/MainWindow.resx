@@ -367,7 +367,7 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   </data>
   <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>This will attempt to fix any file or folder permission issues in the game directory.
-Make sure that no other applications are using anything inside the game directory before uisng, otherwise a PC restart might be required to be able to access some of the files again.</value>
+Make sure that no other applications are using anything inside the game directory before using, otherwise a PC restart might be required to be able to access some of the files again.</value>
   </data>
   <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 22</value>
