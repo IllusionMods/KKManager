@@ -64,6 +64,7 @@ namespace KKManager.Windows
             this.updateSideloaderModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lookForModUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openIndividualDownloadWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportAnIssueWithTheModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.checkForUpdatesOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useSystemProxyServerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +73,7 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDebugInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openModpackToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +95,7 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.reportAnIssueWithTheModpackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -324,6 +326,12 @@ namespace KKManager.Windows
             resources.ApplyResources(this.openIndividualDownloadWebsiteToolStripMenuItem, "openIndividualDownloadWebsiteToolStripMenuItem");
             this.openIndividualDownloadWebsiteToolStripMenuItem.Click += new System.EventHandler(this.openIndividualDownloadWebsiteToolStripMenuItem_Click);
             // 
+            // reportAnIssueWithTheModpackToolStripMenuItem
+            // 
+            this.reportAnIssueWithTheModpackToolStripMenuItem.Name = "reportAnIssueWithTheModpackToolStripMenuItem";
+            resources.ApplyResources(this.reportAnIssueWithTheModpackToolStripMenuItem, "reportAnIssueWithTheModpackToolStripMenuItem");
+            this.reportAnIssueWithTheModpackToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueWithTheModpackToolStripMenuItem_Click);
+            // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
@@ -348,6 +356,8 @@ namespace KKManager.Windows
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateDebugInfoToolStripMenuItem,
+            this.toolStripSeparator10,
             this.fixFileAndFolderPermissionsToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
             this.cleanUpDuplicateZipmodsToolStripMenuItem,
@@ -373,6 +383,12 @@ namespace KKManager.Windows
             this.cleanUpDuplicateZipmodsToolStripMenuItem.Name = "cleanUpDuplicateZipmodsToolStripMenuItem";
             resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
             this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
+            // 
+            // generateDebugInfoToolStripMenuItem
+            // 
+            this.generateDebugInfoToolStripMenuItem.Name = "generateDebugInfoToolStripMenuItem";
+            resources.ApplyResources(this.generateDebugInfoToolStripMenuItem, "generateDebugInfoToolStripMenuItem");
+            this.generateDebugInfoToolStripMenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
             // 
             // toolStripSeparator3
             // 
@@ -510,11 +526,10 @@ namespace KKManager.Windows
             this.toolTip1.ReshowDelay = 100;
             this.toolTip1.ShowAlways = true;
             // 
-            // reportAnIssueWithTheModpackToolStripMenuItem
+            // toolStripSeparator10
             // 
-            this.reportAnIssueWithTheModpackToolStripMenuItem.Name = "reportAnIssueWithTheModpackToolStripMenuItem";
-            resources.ApplyResources(this.reportAnIssueWithTheModpackToolStripMenuItem, "reportAnIssueWithTheModpackToolStripMenuItem");
-            this.reportAnIssueWithTheModpackToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueWithTheModpackToolStripMenuItem_Click);
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            resources.ApplyResources(this.toolStripSeparator10, "toolStripSeparator10");
             // 
             // MainWindow
             // 
@@ -601,5 +616,7 @@ namespace KKManager.Windows
         private ToolStripMenuItem openSardineModBrowserToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem reportAnIssueWithTheModpackToolStripMenuItem;
+        private ToolStripMenuItem generateDebugInfoToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator10;
     }
 }

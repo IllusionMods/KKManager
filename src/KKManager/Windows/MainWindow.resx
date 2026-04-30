@@ -162,62 +162,61 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   <data name="installANewModToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Look for mod updates...</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
-    <value>Open the single-mod-download website</value>
-  </data>
-  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>You can download zipmods individually here instead of updating the whole modpack.</value>
-  </data>
-  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Text" xml:space="preserve">
-    <value>Report an issue with the modpack</value>
-  </data>
-  <data name="reportAnIssueWithTheModpackToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>This will open a bug report webpage.</value>
-  </data>
-  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>315, 6</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
-    <value>Check for mod updates on startup</value>
-  </data>
-  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>The Mod updater menu button will turn green if there is an update available.</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Use system proxy server for FTP (needs restart)</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 22</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
-    <value>P2P update transfer settings...</value>
-  </data>
-  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Note: FTP connections are still required even with P2P enabled.</value>
-  </data>
   <data name="updateSideloaderModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 20</value>
   </data>
   <data name="updateSideloaderModpackToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Mod updater</value>
+  </data>
+  <data name="generateDebugInfoToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="generateDebugInfoToolStripMenuItem.Text" xml:space="preserve">
+    <value>Collect game debug info...</value>
+  </data>
+  <data name="generateDebugInfoToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Create a zip file in the game folder containing files helpful for debugging problems with the game.</value>
+  </data>
+  <data name="toolStripSeparator10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 6</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Fix file and folder permissions</value>
+  </data>
+  <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>This will attempt to fix any file or folder permission issues in the game directory.
+Make sure that no other applications are using anything inside the game directory before uisng, otherwise a PC restart might be required to be able to access some of the files again.</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Compress game files</value>
+  </data>
+  <data name="compressGameFilesToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Reduce the size of the game by recompressing its asset bundles with a higher compression level.
+Generally safe but might cause issues in rare cases, especially with newer games like RG or HC. If in doubt, back up the abdata and *_Data folders.</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Clean up duplicate zipmods</value>
+  </data>
+  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Attempt to automatically clean up zipmods with the same GUIDs so that only the latest versions are left.</value>
+  </data>
+  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>228, 6</value>
+  </data>
+  <data name="developersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>231, 22</value>
+  </data>
+  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
+    <value>Developers</value>
   </data>
   <data name="toolsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>46, 20</value>
@@ -388,43 +387,56 @@ For plugins, patchers and especially non-zipmod mods it's recommended to follow 
   <data name="kKManagerToolStripMenuItem.Text" xml:space="preserve">
     <value>KK Manager</value>
   </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 22</value>
+  <data name="lookForModUpdatesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
   </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Fix file and folder permissions</value>
+  <data name="lookForModUpdatesToolStripMenuItem.Text" xml:space="preserve">
+    <value>Look for mod updates...</value>
   </data>
-  <data name="fixFileAndFolderPermissionsToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>This will attempt to fix any file or folder permission issues in the game directory.
-Make sure that no other applications are using anything inside the game directory before uisng, otherwise a PC restart might be required to be able to access some of the files again.</value>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
   </data>
-  <data name="compressGameFilesToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 22</value>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.Text" xml:space="preserve">
+    <value>Open the single-mod-download website</value>
   </data>
-  <data name="compressGameFilesToolStripMenuItem.Text" xml:space="preserve">
-    <value>Compress game files</value>
+  <data name="openIndividualDownloadWebsiteToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>You can download zipmods individually here instead of updating the whole modpack.</value>
   </data>
-  <data name="compressGameFilesToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Reduce the size of the game by recompressing its asset bundles with a higher compression level.
-Generally safe but might cause issues in rare cases, especially with newer games like RG or HC. If in doubt, back up the abdata and *_Data folders.</value>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
   </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 22</value>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.Text" xml:space="preserve">
+    <value>Report an issue with the modpack</value>
   </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Clean up duplicate zipmods</value>
+  <data name="reportAnIssueWithTheModpackToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>This will open a bug report webpage.</value>
   </data>
-  <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
-    <value>Attempt to automatically clean up zipmods with the same GUIDs so that only the latest versions are left.</value>
+  <data name="toolStripSeparator6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>315, 6</value>
   </data>
-  <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>228, 6</value>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
   </data>
-  <data name="developersToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>231, 22</value>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.Text" xml:space="preserve">
+    <value>Check for mod updates on startup</value>
   </data>
-  <data name="developersToolStripMenuItem.Text" xml:space="preserve">
-    <value>Developers</value>
+  <data name="checkForUpdatesOnStartupToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>The Mod updater menu button will turn green if there is an update available.</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="useSystemProxyServerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Use system proxy server for FTP (needs restart)</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 22</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.Text" xml:space="preserve">
+    <value>P2P update transfer settings...</value>
+  </data>
+  <data name="p2PDownloaderSettingsToolStripMenuItem.ToolTipText" xml:space="preserve">
+    <value>Note: FTP connections are still required even with P2P enabled.</value>
   </data>
   <data name="openModpackToolToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>291, 22</value>
@@ -2418,6 +2430,12 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;openIndividualDownloadWebsiteToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Name" xml:space="preserve">
+    <value>reportAnIssueWithTheModpackToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;toolStripSeparator6.Name" xml:space="preserve">
     <value>toolStripSeparator6</value>
   </data>
@@ -2464,6 +2482,12 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
     <value>cleanUpDuplicateZipmodsToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;generateDebugInfoToolStripMenuItem.Name" xml:space="preserve">
+    <value>generateDebugInfoToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;generateDebugInfoToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">
@@ -2580,11 +2604,11 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Name" xml:space="preserve">
-    <value>reportAnIssueWithTheModpackToolStripMenuItem</value>
+  <data name="&gt;&gt;toolStripSeparator10.Name" xml:space="preserve">
+    <value>toolStripSeparator10</value>
   </data>
-  <data name="&gt;&gt;reportAnIssueWithTheModpackToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;toolStripSeparator10.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainWindow</value>

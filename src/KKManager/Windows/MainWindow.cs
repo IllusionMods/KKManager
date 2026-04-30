@@ -858,5 +858,29 @@ namespace KKManager.Windows
         {
             ProcessTools.SafeStartProcess(@"https://github.com/BetterRepack/SideloaderModpackTracker/issues");
         }
+
+        private async void generateDebugInfoZip_Click(object sender, EventArgs e)
+        {
+            using (var cofd = new CommonOpenFileDialog("Select the directory to export the debug info zip to")
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true,
+                EnsureFileExists = true,
+            })
+            {
+                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    try
+                    {
+                        await Task.Run(() => DebugInfo.GenerateDebugInfo(cofd.FileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        MessageBox.Show($"Could not export debug info. Try saving to a different location. If the error persists, report it on GitHub together with the log file.\n {ex.ToStringDemystified()}", "Failed to export debug information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }
