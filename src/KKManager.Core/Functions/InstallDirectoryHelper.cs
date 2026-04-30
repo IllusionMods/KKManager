@@ -200,11 +200,11 @@ namespace KKManager.Functions
             {
                 var candidates = FindLogFiles(true);
 
-                var latestLog = candidates.FirstOrDefault();
-                if (latestLog == null)
+                if (!candidates.Any())
                     throw new FileNotFoundException("No log files were found");
 
-                Process.Start(latestLog.FullName);
+                foreach (var candidate in candidates.Take(3))
+                    Process.Start(candidate.FullName);
             }
             catch (Exception exception)
             {
