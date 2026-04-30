@@ -867,7 +867,6 @@ namespace KKManager.Windows
                 IsFolderPicker = true,
                 EnsurePathExists = true,
                 EnsureFileExists = true,
-
             })
             {
                 if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
@@ -879,7 +878,7 @@ namespace KKManager.Windows
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex);
-                        MessageBox.Show($"Could not export debug info:\n {ex.ToStringDemystified()}", "Failed to export debug information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Could not export debug info. Try saving to a different location. If the error persists, report it on GitHub together with the log file.\n {ex.ToStringDemystified()}", "Failed to export debug information", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
