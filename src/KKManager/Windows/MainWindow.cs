@@ -26,7 +26,6 @@ using KKManager.Util;
 using KKManager.Windows.Content;
 using KKManager.Windows.ToolWindows;
 using KKManager.Windows.ToolWindows.Properties;
-using MessagePack.Formatters;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WeifenLuo.WinFormsUI.Docking;
@@ -862,7 +861,7 @@ namespace KKManager.Windows
 
         private async void generateDebugInfoZip_Click(object sender, EventArgs e)
         {
-            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog("Select the directory to export the debug info zip to")
+            using (var cofd = new CommonOpenFileDialog("Select the directory to export the debug info zip to")
             {
                 IsFolderPicker = true,
                 EnsurePathExists = true,
