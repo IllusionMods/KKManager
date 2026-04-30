@@ -8,7 +8,7 @@ namespace KKManager.Functions
 {
     public class DebugInfo
     {
-        public static void GenerateDebugInfo()
+        public static void GenerateDebugInfo(string atPath)
         {
             DirectoryInfo tempDebugDir = Directory.CreateDirectory("DebugInfoTemp");
 
@@ -22,7 +22,7 @@ namespace KKManager.Functions
                 GetLogs(tempDebugDir);
 
                 string epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
-                ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(InstallDirectoryHelper.GameDirectory.FullName,
+                ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(atPath,
                     $"{InstallDirectoryHelper.GetFancyGameName(InstallDirectoryHelper.GameType)} Debug Info {epoch}.zip"));
             }           
             finally
@@ -89,7 +89,7 @@ namespace KKManager.Functions
 
             foreach (FileInfo file in files)
             {
-           //     if (!inBaseDirectory)
+                if (!inBaseDirectory)
                 {
                     for (int i = 1; i < depth; i++)
                     {

@@ -26,6 +26,7 @@ using KKManager.Util;
 using KKManager.Windows.Content;
 using KKManager.Windows.ToolWindows;
 using KKManager.Windows.ToolWindows.Properties;
+using MessagePack.Formatters;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WeifenLuo.WinFormsUI.Docking;
@@ -859,9 +860,29 @@ namespace KKManager.Windows
             ProcessTools.SafeStartProcess(@"https://github.com/BetterRepack/SideloaderModpackTracker/issues");
         }
 
-        private void generateDebugInfoZip_Click(object sender, EventArgs e) 
+        private void generateDebugInfoZip_Click(object sender, EventArgs e)
         {
-            DebugInfo.GenerateDebugInfo();
+            using (CommonOpenFileDialog cofd = new CommonOpenFileDialog("Select the directory to export the debug info zip to")
+            {
+                IsFolderPicker = true,
+                EnsurePathExists = true,
+                EnsureFileExists = true,
+
+            })
+            {
+                if (cofd.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    try
+                    {
+                        DebugInfo.GenerateDebugInfo(cofd.FileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        MessageBox.Show($"Could not export debug info:\n {ex.ToStringDemystified()}", "Failed to export debug information", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }
