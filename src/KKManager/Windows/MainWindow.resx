@@ -371,13 +371,13 @@ Generally safe but might cause issues in rare cases, especially with newer games
   <data name="cleanUpDuplicateZipmodsToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Attempt to automatically clean up zipmods with the same GUIDs so that only the latest versions are left.</value>
   </data>
-  <data name="generateDebugInfoToolStripmenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="generateDebugInfoToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 22</value>
   </data>
-  <data name="generateDebugInfoToolStripmenuItem.Text" xml:space="preserve">
+  <data name="generateDebugInfoToolStripMenuItem.Text" xml:space="preserve">
     <value>Generate Debug Info</value>
   </data>
-  <data name="generateDebugInfoToolStripmenuItem.ToolTipText" xml:space="preserve">
+  <data name="generateDebugInfoToolStripMenuItem.ToolTipText" xml:space="preserve">
     <value>Create a zip file in the game folder containing files helpful for debugging problems with the game.</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
@@ -2481,10 +2481,10 @@ If this fails for whatever reason (e.g. recycle bin is full or disabled) the fil
   <data name="&gt;&gt;cleanUpDuplicateZipmodsToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;generateDebugInfoToolStripmenuItem.Name" xml:space="preserve">
-    <value>generateDebugInfoToolStripmenuItem</value>
+  <data name="&gt;&gt;generateDebugInfoToolStripMenuItem.Name" xml:space="preserve">
+    <value>generateDebugInfoToolStripMenuItem</value>
   </data>
-  <data name="&gt;&gt;generateDebugInfoToolStripmenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;generateDebugInfoToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripSeparator3.Name" xml:space="preserve">

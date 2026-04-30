@@ -73,7 +73,7 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGameFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanUpDuplicateZipmodsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateDebugInfoToolStripmenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateDebugInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.developersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openModpackToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -358,7 +358,7 @@ namespace KKManager.Windows
             this.fixFileAndFolderPermissionsToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
             this.cleanUpDuplicateZipmodsToolStripMenuItem,
-            this.generateDebugInfoToolStripmenuItem,
+            this.generateDebugInfoToolStripMenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -382,11 +382,11 @@ namespace KKManager.Windows
             resources.ApplyResources(this.cleanUpDuplicateZipmodsToolStripMenuItem, "cleanUpDuplicateZipmodsToolStripMenuItem");
             this.cleanUpDuplicateZipmodsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpDuplicateZipmodsToolStripMenuItem_Click);
             // 
-            // generateDebugInfoToolStripmenuItem
+            // generateDebugInfoToolStripMenuItem
             // 
-            this.generateDebugInfoToolStripmenuItem.Name = "generateDebugInfoToolStripmenuItem";
-            resources.ApplyResources(this.generateDebugInfoToolStripmenuItem, "generateDebugInfoToolStripmenuItem");
-            this.generateDebugInfoToolStripmenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
+            this.generateDebugInfoToolStripMenuItem.Name = "generateDebugInfoToolStripMenuItem";
+            resources.ApplyResources(this.generateDebugInfoToolStripMenuItem, "generateDebugInfoToolStripMenuItem");
+            this.generateDebugInfoToolStripMenuItem.Click += new System.EventHandler(this.generateDebugInfoZip_Click);
             // 
             // toolStripSeparator3
             // 
@@ -609,6 +609,6 @@ namespace KKManager.Windows
         private ToolStripMenuItem openSardineModBrowserToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem reportAnIssueWithTheModpackToolStripMenuItem;
-        private ToolStripMenuItem generateDebugInfoToolStripmenuItem;
+        private ToolStripMenuItem generateDebugInfoToolStripMenuItem;
     }
 }
