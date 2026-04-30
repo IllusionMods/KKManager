@@ -11,7 +11,7 @@ namespace KKManager.Functions
         public static void GenerateDebugInfo(string atPath)
         {
             var epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
-            var tempDebugDir = Directory.CreateDirectory(Path.Combine(atPath, $"DebugInfoTemp {epoch}"));           
+            var tempDebugDir = Directory.CreateDirectory(Path.Combine(atPath, $"DebugInfoTemp {epoch}"));
 
             try
             {
@@ -21,10 +21,10 @@ namespace KKManager.Functions
                 ZipPluginsAndConfig(Path.Combine(tempDebugDir.FullName, "Bepin.zip"));
 
                 GetLogs(tempDebugDir);
-                
+
                 ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(atPath,
                     $"{InstallDirectoryHelper.GameType.GetFancyGameName()} Debug Info {epoch}.zip"));
-            }           
+            }
             finally
             {
                 tempDebugDir.Delete(true);
@@ -81,8 +81,8 @@ namespace KKManager.Functions
             var nameLength = 0;
             foreach (var file in files)
             {
-                if (file.Name.Length > nameLength) 
-                { 
+                if (file.Name.Length > nameLength)
+                {
                     nameLength = file.Name.Length;  //This doesn't handle multibyte Unicode characters correctly
                 }
             }
@@ -153,26 +153,10 @@ namespace KKManager.Functions
 
         private static void GetLogs(DirectoryInfo debugDirInfo)
         {
-            var logOutputFiles = InstallDirectoryHelper.GameDirectory.EnumerateFiles("LogOutput.log*", SearchOption.AllDirectories).ToArray();
-            var outputLogFiles = InstallDirectoryHelper.GameDirectory.EnumerateFiles("output_log.txt", SearchOption.AllDirectories).ToArray();
-
-            if (outputLogFiles.Length == 0)
-            {
-                //We are probably on one of the games that logs to AppData/LocalLow, and the user hasn't configured Doorstop to redirect the logs.
-                //For now just log that this happens instead of trying to traverse the AppData folder (since we'd have to determine the subfolder name in AppData anyway)
-                Console.WriteLine("Could not locate output_log.txt! Check if redirect_output_log is set to true in doorstop_config.ini");
-            }
+            var logOutputFiles = InstallDirectoryHelper.FindLogFiles(true);
 
             foreach (var logFile in logOutputFiles)
-            {
                 logFile.CopyTo(Path.Combine(debugDirInfo.FullName, logFile.Name), true);
-            }
-
-            foreach (var outputFile in outputLogFiles)
-            {
-                var uniqueName = $"{outputFile.Directory.Name} {outputFile.Name}"; //There may be be multiple output_logs so we have to differentiate them
-                outputFile.CopyTo(Path.Combine(debugDirInfo.FullName, uniqueName), true);
-            }
         }
     }
 }

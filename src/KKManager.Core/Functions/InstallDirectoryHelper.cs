@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using KKManager.Util;
 
 namespace KKManager.Functions
 {
@@ -197,38 +198,77 @@ namespace KKManager.Functions
         {
             try
             {
-                bool TryOpen(string path)
-                {
-                    if (path == null) return false;
-                    try
-                    {
-                        Process.Start(path);
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
+                var candidates = FindLogFiles(true);
 
-                var rootDir = GameDirectory.FullName;
-                var candidates = new List<string>();
+                if (!candidates.Any())
+                    throw new FileNotFoundException("No log files were found");
 
-                // BepInEx 5.x log file, can be "LogOutput.log.1" or higher if multiple game instances run.
-                candidates.AddRange(Directory.GetFiles(rootDir, "LogOutput.log*", SearchOption.AllDirectories));
-                // Unity built-in log file, by default inside _Data dir, disabled, or somewhere in appdata. Can be moved to game root by BepInEx preloader if configured.
-                candidates.AddRange(Directory.GetFiles(rootDir, "output_log.txt", SearchOption.AllDirectories));
-
-                var latestLog = candidates.Where(File.Exists).OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault();
-                if (TryOpen(latestLog)) return;
-
-                throw new FileNotFoundException("No log files were found");
+                foreach (var candidate in candidates.Take(3))
+                    Process.Start(candidate.FullName);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception);
                 MessageBox.Show(string.Format(Resources.OpenGameLogFailedMessage, exception.Message), Resources.OpenGameLogMessageTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private static readonly Dictionary<GameType, string> _AppdataRelativePaths = new Dictionary<GameType, string>
+        {
+            { GameType.Koikatsu , @"illusion__Koikatu\Koikatu"},
+            { GameType.KoikatsuSteam , @"illusion__Koikatsu\Koikatsu Party"},
+            { GameType.KoikatsuSunshine , @"illusion__KoikatsuSunshine\KoikatsuSunshine"},
+            { GameType.EmotionCreators , @"illusion__EmotionCreators\EmotionCreators"},
+
+            { GameType.AiShoujo ,@"illusion__AI-Syoujyo\AI-Syoujyo"},
+            { GameType.AiShoujoSteam ,@"illusion__AI-Shoujo\AI-Shoujo"},
+            { GameType.HoneySelect2 , @"illusion__HoneySelect2\HoneySelect2"}, //TODO: illusion__HoneySelect2_Steam\HoneySelect2_Steam
+            
+            { GameType.RoomGirl, @"illusion__RoomGirl\RoomGirl" },
+            // VR_Kanojo ILLUSION\VR_Kanojo
+
+            { GameType.HoneyCome ,@"ILLGAMES\HoneyCome"},
+            { GameType.HoneyComeSteam ,@"ILLGAMES\HoneyComeccp"},
+            { GameType.SamabakeScramble , @"ILLGAMES\SamabakeScramble"},
+            { GameType.Aicomi, @"ILLGAMES\Aicomi" },
+        };
+
+        /// <summary>
+        /// Finds log files for the current game.
+        /// </summary>
+        /// <param name="filter">Whether to filter the log files to only include the latest ones. If true, results are ordered by last write time (descending).</param>
+        /// <returns>A list of log files for the current game.</returns>
+        public static List<FileInfo> FindLogFiles(bool filter)
+        {
+            var candidates = new List<FileInfo>();
+            // BepInEx 5.x log file, can be "LogOutput.log.1" or higher if multiple game instances run.
+            candidates.AddRange(GameDirectory.GetFiles("LogOutput.log*", SearchOption.AllDirectories));
+            // Unity built-in log file, by default inside _Data dir, disabled, or somewhere in appdata. Can be moved to game root by BepInEx preloader if configured.
+            candidates.AddRange(GameDirectory.GetFiles("output_log.txt", SearchOption.AllDirectories));
+            // Check for log files stored in AppData/LocalLow in case they were not redirected by preloader config
+            if (_AppdataRelativePaths.TryGetValue(GameType, out var relativePath))
+            {
+                var localLow = PathTools.GetAppDataLocalLowPath();
+                var appdataLogPath = Path.Combine(localLow, relativePath);
+                if (Directory.Exists(appdataLogPath))
+                {
+                    // It can be either Player.log or output_log.txt depending on Unity version
+                    candidates.AddRange(Directory.GetFiles(appdataLogPath, "Player.log", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
+                    candidates.AddRange(Directory.GetFiles(appdataLogPath, "output_log.txt", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
+                }
+            }
+
+            if (filter)
+            {
+                candidates = candidates
+                             // Only keep the latest log file for each name (e.g. in case output_log.txt is both in game root and in appdata)
+                             .GroupBy(x => x.Name).Select(z => z.OrderByDescending(x => x.LastWriteTimeUtc).ThenByDescending(x => x.CreationTimeUtc).First())
+                             // Order by last write time to have the most recent log on top (e.g. in case output_log.txt and LogOutput.log both exist)
+                             .OrderByDescending(x => x.LastWriteTimeUtc).ThenByDescending(x => x.CreationTimeUtc)
+                             .ToList();
+            }
+
+            return candidates;
         }
     }
 }
