@@ -250,9 +250,12 @@ namespace KKManager.Functions
             {
                 var localLow = PathTools.GetAppDataLocalLowPath();
                 var appdataLogPath = Path.Combine(localLow, relativePath);
-                // It can be either Player.log or output_log.txt depending on Unity version
-                candidates.AddRange(Directory.GetFiles(appdataLogPath, "Player.log", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
-                candidates.AddRange(Directory.GetFiles(appdataLogPath, "output_log.txt", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
+                if (Directory.Exists(appdataLogPath))
+                {
+                    // It can be either Player.log or output_log.txt depending on Unity version
+                    candidates.AddRange(Directory.GetFiles(appdataLogPath, "Player.log", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
+                    candidates.AddRange(Directory.GetFiles(appdataLogPath, "output_log.txt", SearchOption.AllDirectories).Select(x => new FileInfo(x)));
+                }
             }
 
             if (filter)
