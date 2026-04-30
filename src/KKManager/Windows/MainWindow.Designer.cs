@@ -95,6 +95,7 @@ namespace KKManager.Windows
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -355,10 +356,11 @@ namespace KKManager.Windows
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateDebugInfoToolStripMenuItem,
+            this.toolStripSeparator10,
             this.fixFileAndFolderPermissionsToolStripMenuItem,
             this.compressGameFilesToolStripMenuItem,
             this.cleanUpDuplicateZipmodsToolStripMenuItem,
-            this.generateDebugInfoToolStripMenuItem,
             this.toolStripSeparator3,
             this.developersToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -524,6 +526,11 @@ namespace KKManager.Windows
             this.toolTip1.ReshowDelay = 100;
             this.toolTip1.ShowAlways = true;
             // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            resources.ApplyResources(this.toolStripSeparator10, "toolStripSeparator10");
+            // 
             // MainWindow
             // 
             resources.ApplyResources(this, "$this");
@@ -610,5 +617,6 @@ namespace KKManager.Windows
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem reportAnIssueWithTheModpackToolStripMenuItem;
         private ToolStripMenuItem generateDebugInfoToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator10;
     }
 }
