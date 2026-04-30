@@ -12,18 +12,23 @@ namespace KKManager.Functions
         {
             DirectoryInfo tempDebugDir = Directory.CreateDirectory("DebugInfoTemp");
 
-            string fileTree = GenerateFileTree();
-            File.WriteAllText(Path.Combine(tempDebugDir.FullName, "Files.txt"), fileTree);
+            try
+            {
+                string fileTree = GenerateFileTree();
+                File.WriteAllText(Path.Combine(tempDebugDir.FullName, "Files.txt"), fileTree);
 
-            ZipPluginsAndConfig(Path.Combine(tempDebugDir.FullName, "Bepin.zip"));
+                ZipPluginsAndConfig(Path.Combine(tempDebugDir.FullName, "Bepin.zip"));
 
-            GetLogs(tempDebugDir);
+                GetLogs(tempDebugDir);
 
-            string epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
-            ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(InstallDirectoryHelper.GameDirectory.FullName,
-                $"{InstallDirectoryHelper.GetFancyGameName(InstallDirectoryHelper.GameType)} Debug Info {epoch}.zip"));
-
-            tempDebugDir.Delete(true);
+                string epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
+                ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(InstallDirectoryHelper.GameDirectory.FullName,
+                    $"{InstallDirectoryHelper.GetFancyGameName(InstallDirectoryHelper.GameType)} Debug Info {epoch}.zip"));
+            }           
+            finally
+            {
+                tempDebugDir.Delete(true);
+            }
         }
 
         static string GenerateFileTree()
@@ -84,7 +89,7 @@ namespace KKManager.Functions
 
             foreach (FileInfo file in files)
             {
-                if (!inBaseDirectory)
+           //     if (!inBaseDirectory)
                 {
                     for (int i = 1; i < depth; i++)
                     {
