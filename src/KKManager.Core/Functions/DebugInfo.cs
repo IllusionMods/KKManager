@@ -6,7 +6,7 @@ using System.Text;
 
 namespace KKManager.Functions
 {
-    public class DebugInfo
+    public static class DebugInfo
     {
         public static void GenerateDebugInfo(string atPath)
         {
