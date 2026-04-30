@@ -10,7 +10,8 @@ namespace KKManager.Functions
     {
         public static void GenerateDebugInfo(string atPath)
         {
-            DirectoryInfo tempDebugDir = Directory.CreateDirectory("DebugInfoTemp");
+            string epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
+            DirectoryInfo tempDebugDir = Directory.CreateDirectory(Path.Combine(atPath, $"DebugInfoTemp {epoch}"));           
 
             try
             {
@@ -20,8 +21,7 @@ namespace KKManager.Functions
                 ZipPluginsAndConfig(Path.Combine(tempDebugDir.FullName, "Bepin.zip"));
 
                 GetLogs(tempDebugDir);
-
-                string epoch = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString();
+                
                 ZipFile.CreateFromDirectory(tempDebugDir.FullName, Path.Combine(atPath,
                     $"{InstallDirectoryHelper.GetFancyGameName(InstallDirectoryHelper.GameType)} Debug Info {epoch}.zip"));
             }           
