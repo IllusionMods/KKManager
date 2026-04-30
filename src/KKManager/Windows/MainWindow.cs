@@ -860,7 +860,7 @@ namespace KKManager.Windows
             ProcessTools.SafeStartProcess(@"https://github.com/BetterRepack/SideloaderModpackTracker/issues");
         }
 
-        private void generateDebugInfoZip_Click(object sender, EventArgs e)
+        private async void generateDebugInfoZip_Click(object sender, EventArgs e)
         {
             using (CommonOpenFileDialog cofd = new CommonOpenFileDialog("Select the directory to export the debug info zip to")
             {
@@ -873,7 +873,7 @@ namespace KKManager.Windows
                 {
                     try
                     {
-                        DebugInfo.GenerateDebugInfo(cofd.FileName);
+                        await Task.Run(() => DebugInfo.GenerateDebugInfo(cofd.FileName));
                     }
                     catch (Exception ex)
                     {

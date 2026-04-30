@@ -126,7 +126,7 @@ namespace KKManager.Functions
                             zip.CreateEntryFromFile(file.FullName, RelativePath(file.FullName, pluginsDirInfo.FullName));
                         }
                     }
-                    catch (Exception ex) { /* no plugins directory, oh well */ }
+                    catch (Exception) { /* no plugins directory, oh well */ }
 
                     try
                     {
@@ -136,7 +136,7 @@ namespace KKManager.Functions
                             zip.CreateEntryFromFile(file.FullName, RelativePath(file.FullName, configDirInfo.FullName));
                         }
                     }
-                    catch (Exception ex) {/* same as above */ }
+                    catch (Exception) {/* same as above */ }
                 }
             }
         }
