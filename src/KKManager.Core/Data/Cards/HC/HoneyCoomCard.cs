@@ -157,7 +157,9 @@ namespace KKManager.Data.Cards.HC
                 "Mother Figure",
                 "Scaredy Cat",
                 "Boyinsh",
-                "Innocence"
+                "Innocence",
+                "Tsundere",
+                "Japanese Ideal"
             });
         }
         private static string GetValue(int profession, string[] values)
