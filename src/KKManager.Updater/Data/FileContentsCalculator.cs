@@ -81,7 +81,7 @@ namespace KKManager.Updater.Data
                 recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
         }
 
-        [MessagePackObject]
+        [MessagePackObject(AllowPrivate = true)]
         public sealed class HashInfo
         {
             [ThreadStatic] private static CRC32 _crc;

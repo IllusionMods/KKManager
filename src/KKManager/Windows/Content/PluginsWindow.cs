@@ -134,11 +134,15 @@ namespace KKManager.Windows.Content
             }
 
             // Need to do full reload since multiple plugins can be in a single dll
-            PluginLoader.StartReload();
-            RefreshList();
+            StartPluginReload();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            StartPluginReload();
+        }
+
+        private void StartPluginReload()
         {
             PluginLoader.StartReload();
             RefreshList();
