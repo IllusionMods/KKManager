@@ -21,7 +21,7 @@
 		<PackageReference Include="NetSettingBinder" Version="1.1.6062.19744" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="ObjectListView.Official" Version="2.9.1" />
-		<PackageReference Include="SharpCompress" Version="0.42.1" />
+		<PackageReference Include="SharpCompress" Version="0.48.1" />
 		<PackageReference Include="System.Reactive.Windows.Forms" Version="6.1.0" />
 		<PackageReference Include="NBug" Version="1.2.2" />
 		<PackageReference Include="Windows7APICodePack-Shell" Version="1.1.0.0" />

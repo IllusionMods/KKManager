@@ -136,7 +136,7 @@ namespace KKManager.Data.Zipmods
             if (!IsValidZipmodExtension(location.Extension))
                 throw new ArgumentException($"The file {filename} has an invalid extension and can't be a zipmod", nameof(filename));
 
-            using (var zf = ZipArchive.Open(location))
+            using (var zf = ZipArchive.OpenArchive(location))
             {
                 // Without this reading crashes if any entry name has invalid characters
                 // TODO not available in sharplib - zf.IgnoreDuplicateFiles = true;
@@ -170,7 +170,7 @@ namespace KKManager.Data.Zipmods
                     {
                         try
                         {
-                            using (var zf2 = ZipArchive.Open(location))
+                            using (var zf2 = ZipArchive.OpenArchive(location))
                             {
                                 var if2 = zf2.Entries.First(x => x.Key == imgName);
                                 using (var archiveStream = if2.OpenEntryStream())

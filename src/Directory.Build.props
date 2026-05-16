@@ -35,7 +35,7 @@
 
 	<ItemGroup>
 		<!-- Fix MSB3822: required at runtime for non-string resources -->
-		<PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.8" />
 	</ItemGroup>
 
 	<Target Name="CopyLicenseAndReadme" AfterTargets="Build">

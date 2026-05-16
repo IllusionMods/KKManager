@@ -35,7 +35,7 @@ namespace KKManager.SB3UGS
                 {
                     Console.WriteLine("Found " + target.Name + " - attempting to extract");
 
-                    using (var extr = ArchiveFactory.Open(target))
+                    using (var extr = ArchiveFactory.OpenArchive(target))
                     {
                         if (!extr.IsComplete)
                             throw new IOException("Archive " + target.Name + " is not valid or is corrupted");

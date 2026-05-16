@@ -145,7 +145,7 @@ namespace KKManager.Data.Sardines
             var version = name.Substring(versionSepIdx + 1);
 
 
-            using (var zf = ZipArchive.Open(location))
+            using (var zf = ZipArchive.OpenArchive(location))
             {
                 // Without this reading crashes if any entry name has invalid characters
                 // TODO not available in sharplib - zf.IgnoreDuplicateFiles = true;
@@ -174,7 +174,7 @@ namespace KKManager.Data.Sardines
                     {
                         try
                         {
-                            using (var zf2 = ZipArchive.Open(location))
+                            using (var zf2 = ZipArchive.OpenArchive(location))
                             {
                                 var if2 = zf2.Entries.First(x => x.Key == imgName);
                                 using (var archiveStream = if2.OpenEntryStream())
