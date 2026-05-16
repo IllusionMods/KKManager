@@ -8,7 +8,7 @@
 		<ProjectReference Include="..\KKManager.Core\KKManager.Core.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
-		<PackageReference Include="NuGet.Frameworks" Version="7.0.1" />
+		<PackageReference Include="MSTest.TestAdapter" Version="4.2.3" />
+		<PackageReference Include="NuGet.Frameworks" Version="7.6.0" />
 	</ItemGroup>
 </Project>

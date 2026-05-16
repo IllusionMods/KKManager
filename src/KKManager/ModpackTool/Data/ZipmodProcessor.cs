@@ -88,7 +88,7 @@ namespace KKManager.ModpackTool.Data
                     }
 
                     // ------ Extract zipmod to temp
-                    using (var zf = ArchiveFactory.Open(zipmodEntry.FullPath.FullName))
+                    using (var zf = ArchiveFactory.OpenArchive(zipmodEntry.FullPath.FullName))
                     {
                         zf.ExtractArchiveToDirectory(tempDir);
                     }
@@ -135,18 +135,17 @@ namespace KKManager.ModpackTool.Data
                         manifestWorkCopy.Save(writer, SaveOptions.OmitDuplicateNamespaces);
 
                     // ------ Recompress the archive
-                    using (var zf = ZipArchive.Create())
+                    using (var zf = ZipArchive.CreateArchive())
                     using (var fs = File.Create(outPath))
                     {
-                        zf.DeflateCompressionLevel = CompressionLevel.None;
                         zf.AddAllFromDirectory(tempDir);
-                        zf.SaveTo(fs, new ZipWriterOptions(CompressionType.Deflate)
+                        zf.SaveTo(fs, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.None)
                         {
                             ArchiveComment = archiveComment,
-                            ArchiveEncoding = new ArchiveEncoding(Encoding.UTF8, Encoding.UTF8),
+                            ArchiveEncoding = new ArchiveEncoding { Default = Encoding.UTF8, Password = Encoding.UTF8 },
                             // Seems like there's soem funny business going on (getting zip version 63 instead of 20) and setting both of these again seems to fix it???
                             CompressionType = CompressionType.Deflate,
-                            DeflateCompressionLevel = CompressionLevel.None,
+                            CompressionLevel = (int)CompressionLevel.None,
                             UseZip64 = false,
                             LeaveStreamOpen = false
                         });

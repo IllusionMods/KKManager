@@ -8,7 +8,7 @@
 		<ProjectReference Include="..\PortableSettingsProvider\PortableSettingsProvider.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="AWSSDK.S3" Version="4.0.18.2" />
+		<PackageReference Include="AWSSDK.S3" Version="4.0.23.3" />
 		<PackageReference Include="FluentFTP" Version="[*,35.1.0]" />
 		<PackageReference Include="MegaApiClient" Version="1.10.5" />
 		<PackageReference Include="MonoTorrent" Version="3.0.2" />

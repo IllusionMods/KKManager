@@ -16,7 +16,7 @@ namespace KKManager.Updater.Sources
 
         public ZipUpdater(FileInfo archive, int discoveryPriority, int downloadPriority = 101) : base(archive.Name, discoveryPriority, downloadPriority)
         {
-            _archive = ArchiveFactory.Open(archive);
+            _archive = ArchiveFactory.OpenArchive(archive);
         }
         public override void Dispose()
         {
