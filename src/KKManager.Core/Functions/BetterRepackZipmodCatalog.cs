@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using KKManager.Data.Zipmods;
 
 namespace KKManager.Functions
 {
@@ -98,6 +99,32 @@ namespace KKManager.Functions
             return Load().Entries.Where(x => wanted.Contains(x.Guid))
                 .GroupBy(x => x.Guid, StringComparer.OrdinalIgnoreCase)
                 .Select(x => x.OrderByDescending(y => y.LastModified).ThenBy(y => y.Url, StringComparer.OrdinalIgnoreCase).First()).ToList();
+        }
+
+        /// <summary>Downloads verified catalog entries and installs them one at a time.</summary>
+        public static void InstallEntries(IEnumerable<ZipmodCatalogEntry> entries, CancellationToken token, IProgress<string> text, IProgress<int> percent)
+        {
+            var all = entries.ToList();
+            var tempDirectory = Path.Combine(Path.GetTempPath(), "KKManagerZipmodDownloads");
+            Directory.CreateDirectory(tempDirectory);
+            for (var i = 0; i < all.Count; i++)
+            {
+                token.ThrowIfCancellationRequested();
+                var entry = all[i];
+                text?.Report($"Downloading {entry.FileName} ({i + 1}/{all.Count})");
+                var temp = Path.Combine(tempDirectory, Guid.NewGuid() + ".zipmod");
+                try
+                {
+                    using (var client = new WebClient()) client.DownloadFile(entry.Url, temp);
+                    token.ThrowIfCancellationRequested();
+                    var downloaded = SideloaderModLoader.LoadFromFile(temp);
+                    if (!string.Equals(downloaded.Guid, entry.Guid, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidDataException($"Downloaded archive GUID {downloaded.Guid} does not match {entry.Guid}");
+                    ModInstaller.InstallFromUnknownFile(temp);
+                    percent?.Report((i + 1) * 100 / all.Count);
+                }
+                finally { try { if (File.Exists(temp)) File.Delete(temp); } catch { } }
+            }
         }
 
         private void Save(ZipmodCatalog catalog)

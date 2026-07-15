@@ -799,10 +799,9 @@ namespace KKManager.Windows.Content
                 if (selected == null || selected.Length == 0)
                     return;
 
-                CancellableProgressDialog.Run(this, "Installing zipmods", (token, text, percent) => Task.Run(() => InstallCatalogZipmods(selected, token, text, percent), token));
+                CancellableProgressDialog.Run(this, "Installing zipmods", (token, text, percent) => Task.Run(() => BetterRepackZipmodCatalog.InstallEntries(selected, token, text, percent), token));
 
-                _ = SideloaderModLoader.StartReload();
-                RefreshList();
+                MainWindow.Instance.RefreshContents(false, true, false);
                 MainWindow.SetStatusText("Finished installing selected missing zipmods");
             }
             catch (Exception exception)
@@ -845,31 +844,6 @@ namespace KKManager.Windows.Content
             }
             catch (OperationCanceledException) { MainWindow.SetStatusText("Zipmod catalog build cancelled"); }
             catch (Exception ex) { Console.WriteLine(ex); MessageBox.Show(ex.Message, "Zipmod catalog failed", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-        }
-
-        private static void InstallCatalogZipmods(IEnumerable<ZipmodCatalogEntry> entries, CancellationToken token, IProgress<string> text, IProgress<int> percent)
-        {
-            var all = entries.ToList();
-            var tempDirectory = Path.Combine(Path.GetTempPath(), "KKManagerZipmodDownloads");
-            Directory.CreateDirectory(tempDirectory);
-            for (var i = 0; i < all.Count; i++)
-            {
-                token.ThrowIfCancellationRequested();
-                var entry = all[i];
-                text.Report($"Downloading {entry.FileName} ({i + 1}/{all.Count})");
-                var temp = Path.Combine(tempDirectory, Guid.NewGuid() + ".zipmod");
-                try
-                {
-                    using (var client = new WebClient()) client.DownloadFile(entry.Url, temp);
-                    token.ThrowIfCancellationRequested();
-                    var downloaded = SideloaderModLoader.LoadFromFile(temp);
-                    if (!string.Equals(downloaded.Guid, entry.Guid, StringComparison.OrdinalIgnoreCase))
-                        throw new InvalidDataException($"Downloaded archive GUID {downloaded.Guid} does not match {entry.Guid}");
-                    ModInstaller.InstallFromUnknownFile(temp);
-                    percent.Report((i + 1) * 100 / all.Count);
-                }
-                finally { try { if (File.Exists(temp)) File.Delete(temp); } catch { } }
-            }
         }
 
         private static void ExportModCsv(ICollection<Card> cards, bool includeUnused, bool plugins, bool zipmods)
