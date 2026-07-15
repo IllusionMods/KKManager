@@ -54,6 +54,7 @@ namespace KKManager.Windows.Content
             this.toolStripButtonGo = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSubdirs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonInstallMissingZipmods = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -211,6 +212,7 @@ namespace KKManager.Windows.Content
             this.toolStripButtonGo,
             this.toolStripButtonRefresh,
             this.toolStripButtonSubdirs,
+            this.toolStripButtonInstallMissingZipmods,
             this.toolStripSeparator3,
             this.toolStripButtonDelete,
             this.toolStripSeparator4,
@@ -278,6 +280,15 @@ namespace KKManager.Windows.Content
             resources.ApplyResources(this.toolStripButtonSubdirs, "toolStripButtonSubdirs");
             this.toolStripButtonSubdirs.Name = "toolStripButtonSubdirs";
             this.toolStripButtonSubdirs.CheckedChanged += new System.EventHandler(this.toolStripButtonSubdirs_CheckedChanged);
+            //
+            // toolStripButtonInstallMissingZipmods
+            //
+            this.toolStripButtonInstallMissingZipmods.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonInstallMissingZipmods.Enabled = false;
+            this.toolStripButtonInstallMissingZipmods.Name = "toolStripButtonInstallMissingZipmods";
+            this.toolStripButtonInstallMissingZipmods.Text = "Install missing zipmods";
+            this.toolStripButtonInstallMissingZipmods.ToolTipText = "Find and install missing zipmods for the selected cards";
+            this.toolStripButtonInstallMissingZipmods.Click += new System.EventHandler(this.toolStripButtonInstallMissingZipmods_Click);
             // 
             // toolStripSeparator3
             // 
@@ -479,6 +490,7 @@ namespace KKManager.Windows.Content
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private ToolStripButton toolStripButtonGo;
         private ToolStripButton toolStripButtonRefresh;
+        private ToolStripButton toolStripButtonInstallMissingZipmods;
         private ToolStripSeparator toolStripSeparator3;
         private BrightIdeasSoftware.OLVColumn olvColumnPersonality;
         private BrightIdeasSoftware.OLVColumn olvColumnSex;

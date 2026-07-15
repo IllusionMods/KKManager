@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -60,6 +61,7 @@ namespace KKManager.Windows.Content
 
             InitializeComponent();
             AutoScaleMode = AutoScaleMode.Dpi;
+            AddZipmodCatalogButtons();
 
             UniversalDragAndDrop.SetupDragAndDrop(listView, SimpleDropSink_Dropped, SimpleDropSink_CanDrop, (sender, args) => RefreshList());
             SetupImageLists();
@@ -74,6 +76,7 @@ namespace KKManager.Windows.Content
             listView.KeyDown += ListView_KeyDown;
             listView.MouseDoubleClick += ListView_MouseDoubleClick;
             listView.ItemDrag += ListView_ItemDrag;
+            listView.ItemChecked += (sender, args) => UpdateInstallMissingZipmodsButton();
 
             listView.EmptyListMsgFont = new Font(Font.FontFamily, 24);
             listView.EmptyListMsg = "No cards were found";
@@ -258,6 +261,8 @@ namespace KKManager.Windows.Content
         {
             if (listView.SelectedObject != null)
                 MainWindow.Instance.DisplayInPropertyViewer(listView.SelectedObject, this);
+
+            UpdateInstallMissingZipmodsButton();
         }
 
         public void RefreshList()
@@ -750,6 +755,121 @@ namespace KKManager.Windows.Content
         private void toolStripButtonSubdirs_CheckedChanged(object sender, EventArgs e)
         {
             RefreshList();
+        }
+
+        private void UpdateInstallMissingZipmodsButton()
+        {
+            if (toolStripButtonInstallMissingZipmods == null)
+                return;
+
+            toolStripButtonInstallMissingZipmods.Enabled = GetSelectedCards()
+                .Any(card => card.MissingZipmods?.Length > 0);
+        }
+
+        private void toolStripButtonInstallMissingZipmods_Click(object sender, EventArgs e)
+        {
+            var missingGuids = GetSelectedCards()
+                .SelectMany(card => card.MissingZipmods ?? Array.Empty<string>())
+                .Where(guid => !string.IsNullOrWhiteSpace(guid))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            if (missingGuids.Length == 0)
+            {
+                UpdateInstallMissingZipmodsButton();
+                return;
+            }
+
+            try
+            {
+                var catalog = GetZipmodCatalog();
+                var loadedCatalog = catalog.Load();
+                if (loadedCatalog.Entries.Count == 0)
+                {
+                    MessageBox.Show("Build the BetterRepack zipmod catalog first. Use the Build catalog button in this toolbar.", "Zipmod catalog", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                toolStripButtonInstallMissingZipmods.Enabled = false;
+                UseWaitCursor = true;
+                MainWindow.SetStatusText($"Searching for {missingGuids.Length} missing zipmod(s)...");
+                var matches = catalog.Find(missingGuids);
+                var missing = missingGuids.Except(matches.Select(x => x.Guid), StringComparer.OrdinalIgnoreCase).OrderBy(x => x).ToArray();
+                var selected = MissingZipmodInstallDialog.ShowDialog(this, matches, missing);
+                if (selected == null || selected.Length == 0)
+                    return;
+
+                CancellableProgressDialog.Run(this, "Installing zipmods", (token, text, percent) => Task.Run(() => InstallCatalogZipmods(selected, token, text, percent), token));
+
+                _ = SideloaderModLoader.StartReload();
+                RefreshList();
+                MainWindow.SetStatusText("Finished installing selected missing zipmods");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                MessageBox.Show("Failed to look up or install missing zipmods.\n\n" + exception.Message,
+                    "Install missing zipmods", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                UseWaitCursor = false;
+                UpdateInstallMissingZipmodsButton();
+            }
+        }
+
+        private void AddZipmodCatalogButtons()
+        {
+            var build = new ToolStripButton("Build catalog") { DisplayStyle = ToolStripItemDisplayStyle.Text, ToolTipText = "Build the BetterRepack AISHS2 zipmod GUID catalog" };
+            var update = new ToolStripButton("Update catalog") { DisplayStyle = ToolStripItemDisplayStyle.Text, ToolTipText = "Update the BetterRepack AISHS2 zipmod GUID catalog" };
+            build.Click += (sender, args) => BuildZipmodCatalog();
+            update.Click += (sender, args) => BuildZipmodCatalog();
+            toolStrip.Items.Insert(5, update);
+            toolStrip.Items.Insert(5, build);
+        }
+
+        private BetterRepackZipmodCatalog GetZipmodCatalog() => new BetterRepackZipmodCatalog(Path.Combine(Program.ProgramLocation, "ZipmodCatalog", "AISHS2.json"));
+
+        private void BuildZipmodCatalog()
+        {
+            try
+            {
+                var catalog = GetZipmodCatalog();
+                CancellableProgressDialog.Run(this, "Building BetterRepack zipmod catalog", (token, text, percent) =>
+                    catalog.BuildOrUpdate(token, new Progress<CatalogProgress>(p =>
+                    {
+                        text.Report(p.Status);
+                        if (p.Total > 0) percent.Report((int)(p.Processed * 100L / p.Total));
+                    })));
+                MainWindow.SetStatusText("BetterRepack zipmod catalog is ready");
+            }
+            catch (OperationCanceledException) { MainWindow.SetStatusText("Zipmod catalog build cancelled"); }
+            catch (Exception ex) { Console.WriteLine(ex); MessageBox.Show(ex.Message, "Zipmod catalog failed", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        private static void InstallCatalogZipmods(IEnumerable<ZipmodCatalogEntry> entries, CancellationToken token, IProgress<string> text, IProgress<int> percent)
+        {
+            var all = entries.ToList();
+            var tempDirectory = Path.Combine(Path.GetTempPath(), "KKManagerZipmodDownloads");
+            Directory.CreateDirectory(tempDirectory);
+            for (var i = 0; i < all.Count; i++)
+            {
+                token.ThrowIfCancellationRequested();
+                var entry = all[i];
+                text.Report($"Downloading {entry.FileName} ({i + 1}/{all.Count})");
+                var temp = Path.Combine(tempDirectory, Guid.NewGuid() + ".zipmod");
+                try
+                {
+                    using (var client = new WebClient()) client.DownloadFile(entry.Url, temp);
+                    token.ThrowIfCancellationRequested();
+                    var downloaded = SideloaderModLoader.LoadFromFile(temp);
+                    if (!string.Equals(downloaded.Guid, entry.Guid, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidDataException($"Downloaded archive GUID {downloaded.Guid} does not match {entry.Guid}");
+                    ModInstaller.InstallFromUnknownFile(temp);
+                    percent.Report((i + 1) * 100 / all.Count);
+                }
+                finally { try { if (File.Exists(temp)) File.Delete(temp); } catch { } }
+            }
         }
 
         private static void ExportModCsv(ICollection<Card> cards, bool includeUnused, bool plugins, bool zipmods)
