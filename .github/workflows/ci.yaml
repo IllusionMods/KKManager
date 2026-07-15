@@ -14,4 +14,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}_${{ github.sha }}
-          path: src/bin/*.*
+          path: src/bin/
