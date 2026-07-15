@@ -296,6 +296,19 @@ namespace KKManager.Windows
             return cardWindow;
         }
 
+        public SceneWindow OpenOrGetSceneWindow()
+        {
+            var existing = GetWindows<SceneWindow>().FirstOrDefault();
+            if (existing != null)
+            {
+                existing.Focus();
+                return existing;
+            }
+            var sceneWindow = new SceneWindow();
+            sceneWindow.Show(dockPanel, DockState.Document);
+            return sceneWindow;
+        }
+
         private void SetupTabs()
         {
             // Try to load saved state first, if that fails load defaults
@@ -454,7 +467,7 @@ namespace KKManager.Windows
             }
         }
 
-        private void RefreshContents(bool plugins, bool sideloader, bool sardine)
+        public void RefreshContents(bool plugins, bool sideloader, bool sardine)
         {
             if (plugins) PluginLoader.StartReload();
             if (sideloader) SideloaderModLoader.StartReload();
@@ -503,7 +516,7 @@ namespace KKManager.Windows
 
         private void scenesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProcessTools.SafeStartProcess(InstallDirectoryHelper.SceneDir);
+            OpenOrGetSceneWindow();
         }
 
         private void kKManagerToolStripMenuItem_Click(object sender, EventArgs e)
