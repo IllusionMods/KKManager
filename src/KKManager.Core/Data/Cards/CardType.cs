@@ -18,5 +18,7 @@
         AiSyoujyoClothes,
         SamabakeScrambleClothes,
         AicomiClothes,
+        Amanatsu,
+        AmanatsuClothes,
     }
 }

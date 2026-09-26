@@ -15,6 +15,7 @@
         HoneyCome,
         HoneyComeSteam,
         SamabakeScramble,
-        Aicomi
+        Aicomi,
+        AmanatsuLocation
     }
 }

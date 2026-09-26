@@ -108,6 +108,7 @@ namespace KKManager.Functions
                 new Tuple<string, GameType>("HoneyComeccp.exe", GameType.HoneyComeSteam),
                 new Tuple<string, GameType>("SamabakeScramble.exe", GameType.SamabakeScramble),
                 new Tuple<string, GameType>("Aicomi.exe", GameType.Aicomi),
+                new Tuple<string, GameType>("AmanatsuLocation.exe", GameType.AmanatsuLocation),
             };
 
             GameType = gameCheck.FirstOrDefault(x => File.Exists(Path.Combine(path, x.Item1)))?.Item2 ?? GameType.Unknown;
@@ -187,6 +188,7 @@ namespace KKManager.Functions
                 case GameType.HoneyComeSteam: return "HoneyCome come come party";
                 case GameType.SamabakeScramble: return "Summer Vacation Scramble";
                 case GameType.Aicomi: return "Aicomi";
+                case GameType.AmanatsuLocation: return "Amanatsu Location";
                 default: throw new ArgumentOutOfRangeException(nameof(gameType), gameType, null);
             }
         }
@@ -231,6 +233,7 @@ namespace KKManager.Functions
             { GameType.HoneyComeSteam ,@"ILLGAMES\HoneyComeccp"},
             { GameType.SamabakeScramble , @"ILLGAMES\SamabakeScramble"},
             { GameType.Aicomi, @"ILLGAMES\Aicomi" },
+            { GameType.AmanatsuLocation, @"ILLGAMES\AmanatsuLocation" },
         };
 
         /// <summary>
