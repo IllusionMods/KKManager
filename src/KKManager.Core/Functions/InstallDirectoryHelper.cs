@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using KKManager.Util;
+using Microsoft.Win32;
 
 namespace KKManager.Functions
 {
@@ -168,6 +169,54 @@ namespace KKManager.Functions
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Finds all installed games by checking registry keys and validating game directories.
+        /// </summary>
+        /// <returns>A list of full paths to valid game root directories found in the registry.</returns>
+        public static List<string> FindInstalledGames()
+        {
+            var allPaths = new List<string>();
+            var gameRegistryKeys = new[]
+            {
+                @"illusion\Koikatu\Koikatu",
+                @"illusion\Koikatsu\Koikatsu Party",
+                @"illusion\KoikatsuSunshine\KoikatsuSunshine",
+                @"illusion\EmotionCreators\EmotionCreators",
+                @"illusion\AI-Syoujyo\AI-Syoujyo",
+                @"illusion\AI-Shoujo\AI-Shoujo",
+                @"illusion\HoneySelect2\HoneySelect2",
+                @"illusion\HoneySelect2_Steam\HoneySelect2_Steam",
+                @"illusion\RoomGirl\RoomGirl",
+                @"ILLGAMES\HoneyCome",
+                @"ILLGAMES\DigitalCraft",
+                @"ILLGAMES\SamabakeScramble",
+                @"ILLGAMES\SamabakeScramble_STEAM",
+                @"ILLGAMES\Aicomi",
+                @"ILLGAMES\AmanatsuLocation",
+            };
+
+            foreach (var regkey in gameRegistryKeys)
+            {
+                try
+                {
+                    var installDir = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\" + regkey, "INSTALLDIR", null) as string;
+                    if (!string.IsNullOrEmpty(installDir))
+                        allPaths.Add(installDir);
+
+                    var installDirHfp = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\" + regkey, "INSTALLDIR_HFP", null) as string;
+                    if (!string.IsNullOrEmpty(installDirHfp))
+                        allPaths.Add(installDirHfp);
+                }
+                catch
+                {
+                    // Ignore errors reading registry for individual keys
+                }
+            }
+
+            // Filter to only valid game directories and remove duplicates
+            return allPaths.Distinct(StringComparer.OrdinalIgnoreCase).Where(IsValidGamePath).ToList();
         }
 
         public static string GetFancyGameName(this GameType gameType)

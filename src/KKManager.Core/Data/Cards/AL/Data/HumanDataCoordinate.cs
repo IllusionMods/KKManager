@@ -31,7 +31,7 @@ namespace KKManager.Data.Cards.AL.Data
         
 		//private HumanData.Define.LoadErrorType _lastLoadErrorCode;
 
-		private int _tagIndex;
+		//private int _tagIndex;
 
 		public static class LoadFileInfo
 		{

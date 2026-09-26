@@ -155,34 +155,8 @@ namespace KKManager.Windows
             if (string.IsNullOrWhiteSpace(currentPath))
                 currentPath = Program.ProgramLocation;
 
-            using (var fb = new CommonOpenFileDialog
-            {
-                IsFolderPicker = true,
-                InitialDirectory = currentPath,
-                AllowNonFileSystemItems = false,
-                AddToMostRecentlyUsedList = false,
-                EnsurePathExists = true,
-                EnsureFileExists = true,
-                Multiselect = false,
-                Title = "Select the install directory of your game"
-            })
-            {
-            retryFolderSelect:
-                if (fb.ShowDialog() == CommonFileDialogResult.Ok)
-                {
-                    var path = fb.FileName;
-                    if (!InstallDirectoryHelper.IsValidGamePath(path))
-                    {
-                        if (MessageBox.Show(
-                                "The selected directory doesn't seem to contain the game. Make sure the directory is correct and try again.",
-                                "Select install directory", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
-                            goto retryFolderSelect;
-                    }
-                    return path;
-                }
-
-                return null;
-            }
+            using (var gameSelectionDialog = new Dialogs.GameSelectionDialog(currentPath))
+                return gameSelectionDialog.ShowDialog() == DialogResult.OK ? gameSelectionDialog.SelectedPath : null;
         }
 
         private static void CheckInstallPathPermissions(string path)
