@@ -1,4 +1,52 @@
-﻿[25.8]
+﻿[26.2.1]
+  - Fixed conversion of PNG files ending with former format name (except for float formats)
+  - Added reading of LZMA compressed header. Reverted to LZ4HC when saved.
+
+[26.2]
+  - Added support for Texture2DArray with more than 6 elements
+  - Fixed material offset and scaling of MainTex and NormalMap in the preview
+  - Added export option for converting to normalized normalmap and Y flip
+  - Changed order of parameters in script function ExportFbx, ExportMorphFbx
+  - Changed material editor to sort values by attribute name,
+    bold names for attributes used in the perspective preview
+  - Fixed crash in preview for normalmaps in DXT5 format
+  - Fixed 2d (and perspective) preview for NPOT resolutions in formats: RGB24, RGBA32, ARGB32, DXT1, DXT5
+
+Known issues:
+  - Windows11 "2026-08 Security Update (KB5121003) (26200.9168)" breaks Windows 7 style.
+    Additional Help button shifts the others to the left.
+    Fix: restore Computer\HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics
+         set CaptionHeight and CaptionWidth both to -330
+
+[26.1]
+  - Fixed renaming of CAB strings in SceneABs with multiple scenes
+  - Added MagicaCloth helpers
+  - Fixed Renderers shifted attributes in Unity 2021.3+
+  - Changed AnimatorEditor.SetRendererAttributes to support renderer fix and Unity 6000+ attributes
+
+Known issues:
+  - MagicaBoneCloth computations do not consider useVertexList:
+    ClothData > selectionData, structDistanceReferenceList, vertexDepthList, rootList, etc.
+
+[26.0.1]
+  - Added support for normalized16 format in Mesh data layout
+  - Changed column names of list TextAssets for ALT
+  - Fixed MotionIK format for ALT
+
+[26.0]
+  - Added tooltip for AudioClip compression formats
+  - Added editing Shader States in Material editor
+  - Added support for render queue of the first submesh in the preview
+  - Added X-Ray display of bones
+  - Changed to FbxSDK 2020.3.9
+  - Added preview of DynamicBoneColliders (unfinished)
+  - Added support for AmanatsuLocation_Trial
+
+Known issue:
+  - Animations are NOT applied to first-time-selected meshes
+    Workaround: unselect animation then reselect it
+
+[25.8]
   - Added dropping assets into MB and LoadedByTypedefinition editors fills PathID=0 entries
     or adds a new entry at the end of the array
   - Changed handling of Avatars to reduce occasions of manual correction
