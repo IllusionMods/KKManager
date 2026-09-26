@@ -8,6 +8,9 @@
 		<None Update="NBug.config">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="ZipmodCatalog\AISHS2.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="icon.ico" />
