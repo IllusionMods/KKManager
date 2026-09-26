@@ -601,7 +601,8 @@ namespace KKManager.Windows
 
             Settings.Default.GamePath = folder;
             Settings.Default.Save();
-            MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show("Install directory has been changed successfully. KKManager has to be restarted for the changes to take effect.", "Change install directory", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Application.Restart();
         }
 
         private void generateContentsOfUpdatexmlToolStripMenuItem_Click(object sender, EventArgs e)
@@ -746,9 +747,8 @@ namespace KKManager.Windows
                             {
                                 LanguageManager.CurrentCulture = (CultureInfo)((ToolStripMenuItem)obj).Tag;
                                 LanguageManager.ApplyCurrentCulture(this);
-                                MessageBox.Show(
-                                    "You might need to restart KKManager to fully change the laguage.",
-                                    "Language change", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                //MessageBox.Show("You might need to restart KKManager to fully change the laguage.", "Language change", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                Application.Restart();
                             })
                     { Tag = x };
                 }
